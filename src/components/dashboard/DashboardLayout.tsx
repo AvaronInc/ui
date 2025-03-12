@@ -23,7 +23,8 @@ import {
   HardDrive,
   Network,
   Settings, 
-  LogOut
+  LogOut,
+  Shield
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
