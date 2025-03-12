@@ -2,6 +2,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { useSidebar, SIDEBAR_WIDTH_MOBILE } from "./sidebar-base"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,

@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { VariantProps } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
@@ -34,6 +33,31 @@ function useSidebar() {
   }
   return context
 }
+
+const SidebarTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentPropsWithoutRef<typeof Button>
+>(({ className, ...props }, ref) => {
+  const { toggleSidebar } = useSidebar()
+
+  return (
+    <Button
+      ref={ref}
+      variant="ghost"
+      size="icon"
+      className={cn(
+        "h-9 w-9 me-3 rounded-md text-muted-foreground",
+        className
+      )}
+      onClick={toggleSidebar}
+      {...props}
+    >
+      <PanelLeft className="h-5 w-5" />
+      <span className="sr-only">Toggle sidebar</span>
+    </Button>
+  )
+})
+SidebarTrigger.displayName = "SidebarTrigger"
 
 const SidebarProvider = React.forwardRef<
   HTMLDivElement,
@@ -136,4 +160,12 @@ const SidebarProvider = React.forwardRef<
 )
 SidebarProvider.displayName = "SidebarProvider"
 
-export { useSidebar, SidebarContext, SidebarProvider, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON, SIDEBAR_WIDTH_MOBILE }
+export { 
+  useSidebar, 
+  SidebarContext, 
+  SidebarProvider, 
+  SidebarTrigger,
+  SIDEBAR_WIDTH, 
+  SIDEBAR_WIDTH_ICON, 
+  SIDEBAR_WIDTH_MOBILE 
+}
