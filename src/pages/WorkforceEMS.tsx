@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PageTransition } from '@/components/transitions/PageTransition';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
@@ -7,6 +6,7 @@ import VPNSessionsTable from '@/components/workforce/VPNSessionsTable';
 import EndpointDevicesList from '@/components/workforce/EndpointDevicesList';
 import EndpointDetailPanel from '@/components/workforce/EndpointDetailPanel';
 import WorkforceFilters from '@/components/workforce/WorkforceFilters';
+import NetworkReportDialog from '@/components/workforce/NetworkReportDialog';
 import { 
   VPNSession, 
   EndpointDevice, 
@@ -21,7 +21,6 @@ import { Button } from '@/components/ui/button';
 import { FileText, WifiOff, RefreshCw } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
-// Sample data
 const workforceStats: WorkforceStats = {
   totalActiveUsers: 243,
   connectedVPNSessions: 18,
@@ -249,9 +248,7 @@ const WorkforceEMS = () => {
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
   const [filters, setFilters] = useState<WorkforceFilter>({});
   const [groupBy, setGroupBy] = useState('department');
-  
-  // Simulated admin status - in a real app, this would come from auth
-  const isAdmin = true;
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
 
   const handleDisconnectVPN = (sessionId: string) => {
     toast({
@@ -268,13 +265,9 @@ const WorkforceEMS = () => {
   };
   
   const handleGenerateReport = () => {
-    toast({
-      title: "Report Generated",
-      description: "Compliance report has been generated and is ready for download.",
-    });
+    setReportDialogOpen(true);
   };
   
-  // Filter the devices based on current filters
   const filteredDevices = endpointDevices.filter(device => {
     if (filters.searchQuery && !device.name.toLowerCase().includes(filters.searchQuery.toLowerCase()) && 
         !device.assignedUser.toLowerCase().includes(filters.searchQuery.toLowerCase())) {
@@ -300,7 +293,6 @@ const WorkforceEMS = () => {
     return true;
   });
   
-  // Group the devices based on the groupBy selection
   const groupedDevices: Record<string, EndpointDevice[]> = {};
   
   if (groupBy) {
@@ -421,6 +413,10 @@ const WorkforceEMS = () => {
           )}
         </div>
       </DashboardLayout>
+      <NetworkReportDialog
+        open={reportDialogOpen}
+        onOpenChange={setReportDialogOpen}
+      />
     </PageTransition>
   );
 };
