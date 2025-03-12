@@ -16,6 +16,7 @@ import Security from "./pages/Security";
 import WorkforceEMS from "./pages/WorkforceEMS";
 import Topology from "./pages/Topology";
 import Nest from "./pages/Nest";
+import AdminSettings from "./pages/AdminSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/storage" element={<Storage />} />
             <Route path="/security" element={<Security />} />
             <Route path="/workforce" element={<WorkforceEMS />} />
+            <Route path="/settings" element={<AdminSettings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

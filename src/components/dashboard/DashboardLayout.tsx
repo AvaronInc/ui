@@ -128,7 +128,10 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/settings" className="nav-link">
+                  <Link to="/settings" className={cn(
+                    "nav-link",
+                    location.pathname === "/settings" && "active"
+                  )}>
                     <Settings className="h-5 w-5 mr-3" />
                     <span>Settings</span>
                   </Link>
