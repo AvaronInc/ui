@@ -2,7 +2,7 @@
 import React from 'react';
 import TicketFilters from '@/components/tickets/TicketFilters';
 import TicketList from '@/components/tickets/TicketList';
-import TicketDetailPanel from '@/components/tickets/TicketDetailPanel';
+import { TicketDetailPanel } from '@/components/tickets/detail';
 import { useTickets, sampleTechnicians } from '@/context/TicketContext';
 
 const TicketMainContent = () => {
