@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import RMM from "./pages/RMM";
 import IPAM from "./pages/IPAM";
+import Tickets from "./pages/Tickets";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,7 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/rmm" element={<RMM />} />
             <Route path="/ipam" element={<IPAM />} />
-            <Route path="/tickets" element={<NotFound />} />
+            <Route path="/tickets" element={<Tickets />} />
             <Route path="/projects" element={<NotFound />} />
             <Route path="/identity" element={<NotFound />} />
             <Route path="/storage" element={<NotFound />} />
