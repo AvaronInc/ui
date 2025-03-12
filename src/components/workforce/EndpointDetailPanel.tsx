@@ -27,8 +27,8 @@ const EndpointDetailPanel = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:right-auto">
-      <div className="fixed inset-y-0 right-0 z-50 h-full w-3/4 max-w-md border-l bg-background p-6 shadow-lg md:w-full">
+    <div className="fixed inset-0 z-50 bg-background/80">
+      <div className="fixed inset-y-0 right-0 z-50 h-full w-3/4 max-w-md border-l bg-background p-6 shadow-lg">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium">{device.name}</h3>
           <Button variant="ghost" size="icon" onClick={onClose}>
