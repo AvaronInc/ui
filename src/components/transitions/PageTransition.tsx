@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 
 interface PageTransitionProps {
   children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const pageVariants = {
@@ -27,7 +29,7 @@ const pageTransition = {
   duration: 0.3,
 };
 
-export const PageTransition = ({ children }: PageTransitionProps) => {
+export const PageTransition = ({ children, className, style }: PageTransitionProps) => {
   return (
     <motion.div
       initial="initial"
@@ -35,7 +37,8 @@ export const PageTransition = ({ children }: PageTransitionProps) => {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="w-full"
+      className={className || "w-full"}
+      style={style}
     >
       {children}
     </motion.div>
