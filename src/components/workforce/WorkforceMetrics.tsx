@@ -43,7 +43,7 @@ const WorkforceMetrics = ({ stats }: WorkforceMetricsProps) => {
           <Laptop className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1">
               <div className="h-3 w-3 rounded-full bg-success"></div>
               <span className="text-xs">{stats.endpointsByStatus.healthy}</span>
@@ -57,10 +57,10 @@ const WorkforceMetrics = ({ stats }: WorkforceMetricsProps) => {
               <span className="text-xs">{stats.endpointsByStatus.insecure}</span>
             </div>
           </div>
-          <div className="mt-2 grid grid-cols-3 text-xs text-muted-foreground">
-            <span>Healthy</span>
-            <span>Updates</span>
-            <span>Insecure</span>
+          <div className="grid grid-cols-3 text-xs text-muted-foreground">
+            <span className="justify-self-start">Healthy</span>
+            <span className="justify-self-center">Updates</span>
+            <span className="justify-self-end">Insecure</span>
           </div>
         </CardContent>
       </Card>
