@@ -1,16 +1,17 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from '@/context/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const GeneralSettings = () => {
   const { toast } = useToast();
+  const { isDarkMode, toggleDarkMode, primaryColor, setPrimaryColor } = useTheme();
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [systemName, setSystemName] = useState('Network Pulse Management');
   const [timeZone, setTimeZone] = useState('UTC');
@@ -28,12 +29,23 @@ const GeneralSettings = () => {
     setSystemName('Network Pulse Management');
     setTimeZone('UTC');
     setDefaultLanguage('en-US');
+    setPrimaryColor('blue');
+    if (isDarkMode) toggleDarkMode();
     
     toast({
       title: "Settings reset",
       description: "Your general settings have been reset to defaults.",
     });
   };
+
+  const colors = [
+    { name: 'blue', class: 'bg-blue-500' },
+    { name: 'green', class: 'bg-green-500' },
+    { name: 'purple', class: 'bg-purple-500' },
+    { name: 'red', class: 'bg-red-500' },
+    { name: 'orange', class: 'bg-orange-500' },
+    { name: 'gray', class: 'bg-gray-500' }
+  ];
   
   return (
     <div className="space-y-6">
@@ -44,7 +56,7 @@ const GeneralSettings = () => {
           <TabsTrigger value="localization">Localization</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="system" className="space-y-4">
+        <TabsContent value="system">
           <div className="grid gap-4">
             <div className="flex items-center justify-between">
               <div>
@@ -120,18 +132,27 @@ const GeneralSettings = () => {
                   Enable dark mode across the application.
                 </p>
               </div>
-              <Switch id="dark-mode" />
+              <Switch 
+                id="dark-mode"
+                checked={isDarkMode}
+                onCheckedChange={toggleDarkMode}
+              />
             </div>
             
             <div>
               <Label htmlFor="primary-color">Primary Color</Label>
               <div className="grid grid-cols-6 gap-2 mt-1.5">
-                <div className="h-10 bg-blue-500 rounded-md cursor-pointer border-2 border-primary" />
-                <div className="h-10 bg-green-500 rounded-md cursor-pointer" />
-                <div className="h-10 bg-purple-500 rounded-md cursor-pointer" />
-                <div className="h-10 bg-red-500 rounded-md cursor-pointer" />
-                <div className="h-10 bg-orange-500 rounded-md cursor-pointer" />
-                <div className="h-10 bg-gray-500 rounded-md cursor-pointer" />
+                {colors.map((color) => (
+                  <div
+                    key={color.name}
+                    className={cn(
+                      "h-10 rounded-md cursor-pointer border-2",
+                      color.class,
+                      primaryColor === color.name ? "border-primary" : "border-transparent"
+                    )}
+                    onClick={() => setPrimaryColor(color.name)}
+                  />
+                ))}
               </div>
             </div>
           </div>

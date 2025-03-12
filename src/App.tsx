@@ -1,10 +1,10 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { ThemeProvider } from "./context/ThemeContext";
 import Index from "./pages/Index";
 import RMM from "./pages/RMM";
 import IPAM from "./pages/IPAM";
@@ -23,30 +23,31 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/rmm" element={<RMM />} />
-            <Route path="/ipam" element={<IPAM />} />
-            <Route path="/tickets" element={<Tickets />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/identity" element={<Identity />} />
-            <Route path="/topology" element={<Topology />} />
-            <Route path="/nest" element={<Nest />} />
-            <Route path="/storage" element={<Storage />} />
-            <Route path="/security" element={<Security />} />
-            <Route path="/workforce" element={<WorkforceEMS />} />
-            <Route path="/settings" element={<AdminSettings />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AnimatePresence>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/rmm" element={<RMM />} />
+              <Route path="/ipam" element={<IPAM />} />
+              <Route path="/tickets" element={<Tickets />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/identity" element={<Identity />} />
+              <Route path="/topology" element={<Topology />} />
+              <Route path="/nest" element={<Nest />} />
+              <Route path="/storage" element={<Storage />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/workforce" element={<WorkforceEMS />} />
+              <Route path="/settings" element={<AdminSettings />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AnimatePresence>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
