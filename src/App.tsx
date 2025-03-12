@@ -15,6 +15,7 @@ import Storage from "./pages/Storage";
 import Security from "./pages/Security";
 import WorkforceEMS from "./pages/WorkforceEMS";
 import Topology from "./pages/Topology";
+import Nest from "./pages/Nest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/projects" element={<Projects />} />
             <Route path="/identity" element={<Identity />} />
             <Route path="/topology" element={<Topology />} />
+            <Route path="/nest" element={<Nest />} />
             <Route path="/storage" element={<Storage />} />
             <Route path="/security" element={<Security />} />
             <Route path="/workforce" element={<WorkforceEMS />} />

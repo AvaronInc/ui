@@ -25,7 +25,8 @@ import {
   Settings, 
   LogOut,
   Shield,
-  Laptop
+  Laptop,
+  MapPin
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -60,6 +61,11 @@ const navItems = [
     title: 'Topology',
     icon: Network,
     href: '/topology'
+  },
+  {
+    title: 'N.E.S.T.',
+    icon: MapPin,
+    href: '/nest'
   },
   {
     title: 'Projects',
