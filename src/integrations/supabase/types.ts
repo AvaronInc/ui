@@ -105,30 +105,39 @@ export type Database = {
       }
       app_users: {
         Row: {
+          biometrics_enrolled: boolean | null
           created_at: string
           email: string
           id: string
+          kyber_cert_hash: string | null
           last_login: string | null
+          mfa_enabled: boolean | null
           name: string
           role: string
           status: string
           updated_at: string
         }
         Insert: {
+          biometrics_enrolled?: boolean | null
           created_at?: string
           email: string
           id?: string
+          kyber_cert_hash?: string | null
           last_login?: string | null
+          mfa_enabled?: boolean | null
           name: string
           role?: string
           status?: string
           updated_at?: string
         }
         Update: {
+          biometrics_enrolled?: boolean | null
           created_at?: string
           email?: string
           id?: string
+          kyber_cert_hash?: string | null
           last_login?: string | null
+          mfa_enabled?: boolean | null
           name?: string
           role?: string
           status?: string
@@ -190,6 +199,53 @@ export type Database = {
         }
         Relationships: []
       }
+      file_storage: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          last_modified: string
+          name: string
+          parent_id: string | null
+          path: string[]
+          permissions: string
+          size: number
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_modified?: string
+          name: string
+          parent_id?: string | null
+          path: string[]
+          permissions: string
+          size: number
+          type: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_modified?: string
+          name?: string
+          parent_id?: string | null
+          path?: string[]
+          permissions?: string
+          size?: number
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "file_storage_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "file_storage"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       health_checks: {
         Row: {
           checked_at: string
@@ -249,6 +305,45 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      security_events: {
+        Row: {
+          action_taken: string | null
+          affected_device: string | null
+          created_at: string
+          description: string
+          event_type: string
+          id: string
+          severity: string
+          timestamp: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          action_taken?: string | null
+          affected_device?: string | null
+          created_at?: string
+          description: string
+          event_type: string
+          id?: string
+          severity: string
+          timestamp?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          action_taken?: string | null
+          affected_device?: string | null
+          created_at?: string
+          description?: string
+          event_type?: string
+          id?: string
+          severity?: string
+          timestamp?: string
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -409,6 +504,77 @@ export type Database = {
         }
         Relationships: []
       }
+      ticket_notes: {
+        Row: {
+          author: string | null
+          content: string
+          created_at: string
+          id: string
+          is_internal: boolean
+          ticket_id: string
+        }
+        Insert: {
+          author?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          ticket_id: string
+        }
+        Update: {
+          author?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_notes_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tickets: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          priority: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          priority: string
+          status: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          priority?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_records: {
         Row: {
           created_at: string
@@ -443,6 +609,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vpn_sessions: {
+        Row: {
+          created_at: string
+          device_id: string
+          end_time: string | null
+          id: string
+          ip_address: string
+          location: string | null
+          start_time: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          end_time?: string | null
+          id?: string
+          ip_address: string
+          location?: string | null
+          start_time?: string
+          status: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          end_time?: string | null
+          id?: string
+          ip_address?: string
+          location?: string | null
+          start_time?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

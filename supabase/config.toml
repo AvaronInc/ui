@@ -1,1 +1,32 @@
+
 project_id = "ldhcbonevdxtoycfoeds"
+api_server_port = 54321
+db_port = 54322
+studio_port = 54323
+
+[auth]
+enable_signup = true
+enable_confirmations = true
+jwt_expiry = 3600
+site_url = "http://localhost:3000"
+
+[analytics]
+enabled = true
+
+[storage]
+file_size_limit = "50MiB"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "auth"]
+
+[db]
+major_version = 15
+port = 54322
+
+[realtime]
+enabled = true
+
+[edge_functions]
+enabled = true
