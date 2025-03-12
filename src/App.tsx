@@ -13,6 +13,7 @@ import Projects from "./pages/Projects";
 import Identity from "./pages/Identity";
 import Storage from "./pages/Storage";
 import Security from "./pages/Security";
+import WorkforceEMS from "./pages/WorkforceEMS";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/topology" element={<NotFound />} />
             <Route path="/storage" element={<Storage />} />
             <Route path="/security" element={<Security />} />
+            <Route path="/workforce" element={<WorkforceEMS />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

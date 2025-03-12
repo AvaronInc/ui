@@ -24,7 +24,8 @@ import {
   Network,
   Settings, 
   LogOut,
-  Shield
+  Shield,
+  Laptop
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -79,6 +80,11 @@ const navItems = [
     title: 'Security',
     icon: Shield,
     href: '/security'
+  },
+  {
+    title: 'Workforce EMS',
+    icon: Laptop,
+    href: '/workforce'
   }
 ];
 

@@ -12,7 +12,9 @@ import {
   Ticket, 
   Briefcase, 
   Users, 
-  HardDrive 
+  HardDrive,
+  Shield,
+  Laptop
 } from 'lucide-react';
 
 // Sample data
@@ -151,6 +153,20 @@ const navigationTiles = [
     icon: HardDrive,
     href: '/storage',
     color: 'bg-muted/20 text-foreground'
+  },
+  {
+    title: 'Security',
+    description: 'Monitor and respond to security events',
+    icon: Shield,
+    href: '/security',
+    color: 'bg-destructive/10 text-destructive'
+  },
+  {
+    title: 'Workforce EMS',
+    description: 'Manage endpoints and VPN sessions',
+    icon: Laptop,
+    href: '/workforce',
+    color: 'bg-secondary/10 text-secondary'
   }
 ];
 
