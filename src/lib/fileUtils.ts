@@ -1,4 +1,3 @@
-
 import { FileType } from '@/types/storage';
 import { 
   File, 
@@ -10,7 +9,7 @@ import {
   FileCode, 
   Archive, 
   Folder, 
-  FilePresentationIcon
+  Presentation
 } from 'lucide-react';
 
 export const getFileIcon = (fileType: FileType) => {
@@ -30,7 +29,7 @@ export const getFileIcon = (fileType: FileType) => {
     case 'spreadsheet':
       return FileSpreadsheet;
     case 'presentation':
-      return FilePresentationIcon;
+      return Presentation;
     case 'archive':
       return Archive;
     case 'code':
