@@ -190,7 +190,7 @@ const endpointDetails: Record<string, EndpointDetails> = {
     id: 'd3',
     software: [
       { name: 'Microsoft Office', version: '2019', installDate: '2022-08-10', publisher: 'Microsoft', updateAvailable: true },
-      { name: 'Google Chrome', version: '112.0.5615.121', installDate: '2023-04-05', publisher: 'Google', updateAvailable: true },
+      { name: 'Google Chrome', version: '112.0.5481.177', installDate: '2023-04-05', publisher: 'Google', updateAvailable: true },
       { name: 'QuickBooks', version: '2022', installDate: '2022-12-20', publisher: 'Intuit', updateAvailable: true },
       { name: 'Zoom', version: '5.13.5', installDate: '2023-06-10', publisher: 'Zoom Video Communications', updateAvailable: false }
     ],
@@ -249,6 +249,7 @@ const WorkforceEMS = () => {
   const [filters, setFilters] = useState<WorkforceFilter>({});
   const [groupBy, setGroupBy] = useState('department');
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [isAdmin] = useState(true);
 
   const handleDisconnectVPN = (sessionId: string) => {
     toast({
