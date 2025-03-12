@@ -51,17 +51,19 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <ThemeContext.Provider value={{ 
-      isDarkMode, 
-      toggleDarkMode, 
-      primaryColor, 
-      setPrimaryColor: (color) => {
-        setPrimaryColor(color);
-        localStorage.setItem('primaryColor', color);
-      }
-    }}>
+    <ThemeContext.Provider 
+      value={{ 
+        isDarkMode, 
+        toggleDarkMode, 
+        primaryColor, 
+        setPrimaryColor: (color) => {
+          setPrimaryColor(color);
+          localStorage.setItem('primaryColor', color);
+        }
+      }}
+    >
       {children}
-    </ThemeProvider>
+    </ThemeContext.Provider>
   );
 };
 
