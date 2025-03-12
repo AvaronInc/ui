@@ -96,7 +96,7 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
       <div className="min-h-screen flex w-full">
         <Sidebar className="border-r bg-sidebar">
           <SidebarHeader className="px-6 py-5 flex items-center">
-            <h2 className="text-xl font-semibold">IT Central</h2>
+            <h2 className="text-xl font-semibold">Network Pulse Management</h2>
           </SidebarHeader>
           <SidebarContent className="px-3 py-4">
             <SidebarMenu>
