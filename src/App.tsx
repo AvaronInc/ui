@@ -12,6 +12,7 @@ import Tickets from "./pages/Tickets";
 import Projects from "./pages/Projects";
 import Identity from "./pages/Identity";
 import Storage from "./pages/Storage";
+import Security from "./pages/Security";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/identity" element={<Identity />} />
             <Route path="/topology" element={<NotFound />} />
             <Route path="/storage" element={<Storage />} />
+            <Route path="/security" element={<Security />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

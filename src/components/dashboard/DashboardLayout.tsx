@@ -73,6 +73,11 @@ const navItems = [
     title: 'Storage',
     icon: HardDrive,
     href: '/storage'
+  },
+  {
+    title: 'Security',
+    icon: Shield,
+    href: '/security'
   }
 ];
 
