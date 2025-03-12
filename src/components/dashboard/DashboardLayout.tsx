@@ -96,13 +96,14 @@ const navItems = [
 
 export const DashboardLayout = ({ children, className }: DashboardLayoutProps) => {
   const location = useLocation();
+  const systemName = localStorage.getItem('systemName') || 'Network Pulse Management';
   
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <Sidebar className="border-r bg-sidebar">
           <SidebarHeader className="px-6 py-5 flex items-center justify-center">
-            <h2 className="text-xl font-semibold">Network Pulse Management</h2>
+            <h2 className="text-xl font-semibold text-sidebar-foreground">{systemName}</h2>
           </SidebarHeader>
           <SidebarContent className="px-3 py-4">
             <SidebarMenu>

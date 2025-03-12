@@ -13,11 +13,13 @@ const GeneralSettings = () => {
   const { toast } = useToast();
   const { isDarkMode, toggleDarkMode, primaryColor, setPrimaryColor } = useTheme();
   const [maintenanceMode, setMaintenanceMode] = useState(false);
-  const [systemName, setSystemName] = useState('Network Pulse Management');
+  const [systemName, setSystemName] = useState(localStorage.getItem('systemName') || 'Network Pulse Management');
   const [timeZone, setTimeZone] = useState('UTC');
   const [defaultLanguage, setDefaultLanguage] = useState('en-US');
   
   const handleSave = () => {
+    localStorage.setItem('systemName', systemName);
+    
     toast({
       title: "Settings saved",
       description: "Your general settings have been updated successfully.",
@@ -25,8 +27,9 @@ const GeneralSettings = () => {
   };
   
   const handleReset = () => {
-    setMaintenanceMode(false);
-    setSystemName('Network Pulse Management');
+    const defaultName = 'Network Pulse Management';
+    setSystemName(defaultName);
+    localStorage.setItem('systemName', defaultName);
     setTimeZone('UTC');
     setDefaultLanguage('en-US');
     setPrimaryColor('blue');
@@ -81,7 +84,7 @@ const GeneralSettings = () => {
                 className="mt-1.5"
               />
               <p className="text-sm text-muted-foreground mt-1.5">
-                This name appears on the login screen and browser title.
+                This name appears throughout the application interface.
               </p>
             </div>
           </div>
