@@ -20,7 +20,8 @@ import {
   Ticket, 
   Briefcase, 
   Users, 
-  HardDrive, 
+  HardDrive,
+  Network,
   Settings, 
   LogOut
 } from 'lucide-react';
@@ -52,6 +53,11 @@ const navItems = [
     title: 'Tickets',
     icon: Ticket,
     href: '/tickets'
+  },
+  {
+    title: 'Topology',
+    icon: Network,
+    href: '/topology'
   },
   {
     title: 'Projects',

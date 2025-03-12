@@ -25,6 +25,7 @@ const App = () => (
             <Route path="/rmm" element={<RMM />} />
             <Route path="/ipam" element={<IPAM />} />
             <Route path="/tickets" element={<Tickets />} />
+            <Route path="/topology" element={<NotFound />} />
             <Route path="/projects" element={<NotFound />} />
             <Route path="/identity" element={<NotFound />} />
             <Route path="/storage" element={<NotFound />} />
