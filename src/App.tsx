@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import RMM from "./pages/RMM";
+import IPAM from "./pages/IPAM";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,12 +22,11 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/rmm" element={<RMM />} />
-            <Route path="/ipam" element={<NotFound />} />
+            <Route path="/ipam" element={<IPAM />} />
             <Route path="/tickets" element={<NotFound />} />
             <Route path="/projects" element={<NotFound />} />
             <Route path="/identity" element={<NotFound />} />
             <Route path="/storage" element={<NotFound />} />
-            <Route path="/settings" element={<NotFound />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
