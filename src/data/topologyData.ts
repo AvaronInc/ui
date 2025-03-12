@@ -1,5 +1,4 @@
-
-import { NetworkDevice, NetworkConnection, NetworkLog, NetworkAlert, DiagnosticData } from '@/types/topology';
+import { NetworkDevice, NetworkConnection, NetworkLog, NetworkAlert, DiagnosticData, BandwidthData } from '@/types/topology';
 
 // Generate mock devices
 const mockNetworkDevices: NetworkDevice[] = [
