@@ -18,6 +18,7 @@ interface StatusCardProps {
   description: string;
   updated?: string;
   className?: string;
+  style?: React.CSSProperties;
   onClick?: () => void;
 }
 
@@ -54,6 +55,7 @@ export const StatusCard = ({
   description, 
   updated,
   className,
+  style,
   onClick
 }: StatusCardProps) => {
   const config = statusConfig[status];
@@ -66,6 +68,7 @@ export const StatusCard = ({
         onClick && "cursor-pointer",
         className
       )}
+      style={style}
       onClick={onClick}
     >
       <CardHeader className="pb-2">

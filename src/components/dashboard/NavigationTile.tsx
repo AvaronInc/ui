@@ -12,6 +12,7 @@ interface NavigationTileProps {
   href: string;
   color?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const NavigationTile = ({ 
@@ -20,14 +21,17 @@ export const NavigationTile = ({
   icon: Icon, 
   href,
   color = "bg-primary/10 text-primary",
-  className 
+  className,
+  style
 }: NavigationTileProps) => {
   return (
     <Link to={href}>
       <Card className={cn(
         "glass-card h-full overflow-hidden animated-card", 
         className
-      )}>
+      )}
+      style={style}
+      >
         <CardContent className="p-6">
           <div className="flex flex-col items-start gap-4">
             <div className={cn(

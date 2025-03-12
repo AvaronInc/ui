@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Device, DeviceAlert } from '@/types/rmm';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
@@ -16,7 +15,7 @@ import {
   Wrench, 
   Ticket,
   Cpu,
-  Memory,
+  HardDrive,
   Network
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -172,7 +171,7 @@ export const DeviceDetailPanel = ({ device, isOpen, onClose }: DeviceDetailPanel
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Memory className="h-4 w-4" />
+                  <HardDrive className="h-4 w-4" />
                   Memory Usage
                 </CardTitle>
               </CardHeader>

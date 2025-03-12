@@ -49,8 +49,8 @@ export const MetricsChart = ({
   
   const chartColors = colors || defaultColors[type];
   
-  const formatYAxis = (value: number) => {
-    return percentage ? `${value}%` : value;
+  const formatYAxis = (value: number, index: number): string => {
+    return percentage ? `${value}%` : String(value);
   };
   
   const renderChart = () => {
@@ -89,7 +89,7 @@ export const MetricsChart = ({
                   border: '1px solid #f0f0f0',
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.01)',
                 }}
-                formatter={(value: number) => [percentage ? `${value}%` : value, title]}
+                formatter={(value: number) => [percentage ? `${value}%` : String(value), title]}
               />
               <Area 
                 type="monotone" 
@@ -130,7 +130,7 @@ export const MetricsChart = ({
                   border: '1px solid #f0f0f0',
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.01)',
                 }}
-                formatter={(value: number) => [percentage ? `${value}%` : value, title]}
+                formatter={(value: number) => [percentage ? `${value}%` : String(value), title]}
               />
               <Bar 
                 dataKey={value} 
