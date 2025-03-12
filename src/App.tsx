@@ -11,6 +11,7 @@ import IPAM from "./pages/IPAM";
 import Tickets from "./pages/Tickets";
 import Projects from "./pages/Projects";
 import Identity from "./pages/Identity";
+import Storage from "./pages/Storage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,7 +31,7 @@ const App = () => (
             <Route path="/projects" element={<Projects />} />
             <Route path="/identity" element={<Identity />} />
             <Route path="/topology" element={<NotFound />} />
-            <Route path="/storage" element={<NotFound />} />
+            <Route path="/storage" element={<Storage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
