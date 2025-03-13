@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,18 +16,12 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { Bell, LogOut, User, Settings, HelpCircle } from 'lucide-react';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
-import ProfileDialog from '@/components/profile/ProfileDialog';
+import { toast } from 'sonner';
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
-  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
-  
-  // Use useEffect to log dialog state changes
-  useEffect(() => {
-    console.log('Profile dialog state changed to:', profileDialogOpen);
-  }, [profileDialogOpen]);
   
   useEffect(() => {
     // Set up initial company name
@@ -72,15 +66,11 @@ const DashboardHeader = () => {
   };
   
   const handleProfileClick = () => {
-    console.log('Opening profile dialog from menu click');
-    setProfileDialogOpen(true);
+    toast("Profile feature coming soon", {
+      description: "This feature has not been implemented yet.",
+      duration: 3000,
+    });
   };
-
-  // Simple handler that just updates state directly
-  const handleProfileDialogChange = useCallback((open: boolean) => {
-    console.log('Dialog onOpenChange called with:', open);
-    setProfileDialogOpen(open);
-  }, []);
   
   return (
     <header className="w-full flex items-center justify-between">
@@ -144,12 +134,6 @@ const DashboardHeader = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      
-      {/* Use the directly imported ProfileDialog */}
-      <ProfileDialog 
-        open={profileDialogOpen} 
-        onOpenChange={handleProfileDialogChange} 
-      />
     </header>
   );
 };
