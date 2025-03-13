@@ -1,16 +1,27 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
 import { Settings, LogOut } from 'lucide-react';
 import { SidebarFooter as Footer, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const SidebarFooter: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut, isAdmin } = useAuth();
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   
   const handleSettingsClick = () => {
     navigate('/settings');
@@ -22,12 +33,14 @@ const SidebarFooter: React.FC = () => {
     }, 100);
   };
   
-  const handleLogout = async () => {
+  const confirmLogout = async () => {
     try {
       await signOut();
       navigate('/auth');
     } catch (error) {
       console.error('Failed to log out:', error);
+    } finally {
+      setLogoutDialogOpen(false);
     }
   };
 
@@ -57,7 +70,7 @@ const SidebarFooter: React.FC = () => {
             <Button 
               variant="ghost" 
               className="nav-link w-full justify-start"
-              onClick={handleLogout}
+              onClick={() => setLogoutDialogOpen(true)}
             >
               <LogOut className="h-5 w-5 mr-3" />
               <span>Log out</span>
@@ -65,6 +78,21 @@ const SidebarFooter: React.FC = () => {
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
+
+      <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to log out? Any unsaved changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmLogout}>Log out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Footer>
   );
 };

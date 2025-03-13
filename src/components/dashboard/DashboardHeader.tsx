@@ -17,11 +17,22 @@ import { useAuth } from '@/context/AuthContext';
 import { Bell, LogOut, User, Settings, HelpCircle } from 'lucide-react';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   
   useEffect(() => {
     // Set up initial company name
@@ -70,6 +81,17 @@ const DashboardHeader = () => {
       description: "This feature has not been implemented yet.",
       duration: 3000,
     });
+  };
+
+  const confirmLogout = async () => {
+    try {
+      await signOut();
+      navigate('/auth');
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    } finally {
+      setLogoutDialogOpen(false);
+    }
   };
   
   return (
@@ -127,13 +149,31 @@ const DashboardHeader = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={signOut} className="text-red-600 focus:text-red-600 cursor-pointer">
+            <DropdownMenuItem 
+              onClick={() => setLogoutDialogOpen(true)} 
+              className="text-red-600 focus:text-red-600 cursor-pointer"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to log out? Any unsaved changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmLogout}>Log out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </header>
   );
 };
