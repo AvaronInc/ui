@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Clock, Database, CloudStorage, HardDrive } from 'lucide-react';
+import { Clock, Database, Cloud, HardDrive } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 interface BackupSettingsFormValues {
@@ -151,7 +151,7 @@ const BackupSettings = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
-                      <CloudStorage className="h-4 w-4" />
+                      <Cloud className="h-4 w-4" />
                       Primary Backup Location
                     </FormLabel>
                     <Select
