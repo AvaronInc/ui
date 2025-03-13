@@ -145,8 +145,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
       
+      // Clear local state
+      setSession(null);
+      setUser(null);
+      
+      // Show success message
       toast.success('Logged out successfully');
+      
+      // Navigate is handled by components that call this function
     } catch (error: any) {
+      console.error('Error signing out:', error.message);
       toast.error(error.message || 'Error signing out');
     } finally {
       setIsLoading(false);
