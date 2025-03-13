@@ -1,7 +1,7 @@
 
 import { useToast } from '@/hooks/use-toast';
 import { UseFormReturn } from 'react-hook-form';
-import { FormValues } from '../schema';
+import { FormValues, defaultSettings } from '../schema';
 
 interface UseSettingsSubmitProps {
   form: UseFormReturn<FormValues>;
@@ -24,28 +24,36 @@ export const useSettingsSubmit = ({
     try {
       console.log('Submitting settings:', data);
       
-      // Store data in localStorage (for simplicity in this example)
-      localStorage.setItem('companyName', data.companyName);
-      localStorage.setItem('systemName', data.systemName);
+      // Validate and provide fallbacks for all required fields
+      const safeData = {
+        ...data,
+        // Ensure required fields are never empty
+        companyName: data.companyName || defaultSettings.companyName,
+        systemName: data.systemName || defaultSettings.systemName,
+        timeZone: data.timeZone || defaultSettings.timeZone,
+        dateFormat: data.dateFormat || defaultSettings.dateFormat,
+        language: data.language || defaultSettings.language,
+        // Optional fields can be empty
+        supportEmail: data.supportEmail || '',
+        helpdeskPhone: data.helpdeskPhone || ''
+      };
       
-      // Make sure timeZone is never empty
-      localStorage.setItem('timeZone', data.timeZone || 'UTC');
-      
-      // Ensure dateFormat is never empty
-      localStorage.setItem('dateFormat', data.dateFormat || 'MM/DD/YYYY');
-      
-      // Make sure language is never empty
-      localStorage.setItem('language', data.language || 'en-US');
-      
-      localStorage.setItem('supportEmail', data.supportEmail || '');
-      localStorage.setItem('helpdeskPhone', data.helpdeskPhone || '');
+      // Store validated data in localStorage
+      localStorage.setItem('companyName', safeData.companyName);
+      localStorage.setItem('systemName', safeData.systemName);
+      localStorage.setItem('timeZone', safeData.timeZone);
+      localStorage.setItem('dateFormat', safeData.dateFormat);
+      localStorage.setItem('language', safeData.language);
+      localStorage.setItem('supportEmail', safeData.supportEmail);
+      localStorage.setItem('helpdeskPhone', safeData.helpdeskPhone);
       localStorage.setItem('maintenanceMode', maintenanceMode.toString());
       
       if (companyLogo) {
         localStorage.setItem('companyLogo', companyLogo);
       }
       
-      // In a real app, you would also persist to a database here
+      // Update the form with the validated data
+      form.reset(safeData);
       
       toast({
         title: "Settings updated",
@@ -63,12 +71,12 @@ export const useSettingsSubmit = ({
   
   const handleReset = () => {
     // Reset the form to its default values
-    form.reset();
+    form.reset(defaultSettings);
     
     // Also clear any logo that might have been uploaded
     setCompanyLogo(localStorage.getItem('companyLogo'));
     
-    // Reset maintenance mode from localStorage
+    // Reset maintenance mode from localStorage or default to false
     setMaintenanceMode(localStorage.getItem('maintenanceMode') === 'true');
     
     toast({

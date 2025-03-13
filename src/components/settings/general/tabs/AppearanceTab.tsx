@@ -53,6 +53,9 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
   primaryColor,
   setPrimaryColor
 }) => {
+  // Ensure primaryColor is never empty
+  const safeColor = primaryColor || "blue";
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -105,8 +108,8 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
           <FormLabel>Primary Color</FormLabel>
           <Select 
             onValueChange={setPrimaryColor} 
-            defaultValue={primaryColor || "blue"}
-            value={primaryColor || "blue"}
+            defaultValue={safeColor}
+            value={safeColor}
           >
             <FormControl>
               <SelectTrigger>
