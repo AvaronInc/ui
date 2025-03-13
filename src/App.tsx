@@ -19,6 +19,7 @@ import Topology from "./pages/Topology";
 import Nest from "./pages/Nest";
 import AdminSettings from "./pages/AdminSettings";
 import SDMS from "./pages/SDMS";
+import EmailSecurity from "./pages/EmailSecurity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const App = () => (
               <Route path="/workforce" element={<WorkforceEMS />} />
               <Route path="/settings" element={<AdminSettings />} />
               <Route path="/sdms" element={<SDMS />} />
+              <Route path="/email-security" element={<EmailSecurity />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>
