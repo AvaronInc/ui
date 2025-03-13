@@ -172,6 +172,80 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          created_at: string
+          domain: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          settings: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          settings?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          settings?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      company_systems: {
+        Row: {
+          company_id: string
+          config: Json | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          status: string | null
+          system_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          config?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          status?: string | null
+          system_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          config?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          status?: string | null
+          system_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_systems_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       features: {
         Row: {
           created_at: string
@@ -575,6 +649,44 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          avatar_url: string | null
+          company_id: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profiles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_records: {
         Row: {
           created_at: string
@@ -659,6 +771,7 @@ export type Database = {
     Enums: {
       admin_role: "Super Admin" | "Admin"
       server_status: "running" | "stopped" | "maintenance" | "error"
+      user_role: "admin" | "manager" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
