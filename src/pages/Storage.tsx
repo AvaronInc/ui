@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
@@ -11,9 +10,7 @@ import FileDetailPanel from '@/components/storage/FileDetailPanel';
 import FileToolbar from '@/components/storage/FileToolbar';
 import { FileItem, FileFilter } from '@/types/storage';
 
-// Mock data - replace with actual API calls later
 const fetchFiles = async (): Promise<FileItem[]> => {
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
   
   return [
@@ -118,7 +115,6 @@ const Storage = () => {
     setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
-  // Filter files based on current path
   const currentFiles = files.filter(file => 
     JSON.stringify(file.path) === JSON.stringify(currentPath.slice(0, -1)) && 
     file.parentId === (currentPath.length === 1 ? null : currentPath[currentPath.length - 2])
@@ -138,7 +134,7 @@ const Storage = () => {
           <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-3 w-[400px]">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="buckets">Bucket Management</TabsTrigger>
+              <TabsTrigger value="buckets">S3 Management</TabsTrigger>
               <TabsTrigger value="files">File Browser</TabsTrigger>
             </TabsList>
             
