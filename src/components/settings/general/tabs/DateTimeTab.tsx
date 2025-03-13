@@ -35,6 +35,12 @@ const timeZones = [
   { value: "Australia/Sydney", label: "Sydney" }
 ];
 
+// Date format options with guaranteed non-empty values
+const dateFormats = [
+  { value: "MM/DD/YYYY", label: "MM/DD/YYYY" },
+  { value: "DD/MM/YYYY", label: "DD/MM/YYYY" }
+];
+
 const DateTimeTab: React.FC<DateTimeTabProps> = ({ form }) => {
   return (
     <div className="space-y-6">
@@ -56,7 +62,6 @@ const DateTimeTab: React.FC<DateTimeTabProps> = ({ form }) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {/* Only render items with guaranteed non-empty values */}
                   {timeZones.map((timeZone) => (
                     <SelectItem key={timeZone.value} value={timeZone.value}>
                       {timeZone.label}
@@ -89,8 +94,11 @@ const DateTimeTab: React.FC<DateTimeTabProps> = ({ form }) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
-                  <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                  {dateFormats.map(format => (
+                    <SelectItem key={format.value} value={format.value}>
+                      {format.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormDescription>

@@ -20,18 +20,20 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       
+      // Default valid values to use if stored values are invalid
+      const validDateFormats = ['MM/DD/YYYY', 'DD/MM/YYYY'];
+      const validLanguages = ['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'ja-JP', 'zh-CN'];
+      
       // Load from localStorage with proper fallbacks for all fields
       let storedDateFormat = localStorage.getItem('dateFormat') || '';
       // Enforce type safety for dateFormat
-      if (storedDateFormat !== 'MM/DD/YYYY' && storedDateFormat !== 'DD/MM/YYYY') {
+      if (!validDateFormats.includes(storedDateFormat)) {
         storedDateFormat = defaultSettings.dateFormat;
       }
       
       // Get language with a safe default
       const storedLanguage = localStorage.getItem('language') || '';
-      const safeLanguage = 
-        storedLanguage && 
-        ['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'ja-JP', 'zh-CN'].includes(storedLanguage) 
+      const safeLanguage = validLanguages.includes(storedLanguage) 
         ? storedLanguage 
         : defaultSettings.language;
       
@@ -42,12 +44,9 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
       
       const storedSettings: FormValues = {
         companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
-        // Use safe values for required fields
         timeZone: safeTimeZone,
-        // Use the validated dateFormat
         dateFormat: storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY',
         systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
-        // Use safe language value
         language: safeLanguage,
         supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
         helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,

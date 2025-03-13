@@ -28,11 +28,14 @@ const TicketActions = ({
   const [selectedTechnician, setSelectedTechnician] = useState<string>('');
   
   const handleAssignTicket = () => {
-    if (selectedTechnician) {
+    if (selectedTechnician && selectedTechnician !== "unassigned") {
       onAssignTicket(ticket.id, selectedTechnician);
       setSelectedTechnician('');
     }
   };
+
+  // Filter out any potentially empty technician values
+  const validTechnicians = technicians.filter(tech => tech && tech.trim() !== '');
 
   return (
     <div className="space-y-2">
@@ -75,9 +78,8 @@ const TicketActions = ({
               <SelectValue placeholder="Assign to technician" />
             </SelectTrigger>
             <SelectContent>
-              {/* Add a default item with a non-empty value */}
               <SelectItem value="unassigned">Select a technician</SelectItem>
-              {technicians.filter(tech => tech).map(tech => (
+              {validTechnicians.map(tech => (
                 <SelectItem key={tech} value={tech}>{tech}</SelectItem>
               ))}
             </SelectContent>

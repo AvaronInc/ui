@@ -22,6 +22,17 @@ interface S3BucketConnectionProps {
   visible: boolean;
 }
 
+// Predefined regions with guaranteed non-empty values
+const regions = [
+  { value: "us-east-1", label: "US East (N. Virginia)" },
+  { value: "us-east-2", label: "US East (Ohio)" },
+  { value: "us-west-1", label: "US West (N. California)" },
+  { value: "us-west-2", label: "US West (Oregon)" },
+  { value: "eu-west-1", label: "EU (Ireland)" },
+  { value: "eu-central-1", label: "EU (Frankfurt)" },
+  { value: "ap-northeast-1", label: "Asia Pacific (Tokyo)" }
+];
+
 const S3BucketConnection = ({ form, visible }: S3BucketConnectionProps) => {
   if (!visible) return null;
 
@@ -50,7 +61,8 @@ const S3BucketConnection = ({ form, visible }: S3BucketConnectionProps) => {
               <FormLabel>Region</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                defaultValue={field.value || "us-east-1"}
+                value={field.value || "us-east-1"}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -58,13 +70,11 @@ const S3BucketConnection = ({ form, visible }: S3BucketConnectionProps) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="us-east-1">US East (N. Virginia)</SelectItem>
-                  <SelectItem value="us-east-2">US East (Ohio)</SelectItem>
-                  <SelectItem value="us-west-1">US West (N. California)</SelectItem>
-                  <SelectItem value="us-west-2">US West (Oregon)</SelectItem>
-                  <SelectItem value="eu-west-1">EU (Ireland)</SelectItem>
-                  <SelectItem value="eu-central-1">EU (Frankfurt)</SelectItem>
-                  <SelectItem value="ap-northeast-1">Asia Pacific (Tokyo)</SelectItem>
+                  {regions.map(region => (
+                    <SelectItem key={region.value} value={region.value}>
+                      {region.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormItem>
