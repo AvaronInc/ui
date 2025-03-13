@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
@@ -233,7 +232,6 @@ const Projects = () => {
     searchQuery: ''
   });
 
-  // Get unique teams from projects
   const teams = Array.from(
     new Set(projects.map(project => project.team.id))
   ).map(teamId => {
@@ -267,7 +265,6 @@ const Projects = () => {
         return { ...t, completed: !t.completed };
       });
       
-      // Calculate new progress percentage
       const totalTasks = updatedTasks.length;
       const completedTasks = updatedTasks.filter(t => t.completed).length;
       const newProgressPercentage = totalTasks > 0 
@@ -311,27 +308,21 @@ const Projects = () => {
       return;
     }
     
-    // In a real app, we'd mark these as archived in the database
-    // For this demo, we'll just show a toast
     toast({
       title: `${completedProjects.length} projects archived`,
       description: "All completed projects have been archived.",
     });
   };
 
-  // Filter projects
   const filteredProjects = projects.filter(project => {
-    // Filter by status
     if (filter.status && filter.status !== 'all' && project.status !== filter.status) {
       return false;
     }
     
-    // Filter by team
     if (filter.teamId && filter.teamId !== 'all' && project.team.id !== filter.teamId) {
       return false;
     }
     
-    // Filter by search query
     if (filter.searchQuery) {
       const query = filter.searchQuery.toLowerCase();
       return (
@@ -392,8 +383,10 @@ const Projects = () => {
             onNewProject={handleNewProject}
           />
           
-          <div className="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={`md:col-span-${selectedProject ? 2 : 3} overflow-auto`}>
+          <div className="flex-1 overflow-hidden grid grid-cols-1 gap-6" style={{ 
+            gridTemplateColumns: selectedProject ? '3fr 1fr' : '1fr' 
+          }}>
+            <div className="overflow-auto">
               <ProjectList 
                 projects={filteredProjects} 
                 onProjectSelect={handleProjectSelect}
@@ -402,7 +395,7 @@ const Projects = () => {
             </div>
             
             {selectedProject && (
-              <div className="md:col-span-1 border rounded-lg bg-card overflow-hidden">
+              <div className="border rounded-lg bg-card overflow-hidden">
                 <ProjectDetailPanel 
                   project={selectedProject} 
                   onClose={handleClosePanel}
