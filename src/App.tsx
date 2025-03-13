@@ -20,6 +20,7 @@ import Nest from "./pages/Nest";
 import AdminSettings from "./pages/AdminSettings";
 import SDMS from "./pages/SDMS";
 import EmailSecurity from "./pages/EmailSecurity";
+import AssetManagement from "./pages/AssetManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/settings" element={<AdminSettings />} />
               <Route path="/sdms" element={<SDMS />} />
               <Route path="/email-security" element={<EmailSecurity />} />
+              <Route path="/asset-management" element={<AssetManagement />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>

@@ -28,7 +28,8 @@ import {
   Laptop,
   MapPin,
   FileText,
-  Mail
+  Mail,
+  Server
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -94,6 +95,11 @@ const navItems = [
     title: 'Email Security',
     icon: Mail,
     href: '/email-security'
+  },
+  {
+    title: 'Asset Management',
+    icon: Server,
+    href: '/asset-management'
   },
   {
     title: 'Workforce EMS',
