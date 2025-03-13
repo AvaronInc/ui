@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
@@ -27,7 +27,14 @@ import NotFound from "./pages/NotFound";
 import Automation from "./pages/Automation";
 import Auth from "./pages/Auth";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -51,7 +58,7 @@ const App = () => (
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
                 <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
                 <Route path="/workforce" element={<ProtectedRoute><WorkforceEMS /></ProtectedRoute>} />
-                <Route path="/settings" element={<ProtectedRoute adminOnly={true}><AdminSettings /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
                 <Route path="/sdms" element={<ProtectedRoute><SDMS /></ProtectedRoute>} />
                 <Route path="/email-security" element={<ProtectedRoute><EmailSecurity /></ProtectedRoute>} />
                 <Route path="/asset-management" element={<ProtectedRoute><AssetManagement /></ProtectedRoute>} />

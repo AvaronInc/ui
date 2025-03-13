@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -34,6 +34,7 @@ const tenants = [
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [selectedTenant, setSelectedTenant] = useState(tenants[0].id);
   const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
   
@@ -79,6 +80,16 @@ const DashboardHeader = () => {
     setSelectedTenant(tenantId);
     // In a real app, you would perform actions like switching context, loading tenant-specific data, etc.
     console.log(`Switched to tenant: ${tenantId}`);
+  };
+  
+  const handleSettingsClick = () => {
+    navigate('/settings');
+    // Force a full page reload to ensure proper routing
+    setTimeout(() => {
+      if (window.location.pathname !== '/settings') {
+        window.location.href = '/settings';
+      }
+    }, 100);
   };
   
   return (
@@ -146,12 +157,12 @@ const DashboardHeader = () => {
                 <span>Profile</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings" className="flex items-center cursor-pointer">
+            {isAdmin && (
+              <DropdownMenuItem onClick={handleSettingsClick} className="flex items-center cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
-              </Link>
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem asChild>
               <Link to="/help" className="flex items-center cursor-pointer">
                 <HelpCircle className="mr-2 h-4 w-4" />
