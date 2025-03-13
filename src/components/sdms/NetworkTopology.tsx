@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NetworkDevice, NetworkFlow } from '@/types/sdms';
 import { ReactFlow, Controls, Background, Node, Edge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { AlertCircle, Activity } from 'lucide-react';
+import { AlertCircle, Activity, Network as NetworkIcon } from 'lucide-react';
 
 // Mock data for network devices
 const mockDevices: NetworkDevice[] = [
@@ -100,7 +99,7 @@ const NetworkTopology = () => {
           <Card className="h-full">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Network className="h-5 w-5" />
+                <NetworkIcon className="h-5 w-5" />
                 <span>Network Topology Map</span>
               </CardTitle>
               <CardDescription>

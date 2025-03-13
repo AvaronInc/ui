@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,11 +5,10 @@ import { ComplianceReport } from '@/types/sdms';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileCheck, AlertTriangle, Calendar, Download } from 'lucide-react';
 
-// Mock compliance reports
 const mockReports: ComplianceReport[] = [
   {
     id: 'rep-1',
@@ -286,77 +284,60 @@ const ComplianceReports = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Form>
-                    <div className="space-y-4">
-                      <FormField
-                        name="frequency"
-                        render={() => (
-                          <FormItem>
-                            <FormLabel>Report Frequency</FormLabel>
-                            <Select defaultValue={reportFrequency} onValueChange={setReportFrequency}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select frequency" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="daily">Daily</SelectItem>
-                                <SelectItem value="weekly">Weekly</SelectItem>
-                                <SelectItem value="monthly">Monthly</SelectItem>
-                                <SelectItem value="quarterly">Quarterly</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        name="standards"
-                        render={() => (
-                          <FormItem>
-                            <FormLabel>Compliance Standards</FormLabel>
-                            <Select defaultValue="all">
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select standards" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="all">All Standards</SelectItem>
-                                <SelectItem value="gdpr">GDPR</SelectItem>
-                                <SelectItem value="hipaa">HIPAA</SelectItem>
-                                <SelectItem value="soc2">SOC 2</SelectItem>
-                                <SelectItem value="pci">PCI DSS</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        name="delivery"
-                        render={() => (
-                          <FormItem>
-                            <FormLabel>Delivery Method</FormLabel>
-                            <Select defaultValue="email">
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select delivery method" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="email">Email</SelectItem>
-                                <SelectItem value="storage">Save to Storage</SelectItem>
-                                <SelectItem value="both">Email & Storage</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <Button className="w-full">Save Schedule</Button>
+                  <div className="space-y-4">
+                    <div>
+                      <FormLabel>Report Frequency</FormLabel>
+                      <Select defaultValue={reportFrequency} onValueChange={setReportFrequency}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select frequency" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="daily">Daily</SelectItem>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                          <SelectItem value="monthly">Monthly</SelectItem>
+                          <SelectItem value="quarterly">Quarterly</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                  </Form>
+                    
+                    <div>
+                      <FormLabel>Compliance Standards</FormLabel>
+                      <Select defaultValue="all">
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select standards" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="all">All Standards</SelectItem>
+                          <SelectItem value="gdpr">GDPR</SelectItem>
+                          <SelectItem value="hipaa">HIPAA</SelectItem>
+                          <SelectItem value="soc2">SOC 2</SelectItem>
+                          <SelectItem value="pci">PCI DSS</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <FormLabel>Delivery Method</FormLabel>
+                      <Select defaultValue="email">
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select delivery method" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="storage">Save to Storage</SelectItem>
+                          <SelectItem value="both">Email & Storage</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <Button className="w-full">Save Schedule</Button>
+                  </div>
                 </div>
                 
                 <div className="space-y-4">
