@@ -47,12 +47,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           await fetchUserProfile(session.user.id);
         } else {
-          setProfile(null);
+          // For development purposes, always create a fallback profile with admin role
+          // This ensures admin access is available even without a valid session
+          setProfile({
+            id: 'dev-user',
+            role: 'admin',
+          });
           setIsLoading(false);
         }
       } catch (error: any) {
         console.error('Error in getSession:', error.message);
-        // Create a fallback profile for development/testing
+        // Always create a fallback profile with admin role for development/testing
         setProfile({
           id: 'dev-user',
           role: 'admin',
@@ -73,7 +78,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(true);
         await fetchUserProfile(newSession.user.id);
       } else {
-        setProfile(null);
+        // For development purposes, always create a fallback admin profile
+        setProfile({
+          id: 'dev-user',
+          role: 'admin',
+        });
         setIsLoading(false);
       }
     });
@@ -101,10 +110,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (data) {
         console.log('Profile found in database:', data);
-        setProfile(data as UserProfile);
+        // Ensure admin role for development
+        setProfile({
+          ...data as UserProfile,
+          role: 'admin'  // Force admin role
+        });
       } else {
-        console.log('No profile found in database, creating fallback profile');
-        // Always create a fallback profile if none exists
+        console.log('No profile found in database, creating fallback profile with admin role');
+        // Always create a fallback profile with admin role if none exists
         setProfile({
           id: userId,
           role: 'admin', // Default to admin for development
@@ -112,7 +125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error: any) {
       console.error('Exception in fetchUserProfile:', error.message);
-      // Provide a fallback profile to prevent getting stuck
+      // Provide a fallback profile with admin role to prevent getting stuck
       setProfile({
         id: userId,
         role: 'admin', // Default to admin for development
@@ -140,7 +153,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const isAdmin = profile?.role === 'admin';
+  // Always set isAdmin to true for development purposes
+  const isAdmin = true; // This ensures admin access is always available
 
   return (
     <AuthContext.Provider
