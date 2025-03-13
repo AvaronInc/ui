@@ -12,7 +12,7 @@ import DateTimeTab from './tabs/DateTimeTab';
 import ContactsTab from './tabs/ContactsTab';
 
 const GeneralSettings = () => {
-  const { isDarkMode, toggleDarkMode, primaryColor, setPrimaryColor } = useTheme();
+  const { isDarkMode, toggleDarkMode, primaryColor, setPrimaryColor, backgroundImage, setBackgroundImage } = useTheme();
   const {
     form,
     isLoading,
@@ -73,6 +73,8 @@ const GeneralSettings = () => {
                   toggleDarkMode={toggleDarkMode}
                   primaryColor={primaryColor}
                   setPrimaryColor={setPrimaryColor}
+                  backgroundImage={backgroundImage}
+                  setBackgroundImage={setBackgroundImage}
                 />
               </TabsContent>
               

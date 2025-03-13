@@ -25,6 +25,8 @@ interface AppearanceTabProps {
   toggleDarkMode: () => void;
   primaryColor: string;
   setPrimaryColor: (color: string) => void;
+  backgroundImage: string | null;
+  setBackgroundImage: (image: string | null) => void;
 }
 
 // Predefined language options with guaranteed non-empty values
@@ -48,12 +50,20 @@ const colors = [
   { value: "indigo", label: "Indigo" }
 ];
 
+// Background image options
+const backgroundOptions = [
+  { value: "", label: "None" },
+  { value: "/lovable-uploads/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png", label: "Blue Grid" }
+];
+
 const AppearanceTab: React.FC<AppearanceTabProps> = ({ 
   form, 
   isDarkMode, 
   toggleDarkMode,
   primaryColor,
-  setPrimaryColor
+  setPrimaryColor,
+  backgroundImage,
+  setBackgroundImage
 }) => {
   // Ensure primaryColor is never empty
   const safeColor = primaryColor || "blue";
@@ -130,6 +140,31 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
             The primary accent color for UI elements.
           </FormDescription>
         </div>
+      </div>
+      
+      <div className="space-y-2">
+        <FormLabel>Background Image</FormLabel>
+        <Select 
+          onValueChange={(value) => setBackgroundImage(value || null)} 
+          defaultValue={backgroundImage || ""}
+          value={backgroundImage || ""}
+        >
+          <FormControl>
+            <SelectTrigger>
+              <SelectValue placeholder="Select background image" />
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            {backgroundOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <FormDescription>
+          Choose a background image for the application.
+        </FormDescription>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ interface ThemeContextType {
   toggleDarkMode: () => void;
   primaryColor: string;
   setPrimaryColor: (color: string) => void;
+  backgroundImage: string | null;
+  setBackgroundImage: (image: string | null) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -13,6 +15,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [primaryColor, setPrimaryColor] = useState('blue');
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
     // Apply dark mode
@@ -20,7 +23,20 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     
     // Apply primary color
     document.documentElement.style.setProperty('--primary', getPrimaryColorHSL(primaryColor));
-  }, [isDarkMode, primaryColor]);
+    
+    // Apply or remove background image
+    const htmlElement = document.documentElement;
+    if (backgroundImage) {
+      htmlElement.style.backgroundImage = `url(${backgroundImage})`;
+      htmlElement.style.backgroundSize = 'cover';
+      htmlElement.style.backgroundAttachment = 'fixed';
+      htmlElement.style.backgroundPosition = 'center';
+      htmlElement.classList.add('has-background-image');
+    } else {
+      htmlElement.style.backgroundImage = '';
+      htmlElement.classList.remove('has-background-image');
+    }
+  }, [isDarkMode, primaryColor, backgroundImage]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
@@ -33,9 +49,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     const savedPrimaryColor = localStorage.getItem('primaryColor') || 'blue';
+    const savedBackgroundImage = localStorage.getItem('backgroundImage') || null;
     
     setIsDarkMode(savedDarkMode);
     setPrimaryColor(savedPrimaryColor);
+    setBackgroundImage(savedBackgroundImage);
   }, []);
 
   const getPrimaryColorHSL = (color: string) => {
@@ -59,6 +77,15 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         setPrimaryColor: (color) => {
           setPrimaryColor(color);
           localStorage.setItem('primaryColor', color);
+        },
+        backgroundImage,
+        setBackgroundImage: (image) => {
+          setBackgroundImage(image);
+          if (image) {
+            localStorage.setItem('backgroundImage', image);
+          } else {
+            localStorage.removeItem('backgroundImage');
+          }
         }
       }}
     >
