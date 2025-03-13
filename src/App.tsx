@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,7 @@ import WorkforceEMS from "./pages/WorkforceEMS";
 import Topology from "./pages/Topology";
 import Nest from "./pages/Nest";
 import AdminSettings from "./pages/AdminSettings";
+import SDMS from "./pages/SDMS";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,7 @@ const App = () => (
               <Route path="/security" element={<Security />} />
               <Route path="/workforce" element={<WorkforceEMS />} />
               <Route path="/settings" element={<AdminSettings />} />
+              <Route path="/sdms" element={<SDMS />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>

@@ -26,7 +26,8 @@ import {
   LogOut,
   Shield,
   Laptop,
-  MapPin
+  MapPin,
+  FileText
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -92,6 +93,11 @@ const navItems = [
     title: 'Workforce EMS',
     icon: Laptop,
     href: '/workforce'
+  },
+  {
+    title: 'SDMS',
+    icon: FileText,
+    href: '/sdms'
   }
 ];
 
