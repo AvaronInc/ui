@@ -25,12 +25,15 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   onOpenChange 
 }) => {
   const { user, profile } = useAuth();
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState('PowerUser'); // Default to PowerUser
   
   // Update nickname when profile changes or dialog opens
   useEffect(() => {
-    if (open) {
-      setNickname(profile?.full_name || '');
+    if (open && profile?.full_name) {
+      setNickname(profile.full_name);
+    } else if (open) {
+      // Fall back to PowerUser if no profile name exists
+      setNickname('PowerUser');
     }
   }, [profile, open]);
 
@@ -52,8 +55,8 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   };
   
   const handleCancel = () => {
-    // Reset form and close dialog
-    setNickname(profile?.full_name || '');
+    // Reset form to either the profile name or PowerUser, never empty string
+    setNickname(profile?.full_name || 'PowerUser');
     onOpenChange(false);
   };
   
@@ -101,7 +104,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
             <Input 
               id="nickname" 
               value={nickname} 
-              onChange={(e) => setNickname(e.target.value)} 
+              onChange={(e) => setNickname(e.target.value || 'PowerUser')} 
               placeholder="Enter your preferred name"
             />
             <span className="text-xs text-muted-foreground">
