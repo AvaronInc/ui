@@ -22,8 +22,8 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         // Get stored values with proper type handling for dateFormat
         const storedDateFormat = localStorage.getItem('dateFormat') || '';
         const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
-          ? storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY'
-          : 'MM/DD/YYYY' as const; // Default if invalid
+          ? (storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY')
+          : ('MM/DD/YYYY' as const); // Default if invalid
         
         const storedSettings: FormValues = {
           companyName: localStorage.getItem('companyName') || '',
@@ -37,6 +37,7 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         
         console.log('Loaded settings from localStorage:', storedSettings);
         
+        // Reset form with loaded values
         form.reset(storedSettings);
       } catch (error) {
         console.error('Error loading settings from localStorage:', error);
@@ -62,8 +63,8 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
       // Get stored values with proper type handling for dateFormat
       const storedDateFormat = localStorage.getItem('dateFormat') || '';
       const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
-        ? storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY'
-        : 'MM/DD/YYYY' as const; // Default if invalid
+        ? (storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY')
+        : ('MM/DD/YYYY' as const); // Default if invalid
       
       const storedSettings: FormValues = {
         companyName: localStorage.getItem('companyName') || '',
@@ -77,6 +78,7 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
       
       console.log('Loaded settings:', storedSettings);
       
+      // Reset form with loaded values
       form.reset(storedSettings);
     } catch (error) {
       console.error('Error loading settings:', error);

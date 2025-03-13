@@ -33,6 +33,7 @@ export const useSettingsSubmit = ({
       localStorage.setItem('supportEmail', data.supportEmail);
       localStorage.setItem('helpdeskPhone', data.helpdeskPhone);
       localStorage.setItem('maintenanceMode', maintenanceMode.toString());
+      
       if (companyLogo) {
         localStorage.setItem('companyLogo', companyLogo);
       }
