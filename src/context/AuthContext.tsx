@@ -140,6 +140,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       console.log('Signing out...');
+      
+      // Clear local state first (important to do this before the Supabase call)
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      
+      // Then sign out from Supabase
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -149,18 +156,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       console.log('Successfully signed out from Supabase');
       
-      // Clear local state
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      
       // Show success message
       toast.success('Logged out successfully');
       
       // Navigation is handled by the components that call this function
+      return Promise.resolve();
     } catch (error: any) {
       console.error('Error signing out:', error.message);
       toast.error(error.message || 'Error signing out');
+      return Promise.reject(error);
     } finally {
       setIsLoading(false);
     }

@@ -83,15 +83,19 @@ const DashboardHeader = () => {
     });
   };
 
-  const confirmLogout = async () => {
-    try {
-      await signOut();
-      navigate('/auth');
-    } catch (error) {
-      console.error('Failed to log out:', error);
-    } finally {
-      setLogoutDialogOpen(false);
-    }
+  const confirmLogout = () => {
+    // Close the dialog first
+    setLogoutDialogOpen(false);
+    
+    // Then perform the signOut operation
+    setTimeout(async () => {
+      try {
+        await signOut();
+        navigate('/auth');
+      } catch (error) {
+        console.error('Failed to log out:', error);
+      }
+    }, 100);
   };
   
   return (
