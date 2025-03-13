@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent, TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
-import { Search, Cpu, Clock, Map, Phone, Calendar, PlusCircle } from "lucide-react";
+import { Search, Cpu, Clock, Map, Phone, Calendar, PlusCircle, HardDrive, Network, Server } from "lucide-react";
 
 const AssetTrackingSection = () => {
   const [selectedAsset, setSelectedAsset] = useState<null | { id: string; name: string; }>(null);
@@ -206,7 +206,7 @@ const AssetTrackingSection = () => {
                   
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center">
-                      <Database className="h-4 w-4 mr-2 text-purple-500" />
+                      <HardDrive className="h-4 w-4 mr-2 text-purple-500" />
                       <span className="text-sm font-medium">Storage Usage</span>
                     </div>
                     <span className="text-sm">67%</span>
@@ -217,7 +217,7 @@ const AssetTrackingSection = () => {
                   
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center">
-                      <Activity className="h-4 w-4 mr-2 text-red-500" />
+                      <Network className="h-4 w-4 mr-2 text-red-500" />
                       <span className="text-sm font-medium">Network Traffic</span>
                     </div>
                     <span className="text-sm">12.4 Mbps</span>

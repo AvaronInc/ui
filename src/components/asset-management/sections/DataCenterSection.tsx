@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { ServerStack, MapPin, Thermometer, Fan, Wifi, Power, Box, HelpCircle } from 'lucide-react';
+import { Server, MapPin, Thermometer, Fan, Wifi, Power, Box, HelpCircle } from 'lucide-react';
 
 const DataCenterSection = () => {
   const [selectedLocation, setSelectedLocation] = useState('all');
@@ -304,7 +304,7 @@ const DataCenterSection = () => {
             <Card>
               <CardHeader className="pb-2">
                 <div className="flex items-center">
-                  <ServerStack className="h-5 w-5 mr-2 text-primary" />
+                  <Server className="h-5 w-5 mr-2 text-primary" />
                   <CardTitle className="text-base">Data Centers</CardTitle>
                 </div>
               </CardHeader>
