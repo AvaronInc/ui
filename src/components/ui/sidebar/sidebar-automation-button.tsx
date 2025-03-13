@@ -1,9 +1,9 @@
 
 import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Zap } from 'lucide-react'
+import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from './sidebar-menu'
 
 export const SidebarAutomationButton = () => {
   const navigate = useNavigate()
@@ -11,19 +11,24 @@ export const SidebarAutomationButton = () => {
   const isActive = location.pathname === '/automation'
   
   return (
-    <Button 
-      variant="outline" 
-      size="sm" 
-      className={cn(
-        "w-full mt-4", 
-        isActive 
-          ? "bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-accent" 
-          : "bg-sidebar-accent/10 border-sidebar-accent/20"
-      )}
-      onClick={() => navigate('/automation')}
-    >
-      <Zap className={cn("mr-2 h-4 w-4", isActive ? "text-current" : "")} />
-      Automation Panel
-    </Button>
+    <SidebarMenu className="mt-2">
+      <SidebarMenuItem>
+        <SidebarMenuButton 
+          asChild
+          isActive={isActive}
+        >
+          <button
+            onClick={() => navigate('/automation')}
+            className={cn(
+              "nav-link w-full justify-start",
+              isActive && "active"
+            )}
+          >
+            <Zap className="h-5 w-5 mr-3" />
+            <span>Automation Panel</span>
+          </button>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
   )
 }
