@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { 
@@ -29,6 +28,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { 
   HardDrive, 
   CloudRain, 
@@ -40,7 +49,8 @@ import {
   Lock,
   History,
   Link,
-  ExternalLink
+  ExternalLink,
+  AlertTriangle
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -64,7 +74,6 @@ interface StorageBucket {
   lastSync?: string;
 }
 
-// Mock data - replace with actual API call
 const fetchBuckets = async (): Promise<StorageBucket[]> => {
   await new Promise(resolve => setTimeout(resolve, 500));
   
@@ -168,6 +177,9 @@ const BucketManagement = () => {
   const [newBucketType, setNewBucketType] = useState<'minio' | 's3'>('minio');
   const [isCreatingBucket, setIsCreatingBucket] = useState(false);
   const [isConnectingS3, setIsConnectingS3] = useState(false);
+  const [bucketToDelete, setBucketToDelete] = useState<StorageBucket | null>(null);
+  const [confirmationInput, setConfirmationInput] = useState('');
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const { data: buckets = [], isLoading, refetch } = useQuery({
     queryKey: ['storage-buckets'],
@@ -204,14 +216,29 @@ const BucketManagement = () => {
     }, 1500);
   };
 
-  const handleDeleteBucket = (bucketId: string, bucketName: string) => {
+  const openDeleteDialog = (bucket: StorageBucket) => {
+    setBucketToDelete(bucket);
+    setConfirmationInput('');
+    setShowDeleteDialog(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setShowDeleteDialog(false);
+    setBucketToDelete(null);
+    setConfirmationInput('');
+  };
+
+  const handleDeleteBucket = () => {
+    if (!bucketToDelete) return;
+    
     // Simulate API call
     toast({
       title: "Bucket Deleted",
-      description: `The bucket "${bucketName}" has been removed`,
+      description: `The bucket "${bucketToDelete.name}" has been removed`,
     });
     
     // In a real app, you would refetch the data after the API call
+    closeDeleteDialog();
     refetch();
   };
 
@@ -323,6 +350,59 @@ const BucketManagement = () => {
           </DialogContent>
         </Dialog>
       </div>
+      
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              Confirm Bucket Deletion
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-4">
+              <p>
+                This action <strong>cannot be undone</strong>. This will permanently delete the
+                <strong> {bucketToDelete?.name}</strong> bucket and all contained data.
+              </p>
+              <div className="rounded-md bg-amber-50 p-4 border border-amber-200">
+                <div className="flex items-start">
+                  <div className="mt-1 flex-shrink-0">
+                    <AlertTriangle className="h-4 w-4 text-amber-600" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-amber-800">Warning</h3>
+                    <div className="mt-1 text-sm text-amber-700">
+                      <p>
+                        To confirm deletion, please type the bucket name below:
+                        <strong> {bucketToDelete?.name}</strong>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="pt-2">
+                <Label htmlFor="confirm-name" className="sr-only">Type bucket name to confirm</Label>
+                <Input
+                  id="confirm-name"
+                  value={confirmationInput}
+                  onChange={(e) => setConfirmationInput(e.target.value)}
+                  placeholder="Type bucket name here"
+                  className="w-full"
+                />
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={closeDeleteDialog}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteBucket}
+              disabled={confirmationInput !== bucketToDelete?.name}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 disabled:opacity-50"
+            >
+              Delete Bucket
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {buckets.map(bucket => (
@@ -474,7 +554,7 @@ const BucketManagement = () => {
                 variant="ghost" 
                 size="sm" 
                 className="text-destructive hover:text-destructive"
-                onClick={() => handleDeleteBucket(bucket.id, bucket.name)}
+                onClick={() => openDeleteDialog(bucket)}
               >
                 <Trash2 className="h-4 w-4 mr-1" />
                 Delete
