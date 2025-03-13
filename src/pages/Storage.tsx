@@ -3,19 +3,13 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import BucketStatistics from '@/components/storage/BucketStatistics';
+import BucketManagement from '@/components/storage/BucketManagement';
 import FileBrowser from '@/components/storage/FileBrowser';
 import FileDetailPanel from '@/components/storage/FileDetailPanel';
 import FileToolbar from '@/components/storage/FileToolbar';
 import { FileItem, FileFilter } from '@/types/storage';
-import { 
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Home } from 'lucide-react';
 
 // Mock data - replace with actual API calls later
 const fetchFiles = async (): Promise<FileItem[]> => {
@@ -90,6 +84,7 @@ const Storage = () => {
     sortBy: 'name',
     sortDirection: 'asc'
   });
+  const [activeTab, setActiveTab] = useState('overview');
 
   const { data: files = [], isLoading } = useQuery({
     queryKey: ['files', currentPath, filters],
@@ -133,63 +128,60 @@ const Storage = () => {
     <PageTransition>
       <DashboardLayout>
         <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-semibold">File Storage</h1>
-              <Breadcrumb className="py-2">
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/">
-                      <Home className="h-4 w-4" />
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  {currentPath.map((pathItem, index) => (
-                    <React.Fragment key={index}>
-                      <BreadcrumbItem>
-                        {index === currentPath.length - 1 ? (
-                          <BreadcrumbPage>{pathItem}</BreadcrumbPage>
-                        ) : (
-                          <BreadcrumbLink onClick={() => handlePathClick(index)}>
-                            {pathItem}
-                          </BreadcrumbLink>
-                        )}
-                      </BreadcrumbItem>
-                      {index < currentPath.length - 1 && <BreadcrumbSeparator />}
-                    </React.Fragment>
-                  ))}
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
+          <div>
+            <h1 className="text-3xl font-semibold">Storage Management</h1>
+            <p className="text-muted-foreground mt-1">
+              Manage storage resources, including MinIO and S3 buckets
+            </p>
           </div>
           
-          <FileToolbar 
-            filters={filters} 
-            onUpdateFilters={handleUpdateFilters}
-            onNavigateUp={handleNavigateUp}
-            canNavigateUp={currentPath.length > 1}
-          />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className={selectedFile ? "lg:col-span-3" : "lg:col-span-4"}>
-              <FileBrowser 
-                files={currentFiles} 
-                isLoading={isLoading} 
-                onFileSelect={handleFileSelect}
-                onFolderOpen={handleFolderOpen}
-                selectedFileId={selectedFile?.id}
-              />
-            </div>
+          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid grid-cols-3 w-[400px]">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="buckets">Bucket Management</TabsTrigger>
+              <TabsTrigger value="files">File Browser</TabsTrigger>
+            </TabsList>
             
-            {selectedFile && (
-              <div className="lg:col-span-1">
-                <FileDetailPanel 
-                  file={selectedFile} 
-                  onClose={() => setSelectedFile(null)} 
-                />
+            <TabsContent value="overview" className="mt-6">
+              <BucketStatistics />
+            </TabsContent>
+            
+            <TabsContent value="buckets" className="mt-6">
+              <BucketManagement />
+            </TabsContent>
+            
+            <TabsContent value="files" className="mt-6">
+              <FileToolbar 
+                filters={filters} 
+                onUpdateFilters={handleUpdateFilters}
+                onNavigateUp={handleNavigateUp}
+                canNavigateUp={currentPath.length > 1}
+              />
+              
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-4">
+                <div className={selectedFile ? "lg:col-span-3" : "lg:col-span-4"}>
+                  <FileBrowser 
+                    files={currentFiles} 
+                    isLoading={isLoading} 
+                    onFileSelect={handleFileSelect}
+                    onFolderOpen={handleFolderOpen}
+                    selectedFileId={selectedFile?.id}
+                    currentPath={currentPath}
+                    onPathClick={handlePathClick}
+                  />
+                </div>
+                
+                {selectedFile && (
+                  <div className="lg:col-span-1">
+                    <FileDetailPanel 
+                      file={selectedFile} 
+                      onClose={() => setSelectedFile(null)} 
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </DashboardLayout>
     </PageTransition>

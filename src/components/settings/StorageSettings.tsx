@@ -1,6 +1,8 @@
 
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useStorageSettings } from './storage/useStorageSettings';
 import MinioCredentials from './storage/MinioCredentials';
 import StorageAccessControl from './storage/StorageAccessControl';
@@ -13,31 +15,50 @@ const StorageSettings = () => {
   
   return (
     <div className="space-y-6">
-      <div className="text-sm text-muted-foreground mb-6">
-        Configure MinIO integration, storage quotas, retention policies, and access controls.
-      </div>
-      
-      <Form {...form}>
-        <form className="space-y-8">
-          {/* MinIO Credentials Section */}
-          <MinioCredentials form={form} />
-          
-          {/* Storage & Access Control Section */}
-          <StorageAccessControl form={form} />
-          
-          {/* Protection Features Section */}
-          <ProtectionFeatures form={form} />
-          
-          {/* S3 Bucket Connection (conditional display) */}
-          <S3BucketConnection 
-            form={form} 
-            visible={form.watch('enableRansomwareProtection')} 
-          />
-          
-          {/* Retention Policy Section */}
-          <RetentionPolicy form={form} />
-        </form>
-      </Form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Storage Configuration</CardTitle>
+          <CardDescription>
+            Configure MinIO integration, storage quotas, retention policies, and access controls.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="credentials" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="credentials">Credentials</TabsTrigger>
+              <TabsTrigger value="quotas">Quotas & Retention</TabsTrigger>
+              <TabsTrigger value="protection">Protection</TabsTrigger>
+              <TabsTrigger value="external">External Storage</TabsTrigger>
+            </TabsList>
+            
+            <Form {...form}>
+              <form className="space-y-8">
+                <TabsContent value="credentials">
+                  <MinioCredentials form={form} />
+                </TabsContent>
+                
+                <TabsContent value="quotas">
+                  <div className="space-y-6">
+                    <StorageAccessControl form={form} />
+                    <RetentionPolicy form={form} />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="protection">
+                  <ProtectionFeatures form={form} />
+                </TabsContent>
+                
+                <TabsContent value="external">
+                  <S3BucketConnection 
+                    form={form} 
+                    visible={true}
+                  />
+                </TabsContent>
+              </form>
+            </Form>
+          </Tabs>
+        </CardContent>
+      </Card>
       
       <div className="flex justify-end pt-4 border-t">
         <Button onClick={handleSave}>
