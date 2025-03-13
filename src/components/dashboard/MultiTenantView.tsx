@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -32,7 +31,7 @@ const MultiTenantView = () => {
   const [systems, setSystems] = useState<CompanySystem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filter, setFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -69,12 +68,6 @@ const MultiTenantView = () => {
       if (error) throw error;
       
       setSystems(data || []);
-    } catch (error: any) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
     } finally {
       setLoading(false);
     }
@@ -94,6 +87,16 @@ const MultiTenantView = () => {
     });
   };
 
+  const handleCompanySelect = (companyId: string) => {
+    setSelectedCompany(companyId);
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery('');
+    setStatusFilter('all');
+    setSelectedCompany(null);
+  };
+
   const filteredSystems = systems.filter(system => {
     // Apply company filter
     if (selectedCompany && system.company_id !== selectedCompany) {
@@ -101,7 +104,7 @@ const MultiTenantView = () => {
     }
     
     // Apply status filter
-    if (filter !== 'all' && system.status !== filter) {
+    if (statusFilter !== 'all' && system.status !== statusFilter) {
       return false;
     }
     
@@ -155,31 +158,15 @@ const MultiTenantView = () => {
               />
             </div>
             
-            <Select value={selectedCompany || ''} onValueChange={(value) => setSelectedCompany(value || null)}>
-              <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder="Select company" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">All Companies</SelectItem>
-                {companies.map((company) => (
-                  <SelectItem key={company.id} value={company.id}>
-                    {company.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Select value={filter} onValueChange={setFilter}>
-              <SelectTrigger className="w-full md:w-[150px]">
-                <SelectValue placeholder="Filter status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
-                <SelectItem value="offline">Offline</SelectItem>
-              </SelectContent>
-            </Select>
+            {selectedCompany && (
+              <Button 
+                variant="ghost" 
+                onClick={handleClearFilters}
+                className="whitespace-nowrap"
+              >
+                Clear Filters
+              </Button>
+            )}
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -278,7 +265,7 @@ const MultiTenantView = () => {
                       <CardFooter className="border-t pt-4">
                         <Button 
                           variant="outline" 
-                          onClick={() => setSelectedCompany(company.id)} 
+                          onClick={() => handleCompanySelect(company.id)} 
                           className="w-full"
                         >
                           View Systems

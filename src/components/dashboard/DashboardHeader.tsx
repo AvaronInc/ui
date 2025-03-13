@@ -14,28 +14,12 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
-import { Bell, LogOut, User, Settings, HelpCircle, Building, ChevronDown } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Bell, LogOut, User, Settings, HelpCircle, Building } from 'lucide-react';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
-
-// Sample tenant data - in a real app, this would come from an API
-const tenants = [
-  { id: '1', name: 'Primary Tenant' },
-  { id: '2', name: 'Secondary Tenant' },
-  { id: '3', name: 'Client X Corporation' },
-  { id: '4', name: 'Acme Industries' },
-];
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const [selectedTenant, setSelectedTenant] = useState(tenants[0].id);
   const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
   
   useEffect(() => {
@@ -76,12 +60,6 @@ const DashboardHeader = () => {
   
   const userName = profile?.full_name || user?.email?.split('@')[0] || 'User';
   
-  const handleTenantChange = (tenantId: string) => {
-    setSelectedTenant(tenantId);
-    // In a real app, you would perform actions like switching context, loading tenant-specific data, etc.
-    console.log(`Switched to tenant: ${tenantId}`);
-  };
-  
   const handleSettingsClick = () => {
     navigate('/settings');
   };
@@ -90,29 +68,8 @@ const DashboardHeader = () => {
     <header className="w-full flex items-center justify-between">
       <div className="flex items-center">
         <SidebarTrigger />
-        <div className="hidden md:flex ml-4">
-          <Link to="/" className="font-bold">{companyName}</Link>
-        </div>
-        
         <div className="ml-4">
-          <Select 
-            value={selectedTenant} 
-            onValueChange={handleTenantChange}
-          >
-            <SelectTrigger className="w-[220px] bg-background border-input">
-              <div className="flex items-center">
-                <Building className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Select tenant" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {tenants.map(tenant => (
-                <SelectItem key={tenant.id} value={tenant.id}>
-                  {tenant.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Link to="/" className="font-bold">{companyName}</Link>
         </div>
       </div>
       
