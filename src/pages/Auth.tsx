@@ -123,9 +123,9 @@ const Auth = () => {
           <CardHeader className="text-center">
             <div className="mx-auto mb-4">
               <img 
-                src="/lovable-uploads/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png" 
+                src="/lovable-uploads/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png" 
                 alt="Logo" 
-                className="h-16 mx-auto"
+                className="h-20 mx-auto"
               />
             </div>
             <CardTitle className="text-2xl font-bold">Welcome</CardTitle>
