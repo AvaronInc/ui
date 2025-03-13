@@ -14,7 +14,7 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
-import { Bell, LogOut, User, Settings, HelpCircle, Building } from 'lucide-react';
+import { Bell, LogOut, User, Settings, HelpCircle } from 'lucide-react';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
 
 const DashboardHeader = () => {

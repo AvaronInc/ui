@@ -51,12 +51,16 @@ const alertsData: Alert[] = [
 
 const Index = () => {
   const { isAdmin } = useAuth();
+  const [showMultiTenant, setShowMultiTenant] = useState(false);
+  
+  // In a real app, this would be controlled by your routing or tenant selection
+  // For now, we'll always show the dashboard and not the multi-tenant view
   
   return (
     <PageTransition>
       <DashboardLayout>
         <div className="container py-6 space-y-6">
-          {isAdmin ? (
+          {showMultiTenant && isAdmin ? (
             <MultiTenantView />
           ) : (
             <>

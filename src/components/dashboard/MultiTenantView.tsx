@@ -7,8 +7,73 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { Plus, Server, Settings, ExternalLink, Search, RefreshCw } from 'lucide-react';
+
+// Dummy data for companies
+const dummyCompanies = [
+  {
+    id: '1',
+    name: 'Acme Corporation',
+    domain: 'acme.com',
+    logo_url: undefined
+  },
+  {
+    id: '2',
+    name: 'TechSolutions Inc.',
+    domain: 'techsolutions.io',
+    logo_url: undefined
+  },
+  {
+    id: '3',
+    name: 'GlobalEnterprises',
+    domain: 'globalenterprises.org',
+    logo_url: undefined
+  }
+];
+
+// Dummy data for systems
+const dummySystems = [
+  {
+    id: '1',
+    company_id: '1',
+    name: 'Acme Billing System',
+    description: 'Enterprise billing and invoicing platform',
+    system_url: 'https://billing.acme.com',
+    status: 'active'
+  },
+  {
+    id: '2',
+    company_id: '1',
+    name: 'Acme CRM',
+    description: 'Customer relationship management system',
+    system_url: 'https://crm.acme.com',
+    status: 'maintenance'
+  },
+  {
+    id: '3',
+    company_id: '2',
+    name: 'TechSolutions ERP',
+    description: 'Enterprise resource planning system',
+    system_url: 'https://erp.techsolutions.io',
+    status: 'active'
+  },
+  {
+    id: '4',
+    company_id: '2',
+    name: 'TechSolutions Support Portal',
+    description: 'Customer support ticketing and knowledge base',
+    system_url: 'https://support.techsolutions.io',
+    status: 'active'
+  },
+  {
+    id: '5',
+    company_id: '3',
+    name: 'GlobalEnterprises HR System',
+    description: 'Human resources management platform',
+    system_url: 'https://hr.globalenterprises.org',
+    status: 'degraded'
+  }
+];
 
 interface Company {
   id: string;
@@ -37,41 +102,17 @@ const MultiTenantView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCompanies();
-    fetchSystems();
+    // Simulate API call with dummy data
+    setLoading(true);
+    // Simulate a network request
+    const timer = setTimeout(() => {
+      setCompanies(dummyCompanies);
+      setSystems(dummySystems);
+      setLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
-
-  const fetchCompanies = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.from('companies').select('*');
-      
-      if (error) throw error;
-      
-      setCompanies(data || []);
-    } catch (error: any) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchSystems = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.from('company_systems').select('*');
-      
-      if (error) throw error;
-      
-      setSystems(data || []);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getCompanyName = (companyId: string) => {
     const company = companies.find(c => c.id === companyId);
@@ -79,12 +120,17 @@ const MultiTenantView = () => {
   };
 
   const handleRefresh = () => {
-    fetchCompanies();
-    fetchSystems();
-    toast({
-      title: 'Refreshed',
-      description: 'Data has been refreshed',
-    });
+    setLoading(true);
+    // Simulate a refresh
+    setTimeout(() => {
+      setCompanies(dummyCompanies);
+      setSystems(dummySystems);
+      setLoading(false);
+      toast({
+        title: 'Refreshed',
+        description: 'Data has been refreshed',
+      });
+    }, 1000);
   };
 
   const handleCompanySelect = (companyId: string) => {
