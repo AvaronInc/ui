@@ -16,11 +16,13 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { Bell, LogOut, User, Settings, HelpCircle } from 'lucide-react';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
+import ProfileDialog from '@/components/profile/ProfileDialog';
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   
   useEffect(() => {
     // Set up initial company name
@@ -64,6 +66,10 @@ const DashboardHeader = () => {
     navigate('/settings');
   };
   
+  const handleProfileClick = () => {
+    setProfileDialogOpen(true);
+  };
+  
   return (
     <header className="w-full flex items-center justify-between">
       <div className="flex items-center">
@@ -102,11 +108,9 @@ const DashboardHeader = () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to="/profile" className="flex items-center cursor-pointer">
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </Link>
+            <DropdownMenuItem onClick={handleProfileClick} className="flex items-center cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
             </DropdownMenuItem>
             {isAdmin && (
               <DropdownMenuItem onClick={handleSettingsClick} className="flex items-center cursor-pointer">
@@ -128,6 +132,11 @@ const DashboardHeader = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      
+      <ProfileDialog 
+        open={profileDialogOpen} 
+        onOpenChange={setProfileDialogOpen} 
+      />
     </header>
   );
 };
