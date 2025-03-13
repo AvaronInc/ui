@@ -24,6 +24,11 @@ const DashboardHeader = () => {
   const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   
+  // Use useEffect to log dialog state changes
+  useEffect(() => {
+    console.log('Profile dialog state changed to:', profileDialogOpen);
+  }, [profileDialogOpen]);
+  
   useEffect(() => {
     // Set up initial company name
     const storedCompanyName = localStorage.getItem('companyName');
@@ -67,14 +72,13 @@ const DashboardHeader = () => {
   };
   
   const handleProfileClick = () => {
-    console.log('Opening profile dialog');
+    console.log('Opening profile dialog from menu click');
     setProfileDialogOpen(true);
   };
 
-  // Simpler, more direct handler for profile dialog state changes
+  // Simple handler that just updates state directly
   const handleProfileDialogChange = useCallback((open: boolean) => {
-    console.log('Setting profile dialog open state:', open);
-    // Just update the state and nothing more
+    console.log('Dialog onOpenChange called with:', open);
     setProfileDialogOpen(open);
   }, []);
   
@@ -141,7 +145,7 @@ const DashboardHeader = () => {
         </DropdownMenu>
       </div>
       
-      {/* The dialog state is completely controlled by the profileDialogOpen state */}
+      {/* Use the directly imported ProfileDialog */}
       <ProfileDialog 
         open={profileDialogOpen} 
         onOpenChange={handleProfileDialogChange} 
