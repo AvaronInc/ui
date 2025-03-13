@@ -9,7 +9,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DocumentExportFormat } from '@/types/sdms';
-import { FilePdf, FileJson, FileText, FileCode, Save, Download, Calendar } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { FileText, File, FileJson, FileCode, Save, Download, Calendar } from 'lucide-react';
 
 const SaveExport = () => {
   const [exportFormat, setExportFormat] = useState<DocumentExportFormat>('pdf');
@@ -38,13 +40,13 @@ const SaveExport = () => {
   const getFormatIcon = (format: DocumentExportFormat) => {
     switch (format) {
       case 'pdf':
-        return <FilePdf className="h-5 w-5" />;
+        return <FileText className="h-5 w-5 text-red-500" />;
       case 'json':
-        return <FileJson className="h-5 w-5" />;
+        return <FileJson className="h-5 w-5 text-yellow-500" />;
       case 'markdown':
-        return <FileText className="h-5 w-5" />;
+        return <FileText className="h-5 w-5 text-blue-500" />;
       case 'html':
-        return <FileCode className="h-5 w-5" />;
+        return <FileCode className="h-5 w-5 text-green-500" />;
     }
   };
   
@@ -80,7 +82,7 @@ const SaveExport = () => {
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="pdf" id="pdf" />
                     <Label htmlFor="pdf" className="flex items-center gap-2 cursor-pointer">
-                      <FilePdf className="h-5 w-5 text-red-500" />
+                      <FileText className="h-5 w-5 text-red-500" />
                       <span>PDF Document</span>
                     </Label>
                   </div>
@@ -347,7 +349,7 @@ const SaveExport = () => {
                   <TableRow>
                     <TableCell>2024-03-12 09:15</TableCell>
                     <TableCell className="flex items-center gap-2">
-                      <FilePdf className="h-4 w-4 text-red-500" />
+                      <FileText className="h-4 w-4 text-red-500" />
                       <span>PDF</span>
                     </TableCell>
                     <TableCell>4.2 MB</TableCell>
