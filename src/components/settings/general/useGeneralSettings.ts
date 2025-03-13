@@ -1,206 +1,42 @@
-import { useState, useEffect, useCallback } from 'react';
+
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/context/AuthContext';
-import { saveUserSettings, loadUserSettings, SettingsCategory } from '@/services/settings-service';
-import { formSchema, defaultSettings, FormValues } from './schema';
+import { formSchema, defaultSettings } from './schema';
+import { 
+  useLoadSettings, 
+  useLogoManagement, 
+  useSettingsSubmit 
+} from './hooks';
 
 export const useGeneralSettings = () => {
-  const { toast } = useToast();
-  const { user } = useAuth();
-  const [maintenanceMode, setMaintenanceMode] = useState(false);
-  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const [maintenanceMode, setMaintenanceMode] = useState(
+    localStorage.getItem('maintenanceMode') === 'true'
+  );
   
-  const form = useForm<FormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: defaultSettings,
   });
 
-  const loadSettings = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setLoadError(null);
-      
-      console.log("Loading general settings...");
-      
-      // Always default to localStorage values first
-      const localStorage_dateFormat = localStorage.getItem('dateFormat');
-      const typedDateFormat = localStorage_dateFormat === "DD/MM/YYYY" ? 
-        "DD/MM/YYYY" : "MM/DD/YYYY";
-        
-      // Pre-populate form with localStorage values to ensure we always have something
-      form.reset({
-        companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
-        systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
-        timeZone: localStorage.getItem('timeZone') || defaultSettings.timeZone,
-        dateFormat: typedDateFormat,
-        language: localStorage.getItem('language') || defaultSettings.language,
-        supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
-        helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,
-      });
-      
-      setMaintenanceMode(localStorage.getItem('maintenanceMode') === 'true');
-      setCompanyLogo(localStorage.getItem('companyLogo'));
-      
-      // Try to load from database
-      const isDevelopment = import.meta.env.DEV;
-      
-      if (isDevelopment) {
-        console.log("Development mode: using localStorage settings");
-        // In development, prioritize localStorage to speed up testing
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 500);
-        return;
-      }
-      
-      if (user) {
-        try {
-          console.log("Attempting to load settings from database...");
-          const generalSettings = await loadUserSettings(SettingsCategory.GENERAL);
-          
-          if (generalSettings) {
-            console.log("Settings loaded from database:", generalSettings);
-            // Parse dateFormat to ensure it's typed correctly
-            const dateFormat = generalSettings.dateFormat === "DD/MM/YYYY" ? 
-              "DD/MM/YYYY" : "MM/DD/YYYY";
-              
-            // Update form with loaded values
-            form.reset({
-              companyName: generalSettings.companyName || defaultSettings.companyName,
-              systemName: generalSettings.systemName || defaultSettings.systemName,
-              timeZone: generalSettings.timeZone || defaultSettings.timeZone,
-              dateFormat: dateFormat,
-              language: generalSettings.language || defaultSettings.language,
-              supportEmail: generalSettings.supportEmail || defaultSettings.supportEmail,
-              helpdeskPhone: generalSettings.helpdeskPhone || defaultSettings.helpdeskPhone,
-            });
-            
-            // Also update other state values
-            setMaintenanceMode(generalSettings.maintenanceMode || false);
-            setCompanyLogo(generalSettings.companyLogo || null);
-            
-            // Update localStorage for header component to use (for real-time updates)
-            localStorage.setItem('companyName', generalSettings.companyName || defaultSettings.companyName);
-          } else {
-            console.log("No settings found in database, using localStorage");
-          }
-        } catch (dbError) {
-          console.error('Error loading settings from database:', dbError);
-          // Already using localStorage values, so just continue
-        }
-      }
-    } catch (error) {
-      console.error('Error loading settings:', error);
-      setLoadError('Failed to load settings. Please try again.');
-      toast({
-        title: "Error loading settings",
-        description: "There was a problem loading your settings.",
-        variant: "destructive"
-      });
-    } finally {
-      console.log("Settings loading complete, isLoading set to false");
-      setIsLoading(false);
-    }
-  }, [form, toast, user]);
+  // Load settings
+  const { isLoading, loadError, loadSettings } = useLoadSettings(form);
+  
+  // Logo management
+  const { companyLogo, setCompanyLogo, handleLogoUpload } = useLogoManagement();
+  
+  // Form submission and reset
+  const { onSubmit, handleReset } = useSettingsSubmit({
+    form,
+    companyLogo,
+    setCompanyLogo,
+    maintenanceMode,
+    setMaintenanceMode
+  });
 
   useEffect(() => {
     loadSettings();
   }, [loadSettings]);
-
-  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const logoData = e.target?.result as string;
-        setCompanyLogo(logoData);
-        
-        // Also update localStorage for backward compatibility
-        localStorage.setItem('companyLogo', logoData);
-        
-        toast({
-          title: "Logo updated",
-          description: "Your company logo has been updated successfully.",
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  const onSubmit = async (data: FormValues) => {
-    try {
-      // Combine all settings into one object
-      const combinedSettings = {
-        ...data,
-        maintenanceMode,
-        companyLogo
-      };
-      
-      // Save to database if user is authenticated
-      if (user) {
-        await saveUserSettings(SettingsCategory.GENERAL, combinedSettings);
-      }
-      
-      // Still save to localStorage for backward compatibility
-      Object.entries(data).forEach(([key, value]) => {
-        localStorage.setItem(key, value as string);
-      });
-      localStorage.setItem('maintenanceMode', maintenanceMode.toString());
-      if (companyLogo) localStorage.setItem('companyLogo', companyLogo);
-      
-      toast({
-        title: "Settings saved",
-        description: "Your general settings have been updated successfully.",
-      });
-    } catch (error) {
-      console.error("Error saving settings:", error);
-      toast({
-        title: "Error saving settings",
-        description: "There was a problem saving your settings.",
-        variant: "destructive"
-      });
-    }
-  };
-  
-  const handleReset = async () => {
-    const defaultSettingsWithExtras = {
-      ...defaultSettings,
-      maintenanceMode: false,
-      companyLogo: null
-    };
-    
-    // Reset form values
-    form.reset(defaultSettings);
-    
-    // Reset other settings
-    setCompanyLogo(null);
-    setMaintenanceMode(false);
-    
-    // Save reset values to database
-    if (user) {
-      try {
-        await saveUserSettings(SettingsCategory.GENERAL, defaultSettingsWithExtras);
-      } catch (error) {
-        console.error("Error resetting settings:", error);
-      }
-    }
-    
-    // Reset localStorage
-    localStorage.removeItem('companyLogo');
-    Object.entries(defaultSettings).forEach(([key, value]) => {
-      localStorage.setItem(key, value as string);
-    });
-    localStorage.setItem('maintenanceMode', 'false');
-    
-    toast({
-      title: "Settings reset",
-      description: "Your general settings have been reset to defaults.",
-    });
-  };
 
   return {
     form,
