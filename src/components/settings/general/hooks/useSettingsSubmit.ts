@@ -38,6 +38,9 @@ export const useSettingsSubmit = ({
         helpdeskPhone: data.helpdeskPhone || ''
       };
       
+      // Log the safe data we're about to save
+      console.log('Saving settings with safe values:', safeData);
+      
       // Store validated data in localStorage
       localStorage.setItem('companyName', safeData.companyName);
       localStorage.setItem('systemName', safeData.systemName);

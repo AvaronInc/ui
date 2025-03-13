@@ -56,7 +56,7 @@ const DateTimeTab: React.FC<DateTimeTabProps> = ({ form }) => {
                 </FormControl>
                 <SelectContent>
                   {timeZones.map((timeZone) => (
-                    <SelectItem key={timeZone.value} value={timeZone.value}>
+                    <SelectItem key={timeZone.value} value={timeZone.value || "UTC"}>
                       {timeZone.label}
                     </SelectItem>
                   ))}

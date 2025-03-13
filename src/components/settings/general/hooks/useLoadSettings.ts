@@ -27,15 +27,28 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         storedDateFormat = defaultSettings.dateFormat;
       }
       
+      // Get language with a safe default
+      const storedLanguage = localStorage.getItem('language') || '';
+      const safeLanguage = 
+        storedLanguage && 
+        ['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'ja-JP', 'zh-CN'].includes(storedLanguage) 
+        ? storedLanguage 
+        : defaultSettings.language;
+      
+      // Get timeZone with a safe default
+      const storedTimeZone = localStorage.getItem('timeZone') || '';
+      // For simplicity, just check if it's not empty
+      const safeTimeZone = storedTimeZone || defaultSettings.timeZone;
+      
       const storedSettings: FormValues = {
         companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
-        // Ensure timeZone is never empty
-        timeZone: localStorage.getItem('timeZone') || defaultSettings.timeZone,
+        // Use safe values for required fields
+        timeZone: safeTimeZone,
         // Use the validated dateFormat
         dateFormat: storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY',
         systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
-        // Ensure language is never empty
-        language: localStorage.getItem('language') || defaultSettings.language,
+        // Use safe language value
+        language: safeLanguage,
         supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
         helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,
       };
