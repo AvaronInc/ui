@@ -138,33 +138,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      setIsLoading(true);
       console.log('Signing out...');
       
-      // Clear local state first (important to do this before the Supabase call)
+      // Clear local state first
       setSession(null);
       setUser(null);
       setProfile(null);
+      setIsLoading(true);
       
       // Then sign out from Supabase
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error('Error during signOut:', error);
-        throw error;
+        // Even if there's an error, we'll continue with the logout process
+        // This ensures the user can always log out even if the Supabase call fails
       }
       
-      console.log('Successfully signed out from Supabase');
+      console.log('Successfully completed logout process');
       
       // Show success message
       toast.success('Logged out successfully');
       
-      // Navigation is handled by the components that call this function
+      // Navigation is fully delegated to the components that call this function
       return Promise.resolve();
     } catch (error: any) {
       console.error('Error signing out:', error.message);
-      toast.error(error.message || 'Error signing out');
-      return Promise.reject(error);
+      // Even in case of errors, we'll consider the logout successful from UI perspective
+      // This prevents the user from getting stuck in a broken state
+      toast.error('There was an issue during logout, but you have been logged out from this device');
+      return Promise.resolve();
     } finally {
       setIsLoading(false);
     }

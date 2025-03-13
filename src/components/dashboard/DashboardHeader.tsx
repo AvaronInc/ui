@@ -87,15 +87,19 @@ const DashboardHeader = () => {
     // Close the dialog first
     setLogoutDialogOpen(false);
     
-    // Then perform the signOut operation
+    // Then perform the signOut operation in a separate tick with a longer timeout
     setTimeout(async () => {
       try {
         await signOut();
-        navigate('/auth');
+        // After successful logout, navigate to auth page
+        // Use window.location for a complete page reload to clear any lingering state
+        window.location.href = '/auth';
       } catch (error) {
         console.error('Failed to log out:', error);
+        // Even if there's an error, navigate to auth page
+        window.location.href = '/auth';
       }
-    }, 100);
+    }, 200);
   };
   
   return (
