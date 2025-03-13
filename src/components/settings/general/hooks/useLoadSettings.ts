@@ -22,10 +22,10 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         // Get stored values with proper type handling for dateFormat
         const storedDateFormat = localStorage.getItem('dateFormat') || '';
         const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
-          ? storedDateFormat 
-          : 'MM/DD/YYYY'; // Default if invalid
+          ? storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY'
+          : 'MM/DD/YYYY' as const; // Default if invalid
         
-        const storedSettings = {
+        const storedSettings: FormValues = {
           companyName: localStorage.getItem('companyName') || '',
           timeZone: localStorage.getItem('timeZone') || '',
           dateFormat,
@@ -62,10 +62,10 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
       // Get stored values with proper type handling for dateFormat
       const storedDateFormat = localStorage.getItem('dateFormat') || '';
       const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
-        ? storedDateFormat 
-        : 'MM/DD/YYYY'; // Default if invalid
+        ? storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY'
+        : 'MM/DD/YYYY' as const; // Default if invalid
       
-      const storedSettings = {
+      const storedSettings: FormValues = {
         companyName: localStorage.getItem('companyName') || '',
         timeZone: localStorage.getItem('timeZone') || '',
         dateFormat,
