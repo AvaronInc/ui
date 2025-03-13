@@ -20,7 +20,6 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
         </Sidebar>
         <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
           <div className="flex items-center h-16 px-6 border-b bg-background/80 backdrop-blur-sm">
-            <SidebarTrigger />
             <DashboardHeader />
           </div>
           <main className={cn("flex-1 overflow-auto", className)}>
