@@ -52,7 +52,7 @@ const colors = [
 
 // Background image options
 const backgroundOptions = [
-  { value: "", label: "None" },
+  { value: "none", label: "None" },
   { value: "/lovable-uploads/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png", label: "Blue Grid" }
 ];
 
@@ -145,9 +145,9 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
       <div className="space-y-2">
         <FormLabel>Background Image</FormLabel>
         <Select 
-          onValueChange={(value) => setBackgroundImage(value || null)} 
-          defaultValue={backgroundImage || ""}
-          value={backgroundImage || ""}
+          onValueChange={(value) => setBackgroundImage(value === "none" ? null : value)} 
+          defaultValue={backgroundImage || "none"}
+          value={backgroundImage || "none"}
         >
           <FormControl>
             <SelectTrigger>
