@@ -44,6 +44,13 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
     onOpenChange(false);
   };
   
+  const handleCancel = () => {
+    // Reset any form changes
+    setNickname(profile?.full_name || '');
+    // Close the dialog
+    onOpenChange(false);
+  };
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -107,7 +114,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         </div>
         
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
           <Button onClick={handleSave}>
