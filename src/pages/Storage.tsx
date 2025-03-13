@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BucketStatistics from '@/components/storage/BucketStatistics';
-import BucketManagement from '@/components/storage/BucketManagement';
+import BucketManagement from '@/components/storage/bucket/BucketManagement';
 import FileBrowser from '@/components/storage/FileBrowser';
 import FileDetailPanel from '@/components/storage/FileDetailPanel';
 import FileToolbar from '@/components/storage/FileToolbar';
