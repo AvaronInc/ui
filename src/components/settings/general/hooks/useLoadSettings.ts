@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { FormValues } from '../schema';
+import { FormValues, defaultSettings } from '../schema';
 
 export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,13 +29,13 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         }
         
         const storedSettings: FormValues = {
-          companyName: localStorage.getItem('companyName') || '',
-          timeZone: localStorage.getItem('timeZone') || '',
+          companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
+          timeZone: localStorage.getItem('timeZone') || defaultSettings.timeZone,
           dateFormat: dateFormat,
-          systemName: localStorage.getItem('systemName') || '',
-          language: localStorage.getItem('language') || '',
-          supportEmail: localStorage.getItem('supportEmail') || '',
-          helpdeskPhone: localStorage.getItem('helpdeskPhone') || '',
+          systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
+          language: localStorage.getItem('language') || defaultSettings.language,
+          supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
+          helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,
         };
         
         console.log('Loaded settings from localStorage:', storedSettings);
@@ -73,13 +73,13 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
       }
       
       const storedSettings: FormValues = {
-        companyName: localStorage.getItem('companyName') || '',
-        timeZone: localStorage.getItem('timeZone') || '',
+        companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
+        timeZone: localStorage.getItem('timeZone') || defaultSettings.timeZone,
         dateFormat: dateFormat,
-        systemName: localStorage.getItem('systemName') || '',
-        language: localStorage.getItem('language') || '',
-        supportEmail: localStorage.getItem('supportEmail') || '',
-        helpdeskPhone: localStorage.getItem('helpdeskPhone') || '',
+        systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
+        language: localStorage.getItem('language') || defaultSettings.language,
+        supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
+        helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,
       };
       
       console.log('Loaded settings:', storedSettings);

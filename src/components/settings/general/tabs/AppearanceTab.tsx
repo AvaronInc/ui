@@ -1,11 +1,23 @@
 
-import { FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormControl, 
+  FormDescription, 
+  FormMessage 
+} from '@/components/ui/form';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { FormValues } from '../schema';
-import { cn } from '@/lib/utils';
 
 interface AppearanceTabProps {
   form: UseFormReturn<FormValues>;
@@ -15,83 +27,105 @@ interface AppearanceTabProps {
   setPrimaryColor: (color: string) => void;
 }
 
-const AppearanceTab = ({ 
+const languages = [
+  { value: "en-US", label: "English (US)" },
+  { value: "en-GB", label: "English (UK)" },
+  { value: "es-ES", label: "Spanish" },
+  { value: "fr-FR", label: "French" },
+  { value: "de-DE", label: "German" },
+  { value: "ja-JP", label: "Japanese" },
+  { value: "zh-CN", label: "Chinese (Simplified)" }
+];
+
+const colors = [
+  { value: "blue", label: "Blue" },
+  { value: "green", label: "Green" },
+  { value: "purple", label: "Purple" },
+  { value: "red", label: "Red" },
+  { value: "orange", label: "Orange" },
+  { value: "indigo", label: "Indigo" }
+];
+
+const AppearanceTab: React.FC<AppearanceTabProps> = ({ 
   form, 
   isDarkMode, 
-  toggleDarkMode, 
-  primaryColor, 
-  setPrimaryColor 
-}: AppearanceTabProps) => {
-  const colors = [
-    { name: 'blue', class: 'bg-blue-500' },
-    { name: 'green', class: 'bg-green-500' },
-    { name: 'purple', class: 'bg-purple-500' },
-    { name: 'red', class: 'bg-red-500' },
-    { name: 'orange', class: 'bg-orange-500' },
-    { name: 'gray', class: 'bg-gray-500' }
-  ];
-
+  toggleDarkMode,
+  primaryColor,
+  setPrimaryColor
+}) => {
   return (
-    <div className="grid gap-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <Label htmlFor="dark-mode" className="font-medium">Dark Mode</Label>
-          <p className="text-sm text-muted-foreground">
-            Enable dark mode across the application.
-          </p>
+        <div className="space-y-0.5">
+          <FormLabel>Dark Mode</FormLabel>
+          <FormDescription>
+            Enable dark mode for the interface.
+          </FormDescription>
         </div>
         <Switch 
-          id="dark-mode"
-          checked={isDarkMode}
+          checked={isDarkMode} 
           onCheckedChange={toggleDarkMode}
         />
       </div>
       
-      <div>
-        <Label htmlFor="primary-color">Theme Color</Label>
-        <div className="grid grid-cols-6 gap-2 mt-1.5">
-          {colors.map((color) => (
-            <div
-              key={color.name}
-              className={cn(
-                "h-10 rounded-md cursor-pointer border-2",
-                color.class,
-                primaryColor === color.name ? "border-primary" : "border-transparent"
-              )}
-              onClick={() => setPrimaryColor(color.name)}
-            />
-          ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          control={form.control}
+          name="language"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Language</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value || "en-US"}
+                value={field.value || "en-US"}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select language" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {languages.map((language) => (
+                    <SelectItem key={language.value} value={language.value}>
+                      {language.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                The default language for the system.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="space-y-2">
+          <FormLabel>Primary Color</FormLabel>
+          <Select 
+            onValueChange={setPrimaryColor} 
+            defaultValue={primaryColor || "blue"}
+            value={primaryColor || "blue"}
+          >
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Select primary color" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              {colors.map((color) => (
+                <SelectItem key={color.value} value={color.value}>
+                  {color.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FormDescription>
+            The primary accent color for UI elements.
+          </FormDescription>
         </div>
       </div>
-      
-      <FormField
-        control={form.control}
-        name="language"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Language</FormLabel>
-            <Select 
-              value={field.value} 
-              onValueChange={field.onChange}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en-US">English (US)</SelectItem>
-                <SelectItem value="en-GB">English (UK)</SelectItem>
-                <SelectItem value="es">Spanish</SelectItem>
-                <SelectItem value="fr">French</SelectItem>
-                <SelectItem value="de">German</SelectItem>
-                <SelectItem value="it">Italian</SelectItem>
-                <SelectItem value="pt">Portuguese</SelectItem>
-                <SelectItem value="ja">Japanese</SelectItem>
-                <SelectItem value="zh">Chinese (Simplified)</SelectItem>
-              </SelectContent>
-            </Select>
-          </FormItem>
-        )}
-      />
     </div>
   );
 };
