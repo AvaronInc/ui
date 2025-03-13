@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -70,11 +70,11 @@ const DashboardHeader = () => {
     setProfileDialogOpen(true);
   };
 
-  // Dedicated handler for the ProfileDialog open state changes
-  const handleProfileDialogChange = (open: boolean) => {
-    // Simple state update - don't combine with complex logic
+  // Memoized handler for the ProfileDialog open state changes
+  const handleProfileDialogChange = useCallback((open: boolean) => {
+    console.log('Setting profile dialog open state:', open);
     setProfileDialogOpen(open);
-  };
+  }, []);
   
   return (
     <header className="w-full flex items-center justify-between">

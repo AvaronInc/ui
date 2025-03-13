@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { Camera, User } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ProfileDialogProps {
   open: boolean;
@@ -50,14 +51,15 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
 
   const handleSave = () => {
     // This would save the profile updates to the backend
-    // Close the dialog safely with the callback
+    toast.success("Profile updated successfully");
+    // Important: Call onOpenChange AFTER all other operations
     onOpenChange(false);
   };
   
   const handleCancel = () => {
-    // Reset form to either the profile name or PowerUser, never empty string
+    // Reset the nickname to the current profile name or default
     setNickname(profile?.full_name || 'PowerUser');
-    // Close the dialog safely with the callback
+    // Important: Call onOpenChange at the end
     onOpenChange(false);
   };
   
