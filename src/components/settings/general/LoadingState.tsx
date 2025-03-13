@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 interface LoadingStateProps {
   isLoading: boolean;
@@ -13,7 +14,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({ isLoading, error, onRetry }
     return (
       <div className="flex justify-center items-center p-6 min-h-[300px]">
         <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
           <p>Loading settings...</p>
         </div>
       </div>
@@ -22,9 +23,10 @@ const LoadingState: React.FC<LoadingStateProps> = ({ isLoading, error, onRetry }
   
   if (error) {
     return (
-      <div className="flex justify-center p-6">
+      <div className="flex flex-col items-center justify-center p-6 min-h-[200px]">
         <div className="text-center">
-          <p className="text-destructive mb-2">{error}</p>
+          <AlertCircle className="h-10 w-10 text-destructive mx-auto mb-3" />
+          <p className="text-destructive mb-4 font-medium">{error}</p>
           <Button 
             onClick={onRetry} 
             variant="outline"

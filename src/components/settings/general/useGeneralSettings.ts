@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/use-toast';
@@ -20,34 +20,37 @@ export const useGeneralSettings = () => {
     defaultValues: defaultSettings,
   });
 
-  useEffect(() => {
-    loadSettings();
-  }, [user]);
-
-  const loadSettings = async () => {
+  const loadSettings = useCallback(async () => {
     try {
       setIsLoading(true);
       setLoadError(null);
       
       let generalSettings;
       
-      // Development mode workaround - skip DB loading if no user
-      if (!user) {
+      // Development mode check
+      const isDevelopment = import.meta.env.DEV;
+      
+      if (isDevelopment && !user) {
         console.log("Development mode: bypassing authentication checks");
         // Load from localStorage only
-        const storedSettings = {
-          companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
-          systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
-          timeZone: localStorage.getItem('timeZone') || defaultSettings.timeZone,
-          dateFormat: (localStorage.getItem('dateFormat') as "MM/DD/YYYY" | "DD/MM/YYYY") || defaultSettings.dateFormat,
-          language: localStorage.getItem('language') || defaultSettings.language,
-          supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
-          helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,
-          maintenanceMode: localStorage.getItem('maintenanceMode') === 'true',
-          companyLogo: localStorage.getItem('companyLogo')
-        };
-        
-        generalSettings = storedSettings;
+        try {
+          const storedSettings = {
+            companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
+            systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
+            timeZone: localStorage.getItem('timeZone') || defaultSettings.timeZone,
+            dateFormat: (localStorage.getItem('dateFormat') as "MM/DD/YYYY" | "DD/MM/YYYY") || defaultSettings.dateFormat,
+            language: localStorage.getItem('language') || defaultSettings.language,
+            supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
+            helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,
+            maintenanceMode: localStorage.getItem('maintenanceMode') === 'true',
+            companyLogo: localStorage.getItem('companyLogo')
+          };
+          
+          generalSettings = storedSettings;
+        } catch (localError) {
+          console.error('Error loading settings from localStorage:', localError);
+          generalSettings = defaultSettings;
+        }
       } else {
         // User is authenticated, try loading from database
         try {
@@ -60,12 +63,16 @@ export const useGeneralSettings = () => {
       }
       
       if (generalSettings) {
+        // Parse dateFormat to ensure it's typed correctly
+        const dateFormat = generalSettings.dateFormat === "DD/MM/YYYY" ? 
+          "DD/MM/YYYY" : "MM/DD/YYYY";
+          
         // Update form with loaded values
         form.reset({
           companyName: generalSettings.companyName || defaultSettings.companyName,
           systemName: generalSettings.systemName || defaultSettings.systemName,
           timeZone: generalSettings.timeZone || defaultSettings.timeZone,
-          dateFormat: (generalSettings.dateFormat as "MM/DD/YYYY" | "DD/MM/YYYY") || defaultSettings.dateFormat,
+          dateFormat: dateFormat,
           language: generalSettings.language || defaultSettings.language,
           supportEmail: generalSettings.supportEmail || defaultSettings.supportEmail,
           helpdeskPhone: generalSettings.helpdeskPhone || defaultSettings.helpdeskPhone,
@@ -79,11 +86,15 @@ export const useGeneralSettings = () => {
         localStorage.setItem('companyName', generalSettings.companyName || defaultSettings.companyName);
       } else {
         // Fallback to localStorage for backward compatibility
+        const localStorage_dateFormat = localStorage.getItem('dateFormat');
+        const typedDateFormat = localStorage_dateFormat === "DD/MM/YYYY" ? 
+          "DD/MM/YYYY" : "MM/DD/YYYY";
+          
         form.reset({
           companyName: localStorage.getItem('companyName') || defaultSettings.companyName,
           systemName: localStorage.getItem('systemName') || defaultSettings.systemName,
           timeZone: localStorage.getItem('timeZone') || defaultSettings.timeZone,
-          dateFormat: (localStorage.getItem('dateFormat') as "MM/DD/YYYY" | "DD/MM/YYYY") || defaultSettings.dateFormat,
+          dateFormat: typedDateFormat,
           language: localStorage.getItem('language') || defaultSettings.language,
           supportEmail: localStorage.getItem('supportEmail') || defaultSettings.supportEmail,
           helpdeskPhone: localStorage.getItem('helpdeskPhone') || defaultSettings.helpdeskPhone,
@@ -100,10 +111,17 @@ export const useGeneralSettings = () => {
         description: "There was a problem loading your settings.",
         variant: "destructive"
       });
+      
+      // Set default values in form to ensure the UI is usable
+      form.reset(defaultSettings);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [form, toast, user]);
+
+  useEffect(() => {
+    loadSettings();
+  }, [loadSettings]);
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

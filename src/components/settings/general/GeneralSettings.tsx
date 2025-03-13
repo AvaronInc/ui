@@ -32,7 +32,7 @@ const GeneralSettings = () => {
       <LoadingState 
         isLoading={isLoading} 
         error={loadError} 
-        onRetry={() => window.location.reload()}
+        onRetry={loadSettings}
       />
       
       {!isLoading && !loadError && (
