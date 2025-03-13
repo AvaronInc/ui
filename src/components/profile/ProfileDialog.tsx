@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Dialog, 
   DialogContent, 
@@ -25,8 +25,15 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   onOpenChange 
 }) => {
   const { user, profile } = useAuth();
-  const [nickname, setNickname] = useState(profile?.full_name || '');
+  const [nickname, setNickname] = useState('');
   
+  // Update nickname when profile changes or dialog opens
+  useEffect(() => {
+    if (open) {
+      setNickname(profile?.full_name || '');
+    }
+  }, [profile, open]);
+
   // Get initials for avatar fallback
   const getInitials = (name?: string) => {
     if (!name) return 'U';
@@ -45,9 +52,8 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   };
   
   const handleCancel = () => {
-    // Reset any form changes
+    // Reset form and close dialog
     setNickname(profile?.full_name || '');
-    // Close the dialog
     onOpenChange(false);
   };
   
@@ -73,6 +79,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                 size="icon" 
                 variant="outline" 
                 className="absolute bottom-0 right-0 rounded-full h-8 w-8"
+                type="button"
               >
                 <Camera className="h-4 w-4" />
                 <span className="sr-only">Upload photo</span>
@@ -114,10 +121,10 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         </div>
         
         <DialogFooter>
-          <Button variant="outline" onClick={handleCancel}>
+          <Button variant="outline" onClick={handleCancel} type="button">
             Cancel
           </Button>
-          <Button onClick={handleSave}>
+          <Button onClick={handleSave} type="button">
             Save changes
           </Button>
         </DialogFooter>
