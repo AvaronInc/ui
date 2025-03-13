@@ -4,7 +4,7 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import MultiTenantView from '@/components/dashboard/MultiTenantView';
 import StatusCard from '@/components/dashboard/StatusCard';
-import AlertsTable from '@/components/dashboard/AlertsTable';
+import AlertsTable, { Alert, AlertSeverity } from '@/components/dashboard/AlertsTable';
 import MetricsChart from '@/components/dashboard/MetricsChart';
 import NavigationTile from '@/components/dashboard/NavigationTile';
 import PageTransition from '@/components/transitions/PageTransition';
@@ -22,10 +22,10 @@ const metricsData = [
 ];
 
 // Sample alerts data - updated to match Alert type in AlertsTable component
-const alertsData = [
+const alertsData: Alert[] = [
   { 
     id: '1', 
-    severity: 'critical', 
+    severity: 'critical' as AlertSeverity, 
     status: 'active',
     message: 'Server CPU usage at 92%', 
     source: 'System Monitor',
@@ -33,7 +33,7 @@ const alertsData = [
   },
   { 
     id: '2', 
-    severity: 'warning', 
+    severity: 'warning' as AlertSeverity, 
     status: 'acknowledged',
     message: 'Storage space below 15%', 
     source: 'Storage Monitor',
@@ -41,7 +41,7 @@ const alertsData = [
   },
   { 
     id: '3', 
-    severity: 'info', 
+    severity: 'info' as AlertSeverity, 
     status: 'resolved',
     message: 'Backup completed successfully', 
     source: 'Backup Service',
