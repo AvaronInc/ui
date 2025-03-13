@@ -39,6 +39,9 @@ interface NewUserFormProps {
   onUserCreated: (user: User) => void;
 }
 
+// Define valid roles to ensure we never have empty values
+const USER_ROLES = ['User', 'Engineer', 'Admin'] as const;
+
 const formSchema = z.object({
   username: z.string().min(3, {
     message: 'Username must be at least 3 characters.',
@@ -179,9 +182,9 @@ const NewUserForm: React.FC<NewUserFormProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="User">User</SelectItem>
-                      <SelectItem value="Engineer">Engineer</SelectItem>
-                      <SelectItem value="Admin">Admin</SelectItem>
+                      {USER_ROLES.map(role => (
+                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>

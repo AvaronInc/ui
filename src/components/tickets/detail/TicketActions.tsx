@@ -25,17 +25,22 @@ const TicketActions = ({
   onAssignTicket,
   technicians
 }: TicketActionsProps) => {
-  const [selectedTechnician, setSelectedTechnician] = useState<string>('');
+  const [selectedTechnician, setSelectedTechnician] = useState<string>('unassigned');
   
   const handleAssignTicket = () => {
     if (selectedTechnician && selectedTechnician !== "unassigned") {
       onAssignTicket(ticket.id, selectedTechnician);
-      setSelectedTechnician('');
+      setSelectedTechnician('unassigned');
     }
   };
 
-  // Filter out any potentially empty technician values
+  // Filter out any potentially empty technician values and ensure there's always at least one valid option
   const validTechnicians = technicians.filter(tech => tech && tech.trim() !== '');
+  
+  // If no valid technicians, add a default "None available" option
+  const displayTechnicians = validTechnicians.length > 0 
+    ? validTechnicians 
+    : ['No technicians available'];
 
   return (
     <div className="space-y-2">
@@ -71,7 +76,7 @@ const TicketActions = ({
       <div className="flex gap-2 items-end">
         <div className="flex-1">
           <Select 
-            value={selectedTechnician || "unassigned"} 
+            value={selectedTechnician} 
             onValueChange={setSelectedTechnician}
           >
             <SelectTrigger>
@@ -79,7 +84,7 @@ const TicketActions = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="unassigned">Select a technician</SelectItem>
-              {validTechnicians.map(tech => (
+              {displayTechnicians.map(tech => (
                 <SelectItem key={tech} value={tech}>{tech}</SelectItem>
               ))}
             </SelectContent>
