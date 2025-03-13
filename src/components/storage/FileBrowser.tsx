@@ -21,6 +21,8 @@ interface FileBrowserProps {
   onFileSelect: (file: FileItem) => void;
   onFolderOpen: (file: FileItem) => void;
   selectedFileId?: string;
+  currentPath?: string[];
+  onPathClick?: (index: number) => void;
 }
 
 const FileBrowser: React.FC<FileBrowserProps> = ({
@@ -29,6 +31,8 @@ const FileBrowser: React.FC<FileBrowserProps> = ({
   onFileSelect,
   onFolderOpen,
   selectedFileId,
+  currentPath = ['root'],
+  onPathClick,
 }) => {
   
   const handleRowClick = (file: FileItem) => {
@@ -43,6 +47,22 @@ const FileBrowser: React.FC<FileBrowserProps> = ({
 
   return (
     <div className="border rounded-md shadow-sm bg-card">
+      {currentPath && currentPath.length > 0 && onPathClick && (
+        <div className="flex items-center gap-1 p-2 text-sm text-muted-foreground border-b">
+          {currentPath.map((pathPart, index) => (
+            <React.Fragment key={index}>
+              {index > 0 && <span>/</span>}
+              <button
+                onClick={() => onPathClick(index)}
+                className="hover:text-primary hover:underline"
+              >
+                {pathPart}
+              </button>
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+      
       <Table>
         <TableHeader>
           <TableRow>
