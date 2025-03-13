@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 
@@ -30,83 +29,100 @@ export enum OrgSettingsCategory {
  * Save user settings to Supabase
  */
 export const saveUserSettings = async (category: SettingsCategory, settings: any) => {
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-  
-  if (userError || !userData.user) {
-    console.error('Error fetching user data:', userError);
-    throw new Error('User not authenticated');
-  }
-  
-  const userId = userData.user.id;
-  
-  // First check if settings exist for this category
-  const { data: existingSettings } = await supabase
-    .from('app_settings')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('category', category)
-    .single();
-  
-  if (existingSettings) {
-    // Update existing settings
-    const { error } = await supabase
-      .from('app_settings')
-      .update({ settings })
-      .eq('id', existingSettings.id);
+  try {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
     
-    if (error) {
-      console.error('Error updating settings:', error);
-      throw error;
+    if (userError || !userData.user) {
+      console.error('Error fetching user data:', userError);
+      throw new Error('User not authenticated');
     }
-  } else {
-    // Insert new settings
-    const { error } = await supabase
-      .from('app_settings')
-      .insert([{ 
-        user_id: userId, 
-        category, 
-        settings 
-      }]);
     
-    if (error) {
-      console.error('Error inserting settings:', error);
-      throw error;
+    const userId = userData.user.id;
+    
+    // First check if settings exist for this category
+    const { data: existingSettings, error: fetchError } = await supabase
+      .from('app_settings')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('category', category)
+      .maybeSingle();
+    
+    if (fetchError) {
+      console.error('Error checking existing settings:', fetchError);
+      throw fetchError;
     }
+    
+    if (existingSettings) {
+      // Update existing settings
+      const { error } = await supabase
+        .from('app_settings')
+        .update({ settings })
+        .eq('id', existingSettings.id);
+      
+      if (error) {
+        console.error('Error updating settings:', error);
+        throw error;
+      }
+    } else {
+      // Insert new settings
+      const { error } = await supabase
+        .from('app_settings')
+        .insert([{ 
+          user_id: userId, 
+          category, 
+          settings 
+        }]);
+      
+      if (error) {
+        console.error('Error inserting settings:', error);
+        throw error;
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Unexpected error in saveUserSettings:', error);
+    throw error;
   }
-  
-  return true;
 };
 
 /**
  * Load user settings from Supabase
  */
 export const loadUserSettings = async (category: SettingsCategory) => {
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-  
-  if (userError || !userData.user) {
-    console.error('Error fetching user data:', userError);
-    // Fall back to localStorage for unauthenticated users
+  try {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !userData.user) {
+      console.error('Error fetching user data:', userError);
+      // Fall back to localStorage for unauthenticated users
+      const localData = localStorage.getItem(category);
+      return localData ? JSON.parse(localData) : null;
+    }
+    
+    const userId = userData.user.id;
+    
+    const { data, error } = await supabase
+      .from('app_settings')
+      .select('settings')
+      .eq('user_id', userId)
+      .eq('category', category)
+      .maybeSingle();
+    
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" which is expected for new users
+      console.error(`Error loading ${category} settings:`, error);
+      // Fall back to localStorage if database fetch fails
+      const localData = localStorage.getItem(category);
+      return localData ? JSON.parse(localData) : null;
+    }
+    
+    return data?.settings || null;
+  } catch (error) {
+    console.error('Unexpected error in loadUserSettings:', error);
+    // Fall back to localStorage on any error
     const localData = localStorage.getItem(category);
     return localData ? JSON.parse(localData) : null;
   }
-  
-  const userId = userData.user.id;
-  
-  const { data, error } = await supabase
-    .from('app_settings')
-    .select('settings')
-    .eq('user_id', userId)
-    .eq('category', category)
-    .single();
-  
-  if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" which is expected for new users
-    console.error(`Error loading ${category} settings:`, error);
-    // Fall back to localStorage if database fetch fails
-    const localData = localStorage.getItem(category);
-    return localData ? JSON.parse(localData) : null;
-  }
-  
-  return data?.settings || null;
 };
 
 /**

@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -34,6 +33,7 @@ const GeneralSettings = () => {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [companyLogo, setCompanyLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,12 +53,40 @@ const GeneralSettings = () => {
     const loadSettings = async () => {
       try {
         setIsLoading(true);
+        setLoadError(null);
         
-        // Load general settings from the database
-        const generalSettings = await loadUserSettings(SettingsCategory.GENERAL);
+        let generalSettings;
+        
+        // Development mode workaround - skip DB loading if no user
+        if (!user) {
+          console.log("Development mode: bypassing authentication checks");
+          // Load from localStorage only
+          const storedSettings = {
+            companyName: localStorage.getItem('companyName') || 'CyberNest Corp',
+            systemName: localStorage.getItem('systemName') || 'Network Pulse Management',
+            timeZone: localStorage.getItem('timeZone') || 'UTC',
+            dateFormat: (localStorage.getItem('dateFormat') as "MM/DD/YYYY" | "DD/MM/YYYY") || "MM/DD/YYYY",
+            language: localStorage.getItem('language') || 'en-US',
+            supportEmail: localStorage.getItem('supportEmail') || 'support@cybernest.com',
+            helpdeskPhone: localStorage.getItem('helpdeskPhone') || '+1 (555) 123-4567',
+            maintenanceMode: localStorage.getItem('maintenanceMode') === 'true',
+            companyLogo: localStorage.getItem('companyLogo')
+          };
+          
+          generalSettings = storedSettings;
+        } else {
+          // User is authenticated, try loading from database
+          try {
+            generalSettings = await loadUserSettings(SettingsCategory.GENERAL);
+          } catch (dbError) {
+            console.error('Error loading settings from database:', dbError);
+            // Fall back to localStorage on DB error
+            generalSettings = null;
+          }
+        }
         
         if (generalSettings) {
-          // Update form with database values
+          // Update form with loaded values
           form.reset({
             companyName: generalSettings.companyName || 'CyberNest Corp',
             systemName: generalSettings.systemName || 'Network Pulse Management',
@@ -92,6 +120,7 @@ const GeneralSettings = () => {
         }
       } catch (error) {
         console.error('Error loading settings:', error);
+        setLoadError('Failed to load settings. Please try again.');
         toast({
           title: "Error loading settings",
           description: "There was a problem loading your settings.",
@@ -103,7 +132,7 @@ const GeneralSettings = () => {
     };
     
     loadSettings();
-  }, [form, toast]);
+  }, [form, toast, user]);
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -138,7 +167,7 @@ const GeneralSettings = () => {
         companyLogo
       };
       
-      // Save to database
+      // Save to database if user is authenticated
       if (user) {
         await saveUserSettings(SettingsCategory.GENERAL, combinedSettings);
       }
@@ -230,7 +259,30 @@ const GeneralSettings = () => {
   ];
   
   if (isLoading) {
-    return <div className="flex justify-center p-6">Loading settings...</div>;
+    return (
+      <div className="flex justify-center items-center p-6 min-h-[300px]">
+        <div className="text-center">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p>Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (loadError) {
+    return (
+      <div className="flex justify-center p-6">
+        <div className="text-center">
+          <p className="text-destructive mb-2">{loadError}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            variant="outline"
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
   }
   
   return (
