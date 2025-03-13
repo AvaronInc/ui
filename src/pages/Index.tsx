@@ -21,11 +21,32 @@ const metricsData = [
   { name: 'Sun', value: 40 }
 ];
 
-// Sample alerts data
+// Sample alerts data - updated to match Alert type in AlertsTable component
 const alertsData = [
-  { id: 1, level: 'critical', message: 'Server CPU usage at 92%', time: '2 min ago' },
-  { id: 2, level: 'warning', message: 'Storage space below 15%', time: '15 min ago' },
-  { id: 3, level: 'info', message: 'Backup completed successfully', time: '1 hour ago' }
+  { 
+    id: '1', 
+    severity: 'critical', 
+    status: 'active',
+    message: 'Server CPU usage at 92%', 
+    source: 'System Monitor',
+    timestamp: '2 min ago' 
+  },
+  { 
+    id: '2', 
+    severity: 'warning', 
+    status: 'acknowledged',
+    message: 'Storage space below 15%', 
+    source: 'Storage Monitor',
+    timestamp: '15 min ago' 
+  },
+  { 
+    id: '3', 
+    severity: 'info', 
+    status: 'resolved',
+    message: 'Backup completed successfully', 
+    source: 'Backup Service',
+    timestamp: '1 hour ago' 
+  }
 ];
 
 const Index = () => {
@@ -84,25 +105,25 @@ const Index = () => {
                   title="Security Operations"
                   description="Monitor and manage security events"
                   href="/security"
-                  icon={<ShieldCheck className="h-8 w-8" />}
+                  icon={ShieldCheck}
                 />
                 <NavigationTile
                   title="Remote Monitoring"
                   description="View and manage monitored devices"
                   href="/rmm"
-                  icon={<Server className="h-8 w-8" />}
+                  icon={Server}
                 />
                 <NavigationTile
                   title="Workforce Management"
                   description="Manage employee devices & access"
                   href="/workforce"
-                  icon={<Users className="h-8 w-8" />}
+                  icon={Users}
                 />
                 <NavigationTile
                   title="Storage Management"
                   description="Manage files and storage buckets"
                   href="/storage"
-                  icon={<Building className="h-8 w-8" />}
+                  icon={Building}
                 />
               </div>
             </>
