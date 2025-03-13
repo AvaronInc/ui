@@ -78,8 +78,8 @@ const DateTimeTab: React.FC<DateTimeTabProps> = ({ form }) => {
               <FormLabel>Date Format</FormLabel>
               <Select 
                 onValueChange={field.onChange} 
-                defaultValue={field.value}
-                value={field.value}
+                defaultValue={field.value || "MM/DD/YYYY"}
+                value={field.value || "MM/DD/YYYY"}
               >
                 <FormControl>
                   <SelectTrigger>

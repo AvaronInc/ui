@@ -31,14 +31,14 @@ export const useSettingsSubmit = ({
       // Make sure timeZone is never empty
       localStorage.setItem('timeZone', data.timeZone || 'UTC');
       
-      // dateFormat is already typed as 'MM/DD/YYYY' | 'DD/MM/YYYY'
-      localStorage.setItem('dateFormat', data.dateFormat);
+      // Ensure dateFormat is never empty
+      localStorage.setItem('dateFormat', data.dateFormat || 'MM/DD/YYYY');
       
       // Make sure language is never empty
       localStorage.setItem('language', data.language || 'en-US');
       
-      localStorage.setItem('supportEmail', data.supportEmail);
-      localStorage.setItem('helpdeskPhone', data.helpdeskPhone);
+      localStorage.setItem('supportEmail', data.supportEmail || '');
+      localStorage.setItem('helpdeskPhone', data.helpdeskPhone || '');
       localStorage.setItem('maintenanceMode', maintenanceMode.toString());
       
       if (companyLogo) {
