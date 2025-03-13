@@ -67,12 +67,14 @@ const DashboardHeader = () => {
   };
   
   const handleProfileClick = () => {
+    console.log('Opening profile dialog');
     setProfileDialogOpen(true);
   };
 
-  // Memoized handler for the ProfileDialog open state changes
+  // Simpler, more direct handler for profile dialog state changes
   const handleProfileDialogChange = useCallback((open: boolean) => {
     console.log('Setting profile dialog open state:', open);
+    // Just update the state and nothing more
     setProfileDialogOpen(open);
   }, []);
   
@@ -139,6 +141,7 @@ const DashboardHeader = () => {
         </DropdownMenu>
       </div>
       
+      {/* The dialog state is completely controlled by the profileDialogOpen state */}
       <ProfileDialog 
         open={profileDialogOpen} 
         onOpenChange={handleProfileDialogChange} 
