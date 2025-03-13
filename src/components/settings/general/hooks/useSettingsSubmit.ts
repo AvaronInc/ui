@@ -26,10 +26,12 @@ export const useSettingsSubmit = ({
       
       // Store data in localStorage (for simplicity in this example)
       localStorage.setItem('companyName', data.companyName);
+      localStorage.setItem('systemName', data.systemName);
       localStorage.setItem('timeZone', data.timeZone);
       localStorage.setItem('dateFormat', data.dateFormat);
-      localStorage.setItem('businessStartTime', data.businessStartTime);
-      localStorage.setItem('businessEndTime', data.businessEndTime);
+      localStorage.setItem('language', data.language);
+      localStorage.setItem('supportEmail', data.supportEmail);
+      localStorage.setItem('helpdeskPhone', data.helpdeskPhone);
       localStorage.setItem('maintenanceMode', maintenanceMode.toString());
       if (companyLogo) {
         localStorage.setItem('companyLogo', companyLogo);

@@ -19,20 +19,25 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         setIsLoading(true);
         setLoadError(null);
         
+        // Get stored values with proper type handling for dateFormat
+        const storedDateFormat = localStorage.getItem('dateFormat') || '';
+        const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
+          ? storedDateFormat 
+          : 'MM/DD/YYYY'; // Default if invalid
+        
         const storedSettings = {
           companyName: localStorage.getItem('companyName') || '',
           timeZone: localStorage.getItem('timeZone') || '',
-          dateFormat: localStorage.getItem('dateFormat') || '',
-          businessStartTime: localStorage.getItem('businessStartTime') || '',
-          businessEndTime: localStorage.getItem('businessEndTime') || '',
+          dateFormat,
+          systemName: localStorage.getItem('systemName') || '',
+          language: localStorage.getItem('language') || '',
+          supportEmail: localStorage.getItem('supportEmail') || '',
+          helpdeskPhone: localStorage.getItem('helpdeskPhone') || '',
         };
         
         console.log('Loaded settings from localStorage:', storedSettings);
         
-        form.reset({
-          ...form.getValues(),
-          ...storedSettings,
-        });
+        form.reset(storedSettings);
       } catch (error) {
         console.error('Error loading settings from localStorage:', error);
         setLoadError('Could not load settings from localStorage');
@@ -54,20 +59,25 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
       // const data = await response.json();
       
       // For now, we'll just use localStorage as a fallback
+      // Get stored values with proper type handling for dateFormat
+      const storedDateFormat = localStorage.getItem('dateFormat') || '';
+      const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
+        ? storedDateFormat 
+        : 'MM/DD/YYYY'; // Default if invalid
+      
       const storedSettings = {
         companyName: localStorage.getItem('companyName') || '',
         timeZone: localStorage.getItem('timeZone') || '',
-        dateFormat: localStorage.getItem('dateFormat') || '',
-        businessStartTime: localStorage.getItem('businessStartTime') || '',
-        businessEndTime: localStorage.getItem('businessEndTime') || '',
+        dateFormat,
+        systemName: localStorage.getItem('systemName') || '',
+        language: localStorage.getItem('language') || '',
+        supportEmail: localStorage.getItem('supportEmail') || '',
+        helpdeskPhone: localStorage.getItem('helpdeskPhone') || '',
       };
       
       console.log('Loaded settings:', storedSettings);
       
-      form.reset({
-        ...form.getValues(),
-        ...storedSettings,
-      });
+      form.reset(storedSettings);
     } catch (error) {
       console.error('Error loading settings:', error);
       setLoadError('Could not load settings. Please try again.');
