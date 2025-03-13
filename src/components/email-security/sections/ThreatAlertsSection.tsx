@@ -1,4 +1,3 @@
-
 import {
   Form,
   FormControl,
@@ -15,6 +14,7 @@ import { EmailSecuritySettings } from "@/types/emailSecurity";
 import { Badge } from "@/components/ui/badge";
 import { X, Plus, UserPlus, Mail, Bell, AlertTriangle } from "lucide-react";
 import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ThreatAlertsSectionProps {
   form: UseFormReturn<EmailSecuritySettings>;

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { FilePdf, FileJson, Search, Shield, Mail, Users, Lock, FileText, Bell, Phone } from 'lucide-react';
+import { FileText, File, Search, Shield, Mail, Users, Lock, Bell, Phone } from 'lucide-react';
 import AIEmailFilteringSection from './sections/AIEmailFilteringSection';
 import RiskAssessmentSection from './sections/RiskAssessmentSection';
 import IdentityVerificationSection from './sections/IdentityVerificationSection';
@@ -172,7 +172,7 @@ const EmailSecurityPanel = () => {
             onClick={() => handleExport('pdf')}
             className="flex items-center gap-2"
           >
-            <FilePdf className="h-4 w-4" />
+            <FileText className="h-4 w-4" />
             Export PDF
           </Button>
           <Button 
@@ -180,7 +180,7 @@ const EmailSecurityPanel = () => {
             onClick={() => handleExport('json')}
             className="flex items-center gap-2"
           >
-            <FileJson className="h-4 w-4" />
+            <File className="h-4 w-4" />
             Export JSON
           </Button>
           <Button 
