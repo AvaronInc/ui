@@ -36,22 +36,57 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
   const handleSignup = async (values: SignupFormValues) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      console.log('Starting signup process...');
+      
+      // First check if the user already exists
+      const { data: existingUser, error: checkError } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('email', values.email)
+        .maybeSingle();
+      
+      if (checkError) {
+        console.error('Error checking existing user:', checkError);
+      }
+      
+      if (existingUser) {
+        toast.error('An account with this email already exists');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Proceed with signup
+      const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
           data: {
             full_name: values.fullName,
+            // Explicitly set role to 'user' to avoid type issues
+            role: 'user',
           },
         },
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Signup error:', error);
+        throw error;
+      }
       
+      console.log('Signup successful:', data);
       toast.success('Account created successfully. Please check your email to confirm your account.');
       onSuccess();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create account');
+      console.error('Error in handleSignup:', error);
+      
+      // Provide more user-friendly error messages
+      if (error.message?.includes('user_role')) {
+        toast.error('There was an issue with your account type. Please try again later.');
+      } else if (error.message?.includes('already registered')) {
+        toast.error('This email is already registered. Please use a different email or try to log in.');
+      } else {
+        toast.error(error.message || 'Failed to create account. Please try again later.');
+      }
     } finally {
       setIsLoading(false);
     }
