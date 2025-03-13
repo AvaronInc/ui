@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
 
 // Sample tenant data - in a real app, this would come from an API
 const tenants = [
@@ -33,7 +35,33 @@ const tenants = [
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const [selectedTenant, setSelectedTenant] = useState(tenants[0].id);
-  const companyName = localStorage.getItem('companyName') || 'SecuriCorp';
+  const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
+  
+  useEffect(() => {
+    // Set up initial company name
+    const storedCompanyName = localStorage.getItem('companyName');
+    if (storedCompanyName) {
+      setCompanyName(storedCompanyName);
+    }
+    
+    // Load company name from database if user is logged in
+    if (user) {
+      const fetchCompanyName = async () => {
+        try {
+          const generalSettings = await loadUserSettings(SettingsCategory.GENERAL);
+          if (generalSettings && generalSettings.companyName) {
+            setCompanyName(generalSettings.companyName);
+            // Also update localStorage for components that rely on it
+            localStorage.setItem('companyName', generalSettings.companyName);
+          }
+        } catch (error) {
+          console.error('Error loading company name:', error);
+        }
+      };
+      
+      fetchCompanyName();
+    }
+  }, [user]);
   
   const getInitials = (name?: string) => {
     if (!name) return 'U';

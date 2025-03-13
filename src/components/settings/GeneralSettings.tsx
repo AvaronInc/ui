@@ -1,5 +1,5 @@
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -14,6 +14,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
+import { saveUserSettings, loadUserSettings, SettingsCategory } from '@/services/settings-service';
+import { useAuth } from '@/context/AuthContext';
 
 const formSchema = z.object({
   companyName: z.string().min(2, { message: "Company name must be at least 2 characters." }),
@@ -27,23 +29,81 @@ const formSchema = z.object({
 
 const GeneralSettings = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const { isDarkMode, toggleDarkMode, primaryColor, setPrimaryColor } = useTheme();
   const [maintenanceMode, setMaintenanceMode] = useState(false);
-  const [companyLogo, setCompanyLogo] = useState<string | null>(localStorage.getItem('companyLogo'));
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      companyName: localStorage.getItem('companyName') || 'CyberNest Corp',
-      systemName: localStorage.getItem('systemName') || 'Network Pulse Management',
-      timeZone: localStorage.getItem('timeZone') || 'UTC',
-      dateFormat: (localStorage.getItem('dateFormat') as "MM/DD/YYYY" | "DD/MM/YYYY") || "MM/DD/YYYY",
-      language: localStorage.getItem('language') || 'en-US',
-      supportEmail: localStorage.getItem('supportEmail') || 'support@cybernest.com',
-      helpdeskPhone: localStorage.getItem('helpdeskPhone') || '+1 (555) 123-4567',
+      companyName: 'CyberNest Corp',
+      systemName: 'Network Pulse Management',
+      timeZone: 'UTC',
+      dateFormat: "MM/DD/YYYY",
+      language: 'en-US',
+      supportEmail: 'support@cybernest.com',
+      helpdeskPhone: '+1 (555) 123-4567',
     },
   });
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Load general settings from the database
+        const generalSettings = await loadUserSettings(SettingsCategory.GENERAL);
+        
+        if (generalSettings) {
+          // Update form with database values
+          form.reset({
+            companyName: generalSettings.companyName || 'CyberNest Corp',
+            systemName: generalSettings.systemName || 'Network Pulse Management',
+            timeZone: generalSettings.timeZone || 'UTC',
+            dateFormat: generalSettings.dateFormat || "MM/DD/YYYY",
+            language: generalSettings.language || 'en-US',
+            supportEmail: generalSettings.supportEmail || 'support@cybernest.com',
+            helpdeskPhone: generalSettings.helpdeskPhone || '+1 (555) 123-4567',
+          });
+          
+          // Also update other state values
+          setMaintenanceMode(generalSettings.maintenanceMode || false);
+          setCompanyLogo(generalSettings.companyLogo || null);
+          
+          // Update localStorage for header component to use (for real-time updates)
+          localStorage.setItem('companyName', generalSettings.companyName || 'CyberNest Corp');
+        } else {
+          // Fallback to localStorage for backward compatibility
+          form.reset({
+            companyName: localStorage.getItem('companyName') || 'CyberNest Corp',
+            systemName: localStorage.getItem('systemName') || 'Network Pulse Management',
+            timeZone: localStorage.getItem('timeZone') || 'UTC',
+            dateFormat: (localStorage.getItem('dateFormat') as "MM/DD/YYYY" | "DD/MM/YYYY") || "MM/DD/YYYY",
+            language: localStorage.getItem('language') || 'en-US',
+            supportEmail: localStorage.getItem('supportEmail') || 'support@cybernest.com',
+            helpdeskPhone: localStorage.getItem('helpdeskPhone') || '+1 (555) 123-4567',
+          });
+          
+          setMaintenanceMode(localStorage.getItem('maintenanceMode') === 'true');
+          setCompanyLogo(localStorage.getItem('companyLogo'));
+        }
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        toast({
+          title: "Error loading settings",
+          description: "There was a problem loading your settings.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadSettings();
+  }, [form, toast]);
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -52,7 +112,10 @@ const GeneralSettings = () => {
       reader.onload = (e) => {
         const logoData = e.target?.result as string;
         setCompanyLogo(logoData);
+        
+        // Also update localStorage for backward compatibility
         localStorage.setItem('companyLogo', logoData);
+        
         toast({
           title: "Logo updated",
           description: "Your company logo has been updated successfully.",
@@ -66,21 +129,43 @@ const GeneralSettings = () => {
     fileInputRef.current?.click();
   };
   
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    // Save all form data to localStorage
-    Object.entries(data).forEach(([key, value]) => {
-      localStorage.setItem(key, value);
-    });
-    
-    toast({
-      title: "Settings saved",
-      description: "Your general settings have been updated successfully.",
-    });
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      // Combine all settings into one object
+      const combinedSettings = {
+        ...data,
+        maintenanceMode,
+        companyLogo
+      };
+      
+      // Save to database
+      if (user) {
+        await saveUserSettings(SettingsCategory.GENERAL, combinedSettings);
+      }
+      
+      // Still save to localStorage for backward compatibility
+      Object.entries(data).forEach(([key, value]) => {
+        localStorage.setItem(key, value);
+      });
+      localStorage.setItem('maintenanceMode', maintenanceMode.toString());
+      if (companyLogo) localStorage.setItem('companyLogo', companyLogo);
+      
+      toast({
+        title: "Settings saved",
+        description: "Your general settings have been updated successfully.",
+      });
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      toast({
+        title: "Error saving settings",
+        description: "There was a problem saving your settings.",
+        variant: "destructive"
+      });
+    }
   };
   
-  const handleReset = () => {
-    // Reset form values
-    form.reset({
+  const handleReset = async () => {
+    const defaultSettings = {
       companyName: 'CyberNest Corp',
       systemName: 'Network Pulse Management',
       timeZone: 'UTC',
@@ -88,14 +173,38 @@ const GeneralSettings = () => {
       language: 'en-US',
       supportEmail: 'support@cybernest.com',
       helpdeskPhone: '+1 (555) 123-4567',
-    });
+      maintenanceMode: false,
+      companyLogo: null
+    };
+    
+    // Reset form values
+    form.reset(defaultSettings);
     
     // Reset other settings
     setCompanyLogo(null);
-    localStorage.removeItem('companyLogo');
     setMaintenanceMode(false);
     setPrimaryColor('blue');
     if (isDarkMode) toggleDarkMode();
+    
+    // Save reset values to database
+    if (user) {
+      try {
+        await saveUserSettings(SettingsCategory.GENERAL, defaultSettings);
+      } catch (error) {
+        console.error("Error resetting settings:", error);
+      }
+    }
+    
+    // Reset localStorage
+    localStorage.removeItem('companyLogo');
+    localStorage.setItem('companyName', defaultSettings.companyName);
+    localStorage.setItem('systemName', defaultSettings.systemName);
+    localStorage.setItem('timeZone', defaultSettings.timeZone);
+    localStorage.setItem('dateFormat', defaultSettings.dateFormat);
+    localStorage.setItem('language', defaultSettings.language);
+    localStorage.setItem('supportEmail', defaultSettings.supportEmail);
+    localStorage.setItem('helpdeskPhone', defaultSettings.helpdeskPhone);
+    localStorage.setItem('maintenanceMode', 'false');
     
     toast({
       title: "Settings reset",
@@ -111,6 +220,10 @@ const GeneralSettings = () => {
     { name: 'orange', class: 'bg-orange-500' },
     { name: 'gray', class: 'bg-gray-500' }
   ];
+  
+  if (isLoading) {
+    return <div className="flex justify-center p-6">Loading settings...</div>;
+  }
   
   return (
     <div className="space-y-6">

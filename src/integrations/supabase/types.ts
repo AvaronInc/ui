@@ -103,6 +103,33 @@ export type Database = {
           },
         ]
       }
+      app_settings: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          settings: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          settings?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          settings?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       app_users: {
         Row: {
           biometrics_enrolled: boolean | null
@@ -354,6 +381,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      organization_settings: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          organization_id: string
+          settings: Json
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          settings?: Json
+          updated_at?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
