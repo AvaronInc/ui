@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Dialog, 
@@ -60,6 +59,13 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
     onOpenChange(false);
   };
   
+  // Safe handler for nickname input changes
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    // Only update if there's a value, otherwise keep as PowerUser
+    setNickname(newValue || 'PowerUser');
+  };
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -104,7 +110,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
             <Input 
               id="nickname" 
               value={nickname} 
-              onChange={(e) => setNickname(e.target.value || 'PowerUser')} 
+              onChange={handleNicknameChange}
               placeholder="Enter your preferred name"
             />
             <span className="text-xs text-muted-foreground">
@@ -124,10 +130,17 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         </div>
         
         <DialogFooter>
-          <Button variant="outline" onClick={handleCancel} type="button">
+          <Button 
+            variant="outline" 
+            onClick={handleCancel} 
+            type="button"
+          >
             Cancel
           </Button>
-          <Button onClick={handleSave} type="button">
+          <Button 
+            onClick={handleSave} 
+            type="button"
+          >
             Save changes
           </Button>
         </DialogFooter>

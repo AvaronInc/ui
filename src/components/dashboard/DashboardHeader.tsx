@@ -69,6 +69,10 @@ const DashboardHeader = () => {
   const handleProfileClick = () => {
     setProfileDialogOpen(true);
   };
+
+  const handleProfileDialogChange = (open: boolean) => {
+    setProfileDialogOpen(open);
+  };
   
   return (
     <header className="w-full flex items-center justify-between">
@@ -135,7 +139,7 @@ const DashboardHeader = () => {
       
       <ProfileDialog 
         open={profileDialogOpen} 
-        onOpenChange={setProfileDialogOpen} 
+        onOpenChange={handleProfileDialogChange} 
       />
     </header>
   );
