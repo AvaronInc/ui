@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -53,6 +52,9 @@ const aiSettingsSchema = z.object({
   voiceConversationMode: z.enum(['brief', 'interactive']).default('brief'),
   openSupportTicket: z.boolean().default(true),
   generateTranscript: z.boolean().default(true),
+  enableAIRecommendations: z.boolean().default(false),
+  autoFixConfidenceThreshold: z.number().min(0).max(100).default(85),
+  aiLearningDuration: z.enum(['7', '14', '30']).default('14'),
 });
 
 type AISettingsValues = z.infer<typeof aiSettingsSchema>;
@@ -62,7 +64,6 @@ const AISettings = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [adminOrder, setAdminOrder] = useState<string[]>([]);
   
-  // Load saved settings from localStorage if available
   const savedSettings = localStorage.getItem('aiVoiceCallSettings');
   const parsedSettings = savedSettings ? JSON.parse(savedSettings) : {};
   
@@ -79,9 +80,11 @@ const AISettings = () => {
     voiceConversationMode: parsedSettings.voiceConversationMode || 'brief',
     openSupportTicket: parsedSettings.openSupportTicket !== undefined ? parsedSettings.openSupportTicket : true,
     generateTranscript: parsedSettings.generateTranscript !== undefined ? parsedSettings.generateTranscript : true,
+    enableAIRecommendations: parsedSettings.enableAIRecommendations || false,
+    autoFixConfidenceThreshold: parsedSettings.autoFixConfidenceThreshold || 85,
+    aiLearningDuration: parsedSettings.aiLearningDuration || '14',
   };
 
-  // Set initial admin order from saved settings
   useState(() => {
     if (parsedSettings.adminOrder) {
       setAdminOrder(parsedSettings.adminOrder);
@@ -96,9 +99,7 @@ const AISettings = () => {
   const handleSave = (values: AISettingsValues) => {
     setIsSaving(true);
     
-    // Simulate saving to server
     setTimeout(() => {
-      // Save settings to localStorage
       const settingsToSave = {
         ...values,
         adminOrder: adminOrder
@@ -113,7 +114,6 @@ const AISettings = () => {
     }, 500);
   };
 
-  // Function to move an admin up in the priority list
   const moveAdminUp = (id: string) => {
     const currentIndex = adminOrder.indexOf(id);
     if (currentIndex > 0) {
@@ -123,7 +123,6 @@ const AISettings = () => {
     }
   };
 
-  // Function to move an admin down in the priority list
   const moveAdminDown = (id: string) => {
     const currentIndex = adminOrder.indexOf(id);
     if (currentIndex < adminOrder.length - 1 && currentIndex !== -1) {
@@ -133,18 +132,16 @@ const AISettings = () => {
     }
   };
 
-  // Function to handle admin selection from dropdown
   const handleAdminSelect = (selectedAdmins: string[]) => {
     form.setValue('adminCallRoster', selectedAdmins);
     
-    // Update admin order by adding new admins at the end
-    // and removing admins that are no longer selected
     const newOrder = adminOrder.filter(id => selectedAdmins.includes(id));
     const newAdmins = selectedAdmins.filter(id => !adminOrder.includes(id));
     setAdminOrder([...newOrder, ...newAdmins]);
   };
 
   const selectedAdmins = form.watch('adminCallRoster');
+  const confidenceThreshold = form.watch('autoFixConfidenceThreshold');
   
   return (
     <div className="space-y-6">
@@ -439,6 +436,91 @@ const AISettings = () => {
                   </Select>
                   <FormDescription>
                     Brief mode provides a quick summary while interactive mode allows for questions
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+          </SettingsCard>
+          
+          <SettingsCard title="AI-Generated Fixes">
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="enableAIRecommendations"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Enable AI Recommendations</FormLabel>
+                      <FormDescription>
+                        Allow AI to analyze system issues and suggest or automatically implement fixes
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="autoFixConfidenceThreshold"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confidence Threshold for Auto-Fixes</FormLabel>
+                    <div className="space-y-2">
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="100"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <div className="flex flex-col space-y-1">
+                        <div className="text-sm text-muted-foreground">
+                          Current: {confidenceThreshold}%
+                        </div>
+                        <Progress value={confidenceThreshold} className="h-2" />
+                      </div>
+                    </div>
+                    <FormDescription>
+                      AI will only auto-implement fixes when confidence level meets or exceeds this threshold (%)
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </SettingsCard>
+          
+          <SettingsCard title="AI Self-Learning Period">
+            <FormField
+              control={form.control}
+              name="aiLearningDuration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Learning Duration Before Auto-Fixing New Issues</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select learning period" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="7">7 Days</SelectItem>
+                      <SelectItem value="14">14 Days</SelectItem>
+                      <SelectItem value="30">30 Days</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Period the AI will observe and learn about new issues before attempting to auto-fix them
                   </FormDescription>
                 </FormItem>
               )}
