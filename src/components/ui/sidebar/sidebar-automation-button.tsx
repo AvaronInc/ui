@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { Zap } from 'lucide-react'
-import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from './sidebar-menu'
+import { SidebarMenuItem, SidebarMenuButton } from './sidebar-menu'
 
 export const SidebarAutomationButton = () => {
   const navigate = useNavigate()
@@ -11,24 +11,22 @@ export const SidebarAutomationButton = () => {
   const isActive = location.pathname === '/automation'
   
   return (
-    <SidebarMenu className="mt-2">
-      <SidebarMenuItem>
-        <SidebarMenuButton 
-          asChild
-          isActive={isActive}
+    <SidebarMenuItem>
+      <SidebarMenuButton 
+        asChild
+        isActive={isActive}
+      >
+        <button
+          onClick={() => navigate('/automation')}
+          className={cn(
+            "nav-link w-full justify-start",
+            isActive && "active"
+          )}
         >
-          <button
-            onClick={() => navigate('/automation')}
-            className={cn(
-              "nav-link w-full justify-start",
-              isActive && "active"
-            )}
-          >
-            <Zap className="h-5 w-5 mr-3" />
-            <span>Automation Panel</span>
-          </button>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    </SidebarMenu>
+          <Zap className="h-5 w-5 mr-3" />
+          <span>Automation Panel</span>
+        </button>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   )
 }

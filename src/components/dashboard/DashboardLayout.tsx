@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import DashboardHeader from './DashboardHeader';
@@ -150,8 +149,8 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarAutomationButton />
             </SidebarMenu>
-            <SidebarAutomationButton />
           </SidebarContent>
           <SidebarFooter className="px-3 py-4 border-t">
             <SidebarMenu>
