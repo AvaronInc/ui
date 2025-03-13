@@ -35,7 +35,7 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
 import SettingsCard from '@/components/settings/SettingsCard';
 import AuditTrail from '@/components/settings/AuditTrail';
-import GeneralSettings from '@/components/settings/GeneralSettings';
+import GeneralSettings from '@/components/settings/general'; // Updated import path
 import UserAccessSettings from '@/components/settings/UserAccessSettings';
 import WorkforceSettings from '@/components/settings/WorkforceSettings';
 import SecuritySettings from '@/components/settings/SecuritySettings';
