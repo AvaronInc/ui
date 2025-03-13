@@ -22,6 +22,7 @@ interface DateTimeTabProps {
   form: UseFormReturn<FormValues>;
 }
 
+// Hardcoded array of time zones with guaranteed non-empty values
 const timeZones = [
   { value: "UTC", label: "UTC (Coordinated Universal Time)" },
   { value: "America/New_York", label: "Eastern Time (US & Canada)" },
@@ -55,8 +56,9 @@ const DateTimeTab: React.FC<DateTimeTabProps> = ({ form }) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
+                  {/* Only render items with guaranteed non-empty values */}
                   {timeZones.map((timeZone) => (
-                    <SelectItem key={timeZone.value} value={timeZone.value || "UTC"}>
+                    <SelectItem key={timeZone.value} value={timeZone.value}>
                       {timeZone.label}
                     </SelectItem>
                   ))}

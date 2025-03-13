@@ -26,6 +26,17 @@ interface ConnectS3DialogProps {
   isConnectingS3: boolean;
 }
 
+// Ensuring all regions have non-empty values
+const regions = [
+  { value: "us-east-1", label: "US East (N. Virginia)" },
+  { value: "us-east-2", label: "US East (Ohio)" },
+  { value: "us-west-1", label: "US West (N. California)" },
+  { value: "us-west-2", label: "US West (Oregon)" },
+  { value: "eu-west-1", label: "EU (Ireland)" },
+  { value: "eu-central-1", label: "EU (Frankfurt)" },
+  { value: "ap-northeast-1", label: "Asia Pacific (Tokyo)" }
+];
+
 const ConnectS3Dialog: React.FC<ConnectS3DialogProps> = ({ 
   onConnectS3, 
   isConnectingS3 
@@ -62,13 +73,11 @@ const ConnectS3Dialog: React.FC<ConnectS3DialogProps> = ({
                   <SelectValue placeholder="Select region" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="us-east-1">US East (N. Virginia)</SelectItem>
-                  <SelectItem value="us-east-2">US East (Ohio)</SelectItem>
-                  <SelectItem value="us-west-1">US West (N. California)</SelectItem>
-                  <SelectItem value="us-west-2">US West (Oregon)</SelectItem>
-                  <SelectItem value="eu-west-1">EU (Ireland)</SelectItem>
-                  <SelectItem value="eu-central-1">EU (Frankfurt)</SelectItem>
-                  <SelectItem value="ap-northeast-1">Asia Pacific (Tokyo)</SelectItem>
+                  {regions.map(region => (
+                    <SelectItem key={region.value} value={region.value}>
+                      {region.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

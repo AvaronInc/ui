@@ -68,14 +68,16 @@ const TicketActions = ({
       <div className="flex gap-2 items-end">
         <div className="flex-1">
           <Select 
-            value={selectedTechnician} 
+            value={selectedTechnician || "unassigned"} 
             onValueChange={setSelectedTechnician}
           >
             <SelectTrigger>
               <SelectValue placeholder="Assign to technician" />
             </SelectTrigger>
             <SelectContent>
-              {technicians.map(tech => (
+              {/* Add a default item with a non-empty value */}
+              <SelectItem value="unassigned">Select a technician</SelectItem>
+              {technicians.filter(tech => tech).map(tech => (
                 <SelectItem key={tech} value={tech}>{tech}</SelectItem>
               ))}
             </SelectContent>
@@ -83,7 +85,7 @@ const TicketActions = ({
         </div>
         <Button 
           onClick={handleAssignTicket} 
-          disabled={!selectedTechnician}
+          disabled={!selectedTechnician || selectedTechnician === "unassigned"}
           size="sm"
         >
           Assign

@@ -27,6 +27,7 @@ interface AppearanceTabProps {
   setPrimaryColor: (color: string) => void;
 }
 
+// Predefined language options with guaranteed non-empty values
 const languages = [
   { value: "en-US", label: "English (US)" },
   { value: "en-GB", label: "English (UK)" },
@@ -37,6 +38,7 @@ const languages = [
   { value: "zh-CN", label: "Chinese (Simplified)" }
 ];
 
+// Predefined color options with guaranteed non-empty values
 const colors = [
   { value: "blue", label: "Blue" },
   { value: "green", label: "Green" },
