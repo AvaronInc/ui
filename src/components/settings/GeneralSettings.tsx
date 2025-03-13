@@ -174,7 +174,7 @@ const GeneralSettings = () => {
                               <Input {...field} />
                             </FormControl>
                             <FormDescription>
-                              This is your company's official name.
+                              This is your company's official name displayed in the application header.
                             </FormDescription>
                           </FormItem>
                         )}

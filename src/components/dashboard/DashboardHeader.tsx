@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -34,6 +33,7 @@ const tenants = [
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const [selectedTenant, setSelectedTenant] = useState(tenants[0].id);
+  const companyName = localStorage.getItem('companyName') || 'SecuriCorp';
   
   const getInitials = (name?: string) => {
     if (!name) return 'U';
@@ -58,7 +58,7 @@ const DashboardHeader = () => {
       <div className="flex items-center">
         <SidebarTrigger />
         <div className="hidden md:flex ml-4">
-          <Link to="/" className="font-bold">SecuriCorp</Link>
+          <Link to="/" className="font-bold">{companyName}</Link>
         </div>
         
         <div className="ml-4">
