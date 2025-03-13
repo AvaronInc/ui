@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Device, DeviceAlert } from '@/types/rmm';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
@@ -19,6 +20,7 @@ import {
   Network
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTheme } from '@/context/ThemeContext';
 
 interface DeviceDetailPanelProps {
   device: Device | null;
@@ -28,6 +30,7 @@ interface DeviceDetailPanelProps {
 
 export const DeviceDetailPanel = ({ device, isOpen, onClose }: DeviceDetailPanelProps) => {
   const [activeTab, setActiveTab] = useState('metrics');
+  const { isDarkMode } = useTheme();
   
   if (!device) return null;
   
@@ -79,6 +82,15 @@ export const DeviceDetailPanel = ({ device, isOpen, onClose }: DeviceDetailPanel
       <span className="capitalize">{device.status}</span>
     </div>
   );
+
+  // Chart colors that work in both light and dark mode
+  const chartColors = {
+    cpu: isDarkMode ? "#3B82F6" : "#3B82F6",
+    memory: isDarkMode ? "#10B981" : "#10B981",
+    network: isDarkMode ? "#F59E0B" : "#F59E0B",
+    grid: isDarkMode ? "#333333" : "#e5e7eb",
+    text: isDarkMode ? "#FFFFFF" : "#000000"
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -152,14 +164,30 @@ export const DeviceDetailPanel = ({ device, isOpen, onClose }: DeviceDetailPanel
                 <div className="h-[150px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={device.metrics.cpu}>
-                      <XAxis dataKey="time" />
-                      <YAxis tickFormatter={(value) => `${value}%`} />
-                      <Tooltip formatter={(value) => [`${value}%`, 'CPU Usage']} />
+                      <XAxis 
+                        dataKey="time" 
+                        stroke={chartColors.text} 
+                        tick={{ fill: chartColors.text }}
+                      />
+                      <YAxis 
+                        tickFormatter={(value) => `${value}%`} 
+                        stroke={chartColors.text}
+                        tick={{ fill: chartColors.text }}
+                      />
+                      <Tooltip 
+                        formatter={(value) => [`${value}%`, 'CPU Usage']}
+                        contentStyle={{ 
+                          backgroundColor: isDarkMode ? '#1f2937' : 'white',
+                          color: chartColors.text,
+                          border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`
+                        }}
+                        labelStyle={{ color: chartColors.text }}
+                      />
                       <Area 
                         type="monotone" 
                         dataKey="value" 
-                        stroke="var(--primary)" 
-                        fill="var(--primary)" 
+                        stroke={chartColors.cpu} 
+                        fill={chartColors.cpu} 
                         fillOpacity={0.2} 
                       />
                     </AreaChart>
@@ -179,14 +207,30 @@ export const DeviceDetailPanel = ({ device, isOpen, onClose }: DeviceDetailPanel
                 <div className="h-[150px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={device.metrics.memory}>
-                      <XAxis dataKey="time" />
-                      <YAxis tickFormatter={(value) => `${value}%`} />
-                      <Tooltip formatter={(value) => [`${value}%`, 'Memory Usage']} />
+                      <XAxis 
+                        dataKey="time" 
+                        stroke={chartColors.text}
+                        tick={{ fill: chartColors.text }}
+                      />
+                      <YAxis 
+                        tickFormatter={(value) => `${value}%`} 
+                        stroke={chartColors.text}
+                        tick={{ fill: chartColors.text }}
+                      />
+                      <Tooltip 
+                        formatter={(value) => [`${value}%`, 'Memory Usage']}
+                        contentStyle={{ 
+                          backgroundColor: isDarkMode ? '#1f2937' : 'white',
+                          color: chartColors.text,
+                          border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`
+                        }}
+                        labelStyle={{ color: chartColors.text }}
+                      />
                       <Area 
                         type="monotone" 
                         dataKey="value" 
-                        stroke="var(--info)" 
-                        fill="var(--info)" 
+                        stroke={chartColors.memory} 
+                        fill={chartColors.memory} 
                         fillOpacity={0.2} 
                       />
                     </AreaChart>
@@ -206,12 +250,28 @@ export const DeviceDetailPanel = ({ device, isOpen, onClose }: DeviceDetailPanel
                 <div className="h-[150px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={device.metrics.network}>
-                      <XAxis dataKey="time" />
-                      <YAxis tickFormatter={(value) => `${value}ms`} />
-                      <Tooltip formatter={(value) => [`${value}ms`, 'Latency']} />
+                      <XAxis 
+                        dataKey="time" 
+                        stroke={chartColors.text}
+                        tick={{ fill: chartColors.text }}
+                      />
+                      <YAxis 
+                        tickFormatter={(value) => `${value}ms`} 
+                        stroke={chartColors.text}
+                        tick={{ fill: chartColors.text }}
+                      />
+                      <Tooltip 
+                        formatter={(value) => [`${value}ms`, 'Latency']}
+                        contentStyle={{ 
+                          backgroundColor: isDarkMode ? '#1f2937' : 'white',
+                          color: chartColors.text,
+                          border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`
+                        }}
+                        labelStyle={{ color: chartColors.text }}
+                      />
                       <Bar 
                         dataKey="value" 
-                        fill="var(--warning)" 
+                        fill={chartColors.network} 
                         radius={[4, 4, 0, 0]} 
                       />
                     </BarChart>

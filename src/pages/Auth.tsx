@@ -121,6 +121,13 @@ const Auth = () => {
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-background to-secondary/20 p-4">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="text-center">
+            <div className="mx-auto mb-4">
+              <img 
+                src="/lovable-uploads/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png" 
+                alt="Logo" 
+                className="h-16 mx-auto"
+              />
+            </div>
             <CardTitle className="text-2xl font-bold">Welcome</CardTitle>
             <CardDescription>
               Login or create an account to continue
