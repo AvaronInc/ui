@@ -70,7 +70,9 @@ const DashboardHeader = () => {
     setProfileDialogOpen(true);
   };
 
+  // Dedicated handler for the ProfileDialog open state changes
   const handleProfileDialogChange = (open: boolean) => {
+    // Simple state update - don't combine with complex logic
     setProfileDialogOpen(open);
   };
   

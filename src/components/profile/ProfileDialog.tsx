@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { 
   Dialog, 
@@ -49,13 +50,14 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
 
   const handleSave = () => {
     // This would save the profile updates to the backend
-    // For now, just close the dialog
+    // Close the dialog safely with the callback
     onOpenChange(false);
   };
   
   const handleCancel = () => {
     // Reset form to either the profile name or PowerUser, never empty string
     setNickname(profile?.full_name || 'PowerUser');
+    // Close the dialog safely with the callback
     onOpenChange(false);
   };
   
