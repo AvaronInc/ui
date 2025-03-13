@@ -17,6 +17,7 @@ const GeneralSettings = () => {
     form,
     isLoading,
     loadError,
+    progress,
     maintenanceMode,
     setMaintenanceMode,
     companyLogo,
@@ -27,7 +28,7 @@ const GeneralSettings = () => {
     loadSettings
   } = useGeneralSettings();
   
-  console.log("GeneralSettings rendering. Loading:", isLoading, "Error:", loadError);
+  console.log("GeneralSettings rendering. Loading:", isLoading, "Error:", loadError, "Progress:", progress);
   
   return (
     <div className="space-y-6">
@@ -35,6 +36,7 @@ const GeneralSettings = () => {
         isLoading={isLoading} 
         error={loadError} 
         onRetry={loadSettings}
+        progress={progress}
       />
       
       {!isLoading && !loadError && (

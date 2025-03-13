@@ -20,7 +20,7 @@ export const useGeneralSettings = () => {
   });
 
   // Load settings
-  const { isLoading, loadError, loadSettings } = useLoadSettings(form);
+  const { isLoading, loadError, loadSettings, progress } = useLoadSettings(form);
   
   // Logo management
   const { companyLogo, setCompanyLogo, handleLogoUpload } = useLogoManagement();
@@ -42,6 +42,7 @@ export const useGeneralSettings = () => {
     form,
     isLoading,
     loadError,
+    progress,
     maintenanceMode,
     setMaintenanceMode,
     companyLogo,

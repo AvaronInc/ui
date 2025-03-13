@@ -2,20 +2,26 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Loader2 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 
 interface LoadingStateProps {
   isLoading: boolean;
   error: string | null;
   onRetry: () => void;
+  progress?: number;
 }
 
-const LoadingState: React.FC<LoadingStateProps> = ({ isLoading, error, onRetry }) => {
+const LoadingState: React.FC<LoadingStateProps> = ({ isLoading, error, onRetry, progress = 0 }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-6 min-h-[300px]">
-        <div className="text-center">
+        <div className="text-center w-full max-w-md">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-          <p>Loading settings...</p>
+          <p className="mb-3">Loading settings...</p>
+          <Progress value={progress} className="h-2 mb-2" />
+          <p className="text-sm text-muted-foreground">
+            {progress < 100 ? 'Retrieving your settings...' : 'Almost done...'}
+          </p>
         </div>
       </div>
     );
