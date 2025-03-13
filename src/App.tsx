@@ -22,6 +22,7 @@ import SDMS from "./pages/SDMS";
 import EmailSecurity from "./pages/EmailSecurity";
 import AssetManagement from "./pages/AssetManagement";
 import NotFound from "./pages/NotFound";
+import Automation from "./pages/Automation";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="/sdms" element={<SDMS />} />
               <Route path="/email-security" element={<EmailSecurity />} />
               <Route path="/asset-management" element={<AssetManagement />} />
+              <Route path="/automation" element={<Automation />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>

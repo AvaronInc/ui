@@ -11,7 +11,8 @@ import {
   SidebarMenuButton, 
   SidebarMenuItem,
   SidebarHeader,
-  SidebarFooter
+  SidebarFooter,
+  SidebarAutomationButton
 } from '@/components/ui/sidebar';
 import { 
   LayoutDashboard, 
@@ -150,6 +151,7 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+            <SidebarAutomationButton />
           </SidebarContent>
           <SidebarFooter className="px-3 py-4 border-t">
             <SidebarMenu>
