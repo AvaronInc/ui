@@ -32,7 +32,7 @@ import {
   Mail,
   Server
 } from 'lucide-react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import CopyrightFooter from '@/components/common/CopyrightFooter';
 
@@ -116,8 +116,18 @@ const navItems = [
 
 export const DashboardLayout = ({ children, className }: DashboardLayoutProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const systemName = localStorage.getItem('systemName') || 'Network Pulse Management';
   
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
+  
+  const handleLogout = () => {
+    // Logout logic would go here
+    console.log('Logging out...');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -156,22 +166,27 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
           <SidebarFooter className="px-3 py-4 border-t">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link 
-                    to="/settings" 
+                <SidebarMenuButton>
+                  <Button 
+                    variant="ghost" 
                     className={cn(
-                      "nav-link",
+                      "nav-link w-full justify-start",
                       location.pathname === "/settings" && "active"
                     )}
+                    onClick={handleSettingsClick}
                   >
                     <Settings className="h-5 w-5 mr-3" />
                     <span>Settings</span>
-                  </Link>
+                  </Button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Button variant="ghost" className="nav-link w-full justify-start">
+                <SidebarMenuButton>
+                  <Button 
+                    variant="ghost" 
+                    className="nav-link w-full justify-start"
+                    onClick={handleLogout}
+                  >
                     <LogOut className="h-5 w-5 mr-3" />
                     <span>Log out</span>
                   </Button>
