@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import DashboardHeader from './DashboardHeader';
+import { useAuth } from '@/context/AuthContext';
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -117,15 +117,20 @@ const navItems = [
 export const DashboardLayout = ({ children, className }: DashboardLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const systemName = localStorage.getItem('systemName') || 'Network Pulse Management';
   
   const handleSettingsClick = () => {
     navigate('/settings');
   };
   
-  const handleLogout = () => {
-    // Logout logic would go here
-    console.log('Logging out...');
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/auth');
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
   };
 
   return (

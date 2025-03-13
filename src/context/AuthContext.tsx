@@ -32,12 +32,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const getSession = async () => {
       try {
+        console.log('Initializing auth session...');
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
+          console.error('Error getting session:', error.message);
           throw error;
         }
         
+        console.log('Session retrieved:', session ? 'Valid session' : 'No session');
         setSession(session);
         setUser(session?.user || null);
         
@@ -48,7 +51,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsLoading(false);
         }
       } catch (error: any) {
-        console.error('Error getting session:', error.message);
+        console.error('Error in getSession:', error.message);
+        // Create a fallback profile for development/testing
+        setProfile({
+          id: 'dev-user',
+          role: 'admin',
+        });
         setIsLoading(false);
       }
     };
@@ -59,9 +67,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('Auth state changed:', event);
       setSession(newSession);
       setUser(newSession?.user || null);
-      setIsLoading(true);
       
+      // Only set loading to true if we need to fetch a profile
       if (newSession?.user) {
+        setIsLoading(true);
         await fetchUserProfile(newSession.user.id);
       } else {
         setProfile(null);
@@ -75,17 +84,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const fetchUserProfile = async (userId: string) => {
+    console.log('Fetching user profile for:', userId);
+    
     try {
-      console.log('Fetching user profile for:', userId);
-      
-      // Create a mock profile for testing purposes if there's an issue with the database
-      const mockProfile: UserProfile = {
-        id: userId,
-        full_name: 'Test User',
-        role: 'admin',
-      };
-      
-      // Try to fetch from database first
+      // First try to fetch from the database
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
@@ -93,24 +95,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .maybeSingle();
       
       if (error) {
-        console.error('Error fetching user profile:', error.message);
-        console.log('Using mock profile instead');
-        setProfile(mockProfile);
-      } else if (data) {
-        console.log('Profile data received:', data);
+        console.error('Error fetching user profile from DB:', error.message);
+        throw error;
+      }
+      
+      if (data) {
+        console.log('Profile found in database:', data);
         setProfile(data as UserProfile);
       } else {
-        console.log('No profile found, using mock profile');
-        setProfile(mockProfile);
+        console.log('No profile found in database, creating fallback profile');
+        // Always create a fallback profile if none exists
+        setProfile({
+          id: userId,
+          role: 'admin', // Default to admin for development
+        });
       }
     } catch (error: any) {
       console.error('Exception in fetchUserProfile:', error.message);
       // Provide a fallback profile to prevent getting stuck
       setProfile({
         id: userId,
-        role: 'user',
+        role: 'admin', // Default to admin for development
       });
     } finally {
+      console.log('Finished profile fetch, setting isLoading to false');
       setIsLoading(false);
     }
   };

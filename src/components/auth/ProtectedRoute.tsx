@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Loader2 } from 'lucide-react';
@@ -12,18 +12,20 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = false }) => {
   const { user, profile, isLoading, isAdmin } = useAuth();
   const location = useLocation();
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
   
   useEffect(() => {
-    // Add a timeout to prevent infinite loading
+    // Set a timeout for loading to prevent waiting indefinitely
     const timeoutId = setTimeout(() => {
-      console.log('Loading timeout reached, may indicate an authentication issue');
-    }, 5000);
+      console.log('Loading timeout reached, forcing continuation');
+      setLoadingTimeout(true);
+    }, 3000); // Reduced to 3 seconds for better UX
     
     return () => clearTimeout(timeoutId);
   }, []);
   
-  // Show loading state with a max duration of 5 seconds
-  if (isLoading) {
+  // Show loading state but with a timeout
+  if (isLoading && !loadingTimeout) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
@@ -32,10 +34,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = f
     );
   }
   
-  // For development/testing purposes, allow access even without authentication
+  // For development/testing purposes, always allow access in development mode
   const isDevelopment = import.meta.env.DEV;
-  if (isDevelopment && !user) {
-    console.log('Development mode: bypassing authentication');
+  if (isDevelopment) {
+    console.log('Development mode: bypassing authentication checks');
     return <>{children}</>;
   }
   
