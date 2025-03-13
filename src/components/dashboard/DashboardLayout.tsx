@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import CopyrightFooter from '@/components/common/CopyrightFooter';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -103,7 +104,14 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
       <div className="min-h-screen flex w-full">
         <Sidebar className="border-r bg-sidebar">
           <SidebarHeader className="px-6 py-5 flex items-center justify-center">
-            <h2 className="text-xl font-semibold text-sidebar-foreground">{systemName}</h2>
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png" 
+                alt="Network Pulse Logo" 
+                className="w-9 h-9 mr-2" 
+              />
+              <h2 className="text-xl font-semibold text-sidebar-foreground">{systemName}</h2>
+            </div>
           </SidebarHeader>
           <SidebarContent className="px-3 py-4">
             <SidebarMenu>
@@ -157,6 +165,7 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
           <main className={cn("flex-1 overflow-auto", className)}>
             {children}
           </main>
+          <CopyrightFooter />
         </div>
       </div>
     </SidebarProvider>
