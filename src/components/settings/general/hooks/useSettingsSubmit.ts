@@ -1,17 +1,14 @@
 
-import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/context/AuthContext';
-import { saveUserSettings, SettingsCategory } from '@/services/settings-service';
-import { FormValues, defaultSettings } from '../schema';
 import { UseFormReturn } from 'react-hook-form';
+import { FormValues } from '../schema';
 
-interface SubmitHookOptions {
+interface UseSettingsSubmitProps {
   form: UseFormReturn<FormValues>;
   companyLogo: string | null;
   setCompanyLogo: (logo: string | null) => void;
   maintenanceMode: boolean;
-  setMaintenanceMode: (value: boolean) => void;
+  setMaintenanceMode: (mode: boolean) => void;
 }
 
 export const useSettingsSubmit = ({
@@ -20,81 +17,56 @@ export const useSettingsSubmit = ({
   setCompanyLogo,
   maintenanceMode,
   setMaintenanceMode
-}: SubmitHookOptions) => {
+}: UseSettingsSubmitProps) => {
   const { toast } = useToast();
-  const { user } = useAuth();
   
   const onSubmit = async (data: FormValues) => {
     try {
-      // Combine all settings into one object
-      const combinedSettings = {
-        ...data,
-        maintenanceMode,
-        companyLogo
-      };
+      console.log('Submitting settings:', data);
       
-      // Save to database if user is authenticated
-      if (user) {
-        await saveUserSettings(SettingsCategory.GENERAL, combinedSettings);
+      // Store data in localStorage (for simplicity in this example)
+      localStorage.setItem('companyName', data.companyName);
+      localStorage.setItem('timeZone', data.timeZone);
+      localStorage.setItem('dateFormat', data.dateFormat);
+      localStorage.setItem('businessStartTime', data.businessStartTime);
+      localStorage.setItem('businessEndTime', data.businessEndTime);
+      localStorage.setItem('maintenanceMode', maintenanceMode.toString());
+      if (companyLogo) {
+        localStorage.setItem('companyLogo', companyLogo);
       }
       
-      // Still save to localStorage for backward compatibility
-      Object.entries(data).forEach(([key, value]) => {
-        localStorage.setItem(key, value as string);
-      });
-      localStorage.setItem('maintenanceMode', maintenanceMode.toString());
-      if (companyLogo) localStorage.setItem('companyLogo', companyLogo);
+      // In a real app, you would also persist to a database here
       
       toast({
-        title: "Settings saved",
-        description: "Your general settings have been updated successfully.",
+        title: "Settings updated",
+        description: "Your changes have been saved successfully.",
       });
     } catch (error) {
-      console.error("Error saving settings:", error);
+      console.error('Error saving settings:', error);
       toast({
         title: "Error saving settings",
-        description: "There was a problem saving your settings.",
-        variant: "destructive"
+        description: "There was a problem saving your changes.",
+        variant: "destructive",
       });
     }
   };
   
-  const handleReset = async () => {
-    const defaultSettingsWithExtras = {
-      ...defaultSettings,
-      maintenanceMode: false,
-      companyLogo: null
-    };
+  const handleReset = () => {
+    // Reset the form to its default values
+    form.reset();
     
-    // Reset form values
-    form.reset(defaultSettings);
+    // Also clear any logo that might have been uploaded
+    setCompanyLogo(localStorage.getItem('companyLogo'));
     
-    // Reset other settings
-    setCompanyLogo(null);
-    setMaintenanceMode(false);
-    
-    // Save reset values to database
-    if (user) {
-      try {
-        await saveUserSettings(SettingsCategory.GENERAL, defaultSettingsWithExtras);
-      } catch (error) {
-        console.error("Error resetting settings:", error);
-      }
-    }
-    
-    // Reset localStorage
-    localStorage.removeItem('companyLogo');
-    Object.entries(defaultSettings).forEach(([key, value]) => {
-      localStorage.setItem(key, value as string);
-    });
-    localStorage.setItem('maintenanceMode', 'false');
+    // Reset maintenance mode from localStorage
+    setMaintenanceMode(localStorage.getItem('maintenanceMode') === 'true');
     
     toast({
       title: "Settings reset",
-      description: "Your general settings have been reset to defaults.",
+      description: "Your changes have been discarded.",
     });
   };
-
+  
   return {
     onSubmit,
     handleReset

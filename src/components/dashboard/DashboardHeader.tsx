@@ -84,12 +84,6 @@ const DashboardHeader = () => {
   
   const handleSettingsClick = () => {
     navigate('/settings');
-    // Force a full page reload to ensure proper routing
-    setTimeout(() => {
-      if (window.location.pathname !== '/settings') {
-        window.location.href = '/settings';
-      }
-    }, 100);
   };
   
   return (
