@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import DashboardHeader from './DashboardHeader';
@@ -156,10 +157,13 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/settings" className={cn(
-                    "nav-link",
-                    location.pathname === "/settings" && "active"
-                  )}>
+                  <Link 
+                    to="/settings" 
+                    className={cn(
+                      "nav-link",
+                      location.pathname === "/settings" && "active"
+                    )}
+                  >
                     <Settings className="h-5 w-5 mr-3" />
                     <span>Settings</span>
                   </Link>
