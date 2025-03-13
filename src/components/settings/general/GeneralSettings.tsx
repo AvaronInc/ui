@@ -27,6 +27,8 @@ const GeneralSettings = () => {
     loadSettings
   } = useGeneralSettings();
   
+  console.log("GeneralSettings rendering. Loading:", isLoading, "Error:", loadError);
+  
   return (
     <div className="space-y-6">
       <LoadingState 
