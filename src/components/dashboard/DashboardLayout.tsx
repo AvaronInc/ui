@@ -27,7 +27,8 @@ import {
   Shield,
   Laptop,
   MapPin,
-  FileText
+  FileText,
+  Mail
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -88,6 +89,11 @@ const navItems = [
     title: 'Security',
     icon: Shield,
     href: '/security'
+  },
+  {
+    title: 'Email Security',
+    icon: Mail,
+    href: '/email-security'
   },
   {
     title: 'Workforce EMS',
