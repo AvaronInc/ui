@@ -63,7 +63,7 @@ const GeneralSettings = () => {
             companyName: generalSettings.companyName || 'CyberNest Corp',
             systemName: generalSettings.systemName || 'Network Pulse Management',
             timeZone: generalSettings.timeZone || 'UTC',
-            dateFormat: generalSettings.dateFormat || "MM/DD/YYYY",
+            dateFormat: (generalSettings.dateFormat as "MM/DD/YYYY" | "DD/MM/YYYY") || "MM/DD/YYYY",
             language: generalSettings.language || 'en-US',
             supportEmail: generalSettings.supportEmail || 'support@cybernest.com',
             helpdeskPhone: generalSettings.helpdeskPhone || '+1 (555) 123-4567',
@@ -169,7 +169,7 @@ const GeneralSettings = () => {
       companyName: 'CyberNest Corp',
       systemName: 'Network Pulse Management',
       timeZone: 'UTC',
-      dateFormat: 'MM/DD/YYYY',
+      dateFormat: "MM/DD/YYYY" as "MM/DD/YYYY" | "DD/MM/YYYY",
       language: 'en-US',
       supportEmail: 'support@cybernest.com',
       helpdeskPhone: '+1 (555) 123-4567',
@@ -177,8 +177,16 @@ const GeneralSettings = () => {
       companyLogo: null
     };
     
-    // Reset form values
-    form.reset(defaultSettings);
+    // Reset form values - ensure correct typing for dateFormat
+    form.reset({
+      companyName: defaultSettings.companyName,
+      systemName: defaultSettings.systemName,
+      timeZone: defaultSettings.timeZone,
+      dateFormat: defaultSettings.dateFormat,
+      language: defaultSettings.language,
+      supportEmail: defaultSettings.supportEmail,
+      helpdeskPhone: defaultSettings.helpdeskPhone,
+    });
     
     // Reset other settings
     setCompanyLogo(null);
