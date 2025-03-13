@@ -10,7 +10,7 @@ import NetworkSettings from '@/components/settings/NetworkSettings';
 import NestSettings from '@/components/settings/NestSettings';
 import StorageSettings from '@/components/settings/StorageSettings';
 import LoggingSettings from '@/components/settings/LoggingSettings';
-import AISettings from '@/components/settings/AISettings';
+import AISettings from '@/components/settings/ai';
 import NotificationSettings from '@/components/settings/NotificationSettings';
 import APISettings from '@/components/settings/APISettings';
 import BackupSettings from '@/components/settings/BackupSettings';
