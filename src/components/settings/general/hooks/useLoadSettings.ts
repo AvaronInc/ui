@@ -21,14 +21,17 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
         
         // Get stored values with proper type handling for dateFormat
         const storedDateFormat = localStorage.getItem('dateFormat') || '';
-        const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
-          ? (storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY')
-          : ('MM/DD/YYYY' as const); // Default if invalid
+        let dateFormat: 'MM/DD/YYYY' | 'DD/MM/YYYY' = 'MM/DD/YYYY'; // Default
+        
+        // Only set if it's a valid value
+        if (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') {
+          dateFormat = storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY';
+        }
         
         const storedSettings: FormValues = {
           companyName: localStorage.getItem('companyName') || '',
           timeZone: localStorage.getItem('timeZone') || '',
-          dateFormat,
+          dateFormat: dateFormat,
           systemName: localStorage.getItem('systemName') || '',
           language: localStorage.getItem('language') || '',
           supportEmail: localStorage.getItem('supportEmail') || '',
@@ -62,14 +65,17 @@ export const useLoadSettings = (form: UseFormReturn<FormValues>) => {
       // For now, we'll just use localStorage as a fallback
       // Get stored values with proper type handling for dateFormat
       const storedDateFormat = localStorage.getItem('dateFormat') || '';
-      const dateFormat = (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') 
-        ? (storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY')
-        : ('MM/DD/YYYY' as const); // Default if invalid
+      let dateFormat: 'MM/DD/YYYY' | 'DD/MM/YYYY' = 'MM/DD/YYYY'; // Default
+      
+      // Only set if it's a valid value
+      if (storedDateFormat === 'MM/DD/YYYY' || storedDateFormat === 'DD/MM/YYYY') {
+        dateFormat = storedDateFormat as 'MM/DD/YYYY' | 'DD/MM/YYYY';
+      }
       
       const storedSettings: FormValues = {
         companyName: localStorage.getItem('companyName') || '',
         timeZone: localStorage.getItem('timeZone') || '',
-        dateFormat,
+        dateFormat: dateFormat,
         systemName: localStorage.getItem('systemName') || '',
         language: localStorage.getItem('language') || '',
         supportEmail: localStorage.getItem('supportEmail') || '',
