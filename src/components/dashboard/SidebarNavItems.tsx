@@ -19,9 +19,11 @@ import {
   Server,
   Globe,
   Contact,
-  Puzzle
+  Puzzle,
+  CreditCard
 } from 'lucide-react';
 import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarAutomationButton } from '@/components/ui/sidebar';
+import { useAuth } from '@/context/AuthContext';
 
 export const navItems = [
   {
@@ -111,17 +113,30 @@ export const navItems = [
   }
 ];
 
+// Admin-only menu items
+export const adminNavItems = [
+  {
+    title: 'Billing',
+    icon: CreditCard,
+    href: '/billing'
+  }
+];
+
 interface SidebarNavItemsProps {
   className?: string;
 }
 
 const SidebarNavItems: React.FC<SidebarNavItemsProps> = ({ className }) => {
   const location = useLocation();
+  const { isAdmin } = useAuth();
+  
+  // Combine the regular items with admin items if the user is an admin
+  const allNavItems = [...navItems, ...(isAdmin ? adminNavItems : [])];
   
   return (
     <SidebarContent className={cn("px-3 py-4", className)}>
       <SidebarMenu>
-        {navItems.map((item) => (
+        {allNavItems.map((item) => (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton asChild>
               <Link 
