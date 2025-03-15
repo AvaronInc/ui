@@ -6,7 +6,7 @@ export const mockActiveIntegrations = [
     name: 'ServiceNow',
     description: 'Enterprise IT service management platform',
     category: 'ITSM',
-    status: 'active',
+    status: 'active' as 'active' | 'inactive' | 'error' | 'warning',
     lastSynced: '10 minutes ago',
     logoUrl: '/placeholder.svg',
     recentEvents: [
@@ -22,7 +22,7 @@ export const mockActiveIntegrations = [
     name: 'Splunk',
     description: 'Security information and event management',
     category: 'Security & SIEM',
-    status: 'warning',
+    status: 'warning' as 'active' | 'inactive' | 'error' | 'warning',
     lastSynced: '1 hour ago',
     logoUrl: '/placeholder.svg',
     recentEvents: [
@@ -38,7 +38,7 @@ export const mockActiveIntegrations = [
     name: 'AWS',
     description: 'Amazon Web Services cloud platform',
     category: 'Cloud Provider',
-    status: 'active',
+    status: 'active' as 'active' | 'inactive' | 'error' | 'warning',
     lastSynced: '30 minutes ago',
     logoUrl: '/placeholder.svg',
     recentEvents: [
@@ -54,7 +54,7 @@ export const mockActiveIntegrations = [
     name: 'Datadog',
     description: 'Cloud monitoring and analytics platform',
     category: 'Monitoring',
-    status: 'error',
+    status: 'error' as 'active' | 'inactive' | 'error' | 'warning',
     lastSynced: '2 hours ago',
     logoUrl: '/placeholder.svg',
     recentEvents: [
@@ -70,7 +70,7 @@ export const mockActiveIntegrations = [
     name: 'Ansible',
     description: 'Automation platform for configuration management',
     category: 'Automation',
-    status: 'active',
+    status: 'active' as 'active' | 'inactive' | 'error' | 'warning',
     lastSynced: '45 minutes ago',
     logoUrl: '/placeholder.svg'
   }

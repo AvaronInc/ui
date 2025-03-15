@@ -61,7 +61,7 @@ const IntegrationsOverview = () => {
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-lg">{integration.name}</CardTitle>
-                    <StatusBadge status={integration.status} />
+                    <StatusBadge status={integration.status as 'active' | 'inactive' | 'error' | 'warning'} />
                   </div>
                   <CardDescription>{integration.description}</CardDescription>
                 </CardHeader>
