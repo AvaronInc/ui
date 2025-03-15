@@ -26,6 +26,7 @@ import AssetManagement from "./pages/AssetManagement";
 import NotFound from "./pages/NotFound";
 import Automation from "./pages/Automation";
 import Auth from "./pages/Auth";
+import SDWAN from "./pages/SDWAN";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,6 +64,7 @@ const App = () => (
                 <Route path="/email-security" element={<ProtectedRoute><EmailSecurity /></ProtectedRoute>} />
                 <Route path="/asset-management" element={<ProtectedRoute><AssetManagement /></ProtectedRoute>} />
                 <Route path="/automation" element={<ProtectedRoute><Automation /></ProtectedRoute>} />
+                <Route path="/sdwan" element={<ProtectedRoute><SDWAN /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnimatePresence>

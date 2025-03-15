@@ -16,7 +16,8 @@ import {
   MapPin,
   FileText,
   Mail,
-  Server
+  Server,
+  Globe
 } from 'lucide-react';
 import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarAutomationButton } from '@/components/ui/sidebar';
 
@@ -50,6 +51,11 @@ export const navItems = [
     title: 'N.E.S.T.',
     icon: MapPin,
     href: '/nest'
+  },
+  {
+    title: 'SD-WAN',
+    icon: Globe,
+    href: '/sdwan'
   },
   {
     title: 'Projects',
