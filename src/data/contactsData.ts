@@ -5,7 +5,8 @@ import {
   TechSupportContact, 
   SalesContact, 
   EmergencyContact, 
-  InternalContact 
+  InternalContact,
+  ContactCategory
 } from '@/types/contacts';
 
 // Generate random date in the last 2 years
