@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -13,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Contact, ContactsFilter, ContactCategory } from '@/types/contacts';
 import { User, Users, Phone, Mail, Star, Calendar, ArrowUpRight } from 'lucide-react';
-import { mockContacts, getRecentContacts, getFavoriteContacts } from '@/data/contactsData';
+import { mockContacts, getRecentContacts, getFavoriteContacts } from '@/data/contacts';
 
 interface CategoryCountItem {
   category: ContactCategory;
