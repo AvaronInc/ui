@@ -17,7 +17,8 @@ import {
   FileText,
   Mail,
   Server,
-  Globe
+  Globe,
+  Contact
 } from 'lucide-react';
 import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarAutomationButton } from '@/components/ui/sidebar';
 
@@ -96,6 +97,11 @@ export const navItems = [
     title: 'SDMS',
     icon: FileText,
     href: '/sdms'
+  },
+  {
+    title: 'Contacts',
+    icon: Contact,
+    href: '/contacts'
   }
 ];
 
