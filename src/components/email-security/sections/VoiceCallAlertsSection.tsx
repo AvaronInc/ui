@@ -13,7 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { UseFormReturn } from "react-hook-form";
 import { EmailSecuritySettings } from "@/types/emailSecurity";
-import { Phone, Clock, Volume2 } from "lucide-react";
+import { Phone, Clock, Volume2, MessageSquare, Bot } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface VoiceCallAlertsSectionProps {
   form: UseFormReturn<EmailSecuritySettings>;
@@ -21,6 +23,7 @@ interface VoiceCallAlertsSectionProps {
 
 const VoiceCallAlertsSection = ({ form }: VoiceCallAlertsSectionProps) => {
   const voiceThreshold = form.watch("voiceAlertThreshold");
+  const responseMode = form.watch("aiResponseMode");
 
   return (
     <Form {...form}>
@@ -107,6 +110,124 @@ const VoiceCallAlertsSection = ({ form }: VoiceCallAlertsSectionProps) => {
             )}
           />
           
+          <div className="border rounded-lg p-4 space-y-4">
+            <h4 className="text-sm font-medium flex items-center gap-2">
+              <Bot className="h-4 w-4 text-primary" />
+              AI Response Configuration
+            </h4>
+            
+            <FormField
+              control={form.control}
+              name="aiResponseMode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>AI Response Mode</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    >
+                      <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <RadioGroupItem value="explain" />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="font-medium">Explanation Mode</FormLabel>
+                          <FormDescription>
+                            AI explains the security threat in detail without prompting for questions
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                      
+                      <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <RadioGroupItem value="interactive" />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="font-medium">Interactive Mode</FormLabel>
+                          <FormDescription>
+                            AI explains the threat and can answer questions about it
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="aiVoiceModel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>AI Voice Model</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select voice model" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="gpt-4">GPT-4 (Most Comprehensive)</SelectItem>
+                      <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast Response)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Select AI model for voice interactions
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="aiDetailLevel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Response Detail Level</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select detail level" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="concise">Concise (Brief overview)</SelectItem>
+                      <SelectItem value="standard">Standard (Balanced details)</SelectItem>
+                      <SelectItem value="detailed">Detailed (Extensive information)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Control how detailed the AI's explanations should be
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="includeTechnicalDetails"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                  <div className="space-y-0.5">
+                    <FormLabel>Include Technical Details</FormLabel>
+                    <FormDescription>
+                      Include technical specifics about the threat in AI explanations
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-start gap-3 p-4 border rounded-lg">
               <Phone className="h-5 w-5 text-primary mt-0.5" />
@@ -119,29 +240,15 @@ const VoiceCallAlertsSection = ({ form }: VoiceCallAlertsSectionProps) => {
             </div>
             
             <div className="flex items-start gap-3 p-4 border rounded-lg">
-              <Clock className="h-5 w-5 text-primary mt-0.5" />
+              <MessageSquare className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h4 className="text-sm font-medium">Escalation Timeline</h4>
+                <h4 className="text-sm font-medium">AI Response Style</h4>
                 <p className="text-sm text-muted-foreground mt-1">
-                  If no action is taken within {form.watch("callEscalationMinutes")} minutes, the system will escalate the alert to additional team members.
+                  {responseMode === 'interactive' 
+                    ? 'The AI will engage in a conversation, explaining the threat and answering questions.'
+                    : 'The AI will provide a detailed explanation of the threat without waiting for questions.'}
                 </p>
               </div>
-            </div>
-          </div>
-          
-          <div className="mt-4 rounded-md bg-muted p-4">
-            <h4 className="mb-2 text-sm font-medium">Voice Call Message Template</h4>
-            <div className="text-sm text-muted-foreground">
-              <p className="mb-2">
-                "This is an automated security alert from your Email Security system. 
-                A high-risk email with a confidence score of [SCORE]% has been detected.
-                The sender is [SENDER] and the subject is [SUBJECT].
-                This appears to be a [THREAT_TYPE] attempt."
-              </p>
-              <p>
-                "Please log in to the security portal to review this threat immediately. 
-                If no action is taken within {form.watch("callEscalationMinutes")} minutes, this alert will be escalated."
-              </p>
             </div>
           </div>
         </div>
@@ -151,3 +258,4 @@ const VoiceCallAlertsSection = ({ form }: VoiceCallAlertsSectionProps) => {
 };
 
 export default VoiceCallAlertsSection;
+

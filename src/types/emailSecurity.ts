@@ -1,6 +1,9 @@
 
 export type DetectionSensitivity = 'low' | 'medium' | 'high';
 export type RetentionPeriod = '7' | '30' | '90';
+export type AIResponseMode = 'explain' | 'interactive';
+export type AIVoiceModel = 'gpt-4' | 'gpt-3.5-turbo';
+export type AIDetailLevel = 'concise' | 'standard' | 'detailed';
 
 export interface EmailSecuritySettings {
   // AI-Powered Email Filtering & DLP Configuration
@@ -50,6 +53,10 @@ export interface EmailSecuritySettings {
   aiVoiceCallEnabled: boolean;
   voiceAlertThreshold: number;
   callEscalationMinutes: number;
+  aiResponseMode: AIResponseMode;
+  aiVoiceModel: AIVoiceModel;
+  aiDetailLevel: AIDetailLevel;
+  includeTechnicalDetails: boolean;
   
   // Compliance Reports
   scheduleAutomaticReports: boolean;

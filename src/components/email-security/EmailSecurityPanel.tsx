@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -67,6 +66,10 @@ const defaultSettings: EmailSecuritySettings = {
   aiVoiceCallEnabled: false,
   voiceAlertThreshold: 90,
   callEscalationMinutes: 15,
+  aiResponseMode: 'explain',
+  aiVoiceModel: 'gpt-4',
+  aiDetailLevel: 'standard',
+  includeTechnicalDetails: true,
   
   // Compliance
   scheduleAutomaticReports: true
@@ -114,6 +117,10 @@ const formSchema = z.object({
   aiVoiceCallEnabled: z.boolean(),
   voiceAlertThreshold: z.number().min(0).max(100),
   callEscalationMinutes: z.number().int().min(1),
+  aiResponseMode: z.enum(['explain', 'interactive']),
+  aiVoiceModel: z.enum(['gpt-4', 'gpt-3.5-turbo']),
+  aiDetailLevel: z.enum(['concise', 'standard', 'detailed']),
+  includeTechnicalDetails: z.boolean(),
   
   scheduleAutomaticReports: z.boolean()
 });
