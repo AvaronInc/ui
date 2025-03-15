@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, Calendar, CreditCard, DollarSign, BarChart, Activity } from 'lucide-react';
+import { AlertCircle, Calendar, CreditCard, DollarSign, BarChart, Activity, HardDrive } from 'lucide-react';
 import { useBillingData } from '@/components/billing/hooks/useBillingData';
 
 const BillingOverview = () => {
