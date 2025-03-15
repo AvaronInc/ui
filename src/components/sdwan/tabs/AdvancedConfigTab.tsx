@@ -1,18 +1,29 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Code, Settings2, Zap, Share } from 'lucide-react';
+import { Code, Settings2, Zap, Share, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AdvancedConfigTab = () => {
+  const [scriptDescription, setScriptDescription] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  
+  const handleGenerateScript = (scriptType: string) => {
+    setIsGenerating(true);
+    // Simulate AI generation (in a real implementation, this would call an API)
+    setTimeout(() => {
+      setIsGenerating(false);
+    }, 1500);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <Card>
@@ -110,6 +121,32 @@ const AdvancedConfigTab = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-4 mb-4">
+            <Label htmlFor="script-description">AI Script Generation</Label>
+            <Textarea 
+              id="script-description" 
+              placeholder="Describe what you want the script to do (e.g., 'Monitor primary connection and failover to secondary if latency exceeds 100ms for more than 30 seconds')"
+              value={scriptDescription}
+              onChange={(e) => setScriptDescription(e.target.value)}
+              className="h-24"
+            />
+            <div className="flex items-center space-x-2">
+              <Switch id="use-ai" />
+              <Label htmlFor="use-ai">Use AI to optimize generated scripts</Label>
+            </div>
+            <Button 
+              variant="outline" 
+              className="w-full flex items-center justify-center" 
+              disabled={!scriptDescription.trim() || isGenerating}
+              onClick={() => handleGenerateScript("current")}
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              {isGenerating ? "Generating Script..." : "Generate Script with AI"}
+            </Button>
+          </div>
+          
+          <Separator className="my-4" />
+          
           <Tabs defaultValue="powershell" className="w-full">
             <TabsList className="grid grid-cols-4 mb-4">
               <TabsTrigger value="powershell">PowerShell</TabsTrigger>
@@ -120,7 +157,19 @@ const AdvancedConfigTab = () => {
             
             <TabsContent value="powershell" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="powershell-script">PowerShell Script</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="powershell-script">PowerShell Script</Label>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 px-2 text-xs"
+                    onClick={() => handleGenerateScript("powershell")}
+                    disabled={!scriptDescription.trim() || isGenerating}
+                  >
+                    <Sparkles className="mr-1 h-3 w-3" />
+                    Generate
+                  </Button>
+                </div>
                 <Textarea
                   id="powershell-script"
                   placeholder="# Enter PowerShell script for advanced routing logic"
@@ -143,7 +192,19 @@ if ($primary.PingSucceeded -eq $false) {
             
             <TabsContent value="python" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="python-script">Python Script</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="python-script">Python Script</Label>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 px-2 text-xs"
+                    onClick={() => handleGenerateScript("python")}
+                    disabled={!scriptDescription.trim() || isGenerating}
+                  >
+                    <Sparkles className="mr-1 h-3 w-3" />
+                    Generate
+                  </Button>
+                </div>
                 <Textarea
                   id="python-script"
                   placeholder="# Enter Python script"
@@ -174,7 +235,19 @@ if not check_connection():
             
             <TabsContent value="golang" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="golang-script">GoLang Script</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="golang-script">GoLang Script</Label>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 px-2 text-xs"
+                    onClick={() => handleGenerateScript("golang")}
+                    disabled={!scriptDescription.trim() || isGenerating}
+                  >
+                    <Sparkles className="mr-1 h-3 w-3" />
+                    Generate
+                  </Button>
+                </div>
                 <Textarea
                   id="golang-script"
                   placeholder="// Enter GoLang script"
@@ -215,7 +288,19 @@ func main() {
             
             <TabsContent value="ansible" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="ansible-script">Ansible Playbook</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="ansible-script">Ansible Playbook</Label>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 px-2 text-xs"
+                    onClick={() => handleGenerateScript("ansible")}
+                    disabled={!scriptDescription.trim() || isGenerating}
+                  >
+                    <Sparkles className="mr-1 h-3 w-3" />
+                    Generate
+                  </Button>
+                </div>
                 <Textarea
                   id="ansible-script"
                   placeholder="# Enter Ansible playbook YAML"
