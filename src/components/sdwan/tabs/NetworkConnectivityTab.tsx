@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Wifi, Ethernet, Satellite, RefreshCw } from 'lucide-react';
+import { Wifi, Network, Satellite, RefreshCw } from 'lucide-react';
 
 const NetworkConnectivityTab = () => {
   return (
@@ -76,7 +76,7 @@ const NetworkConnectivityTab = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Ethernet className="mr-2 h-5 w-5" />
+            <Network className="mr-2 h-5 w-5" />
             Full Mesh Configuration
           </CardTitle>
         </CardHeader>
