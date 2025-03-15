@@ -5,8 +5,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { FileText, ChartBar } from 'lucide-react';
+import { LoggingAlertsProps } from './interfaces';
 
-const LoggingAlertsCard = () => {
+const LoggingAlertsCard = ({ logging, onLoggingToggle }: LoggingAlertsProps) => {
   return (
     <Card className="md:col-span-2">
       <CardHeader>
@@ -20,12 +21,20 @@ const LoggingAlertsCard = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="enable-logging">Enable AI Failover Logging</Label>
-              <Switch id="enable-logging" defaultChecked />
+              <Switch 
+                id="enable-logging" 
+                checked={logging.enabled}
+                onCheckedChange={() => onLoggingToggle('enabled')}
+              />
             </div>
             
             <div className="flex items-center justify-between">
               <Label htmlFor="enable-alerts">Send Alerts When AI Makes a Failover Decision</Label>
-              <Switch id="enable-alerts" defaultChecked />
+              <Switch 
+                id="enable-alerts" 
+                checked={logging.sendAlerts}
+                onCheckedChange={() => onLoggingToggle('sendAlerts')}
+              />
             </div>
             
             <Button variant="outline" className="mt-2 w-full">

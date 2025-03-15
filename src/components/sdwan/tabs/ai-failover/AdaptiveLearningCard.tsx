@@ -5,8 +5,12 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Signal } from 'lucide-react';
+import { AdaptiveLearningProps } from './interfaces';
 
-const AdaptiveLearningCard = () => {
+const AdaptiveLearningCard = ({ 
+  adaptiveLearning, 
+  onToggleAdaptiveLearning 
+}: AdaptiveLearningProps) => {
   return (
     <Card>
       <CardHeader>
@@ -19,12 +23,20 @@ const AdaptiveLearningCard = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label htmlFor="adaptive-learning">Enable Adaptive Learning Mode</Label>
-            <Switch id="adaptive-learning" defaultChecked />
+            <Switch 
+              id="adaptive-learning" 
+              checked={adaptiveLearning.enabled}
+              onCheckedChange={() => onToggleAdaptiveLearning('enabled')}
+            />
           </div>
           
           <div className="flex items-center justify-between">
             <Label htmlFor="real-time-adjust">Allow AI to Adjust Traffic Routing in Real-Time</Label>
-            <Switch id="real-time-adjust" defaultChecked />
+            <Switch 
+              id="real-time-adjust" 
+              checked={adaptiveLearning.allowRealTimeTrafficAdjustment}
+              onCheckedChange={() => onToggleAdaptiveLearning('allowRealTimeTrafficAdjustment')}
+            />
           </div>
           
           <div className="pt-2 space-y-2">

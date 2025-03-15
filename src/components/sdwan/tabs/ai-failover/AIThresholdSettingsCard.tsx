@@ -6,8 +6,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Brain } from 'lucide-react';
+import { AIThresholdSettingsProps } from './interfaces';
 
-const AIThresholdSettingsCard = () => {
+const AIThresholdSettingsCard = ({
+  confidenceLevel,
+  minimumConfidence,
+  threshold,
+  requireAdminApproval,
+  onConfidenceLevelChange,
+  onMinimumConfidenceChange,
+  onThresholdChange,
+  onAdminApprovalToggle
+}: AIThresholdSettingsProps) => {
   return (
     <Card>
       <CardHeader>
@@ -20,21 +30,37 @@ const AIThresholdSettingsCard = () => {
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="ai-confidence">AI Confidence Level for Autonomous Failover: 75%</Label>
+              <Label htmlFor="ai-confidence">AI Confidence Level for Autonomous Failover: {confidenceLevel}%</Label>
             </div>
-            <Slider id="ai-confidence" defaultValue={[75]} max={100} step={1} />
+            <Slider 
+              id="ai-confidence" 
+              value={[confidenceLevel]} 
+              max={100} 
+              step={1} 
+              onValueChange={(value) => onConfidenceLevelChange(value[0])}
+            />
           </div>
           
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="min-confidence">Minimum Confidence Required: 80%</Label>
+              <Label htmlFor="min-confidence">Minimum Confidence Required: {minimumConfidence}%</Label>
             </div>
-            <Slider id="min-confidence" defaultValue={[80]} min={50} max={100} step={1} />
+            <Slider 
+              id="min-confidence" 
+              value={[minimumConfidence]} 
+              min={50} 
+              max={100} 
+              step={1} 
+              onValueChange={(value) => onMinimumConfidenceChange(value[0])}
+            />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="threshold">Threshold for AI-Generated Failover Recommendations</Label>
-            <Select defaultValue="medium">
+            <Select 
+              value={threshold} 
+              onValueChange={(value: 'low' | 'medium' | 'high') => onThresholdChange(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select threshold" />
               </SelectTrigger>
@@ -48,7 +74,11 @@ const AIThresholdSettingsCard = () => {
           
           <div className="flex items-center justify-between">
             <Label htmlFor="admin-approval">Admin Approval Requirement</Label>
-            <Switch id="admin-approval" defaultChecked />
+            <Switch 
+              id="admin-approval" 
+              checked={requireAdminApproval} 
+              onCheckedChange={onAdminApprovalToggle}
+            />
           </div>
         </div>
       </CardContent>

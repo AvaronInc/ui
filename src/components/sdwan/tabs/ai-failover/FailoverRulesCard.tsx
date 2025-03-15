@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -7,8 +7,35 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertTriangle } from 'lucide-react';
+import { FailoverRulesProps } from './interfaces';
 
-const FailoverRulesCard = () => {
+const FailoverRulesCard = ({ 
+  failoverPriority, 
+  simulationMode, 
+  customRules, 
+  onFailoverPriorityChange, 
+  onSimulationModeToggle, 
+  onAddRule 
+}: FailoverRulesProps) => {
+  const [isAddingRule, setIsAddingRule] = useState(false);
+  const [newRule, setNewRule] = useState({
+    sourceIp: '',
+    destination: '',
+    priority: 'medium' as 'high' | 'medium' | 'low'
+  });
+
+  const handleAddRule = () => {
+    if (newRule.sourceIp && newRule.destination) {
+      onAddRule(newRule);
+      setNewRule({
+        sourceIp: '',
+        destination: '',
+        priority: 'medium'
+      });
+      setIsAddingRule(false);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -21,7 +48,10 @@ const FailoverRulesCard = () => {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Prioritize Failover Paths by:</Label>
-            <Select defaultValue="performance">
+            <Select 
+              value={failoverPriority} 
+              onValueChange={(value: 'cost' | 'performance' | 'stability') => onFailoverPriorityChange(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select priority" />
               </SelectTrigger>
@@ -45,27 +75,33 @@ const FailoverRulesCard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell>10.0.1.0/24</TableCell>
-                    <TableCell>SaaS Apps</TableCell>
-                    <TableCell>High</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>10.0.2.0/24</TableCell>
-                    <TableCell>Cloud Services</TableCell>
-                    <TableCell>Medium</TableCell>
-                  </TableRow>
+                  {customRules.map((rule) => (
+                    <TableRow key={rule.id}>
+                      <TableCell>{rule.sourceIp}</TableCell>
+                      <TableCell>{rule.destination}</TableCell>
+                      <TableCell>{rule.priority}</TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </div>
-            <Button variant="outline" size="sm" className="mt-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="mt-2"
+              onClick={() => setIsAddingRule(true)}
+            >
               Add Rule
             </Button>
           </div>
           
           <div className="flex items-center justify-between pt-2">
             <Label htmlFor="simulation-mode">AI Failover Testing Mode (Simulation)</Label>
-            <Switch id="simulation-mode" />
+            <Switch 
+              id="simulation-mode" 
+              checked={simulationMode}
+              onCheckedChange={onSimulationModeToggle}
+            />
           </div>
         </div>
       </CardContent>
