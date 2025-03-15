@@ -13,6 +13,11 @@ import PageTitle from '@/components/common/PageTitle';
 const BillingPanel = () => {
   const [activeTab, setActiveTab] = useState("overview");
 
+  const handleTabChange = (value: string) => {
+    // Set the active tab without affecting the sidebar state
+    setActiveTab(value);
+  };
+
   return (
     <div className="space-y-6">
       <PageTitle 
@@ -21,7 +26,12 @@ const BillingPanel = () => {
         icon={<CreditCard className="h-6 w-6" />}
       />
 
-      <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+      <Tabs 
+        defaultValue="overview" 
+        value={activeTab} 
+        onValueChange={handleTabChange} 
+        className="space-y-4"
+      >
         <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-2">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="payment-methods">Payment Methods</TabsTrigger>
