@@ -111,3 +111,38 @@ export interface BackupConfiguration {
     size: number; // in bytes
   }[];
 }
+
+// AI-Powered Intelligent Failover types
+export interface AIFailoverConfiguration {
+  confidenceLevel: number; // 0-100
+  minimumConfidenceRequired: number; // 50-100
+  thresholdForRecommendations: 'low' | 'medium' | 'high';
+  requireAdminApproval: boolean;
+  networkConditions: {
+    latencyThreshold: number; // ms
+    packetLossThreshold: number; // percentage
+    jitterThreshold: number; // ms
+    connectionDownThreshold: {
+      count: number;
+      timeWindow: number; // minutes
+    };
+    detectBGPIssues: boolean;
+    ddosResponseEnabled: boolean;
+  };
+  adaptiveLearning: {
+    enabled: boolean;
+    allowRealTimeTrafficAdjustment: boolean;
+  };
+  failoverPriority: 'cost' | 'performance' | 'stability';
+  simulationModeEnabled: boolean;
+  logging: {
+    enabled: boolean;
+    sendAlerts: boolean;
+  };
+  customRules: {
+    id: string;
+    sourceIp: string;
+    destination: string;
+    priority: 'high' | 'medium' | 'low';
+  }[];
+}
