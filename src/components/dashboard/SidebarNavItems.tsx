@@ -18,7 +18,8 @@ import {
   Mail,
   Server,
   Globe,
-  Contact
+  Contact,
+  Puzzle
 } from 'lucide-react';
 import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarAutomationButton } from '@/components/ui/sidebar';
 
@@ -67,6 +68,11 @@ export const navItems = [
     title: 'Identity',
     icon: Users,
     href: '/identity'
+  },
+  {
+    title: 'Integrations',
+    icon: Puzzle,
+    href: '/integrations'
   },
   {
     title: 'Storage',
