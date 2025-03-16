@@ -108,12 +108,12 @@ const IPAddressAllocation: React.FC<IPAddressAllocationProps> = ({
                   <Filter className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Status</span>
                 </div>
-                <Select value={statusFilter || ''} onValueChange={(value) => setStatusFilter(value || null)}>
+                <Select value={statusFilter || 'all'} onValueChange={(value) => setStatusFilter(value === 'all' ? null : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Statuses</SelectItem>
+                    <SelectItem value="all">All Statuses</SelectItem>
                     <SelectItem value="in-use">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-3.5 w-3.5 text-warning" />
@@ -141,12 +141,12 @@ const IPAddressAllocation: React.FC<IPAddressAllocationProps> = ({
                   <Filter className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Subnet</span>
                 </div>
-                <Select value={subnetFilter || ''} onValueChange={(value) => setSubnetFilter(value || null)}>
+                <Select value={subnetFilter || 'all'} onValueChange={(value) => setSubnetFilter(value === 'all' ? null : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Filter by subnet" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Subnets</SelectItem>
+                    <SelectItem value="all">All Subnets</SelectItem>
                     {subnets.map((subnet) => (
                       <SelectItem key={subnet} value={subnet}>
                         {subnet}
