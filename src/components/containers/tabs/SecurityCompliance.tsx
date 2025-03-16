@@ -1,11 +1,13 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Shield, Lock, RefreshCw, AlertTriangle, CheckCircle, Terminal } from 'lucide-react';
+import { Shield, Lock, RefreshCw, AlertTriangle, CheckCircle, Terminal, FileText, ExternalLink } from 'lucide-react';
 import { useContainersData } from '@/components/containers/hooks/useContainersData';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 const SecurityCompliance = () => {
   const { securityScans } = useContainersData();
