@@ -34,6 +34,7 @@ import Billing from "./pages/Billing";
 import Containers from "./pages/Containers";
 import Services from "./pages/Services";
 import ChangeManagement from "./pages/ChangeManagement";
+import Scheduling from "./pages/Scheduling";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,6 +80,7 @@ const App = () => (
                   <Route path="/containers" element={<ProtectedRoute><Containers /></ProtectedRoute>} />
                   <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
                   <Route path="/change-management" element={<ProtectedRoute><ChangeManagement /></ProtectedRoute>} />
+                  <Route path="/scheduling" element={<ProtectedRoute><Scheduling /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AnimatePresence>
