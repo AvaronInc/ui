@@ -7,7 +7,10 @@ import {
   AlertTriangle, 
   XCircle, 
   Info, 
-  ArrowUpRight 
+  ArrowUpRight,
+  TrendingUp,
+  TrendingDown,
+  Minus
 } from 'lucide-react';
 
 type StatusType = 'healthy' | 'warning' | 'critical' | 'unknown';
@@ -76,6 +79,18 @@ export const StatusCard = ({
 }: StatusCardProps) => {
   const config = statusConfig[status];
   const StatusIcon = config.icon;
+  
+  const renderTrendIcon = () => {
+    if (!trend) return null;
+    
+    if (trend === 'up') {
+      return <TrendingUp className="h-3.5 w-3.5 text-green-500" />;
+    } else if (trend === 'down') {
+      return <TrendingDown className="h-3.5 w-3.5 text-red-500" />;
+    } else {
+      return <Minus className="h-3.5 w-3.5 text-gray-500" />;
+    }
+  };
 
   return (
     <Card 
@@ -106,13 +121,14 @@ export const StatusCard = ({
           <span className={cn("font-medium", config.color)}>
             {config.label}
           </span>
-          {trend && (
-            <span className={cn("ml-auto text-xs font-medium", 
+          {trend && trendValue && (
+            <span className={cn("ml-auto text-xs font-medium flex items-center gap-1", 
               trend === 'up' ? 'text-green-500' : 
               trend === 'down' ? 'text-red-500' : 
               'text-gray-500'
             )}>
-              {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'} {trendValue}
+              {renderTrendIcon()}
+              {trendValue}
             </span>
           )}
         </div>

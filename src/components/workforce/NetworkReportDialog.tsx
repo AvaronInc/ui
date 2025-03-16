@@ -1,137 +1,157 @@
 
-import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, Users, Network, Clock, Shield, Laptop } from "lucide-react";
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { FileText, Download, Calendar, ChevronRight } from 'lucide-react';
 
 interface NetworkReportDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-// Dummy data for the report
-const networkStats = {
-  timestamp: new Date().toLocaleString(),
-  activeUsers: 243,
-  connectedDevices: 198,
-  averageLatency: "24ms",
-  bandwidthUsage: "1.2 GB/s",
-  securityEvents: 12,
-  networkHealth: "98.5%",
-  topApplications: [
-    { name: "Microsoft Teams", bandwidth: "256 Mbps", users: 156 },
-    { name: "Slack", bandwidth: "124 Mbps", users: 143 },
-    { name: "Zoom", bandwidth: "512 Mbps", users: 45 },
-    { name: "Web Browsing", bandwidth: "768 Mbps", users: 201 }
-  ]
-};
-
 const NetworkReportDialog = ({ open, onOpenChange }: NetworkReportDialogProps) => {
+  const { toast } = useToast();
+  const [reportFormat, setReportFormat] = useState('pdf');
+  const [selectedSections, setSelectedSections] = useState({
+    deviceInventory: true,
+    securityCompliance: true,
+    softwareUpdates: true,
+    vpnConnections: true,
+    userActivity: false,
+  });
+  
+  const toggleSection = (section: keyof typeof selectedSections) => {
+    setSelectedSections({
+      ...selectedSections,
+      [section]: !selectedSections[section],
+    });
+  };
+  
+  const handleGenerateReport = () => {
+    toast({
+      title: 'Report Generation Started',
+      description: 'Your workforce report is being prepared and will be available shortly.',
+    });
+    onOpenChange(false);
+  };
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[80vh]">
+      <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle>Network Status Report</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Generate Workforce Report
+          </DialogTitle>
+          <DialogDescription>
+            Create a customized report with your selected parameters
+          </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="h-[60vh] w-full pr-4">
-          <div className="space-y-6">
-            <p className="text-sm text-muted-foreground">
-              Generated on {networkStats.timestamp}
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{networkStats.activeUsers}</div>
-                  <p className="text-xs text-muted-foreground">Currently online</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Network Health</CardTitle>
-                  <Activity className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{networkStats.networkHealth}</div>
-                  <p className="text-xs text-muted-foreground">Overall status</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Average Latency</CardTitle>
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{networkStats.averageLatency}</div>
-                  <p className="text-xs text-muted-foreground">Response time</p>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Network Traffic Analysis</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Application</TableHead>
-                      <TableHead>Active Users</TableHead>
-                      <TableHead>Bandwidth Usage</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {networkStats.topApplications.map((app) => (
-                      <TableRow key={app.name}>
-                        <TableCell className="font-medium">{app.name}</TableCell>
-                        <TableCell>{app.users}</TableCell>
-                        <TableCell>{app.bandwidth}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Security Events</CardTitle>
-                  <Shield className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{networkStats.securityEvents}</div>
-                  <p className="text-xs text-muted-foreground">Detected in last 24h</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Connected Devices</CardTitle>
-                  <Laptop className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{networkStats.connectedDevices}</div>
-                  <p className="text-xs text-muted-foreground">Active endpoints</p>
-                </CardContent>
-              </Card>
+        
+        <div className="py-4 space-y-6">
+          <div>
+            <h4 className="text-sm font-medium mb-3">Report Type</h4>
+            <RadioGroup value={reportFormat} onValueChange={setReportFormat} className="flex flex-col space-y-2">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="pdf" id="pdf" />
+                <Label htmlFor="pdf" className="flex items-center cursor-pointer">
+                  <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
+                  <span>PDF Report</span>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="csv" id="csv" />
+                <Label htmlFor="csv" className="flex items-center cursor-pointer">
+                  <Download className="h-4 w-4 mr-2 text-muted-foreground" />
+                  <span>CSV Export</span>
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+          
+          <div>
+            <h4 className="text-sm font-medium mb-3">Time Range</h4>
+            <RadioGroup defaultValue="30days" className="flex flex-col space-y-2">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="7days" id="7days" />
+                <Label htmlFor="7days" className="cursor-pointer">Last 7 days</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="30days" id="30days" />
+                <Label htmlFor="30days" className="cursor-pointer">Last 30 days</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="90days" id="90days" />
+                <Label htmlFor="90days" className="cursor-pointer">Last 90 days</Label>
+              </div>
+            </RadioGroup>
+          </div>
+          
+          <div>
+            <h4 className="text-sm font-medium mb-3">Include Sections</h4>
+            <div className="flex flex-col space-y-3">
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="deviceInventory" 
+                  checked={selectedSections.deviceInventory}
+                  onCheckedChange={() => toggleSection('deviceInventory')}
+                />
+                <Label htmlFor="deviceInventory" className="cursor-pointer">Device Inventory & Status</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="securityCompliance" 
+                  checked={selectedSections.securityCompliance}
+                  onCheckedChange={() => toggleSection('securityCompliance')}
+                />
+                <Label htmlFor="securityCompliance" className="cursor-pointer">Security & Compliance Status</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="softwareUpdates" 
+                  checked={selectedSections.softwareUpdates}
+                  onCheckedChange={() => toggleSection('softwareUpdates')}
+                />
+                <Label htmlFor="softwareUpdates" className="cursor-pointer">Software Updates & Patching</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="vpnConnections" 
+                  checked={selectedSections.vpnConnections}
+                  onCheckedChange={() => toggleSection('vpnConnections')}
+                />
+                <Label htmlFor="vpnConnections" className="cursor-pointer">VPN Connections History</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="userActivity" 
+                  checked={selectedSections.userActivity}
+                  onCheckedChange={() => toggleSection('userActivity')}
+                />
+                <Label htmlFor="userActivity" className="cursor-pointer">User Activity & Login Patterns</Label>
+              </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
+        
+        <DialogFooter>
+          <Button 
+            variant="outline" 
+            onClick={() => onOpenChange(false)}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleGenerateReport}
+            className="flex items-center"
+          >
+            Generate Report <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

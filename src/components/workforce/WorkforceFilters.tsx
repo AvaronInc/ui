@@ -1,20 +1,11 @@
 
 import React from 'react';
-import { Search, Filter, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { WorkforceFilter, PatchStatus, Role } from '@/types/workforce';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { PatchStatus, Role, WorkforceFilter } from '@/types/workforce';
+import { X, Search, Filter } from 'lucide-react';
 
 interface WorkforceFiltersProps {
   filters: WorkforceFilter;
@@ -26,20 +17,8 @@ interface WorkforceFiltersProps {
   onGroupByChange: (value: string) => void;
 }
 
-const statusOptions: { value: PatchStatus; label: string }[] = [
-  { value: 'up_to_date', label: 'Up to Date' },
-  { value: 'needs_patch', label: 'Needs Patch' },
-  { value: 'security_issue', label: 'Security Issue' },
-];
-
-const groupByOptions = [
-  { value: 'department', label: 'Department' },
-  { value: 'role', label: 'Role' },
-  { value: 'location', label: 'Location' },
-];
-
-const WorkforceFilters = ({ 
-  filters, 
+const WorkforceFilters = ({
+  filters,
   onFilterChange,
   departments,
   roles,
@@ -47,235 +26,152 @@ const WorkforceFilters = ({
   groupBy,
   onGroupByChange
 }: WorkforceFiltersProps) => {
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFilterChange({ ...filters, searchQuery: e.target.value });
+  const updateSearchQuery = (value: string) => {
+    onFilterChange({ ...filters, searchQuery: value });
   };
-
-  const toggleDepartment = (department: string) => {
-    const current = filters.department || [];
-    const updated = current.includes(department)
-      ? current.filter(d => d !== department)
-      : [...current, department];
-    onFilterChange({ ...filters, department: updated });
+  
+  const updateDepartmentFilter = (value: string) => {
+    const currentDepts = filters.department || [];
+    const newDepts = currentDepts.includes(value)
+      ? currentDepts.filter(d => d !== value)
+      : [...currentDepts, value];
+    
+    onFilterChange({ ...filters, department: newDepts.length ? newDepts : undefined });
   };
-
-  const toggleRole = (role: Role) => {
-    const current = filters.role || [];
-    const updated = current.includes(role)
-      ? current.filter(r => r !== role)
-      : [...current, role];
-    onFilterChange({ ...filters, role: updated });
+  
+  const updateRoleFilter = (value: Role) => {
+    const currentRoles = filters.role || [];
+    const newRoles = currentRoles.includes(value)
+      ? currentRoles.filter(r => r !== value)
+      : [...currentRoles, value];
+    
+    onFilterChange({ ...filters, role: newRoles.length ? newRoles : undefined });
   };
-
-  const toggleLocation = (location: string) => {
-    const current = filters.location || [];
-    const updated = current.includes(location)
-      ? current.filter(l => l !== location)
-      : [...current, location];
-    onFilterChange({ ...filters, location: updated });
+  
+  const updateLocationFilter = (value: string) => {
+    const currentLocations = filters.location || [];
+    const newLocations = currentLocations.includes(value)
+      ? currentLocations.filter(l => l !== value)
+      : [...currentLocations, value];
+    
+    onFilterChange({ ...filters, location: newLocations.length ? newLocations : undefined });
   };
-
-  const toggleStatus = (status: PatchStatus) => {
-    const current = filters.status || [];
-    const updated = current.includes(status)
-      ? current.filter(s => s !== status)
-      : [...current, status];
-    onFilterChange({ ...filters, status: updated });
+  
+  const updateStatusFilter = (value: PatchStatus) => {
+    const currentStatuses = filters.status || [];
+    const newStatuses = currentStatuses.includes(value)
+      ? currentStatuses.filter(s => s !== value)
+      : [...currentStatuses, value];
+    
+    onFilterChange({ ...filters, status: newStatuses.length ? newStatuses : undefined });
   };
-
+  
   const clearFilters = () => {
     onFilterChange({});
   };
-
-  const totalActiveFilters = (
-    (filters.department?.length || 0) +
-    (filters.role?.length || 0) +
-    (filters.location?.length || 0) +
-    (filters.status?.length || 0)
+  
+  const hasFilters = Object.values(filters).some(value => 
+    Array.isArray(value) ? value.length > 0 : !!value
   );
-
+  
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search users or devices..."
-            className="pl-8"
+            placeholder="Search devices or users..."
+            className="pl-9"
             value={filters.searchQuery || ''}
-            onChange={handleSearchChange}
+            onChange={(e) => updateSearchQuery(e.target.value)}
           />
+          {filters.searchQuery && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1.5 h-6 w-6"
+              onClick={() => updateSearchQuery('')}
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          )}
         </div>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="flex gap-2">
-              <Filter className="h-4 w-4" />
-              Filters
-              {totalActiveFilters > 0 && (
-                <Badge className="ml-1 h-5 w-5 rounded-full p-0 text-xs" variant="secondary">
-                  {totalActiveFilters}
-                </Badge>
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Filter By</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs">Status</DropdownMenuLabel>
-              {statusOptions.map((status) => (
-                <DropdownMenuItem key={status.value} onSelect={(e) => e.preventDefault()}>
-                  <div className="flex items-center gap-2">
-                    <Checkbox 
-                      id={`status-${status.value}`}
-                      checked={(filters.status || []).includes(status.value)}
-                      onCheckedChange={() => toggleStatus(status.value)}
-                    />
-                    <label htmlFor={`status-${status.value}`} className="text-sm flex-1 cursor-pointer">
-                      {status.label}
-                    </label>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            
-            <DropdownMenuSeparator />
-            
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs">Department</DropdownMenuLabel>
-              {departments.map((dept) => (
-                <DropdownMenuItem key={dept} onSelect={(e) => e.preventDefault()}>
-                  <div className="flex items-center gap-2">
-                    <Checkbox 
-                      id={`dept-${dept}`}
-                      checked={(filters.department || []).includes(dept)}
-                      onCheckedChange={() => toggleDepartment(dept)}
-                    />
-                    <label htmlFor={`dept-${dept}`} className="text-sm flex-1 cursor-pointer">
-                      {dept}
-                    </label>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            
-            <DropdownMenuSeparator />
-            
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs">Role</DropdownMenuLabel>
-              {roles.map((role) => (
-                <DropdownMenuItem key={role} onSelect={(e) => e.preventDefault()}>
-                  <div className="flex items-center gap-2">
-                    <Checkbox 
-                      id={`role-${role}`}
-                      checked={(filters.role || []).includes(role)}
-                      onCheckedChange={() => toggleRole(role)}
-                    />
-                    <label htmlFor={`role-${role}`} className="text-sm flex-1 cursor-pointer">
-                      {role}
-                    </label>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            
-            <DropdownMenuSeparator />
-            
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs">Location</DropdownMenuLabel>
-              {locations.map((loc) => (
-                <DropdownMenuItem key={loc} onSelect={(e) => e.preventDefault()}>
-                  <div className="flex items-center gap-2">
-                    <Checkbox 
-                      id={`loc-${loc}`}
-                      checked={(filters.location || []).includes(loc)}
-                      onCheckedChange={() => toggleLocation(loc)}
-                    />
-                    <label htmlFor={`loc-${loc}`} className="text-sm flex-1 cursor-pointer">
-                      {loc}
-                    </label>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            
-            <DropdownMenuSeparator />
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="w-full justify-center"
-              onClick={clearFilters}
-            >
-              Clear Filters
-            </Button>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              Group By: {groupByOptions.find(opt => opt.value === groupBy)?.label || 'None'}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {groupByOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => onGroupByChange(option.value)}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Select
+          value={groupBy}
+          onValueChange={onGroupByChange}
+        >
+          <SelectTrigger className="w-[180px]">
+            <Filter className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Group by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="department">Group by Department</SelectItem>
+            <SelectItem value="location">Group by Location</SelectItem>
+            <SelectItem value="status">Group by Status</SelectItem>
+            <SelectItem value="role">Group by Role</SelectItem>
+            <SelectItem value="">No Grouping</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       
-      {totalActiveFilters > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {(filters.department || []).map(dept => (
-            <Badge key={`dept-${dept}`} variant="secondary" className="flex gap-1 items-center">
-              Department: {dept}
-              <X 
-                className="h-3 w-3 cursor-pointer" 
-                onClick={() => toggleDepartment(dept)}
-              />
-            </Badge>
-          ))}
-          
-          {(filters.role || []).map(role => (
-            <Badge key={`role-${role}`} variant="secondary" className="flex gap-1 items-center">
-              Role: {role}
-              <X 
-                className="h-3 w-3 cursor-pointer" 
-                onClick={() => toggleRole(role)}
-              />
-            </Badge>
-          ))}
-          
-          {(filters.location || []).map(loc => (
-            <Badge key={`loc-${loc}`} variant="secondary" className="flex gap-1 items-center">
-              Location: {loc}
-              <X 
-                className="h-3 w-3 cursor-pointer" 
-                onClick={() => toggleLocation(loc)}
-              />
-            </Badge>
-          ))}
-          
-          {(filters.status || []).map(status => (
-            <Badge key={`status-${status}`} variant="secondary" className="flex gap-1 items-center">
-              Status: {statusOptions.find(opt => opt.value === status)?.label}
-              <X 
-                className="h-3 w-3 cursor-pointer" 
-                onClick={() => toggleStatus(status)}
-              />
+      <div className="flex flex-wrap gap-2">
+        <div className="flex gap-1.5 flex-wrap">
+          {departments.map(dept => (
+            <Badge
+              key={dept}
+              variant={filters.department?.includes(dept) ? 'default' : 'outline'}
+              className="cursor-pointer"
+              onClick={() => updateDepartmentFilter(dept)}
+            >
+              {dept}
             </Badge>
           ))}
         </div>
-      )}
+        
+        <div className="flex gap-1.5 flex-wrap ml-1">
+          {roles.map(role => (
+            <Badge
+              key={role}
+              variant={filters.role?.includes(role) ? 'default' : 'outline'}
+              className="cursor-pointer"
+              onClick={() => updateRoleFilter(role)}
+            >
+              {role === 'admin' ? 'Admin' : role === 'manager' ? 'Manager' : 'User'}
+            </Badge>
+          ))}
+        </div>
+        
+        <div className="flex gap-1.5 flex-wrap ml-1">
+          {['up_to_date', 'needs_patch', 'security_issue'].map((status) => (
+            <Badge
+              key={status}
+              variant={filters.status?.includes(status as PatchStatus) ? 'default' : 'outline'}
+              className={`cursor-pointer ${
+                status === 'up_to_date' 
+                  ? 'bg-green-500 hover:bg-green-600' 
+                  : status === 'needs_patch'
+                    ? 'bg-amber-500 hover:bg-amber-600' 
+                    : 'bg-red-500 hover:bg-red-600'
+              }`}
+              onClick={() => updateStatusFilter(status as PatchStatus)}
+            >
+              {status === 'up_to_date' ? 'Up to Date' : status === 'needs_patch' ? 'Needs Patch' : 'Security Issue'}
+            </Badge>
+          ))}
+        </div>
+        
+        {hasFilters && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={clearFilters}
+            className="ml-auto"
+          >
+            <X className="mr-1 h-3.5 w-3.5" /> Clear
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
