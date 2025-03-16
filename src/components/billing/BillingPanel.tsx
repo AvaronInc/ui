@@ -27,17 +27,15 @@ const BillingPanel = () => {
         onValueChange={handleTabChange} 
         className="space-y-4"
       >
-        <div className="overflow-x-auto pb-2">
-          <ScrollArea className="w-full">
-            <TabsList className="inline-flex min-w-max">
-              <TabsTrigger value="overview">{isMobile ? "Overview" : "Overview"}</TabsTrigger>
-              <TabsTrigger value="payment-methods">{isMobile ? "Payment" : "Payment Methods"}</TabsTrigger>
-              <TabsTrigger value="hardware-contracts">{isMobile ? "Hardware" : "Hardware Contracts"}</TabsTrigger>
-              <TabsTrigger value="invoices">{isMobile ? "Invoices" : "Invoices"}</TabsTrigger>
-              <TabsTrigger value="usage-analytics">{isMobile ? "Usage" : "Usage & Cost"}</TabsTrigger>
-              <TabsTrigger value="support">{isMobile ? "Support" : "Support"}</TabsTrigger>
-            </TabsList>
-          </ScrollArea>
+        <div className="flex overflow-x-auto pb-2 scrollbar-hide">
+          <TabsList className="flex flex-nowrap min-w-max">
+            <TabsTrigger value="overview">{isMobile ? "Overview" : "Overview"}</TabsTrigger>
+            <TabsTrigger value="payment-methods">{isMobile ? "Payment" : "Payment Methods"}</TabsTrigger>
+            <TabsTrigger value="hardware-contracts">{isMobile ? "Hardware" : "Hardware Contracts"}</TabsTrigger>
+            <TabsTrigger value="invoices">{isMobile ? "Invoices" : "Invoices"}</TabsTrigger>
+            <TabsTrigger value="usage-analytics">{isMobile ? "Usage" : "Usage & Cost"}</TabsTrigger>
+            <TabsTrigger value="support">{isMobile ? "Support" : "Support"}</TabsTrigger>
+          </TabsList>
         </div>
 
         <TabsContent value="overview" className="space-y-4">
