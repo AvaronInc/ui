@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,9 +10,12 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Zap, Brain, CheckCircle, AlertCircle, LineChart, History, Cpu, HardDrive } from 'lucide-react';
 import { useContainersData } from '@/components/containers/hooks/useContainersData';
 import { AIRecommendationChart } from '../charts/AIRecommendationChart';
+import { useForm } from 'react-hook-form';
 
 const AutoHealingOptimization = () => {
   const { aiOptimizations, autoHealingEvents } = useContainersData();
+  const recoveryStrategyForm = useForm();
+  const aiLearningForm = useForm();
   
   return (
     <div className="space-y-6">
@@ -200,13 +202,18 @@ const AutoHealingOptimization = () => {
             <div className="space-y-6">
               <div className="space-y-2">
                 <h3 className="text-sm font-medium">Recovery Strategy</h3>
-                <Form>
+                <Form {...recoveryStrategyForm}>
                   <FormField
+                    control={recoveryStrategyForm.control}
                     name="recoveryStrategy"
-                    render={() => (
+                    render={({ field }) => (
                       <FormItem className="space-y-3">
                         <FormControl>
-                          <RadioGroup defaultValue="restart" className="space-y-1">
+                          <RadioGroup 
+                            onValueChange={field.onChange} 
+                            defaultValue={field.value || "restart"} 
+                            className="space-y-1"
+                          >
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="restart" id="r1" />
                               <FormLabel htmlFor="r1">Restart Container</FormLabel>
@@ -257,13 +264,18 @@ const AutoHealingOptimization = () => {
               
               <div className="space-y-2 mt-8">
                 <h3 className="text-sm font-medium">AI Learning Strategy</h3>
-                <Form>
+                <Form {...aiLearningForm}>
                   <FormField
+                    control={aiLearningForm.control}
                     name="aiLearning"
-                    render={() => (
+                    render={({ field }) => (
                       <FormItem className="space-y-3">
                         <FormControl>
-                          <RadioGroup defaultValue="active" className="space-y-1">
+                          <RadioGroup 
+                            onValueChange={field.onChange}
+                            defaultValue={field.value || "active"} 
+                            className="space-y-1"
+                          >
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="passive" id="ai1" />
                               <FormLabel htmlFor="ai1">Passive Learning Only</FormLabel>

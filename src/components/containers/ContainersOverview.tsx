@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Docker, Cpu, HardDrive, Network, AlertTriangle, Layers, Download } from 'lucide-react';
+import { Dock, Cpu, HardDrive, Network, AlertTriangle, Layers, Download } from 'lucide-react';
 import { useContainersData } from '@/components/containers/hooks/useContainersData';
 import { ContainerUsageChart } from './charts/ContainerUsageChart';
 
@@ -14,7 +13,7 @@ const ContainersOverview = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Running Containers</CardTitle>
-          <Docker className="h-4 w-4 text-muted-foreground" />
+          <Dock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats?.runningContainers || '0'}</div>
@@ -122,7 +121,7 @@ const ContainersOverview = () => {
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <Button className="w-full justify-start">
-            <Docker className="mr-2 h-4 w-4" /> Deploy New Container
+            <Dock className="mr-2 h-4 w-4" /> Deploy New Container
           </Button>
           <Button variant="outline" className="w-full justify-start">
             <Download className="mr-2 h-4 w-4" /> Pull New Image

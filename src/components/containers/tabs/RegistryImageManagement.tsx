@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,11 +9,13 @@ import { TabsContent, TabsList, TabsTrigger, Tabs } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Search, Download, Upload, RefreshCw, Plus, CheckCircle, AlertTriangle, Clock, Tag, Server } from 'lucide-react';
 import { useContainersData } from '@/components/containers/hooks/useContainersData';
+import { useForm } from 'react-hook-form';
 
 const RegistryImageManagement = () => {
   const { images, registries } = useContainersData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegistry, setSelectedRegistry] = useState<string | null>(null);
+  const imagePullForm = useForm();
   
   // Filter images based on search query and selected registry
   const filteredImages = images.filter(image => {
@@ -88,9 +89,10 @@ const RegistryImageManagement = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form>
-              <form className="space-y-4">
+            <Form {...imagePullForm}>
+              <form onSubmit={imagePullForm.handleSubmit((data) => console.log(data))} className="space-y-4">
                 <FormField
+                  control={imagePullForm.control}
                   name="registry"
                   render={({ field }) => (
                     <FormItem>
@@ -115,6 +117,7 @@ const RegistryImageManagement = () => {
                 />
                 
                 <FormField
+                  control={imagePullForm.control}
                   name="imageName"
                   render={({ field }) => (
                     <FormItem>
@@ -128,6 +131,7 @@ const RegistryImageManagement = () => {
                 />
                 
                 <FormField
+                  control={imagePullForm.control}
                   name="tag"
                   render={({ field }) => (
                     <FormItem>

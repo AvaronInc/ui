@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Box, Docker, LineChart, Shield, Zap, Inbox } from 'lucide-react';
+import { Box, Dock, LineChart, Shield, Zap, Inbox } from 'lucide-react';
 import ContainersOverview from './ContainersOverview';
 import DeploymentConfiguration from './tabs/DeploymentConfiguration';
 import MonitoringLogs from './tabs/MonitoringLogs';
@@ -23,7 +22,7 @@ const ContainersPanel = () => {
       <PageTitle 
         title="Containers Management" 
         description="Deploy, monitor, and manage containerized applications across your infrastructure"
-        icon={<Docker className="h-6 w-6" />}
+        icon={<Dock className="h-6 w-6" />}
       />
 
       <Tabs 

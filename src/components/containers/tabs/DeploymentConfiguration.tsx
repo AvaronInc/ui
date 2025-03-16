@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -7,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useForm } from 'react-hook-form';
-import { Docker, Server, Network } from 'lucide-react';
+import { Dock, Server, Network } from 'lucide-react';
 
 const DeploymentConfiguration = () => {
   const form = useForm({
