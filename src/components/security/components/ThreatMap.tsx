@@ -78,7 +78,10 @@ const ThreatMap: React.FC = () => {
         // Convert topojson to geojson with proper typing
         const countries = svg.append("g")
           .selectAll("path")
-          .data(topojson.feature(world, world.objects.countries).features as any[])
+          .data(
+            // Use proper type assertion for topojson feature conversion
+            (topojson.feature(world, world.objects.countries) as GeoJSONFeatureCollection).features
+          )
           .join("path")
           .attr("d", path as any)
           .attr("fill", "#e2e8f0")
