@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import * as topojson from 'topojson-client';
 
 const ThreatMap: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -40,9 +41,9 @@ const ThreatMap: React.FC = () => {
       // Draw world map
       const countries = svg.append("g")
         .selectAll("path")
-        .data(d3.geoPath()(topojson.feature(world, world.objects.countries) as any))
+        .data(topojson.feature(world, world.objects.countries).features)
         .join("path")
-        .attr("d", (d: any) => d)
+        .attr("d", path)
         .attr("fill", "#e2e8f0")
         .attr("stroke", "#cbd5e1")
         .attr("stroke-width", 0.5);
@@ -130,7 +131,7 @@ const ThreatMap: React.FC = () => {
   
   return (
     <div className="text-center">
-      <div ref={mapRef} className="w-full h-full" />
+      <div ref={mapRef} className="w-full h-[400px]" />
     </div>
   );
 };
