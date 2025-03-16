@@ -22,6 +22,22 @@ const ServiceDeployment = () => {
     custom: <Box className="h-10 w-10 text-primary" />,
   };
 
+  // Navigate to the configure tab
+  const navigateToConfigureTab = () => {
+    const configureTab = document.querySelector('[data-value="configure"]') as HTMLElement;
+    if (configureTab) {
+      configureTab.click();
+    }
+  };
+
+  // Navigate to the select tab
+  const navigateToSelectTab = () => {
+    const selectTab = document.querySelector('[data-value="select"]') as HTMLElement;
+    if (selectTab) {
+      selectTab.click();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="select" className="w-full">
@@ -55,7 +71,7 @@ const ServiceDeployment = () => {
               
               {selectedServiceType && (
                 <div className="mt-6 flex justify-end">
-                  <Button onClick={() => document.querySelector('[data-value="configure"]')?.click()}>
+                  <Button onClick={navigateToConfigureTab}>
                     Continue to Configuration
                   </Button>
                 </div>
@@ -68,7 +84,7 @@ const ServiceDeployment = () => {
           {selectedServiceType && (
             <DeploymentForm 
               serviceType={selectedServiceType} 
-              onBack={() => document.querySelector('[data-value="select"]')?.click()}
+              onBack={navigateToSelectTab}
             />
           )}
         </TabsContent>
