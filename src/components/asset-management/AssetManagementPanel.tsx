@@ -8,20 +8,25 @@ import WarrantySection from './sections/WarrantySection';
 import LifecycleSection from './sections/LifecycleSection';
 import TroubleshootingSection from './sections/TroubleshootingSection';
 import SearchExportSection from './sections/SearchExportSection';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AssetManagementPanel = () => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="space-y-6">
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid grid-cols-7 mb-6">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="tracking">Asset Tracking</TabsTrigger>
-          <TabsTrigger value="datacenter">Data Centers</TabsTrigger>
-          <TabsTrigger value="warranty">Warranty & Licensing</TabsTrigger>
-          <TabsTrigger value="lifecycle">Lifecycle</TabsTrigger>
-          <TabsTrigger value="support">Support</TabsTrigger>
-          <TabsTrigger value="search">Search & Export</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-7 mb-4">
+            <TabsTrigger value="overview">{isMobile ? 'Overview' : 'Overview'}</TabsTrigger>
+            <TabsTrigger value="tracking">{isMobile ? 'Assets' : 'Asset Tracking'}</TabsTrigger>
+            <TabsTrigger value="datacenter">{isMobile ? 'DC' : 'Data Centers'}</TabsTrigger>
+            <TabsTrigger value="warranty">{isMobile ? 'Warranty' : 'Warranty & Licensing'}</TabsTrigger>
+            <TabsTrigger value="lifecycle">{isMobile ? 'Lifecycle' : 'Lifecycle'}</TabsTrigger>
+            <TabsTrigger value="support">{isMobile ? 'Support' : 'Support'}</TabsTrigger>
+            <TabsTrigger value="search">{isMobile ? 'Search' : 'Search & Export'}</TabsTrigger>
+          </TabsList>
+        </div>
         
         <TabsContent value="overview" className="mt-0">
           <AssetOverviewSection />

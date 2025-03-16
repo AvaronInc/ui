@@ -8,20 +8,23 @@ import BGPIntegrationsTab from './tabs/BGPIntegrationsTab';
 import MonitoringLogsTab from './tabs/MonitoringLogsTab';
 import AdvancedConfigTab from './tabs/AdvancedConfigTab';
 import AIIntelligentFailoverTab from './tabs/AIIntelligentFailoverTab';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const SDWANPanel = () => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="space-y-4 sm:space-y-6">
       <Tabs defaultValue="connectivity" className="w-full">
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 mb-4 sm:mb-6">
-            <TabsTrigger value="connectivity">Network</TabsTrigger>
-            <TabsTrigger value="failover">Failover</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
-            <TabsTrigger value="bgp">BGP</TabsTrigger>
-            <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
-            <TabsTrigger value="advanced">Advanced</TabsTrigger>
-            <TabsTrigger value="ai-failover">AI Failover</TabsTrigger>
+            <TabsTrigger value="connectivity">{isMobile ? 'Network' : 'Network'}</TabsTrigger>
+            <TabsTrigger value="failover">{isMobile ? 'Failover' : 'Failover'}</TabsTrigger>
+            <TabsTrigger value="security">{isMobile ? 'Security' : 'Security'}</TabsTrigger>
+            <TabsTrigger value="bgp">{isMobile ? 'BGP' : 'BGP'}</TabsTrigger>
+            <TabsTrigger value="monitoring">{isMobile ? 'Monitor' : 'Monitoring'}</TabsTrigger>
+            <TabsTrigger value="advanced">{isMobile ? 'Advanced' : 'Advanced'}</TabsTrigger>
+            <TabsTrigger value="ai-failover">{isMobile ? 'AI' : 'AI Failover'}</TabsTrigger>
           </TabsList>
         </div>
         

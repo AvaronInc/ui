@@ -9,17 +9,19 @@ import { Zap, Activity, Heart, Cpu } from 'lucide-react';
 import PerformanceOptimization from '../components/PerformanceOptimization';
 import AutoHealing from '../components/AutoHealing';
 import AIRecommendations from '../components/AIRecommendations';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AIOptimization = () => {
   const [selectedService, setSelectedService] = useState<string>(activeServices[0]?.id || '');
+  const isMobile = useIsMobile();
 
   const handleServiceChange = (value: string) => {
     setSelectedService(value);
   };
   
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between">
         <Select value={selectedService} onValueChange={handleServiceChange}>
           <SelectTrigger className="w-full md:w-[250px]">
             <SelectValue placeholder="Select a service" />
@@ -34,30 +36,32 @@ const AIOptimization = () => {
         </Select>
         
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="flex gap-1 items-center">
+          <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <Zap className="h-4 w-4" />
-            Run AI Analysis
+            {isMobile ? "Run AI" : "Run AI Analysis"}
           </Button>
         </div>
       </div>
       
       <Tabs defaultValue="performance" className="w-full">
-        <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="performance">
-            <Cpu className="mr-2 h-4 w-4" />
-            Performance Optimization
-          </TabsTrigger>
-          <TabsTrigger value="healing">
-            <Heart className="mr-2 h-4 w-4" />
-            Auto-Healing
-          </TabsTrigger>
-          <TabsTrigger value="recommendations">
-            <Zap className="mr-2 h-4 w-4" />
-            AI Recommendations
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
+            <TabsTrigger value="performance">
+              <Cpu className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "Performance" : "Performance Optimization"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="healing">
+              <Heart className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "Auto-Heal" : "Auto-Healing"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="recommendations">
+              <Zap className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "AI Recs" : "AI Recommendations"}</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
-        <TabsContent value="performance" className="p-0 border-0 mt-6">
+        <TabsContent value="performance" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">
@@ -76,7 +80,7 @@ const AIOptimization = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="healing" className="p-0 border-0 mt-6">
+        <TabsContent value="healing" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">
@@ -95,7 +99,7 @@ const AIOptimization = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="recommendations" className="p-0 border-0 mt-6">
+        <TabsContent value="recommendations" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">

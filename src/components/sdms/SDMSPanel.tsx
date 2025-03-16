@@ -9,21 +9,24 @@ import ComplianceReports from './ComplianceReports';
 import CustomDocumentation from './CustomDocumentation';
 import SDMSSearch from './SDMSSearch';
 import SaveExport from './SaveExport';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const SDMSPanel = () => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="space-y-4 sm:space-y-6">
       <Tabs defaultValue="overview" className="w-full">
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 mb-4 sm:mb-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="topology">Topology</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
-            <TabsTrigger value="apps">Applications</TabsTrigger>
-            <TabsTrigger value="compliance">Compliance</TabsTrigger>
-            <TabsTrigger value="custom">Custom Docs</TabsTrigger>
-            <TabsTrigger value="search">Search</TabsTrigger>
-            <TabsTrigger value="export">Save/Export</TabsTrigger>
+            <TabsTrigger value="overview">{isMobile ? 'Overview' : 'Overview'}</TabsTrigger>
+            <TabsTrigger value="topology">{isMobile ? 'Topology' : 'Topology'}</TabsTrigger>
+            <TabsTrigger value="security">{isMobile ? 'Security' : 'Security'}</TabsTrigger>
+            <TabsTrigger value="apps">{isMobile ? 'Apps' : 'Applications'}</TabsTrigger>
+            <TabsTrigger value="compliance">{isMobile ? 'Comply' : 'Compliance'}</TabsTrigger>
+            <TabsTrigger value="custom">{isMobile ? 'Custom' : 'Custom Docs'}</TabsTrigger>
+            <TabsTrigger value="search">{isMobile ? 'Search' : 'Search'}</TabsTrigger>
+            <TabsTrigger value="export">{isMobile ? 'Export' : 'Save/Export'}</TabsTrigger>
           </TabsList>
         </div>
         

@@ -9,17 +9,19 @@ import { FileText, Network, Download, Code, RefreshCw } from 'lucide-react';
 import TopologyMapping from '../components/TopologyMapping';
 import APIDocumentation from '../components/APIDocumentation';
 import ConfigurationDocs from '../components/ConfigurationDocs';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Documentation = () => {
   const [selectedService, setSelectedService] = useState<string>(activeServices[0]?.id || '');
+  const isMobile = useIsMobile();
 
   const handleServiceChange = (value: string) => {
     setSelectedService(value);
   };
   
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between">
         <Select value={selectedService} onValueChange={handleServiceChange}>
           <SelectTrigger className="w-full md:w-[250px]">
             <SelectValue placeholder="Select a service" />
@@ -33,35 +35,37 @@ const Documentation = () => {
           </SelectContent>
         </Select>
         
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="flex gap-1 items-center">
+        <div className="flex gap-2 flex-wrap justify-end">
+          <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <RefreshCw className="h-4 w-4" />
-            Update Documentation
+            {isMobile ? "Update" : "Update Documentation"}
           </Button>
-          <Button variant="outline" size="sm" className="flex gap-1 items-center">
+          <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <Download className="h-4 w-4" />
-            Export
+            {isMobile ? "Export" : "Export"}
           </Button>
         </div>
       </div>
       
       <Tabs defaultValue="topology" className="w-full">
-        <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="topology">
-            <Network className="mr-2 h-4 w-4" />
-            Topology Mapping
-          </TabsTrigger>
-          <TabsTrigger value="api">
-            <Code className="mr-2 h-4 w-4" />
-            API Documentation
-          </TabsTrigger>
-          <TabsTrigger value="configuration">
-            <FileText className="mr-2 h-4 w-4" />
-            Configuration Docs
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
+            <TabsTrigger value="topology">
+              <Network className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "Topology" : "Topology Mapping"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="api">
+              <Code className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "API" : "API Documentation"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="configuration">
+              <FileText className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "Config" : "Configuration Docs"}</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
-        <TabsContent value="topology" className="p-0 border-0 mt-6">
+        <TabsContent value="topology" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">
@@ -80,7 +84,7 @@ const Documentation = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="api" className="p-0 border-0 mt-6">
+        <TabsContent value="api" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">
@@ -99,7 +103,7 @@ const Documentation = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="configuration" className="p-0 border-0 mt-6">
+        <TabsContent value="configuration" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">

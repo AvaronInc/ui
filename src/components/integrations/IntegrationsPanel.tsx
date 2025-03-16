@@ -9,10 +9,12 @@ import MonitoringIntegrations from "./tabs/MonitoringIntegrations";
 import CustomAPIIntegrations from "./tabs/CustomAPIIntegrations";
 import AutomationIntegrations from "./tabs/AutomationIntegrations";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const IntegrationsPanel = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -26,15 +28,17 @@ const IntegrationsPanel = () => {
         onValueChange={handleTabChange}
         className="w-full"
       >
-        <TabsList className="grid grid-cols-7 md:grid-cols-7 lg:grid-cols-7 w-full">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="itsm">ITSM</TabsTrigger>
-          <TabsTrigger value="security">Security & SIEM</TabsTrigger>
-          <TabsTrigger value="cloud">Cloud Providers</TabsTrigger>
-          <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
-          <TabsTrigger value="customapi">Custom API</TabsTrigger>
-          <TabsTrigger value="automation">Automation</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-7 lg:grid-cols-7 w-full">
+            <TabsTrigger value="overview">{isMobile ? "Overview" : "Overview"}</TabsTrigger>
+            <TabsTrigger value="itsm">{isMobile ? "ITSM" : "ITSM"}</TabsTrigger>
+            <TabsTrigger value="security">{isMobile ? "Security" : "Security & SIEM"}</TabsTrigger>
+            <TabsTrigger value="cloud">{isMobile ? "Cloud" : "Cloud Providers"}</TabsTrigger>
+            <TabsTrigger value="monitoring">{isMobile ? "Monitor" : "Monitoring"}</TabsTrigger>
+            <TabsTrigger value="customapi">{isMobile ? "API" : "Custom API"}</TabsTrigger>
+            <TabsTrigger value="automation">{isMobile ? "Auto" : "Automation"}</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview" className="p-0 border-0">
           <IntegrationsOverview />

@@ -9,17 +9,19 @@ import { Shield, Lock, FileText, AlertOctagon, RefreshCw } from 'lucide-react';
 import SecurityOverview from '../components/SecurityOverview';
 import TLSCertificates from '../components/TLSCertificates';
 import ComplianceAudit from '../components/ComplianceAudit';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const SecurityCompliance = () => {
   const [selectedService, setSelectedService] = useState<string>(activeServices[0]?.id || '');
+  const isMobile = useIsMobile();
 
   const handleServiceChange = (value: string) => {
     setSelectedService(value);
   };
   
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between">
         <Select value={selectedService} onValueChange={handleServiceChange}>
           <SelectTrigger className="w-full md:w-[250px]">
             <SelectValue placeholder="Select a service" />
@@ -33,35 +35,37 @@ const SecurityCompliance = () => {
           </SelectContent>
         </Select>
         
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="flex gap-1 items-center">
+        <div className="flex gap-2 flex-wrap justify-end">
+          <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <RefreshCw className="h-4 w-4" />
-            Run Security Scan
+            {isMobile ? "Scan" : "Run Security Scan"}
           </Button>
-          <Button variant="outline" size="sm" className="flex gap-1 items-center">
+          <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <Shield className="h-4 w-4" />
-            Auto-Patch
+            {isMobile ? "Patch" : "Auto-Patch"}
           </Button>
         </div>
       </div>
       
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="overview">
-            <Shield className="mr-2 h-4 w-4" />
-            Security Overview
-          </TabsTrigger>
-          <TabsTrigger value="certificates">
-            <Lock className="mr-2 h-4 w-4" />
-            TLS/SSL Management
-          </TabsTrigger>
-          <TabsTrigger value="compliance">
-            <FileText className="mr-2 h-4 w-4" />
-            Compliance & Auditing
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
+            <TabsTrigger value="overview">
+              <Shield className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "Overview" : "Security Overview"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="certificates">
+              <Lock className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "TLS/SSL" : "TLS/SSL Management"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="compliance">
+              <FileText className="mr-2 h-4 w-4" />
+              <span>{isMobile ? "Compliance" : "Compliance & Auditing"}</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
-        <TabsContent value="overview" className="p-0 border-0 mt-6">
+        <TabsContent value="overview" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">
@@ -80,7 +84,7 @@ const SecurityCompliance = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="certificates" className="p-0 border-0 mt-6">
+        <TabsContent value="certificates" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">
@@ -99,7 +103,7 @@ const SecurityCompliance = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="compliance" className="p-0 border-0 mt-6">
+        <TabsContent value="compliance" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center">

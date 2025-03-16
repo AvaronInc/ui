@@ -9,9 +9,11 @@ import StorageAccessControl from './storage/StorageAccessControl';
 import ProtectionFeatures from './storage/ProtectionFeatures';
 import S3BucketConnection from './storage/S3BucketConnection';
 import RetentionPolicy from './storage/RetentionPolicy';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const StorageSettings = () => {
   const { form, handleSave } = useStorageSettings();
+  const isMobile = useIsMobile();
   
   return (
     <div className="space-y-6">
@@ -24,15 +26,17 @@ const StorageSettings = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="credentials" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="credentials">Credentials</TabsTrigger>
-              <TabsTrigger value="quotas">Quotas & Retention</TabsTrigger>
-              <TabsTrigger value="protection">Protection</TabsTrigger>
-              <TabsTrigger value="external">External Storage</TabsTrigger>
-            </TabsList>
+            <div className="overflow-x-auto pb-2">
+              <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-4">
+                <TabsTrigger value="credentials">{isMobile ? "Creds" : "Credentials"}</TabsTrigger>
+                <TabsTrigger value="quotas">{isMobile ? "Quotas" : "Quotas & Retention"}</TabsTrigger>
+                <TabsTrigger value="protection">{isMobile ? "Protect" : "Protection"}</TabsTrigger>
+                <TabsTrigger value="external">{isMobile ? "External" : "External Storage"}</TabsTrigger>
+              </TabsList>
+            </div>
             
             <Form {...form}>
-              <form className="space-y-8">
+              <form className="space-y-6 sm:space-y-8">
                 <TabsContent value="credentials">
                   <MinioCredentials form={form} />
                 </TabsContent>
