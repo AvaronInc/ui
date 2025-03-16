@@ -53,7 +53,7 @@ const ThreatMap: React.FC = () => {
     
     // Create SVG
     const width = mapRef.current.clientWidth;
-    const height = mapRef.current.clientHeight - 40; // Reserve space for legend
+    const height = mapRef.current.clientHeight; 
     
     const svg = container
       .append("svg")
@@ -129,22 +129,28 @@ const ThreatMap: React.FC = () => {
           .attr("repeatCount", "indefinite");
       });
     
-    // Add legend for threat severity - position in top right corner
+    // Add improved legend for threat severity - position in top right corner
     const legend = svg.append("g")
-      .attr("transform", `translate(${width - 120}, 15)`);
+      .attr("transform", `translate(${width - 140}, 15)`);
     
     const severities: Array<'critical' | 'high' | 'medium' | 'low'> = ['critical', 'high', 'medium', 'low'];
     
     severities.forEach((severity, i) => {
+      const color = getSeverityColor(severity);
+      const radius = getSeverityRadius(severity);
+      const yOffset = i * 22; // Increased spacing between items
+      
+      // Add color circle
       legend.append("circle")
         .attr("cx", 10)
-        .attr("cy", i * 20)
-        .attr("r", getSeverityRadius(severity))
-        .attr("fill", getSeverityColor(severity));
+        .attr("cy", yOffset)
+        .attr("r", radius)
+        .attr("fill", color);
       
+      // Add severity label
       legend.append("text")
         .attr("x", 25)
-        .attr("y", i * 20 + 5)
+        .attr("y", yOffset + 4) // Better vertical alignment
         .text(severity.charAt(0).toUpperCase() + severity.slice(1))
         .style("font-size", "12px")
         .attr("fill", "#64748b");
@@ -175,7 +181,7 @@ const ThreatMap: React.FC = () => {
   
   return (
     <div className="text-center">
-      <div ref={mapRef} className="w-full h-[400px]" />
+      <div ref={mapRef} className="w-full h-[400px] border-0" />
     </div>
   );
 };
