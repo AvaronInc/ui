@@ -53,7 +53,7 @@ const ThreatMap: React.FC = () => {
     
     // Create SVG
     const width = mapRef.current.clientWidth;
-    const height = mapRef.current.clientHeight;
+    const height = mapRef.current.clientHeight - 40; // Reserve space for legend
     
     const svg = container
       .append("svg")
@@ -62,11 +62,11 @@ const ThreatMap: React.FC = () => {
       .attr("viewBox", [0, 0, width, height])
       .attr("style", "max-width: 100%; height: auto;");
     
-    // Define map projection with improved centering
+    // Define map projection with improved centering and scaling
     const projection = d3.geoNaturalEarth1()
-      .scale(width / 5.5)
-      .translate([width / 2, height / 2])
-      .center([0, 10]); // Adjust center to better position the map
+      .scale(width / 6.2)
+      .translate([width / 2, height / 2.2])
+      .center([0, 15]); // Adjust center to better position the map
     
     // Create a path generator
     const path = d3.geoPath().projection(projection);
@@ -129,9 +129,9 @@ const ThreatMap: React.FC = () => {
           .attr("repeatCount", "indefinite");
       });
     
-    // Add legend for threat severity
+    // Add legend for threat severity - position in top right corner
     const legend = svg.append("g")
-      .attr("transform", `translate(20, ${height - 100})`);
+      .attr("transform", `translate(${width - 120}, 15)`);
     
     const severities: Array<'critical' | 'high' | 'medium' | 'low'> = ['critical', 'high', 'medium', 'low'];
     
