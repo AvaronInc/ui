@@ -2,7 +2,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, CircleDot } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -45,10 +45,18 @@ const AccordionNavGroup: React.FC<AccordionNavGroupProps> = ({
           className={cn(
             "flex w-full items-center justify-between px-3 py-2 text-sm font-semibold tracking-wide text-sidebar-foreground/80 hover:bg-sidebar-accent/30 rounded-md transition-all duration-200",
             "hover:text-sidebar-foreground hover:translate-x-0.5",
-            isOpen && "text-sidebar-foreground bg-sidebar-accent/20"
+            isOpen && "text-sidebar-foreground bg-sidebar-accent/20",
+            // Add a subtle highlight when this section contains the active route but is collapsed
+            !isOpen && isAnyActive && "text-primary border-l-2 border-primary pl-[10px]"
           )}
         >
-          <span>{title}</span>
+          <span className="flex items-center">
+            {/* Show indicator dot when section contains active route but is collapsed */}
+            {!isOpen && isAnyActive && (
+              <CircleDot className="h-3 w-3 mr-1.5 text-primary animate-pulse-slow" />
+            )}
+            {title}
+          </span>
           <ChevronDown 
             className={cn(
               "h-4 w-4 text-sidebar-foreground/70 transition-transform duration-200", 
