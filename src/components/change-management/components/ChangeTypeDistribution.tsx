@@ -65,7 +65,9 @@ function formatTypeName(type: ChangeType): string {
     case 'minor': return 'Minor';
     case 'routine': return 'Routine';
     case 'security': return 'Security';
-    default: return type.charAt(0).toUpperCase() + type.slice(1);
+    default: 
+      // Type assertion to make TypeScript know that type is a string here
+      return (type as string).charAt(0).toUpperCase() + (type as string).slice(1);
   }
 }
 

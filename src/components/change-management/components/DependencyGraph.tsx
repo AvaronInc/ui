@@ -1,6 +1,7 @@
 
 import React from 'react';
-import ReactFlow, { 
+import { 
+  ReactFlow, 
   Background, 
   Controls, 
   Node, 
