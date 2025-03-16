@@ -20,31 +20,40 @@ interface StatusCardProps {
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
+  icon?: React.ReactNode;
 }
 
 const statusConfig = {
   healthy: {
     icon: CheckCircle,
-    color: 'text-success',
-    dotColor: 'green',
+    color: 'text-green-500',
+    bgColor: 'bg-green-50 dark:bg-green-900/10',
+    borderColor: 'border-green-200 dark:border-green-800/30',
+    dotColor: 'bg-green-500',
     label: 'Healthy'
   },
   warning: {
     icon: AlertTriangle,
-    color: 'text-warning',
-    dotColor: 'yellow',
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-50 dark:bg-amber-900/10',
+    borderColor: 'border-amber-200 dark:border-amber-800/30',
+    dotColor: 'bg-amber-500',
     label: 'Warning'
   },
   critical: {
     icon: XCircle,
-    color: 'text-error',
-    dotColor: 'red',
+    color: 'text-red-500',
+    bgColor: 'bg-red-50 dark:bg-red-900/10',
+    borderColor: 'border-red-200 dark:border-red-800/30',
+    dotColor: 'bg-red-500',
     label: 'Critical'
   },
   unknown: {
     icon: Info,
-    color: 'text-muted-foreground',
-    dotColor: '',
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-50 dark:bg-blue-900/10',
+    borderColor: 'border-blue-200 dark:border-blue-800/30',
+    dotColor: 'bg-blue-500',
     label: 'Unknown'
   }
 };
@@ -56,7 +65,8 @@ export const StatusCard = ({
   updated,
   className,
   style,
-  onClick
+  onClick,
+  icon
 }: StatusCardProps) => {
   const config = statusConfig[status];
   const StatusIcon = config.icon;
@@ -64,8 +74,10 @@ export const StatusCard = ({
   return (
     <Card 
       className={cn(
-        "glass-card overflow-hidden animated-card", 
-        onClick && "cursor-pointer",
+        "overflow-hidden transition-all duration-300 border",
+        config.borderColor,
+        config.bgColor,
+        onClick && "cursor-pointer hover:shadow-md",
         className
       )}
       style={style}
@@ -73,7 +85,10 @@ export const StatusCard = ({
     >
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-base font-medium">{title}</CardTitle>
+          <div className="flex items-center">
+            {icon && <div className={cn("mr-2", config.color)}>{icon}</div>}
+            <CardTitle className="text-base font-medium">{title}</CardTitle>
+          </div>
           {onClick && (
             <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
           )}
@@ -81,7 +96,7 @@ export const StatusCard = ({
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-2.5 mb-2">
-          <span className={`status-dot ${config.dotColor}`} />
+          <span className={`h-2.5 w-2.5 rounded-full ${config.dotColor}`} />
           <span className={cn("font-medium", config.color)}>
             {config.label}
           </span>
