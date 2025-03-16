@@ -28,7 +28,7 @@ const BillingPanel = () => {
         className="space-y-4"
       >
         <div className="overflow-x-auto pb-2">
-          <ScrollArea className="w-full" orientation="horizontal">
+          <ScrollArea className="w-full">
             <TabsList className="inline-flex min-w-max">
               <TabsTrigger value="overview">{isMobile ? "Overview" : "Overview"}</TabsTrigger>
               <TabsTrigger value="payment-methods">{isMobile ? "Payment" : "Payment Methods"}</TabsTrigger>
