@@ -155,7 +155,7 @@ const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
           <SheetDescription>
             {isEditing ? (
               <Textarea 
-                value={editedEvent.description ?? event.description || ''} 
+                value={editedEvent.description ?? (event.description || '')} 
                 onChange={(e) => handleFieldChange('description', e.target.value)}
                 placeholder="Add a description..."
                 className="mt-2"
@@ -173,7 +173,8 @@ const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               <Badge variant={
                 event.status === 'scheduled' ? "outline" :
                 event.status === 'in-progress' ? "default" :
-                event.status === 'completed' ? "success" : "secondary"
+                event.status === 'completed' ? "default" : // Changed from 'success' to 'default'
+                "secondary"
               }>
                 {event.status}
               </Badge>
@@ -296,7 +297,7 @@ const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               <MapPin className="h-5 w-5 mr-2 text-muted-foreground" />
               {isEditing ? (
                 <Input 
-                  value={editedEvent.location ?? event.location || ''} 
+                  value={editedEvent.location ?? (event.location || '')} 
                   onChange={(e) => handleFieldChange('location', e.target.value)}
                   placeholder="Add location"
                   className="flex-1"
@@ -314,7 +315,7 @@ const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               <p className="text-sm font-medium">Attendees</p>
               {isEditing ? (
                 <Textarea 
-                  value={editedEvent.attendees ? editedEvent.attendees.join(', ') : event.attendees.join(', ')} 
+                  value={(editedEvent.attendees ? editedEvent.attendees.join(', ') : event.attendees.join(', '))} 
                   onChange={(e) => handleFieldChange('attendees', e.target.value.split(',').map(a => a.trim()))}
                   placeholder="Add attendees (comma separated)"
                   className="mt-1"
@@ -376,7 +377,7 @@ const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               <Label>Notes</Label>
               {isEditing ? (
                 <Textarea 
-                  value={editedEvent.notes ?? event.notes || ''} 
+                  value={editedEvent.notes ?? (event.notes || '')} 
                   onChange={(e) => handleFieldChange('notes', e.target.value)}
                   placeholder="Add notes..."
                   className="w-full"
