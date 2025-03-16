@@ -169,7 +169,7 @@
     @apply text-[0.6rem] py-0 px-1.5 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-sm font-medium;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar - updated for better dark mode visibility */
   .sidebar-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
@@ -193,6 +193,36 @@
   .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--scrollbar-thumb));
   }
+
+  /* Enhanced chart and data visualization styles */
+  .chart-label {
+    @apply text-xs font-medium text-muted-foreground;
+  }
+  
+  .chart-value {
+    @apply text-xl font-bold;
+  }
+  
+  /* IP status indicators */
+  .ip-status {
+    @apply px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .ip-status-available {
+    @apply bg-success/10 text-success;
+  }
+  
+  .ip-status-in-use {
+    @apply bg-warning/10 text-warning;
+  }
+  
+  .ip-status-conflict {
+    @apply bg-destructive/10 text-destructive;
+  }
+  
+  .ip-status-reserved {
+    @apply bg-info/10 text-info;
+  }
 }
 
 @layer utilities {
@@ -203,5 +233,22 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Chrome, Safari and Opera */
   }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Enhanced dark mode optimizations */
+  .dark .glass-effect {
+    @apply bg-slate-900/60 backdrop-blur-md border border-slate-700/50;
+  }
+  
+  .dark .subtle-border {
+    @apply border-slate-700/50;
+  }
 }
-

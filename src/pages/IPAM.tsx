@@ -2,15 +2,16 @@
 import React, { useState } from 'react';
 import { PageTransition } from '@/components/transitions/PageTransition';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
-import IPAddressList from '@/components/ipam/IPAddressList';
-import IPDetailPanel from '@/components/ipam/IPDetailPanel';
-import IPFilters from '@/components/ipam/IPFilters';
-import SubnetUsageChart from '@/components/ipam/SubnetUsageChart';
-import { IPAddress } from '@/types/ipam';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Network, Plus, X, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Network, Plus, X, RefreshCw, Download, Bell } from 'lucide-react';
 import { toast } from 'sonner';
+import { IPAddress } from '@/types/ipam';
+import IPAMOverview from '@/components/ipam/IPAMOverview';
+import IPAddressAllocation from '@/components/ipam/IPAddressAllocation';
+import SubnetManagement from '@/components/ipam/SubnetManagement';
+import ConflictDetection from '@/components/ipam/ConflictDetection';
 
 // Sample data
 const mockIPAddresses: IPAddress[] = [
@@ -126,31 +127,10 @@ const subnetData = {
 const IPAM = () => {
   const [ipAddresses, setIPAddresses] = useState<IPAddress[]>(mockIPAddresses);
   const [selectedIP, setSelectedIP] = useState<IPAddress | null>(null);
-  const [filteredStatus, setFilteredStatus] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredIPs = ipAddresses.filter(ip => {
-    // Apply status filter
-    if (filteredStatus && filteredStatus !== 'all' && ip.status !== filteredStatus) {
-      return false;
-    }
-    
-    // Apply search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      return (
-        ip.address.toLowerCase().includes(query) ||
-        (ip.deviceName?.toLowerCase().includes(query) || false) ||
-        (ip.assignedUser?.toLowerCase().includes(query) || false)
-      );
-    }
-    
-    return true;
-  });
+  const [activeTab, setActiveTab] = useState("overview");
 
   const handleAssignIP = () => {
     toast.success("Assign IP dialog would open here");
-    // Implementation for assigning IPs would go here
   };
 
   const handleReleaseIP = () => {
@@ -165,12 +145,18 @@ const IPAM = () => {
     }
     
     toast.success(`IP ${selectedIP.address} has been released`);
-    // Actual implementation would update the database
   };
 
   const handleScanForConflicts = () => {
     toast.success("Network scan initiated");
-    // Implementation for scanning would go here
+  };
+
+  const handleExportData = () => {
+    toast.success("Preparing network data export");
+  };
+
+  const handleSetAlerts = () => {
+    toast.success("IP alerts configuration dialog would open here");
   };
 
   return (
@@ -199,7 +185,7 @@ const IPAM = () => {
               <h1 className="text-2xl font-semibold mt-2">IP Address Management</h1>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button size="sm" onClick={handleAssignIP}>
                 <Plus className="h-4 w-4 mr-1" />
                 Assign IP
@@ -215,36 +201,60 @@ const IPAM = () => {
               </Button>
               <Button size="sm" variant="secondary" onClick={handleScanForConflicts}>
                 <RefreshCw className="h-4 w-4 mr-1" />
-                Scan for Conflicts
+                Scan Network
+              </Button>
+              <Button size="sm" variant="outline" onClick={handleExportData}>
+                <Download className="h-4 w-4 mr-1" />
+                Export
+              </Button>
+              <Button size="sm" variant="ghost" onClick={handleSetAlerts}>
+                <Bell className="h-4 w-4 mr-1" />
+                Alerts
               </Button>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <IPFilters 
-                onFilterChange={setFilteredStatus} 
-                onSearchChange={setSearchQuery}
-                currentFilter={filteredStatus}
-                currentSearch={searchQuery}
-              />
-              
-              <IPAddressList 
-                ipAddresses={filteredIPs} 
+          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid grid-cols-4 mb-8">
+              <TabsTrigger value="overview">
+                Overview Dashboard
+              </TabsTrigger>
+              <TabsTrigger value="allocation">
+                IP Allocation & Search
+              </TabsTrigger>
+              <TabsTrigger value="subnets">
+                Subnet & VLAN Management
+              </TabsTrigger>
+              <TabsTrigger value="conflicts">
+                Conflict Detection
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="overview" className="mt-0">
+              <IPAMOverview ipAddresses={ipAddresses} subnetData={subnetData} />
+            </TabsContent>
+            
+            <TabsContent value="allocation" className="mt-0">
+              <IPAddressAllocation 
+                ipAddresses={ipAddresses} 
                 onIPSelect={setSelectedIP}
                 selectedIP={selectedIP}
               />
-            </div>
+            </TabsContent>
             
-            <div className="space-y-6">
-              <SubnetUsageChart subnet={subnetData} />
-              
-              <IPDetailPanel 
-                ip={selectedIP} 
-                onClose={() => setSelectedIP(null)} 
+            <TabsContent value="subnets" className="mt-0">
+              <SubnetManagement subnetData={subnetData} />
+            </TabsContent>
+            
+            <TabsContent value="conflicts" className="mt-0">
+              <ConflictDetection 
+                ipAddresses={ipAddresses.filter(ip => ip.status === 'conflict')} 
+                onResolveConflict={(ip) => {
+                  toast.success(`Conflict resolution for ${ip.address} initiated`);
+                }}
               />
-            </div>
-          </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </DashboardLayout>
     </PageTransition>

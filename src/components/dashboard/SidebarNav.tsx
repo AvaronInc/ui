@@ -1,7 +1,9 @@
+
 import React from 'react';
 import SidebarHeader from './SidebarHeader';
 import SidebarFooter from './SidebarFooter';
 import SidebarNavItems from './sidebar/nav-items';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const SidebarNav: React.FC = () => {
   // Keep the system name in localStorage for other functionality
@@ -10,9 +12,9 @@ const SidebarNav: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       <SidebarHeader systemName={systemName} />
-      <div className="flex-1 overflow-y-auto sidebar-scrollbar">
+      <ScrollArea className="flex-1">
         <SidebarNavItems />
-      </div>
+      </ScrollArea>
       <SidebarFooter />
     </div>
   );
