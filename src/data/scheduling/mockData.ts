@@ -1,5 +1,14 @@
 
-import { ScheduleEvent, SchedulingLink, SchedulingSettings, SchedulingStats } from '@/types/scheduling';
+import { 
+  ScheduleEvent, 
+  SchedulingLink, 
+  SchedulingSettings, 
+  SchedulingStats, 
+  ScheduleEventType,
+  ScheduleEventCategory,
+  ScheduleEventPriority,
+  ScheduleEventStatus
+} from '@/types/scheduling';
 import { addDays, addHours, addMinutes, setHours, setMinutes, startOfDay, endOfDay } from 'date-fns';
 
 // Helper function to create dates relative to now
