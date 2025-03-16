@@ -101,6 +101,11 @@ export const operationsItems: NavItem[] = [
   },
   {
     title: 'Services',
+    icon: Server,
+    href: '/services'
+  },
+  {
+    title: 'Tickets',
     icon: List,
     href: '/tickets'
   },
