@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -20,7 +19,8 @@ import {
   Globe,
   Contact,
   Puzzle,
-  CreditCard
+  CreditCard,
+  Dock
 } from 'lucide-react';
 import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarAutomationButton } from '@/components/ui/sidebar';
 import { useAuth } from '@/context/AuthContext';
@@ -45,6 +45,11 @@ export const navItems = [
     title: 'Tickets',
     icon: Ticket,
     href: '/tickets'
+  },
+  {
+    title: 'Containers',
+    icon: Dock,
+    href: '/containers'
   },
   {
     title: 'Topology',
@@ -113,7 +118,6 @@ export const navItems = [
   }
 ];
 
-// Admin-only menu items
 export const adminNavItems = [
   {
     title: 'Billing',
@@ -130,7 +134,6 @@ const SidebarNavItems: React.FC<SidebarNavItemsProps> = ({ className }) => {
   const location = useLocation();
   const { isAdmin } = useAuth();
   
-  // Combine the regular items with admin items if the user is an admin
   const allNavItems = [...navItems, ...(isAdmin ? adminNavItems : [])];
   
   return (

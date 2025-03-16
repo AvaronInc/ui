@@ -30,6 +30,7 @@ import SDWAN from "./pages/SDWAN";
 import Contacts from "./pages/Contacts";
 import Integrations from "./pages/Integrations";
 import Billing from "./pages/Billing";
+import Containers from "./pages/Containers";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,7 @@ const App = () => (
                 <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
                 <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
                 <Route path="/billing" element={<ProtectedRoute adminOnly><Billing /></ProtectedRoute>} />
+                <Route path="/containers" element={<ProtectedRoute><Containers /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnimatePresence>
