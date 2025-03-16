@@ -28,23 +28,23 @@ const SecurityPanel: React.FC = () => {
       >
         <div className="flex overflow-x-auto pb-2 scrollbar-hide">
           <TabsList className="flex flex-nowrap min-w-max">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+            <TabsTrigger value="overview" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Shield className="h-4 w-4" />
               <span>{isMobile ? "Overview" : "Security Overview"}</span>
             </TabsTrigger>
-            <TabsTrigger value="threat-detection" className="flex items-center gap-2">
+            <TabsTrigger value="threat-detection" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <AlertTriangle className="h-4 w-4" />
               <span>{isMobile ? "Threats" : "Threat Detection"}</span>
             </TabsTrigger>
-            <TabsTrigger value="compliance" className="flex items-center gap-2">
+            <TabsTrigger value="compliance" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <FileCheck className="h-4 w-4" />
               <span>{isMobile ? "Compliance" : "Compliance & Zero-Trust"}</span>
             </TabsTrigger>
-            <TabsTrigger value="automation" className="flex items-center gap-2">
+            <TabsTrigger value="automation" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Zap className="h-4 w-4" />
               <span>{isMobile ? "Automation" : "Security Automation"}</span>
             </TabsTrigger>
-            <TabsTrigger value="logs" className="flex items-center gap-2">
+            <TabsTrigger value="logs" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <FileSearch className="h-4 w-4" />
               <span>{isMobile ? "Logs" : "Logs & Forensics"}</span>
             </TabsTrigger>

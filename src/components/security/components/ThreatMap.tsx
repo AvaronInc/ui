@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Define proper types for our data
 interface ThreatData {
@@ -43,6 +44,7 @@ interface GeoJSONFeatureCollection {
 
 const ThreatMap: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     if (!mapRef.current) return;
@@ -63,9 +65,13 @@ const ThreatMap: React.FC = () => {
       .attr("style", "max-width: 100%; height: auto;");
     
     // Define map projection with improved centering and scaling
+    // Adjust scale for mobile
+    const scaleFactor = isMobile ? 5.5 : 6.2;
+    const centerYOffset = isMobile ? 2.1 : 2.2;
+    
     const projection = d3.geoNaturalEarth1()
-      .scale(width / 6.2)
-      .translate([width / 2, height / 2.2])
+      .scale(width / scaleFactor)
+      .translate([width / 2, height / centerYOffset])
       .center([0, 15]); // Adjust center to better position the map
     
     // Create a path generator
@@ -109,7 +115,7 @@ const ThreatMap: React.FC = () => {
           .join("circle")
           .attr("cx", d => projection([d.lon, d.lat])![0])
           .attr("cy", d => projection([d.lon, d.lat])![1])
-          .attr("r", d => getSeverityRadius(d.severity))
+          .attr("r", d => getSeverityRadius(d.severity, isMobile))
           .attr("fill", d => getSeverityColor(d.severity))
           .attr("fill-opacity", 0.7)
           .attr("stroke", d => getSeverityColor(d.severity))
@@ -122,7 +128,7 @@ const ThreatMap: React.FC = () => {
           .append("animate")
           .attr("attributeName", "r")
           .attr("values", (d: ThreatData) => {
-            const radius = getSeverityRadius(d.severity);
+            const radius = getSeverityRadius(d.severity, isMobile);
             return `${radius};${radius * 1.3};${radius}`;
           })
           .attr("dur", "2s")
@@ -130,42 +136,46 @@ const ThreatMap: React.FC = () => {
       });
     
     // Add improved legend for threat severity - position in top right corner
+    // Adjust legend position for mobile
+    const legendX = isMobile ? width - 120 : width - 140;
     const legend = svg.append("g")
-      .attr("transform", `translate(${width - 140}, 15)`);
+      .attr("transform", `translate(${legendX}, 10)`);
     
     const severities: Array<'critical' | 'high' | 'medium' | 'low'> = ['critical', 'high', 'medium', 'low'];
     
     severities.forEach((severity, i) => {
       const color = getSeverityColor(severity);
-      const radius = getSeverityRadius(severity);
-      const yOffset = i * 22; // Increased spacing between items
+      const radius = getSeverityRadius(severity, isMobile);
+      const yOffset = i * (isMobile ? 18 : 22); // Adjusted spacing for mobile
       
       // Add color circle
       legend.append("circle")
-        .attr("cx", 10)
+        .attr("cx", 8)
         .attr("cy", yOffset)
         .attr("r", radius)
         .attr("fill", color);
       
       // Add severity label
       legend.append("text")
-        .attr("x", 25)
+        .attr("x", 20)
         .attr("y", yOffset + 4) // Better vertical alignment
         .text(severity.charAt(0).toUpperCase() + severity.slice(1))
-        .style("font-size", "12px")
+        .style("font-size", isMobile ? "10px" : "12px")
         .attr("fill", "#64748b");
     });
     
-  }, [mapRef]);
+  }, [isMobile]);
   
   // Helper functions for threat visualization
-  const getSeverityRadius = (severity: 'critical' | 'high' | 'medium' | 'low'): number => {
+  const getSeverityRadius = (severity: 'critical' | 'high' | 'medium' | 'low', isMobile = false): number => {
+    const mobileFactor = isMobile ? 0.8 : 1; // Reduce size on mobile
+    
     switch (severity) {
-      case 'critical': return 8;
-      case 'high': return 6;
-      case 'medium': return 5;
-      case 'low': return 4;
-      default: return 4;
+      case 'critical': return 8 * mobileFactor;
+      case 'high': return 6 * mobileFactor;
+      case 'medium': return 5 * mobileFactor;
+      case 'low': return 4 * mobileFactor;
+      default: return 4 * mobileFactor;
     }
   };
   
@@ -181,7 +191,7 @@ const ThreatMap: React.FC = () => {
   
   return (
     <div className="text-center">
-      <div ref={mapRef} className="w-full h-[400px] border-0" />
+      <div ref={mapRef} className={`w-full ${isMobile ? 'h-[300px]' : 'h-[400px]'} border-0`} />
     </div>
   );
 };
