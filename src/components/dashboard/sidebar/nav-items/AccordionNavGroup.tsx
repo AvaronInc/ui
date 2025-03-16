@@ -41,15 +41,22 @@ const AccordionNavGroup: React.FC<AccordionNavGroupProps> = ({
         onOpenChange={setIsOpen}
         className="w-full"
       >
-        <CollapsibleTrigger className="flex w-full items-center justify-between px-3 py-2 text-sm font-semibold tracking-wide text-sidebar-foreground/80 hover:bg-sidebar-accent/30 rounded-md">
+        <CollapsibleTrigger 
+          className={cn(
+            "flex w-full items-center justify-between px-3 py-2 text-sm font-semibold tracking-wide text-sidebar-foreground/80 hover:bg-sidebar-accent/30 rounded-md transition-all duration-200",
+            "hover:text-sidebar-foreground hover:translate-x-0.5",
+            isOpen && "text-sidebar-foreground bg-sidebar-accent/20"
+          )}
+        >
           <span>{title}</span>
           <ChevronDown 
-            className={cn("h-4 w-4 text-sidebar-foreground/70 transition-transform", 
+            className={cn(
+              "h-4 w-4 text-sidebar-foreground/70 transition-transform duration-200", 
               isOpen && "transform rotate-180"
             )} 
           />
         </CollapsibleTrigger>
-        <CollapsibleContent>
+        <CollapsibleContent className="animate-accordion-down">
           <SidebarMenu>
             {items.map((item) => {
               // Skip items that require admin if user is not admin
@@ -63,16 +70,21 @@ const AccordionNavGroup: React.FC<AccordionNavGroupProps> = ({
                     <Link 
                       to={item.href} 
                       className={cn(
-                        "nav-link text-sm flex items-center",
-                        isActive && "active"
+                        "nav-link text-sm flex items-center transition-all duration-200",
+                        "hover:translate-x-1 hover:bg-sidebar-accent/40",
+                        isActive ? "active bg-sidebar-accent/50 shadow-sm" : ""
                       )}
                     >
-                      <item.icon className="h-4 w-4 mr-3" />
+                      <item.icon className={cn(
+                        "h-4 w-4 mr-3 transition-transform duration-200",
+                        isActive ? "text-primary" : "text-sidebar-foreground/70",
+                        "group-hover:text-sidebar-foreground"
+                      )} />
                       <span className="flex-1">{item.title}</span>
                       {item.adminOnly && (
                         <Badge 
                           variant="outline" 
-                          className="ml-2 text-[0.6rem] py-0 h-4 px-1 bg-slate-100 dark:bg-slate-800"
+                          className="ml-2 text-[0.6rem] py-0 h-4 px-1 bg-slate-100 dark:bg-slate-800 transition-colors"
                         >
                           Admin
                         </Badge>
