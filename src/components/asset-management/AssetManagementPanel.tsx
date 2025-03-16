@@ -17,8 +17,8 @@ const AssetManagementPanel = () => {
     <div className="space-y-6">
       <Tabs defaultValue="overview" className="w-full">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-7 mb-4">
-            <TabsTrigger value="overview">{isMobile ? 'Overview' : 'Overview'}</TabsTrigger>
+          <TabsList className="inline-flex min-w-max w-full sm:grid sm:grid-cols-3 md:grid-cols-7 gap-1">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="tracking">{isMobile ? 'Assets' : 'Asset Tracking'}</TabsTrigger>
             <TabsTrigger value="datacenter">{isMobile ? 'DC' : 'Data Centers'}</TabsTrigger>
             <TabsTrigger value="warranty">{isMobile ? 'Warranty' : 'Warranty & Licensing'}</TabsTrigger>
@@ -28,31 +28,31 @@ const AssetManagementPanel = () => {
           </TabsList>
         </div>
         
-        <TabsContent value="overview" className="mt-0">
+        <TabsContent value="overview" className="mt-4">
           <AssetOverviewSection />
         </TabsContent>
         
-        <TabsContent value="tracking" className="mt-0">
+        <TabsContent value="tracking" className="mt-4">
           <AssetTrackingSection />
         </TabsContent>
         
-        <TabsContent value="datacenter" className="mt-0">
+        <TabsContent value="datacenter" className="mt-4">
           <DataCenterSection />
         </TabsContent>
         
-        <TabsContent value="warranty" className="mt-0">
+        <TabsContent value="warranty" className="mt-4">
           <WarrantySection />
         </TabsContent>
         
-        <TabsContent value="lifecycle" className="mt-0">
+        <TabsContent value="lifecycle" className="mt-4">
           <LifecycleSection />
         </TabsContent>
         
-        <TabsContent value="support" className="mt-0">
+        <TabsContent value="support" className="mt-4">
           <TroubleshootingSection />
         </TabsContent>
         
-        <TabsContent value="search" className="mt-0">
+        <TabsContent value="search" className="mt-4">
           <SearchExportSection />
         </TabsContent>
       </Tabs>
