@@ -1,15 +1,14 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Shield, AlertTriangle, CheckCircle, Lock, FileText, ExternalLink } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Shield, Lock, RefreshCw, AlertTriangle, CheckCircle, Terminal } from 'lucide-react';
 import { useContainersData } from '@/components/containers/hooks/useContainersData';
 
 const SecurityCompliance = () => {
-  const { securityScan } = useContainersData();
+  const { securityScans } = useContainersData();
   
   return (
     <div className="space-y-6">
@@ -20,10 +19,10 @@ const SecurityCompliance = () => {
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{securityScan?.overallScore || 0}/100</div>
-            <Progress value={securityScan?.overallScore || 0} className="h-2 mt-2" />
+            <div className="text-2xl font-bold">{securityScans?.overallScore || 0}/100</div>
+            <Progress value={securityScans?.overallScore || 0} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-2">
-              Last scan: {securityScan?.lastScanTime || 'Never'}
+              Last scan: {securityScans?.lastScanTime || 'Never'}
             </p>
           </CardContent>
           <CardFooter>
@@ -39,8 +38,8 @@ const SecurityCompliance = () => {
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{securityScan?.cisDockerScore || 0}%</div>
-            <Progress value={securityScan?.cisDockerScore || 0} className="h-2 mt-2" />
+            <div className="text-2xl font-bold">{securityScans?.cisDockerScore || 0}%</div>
+            <Progress value={securityScans?.cisDockerScore || 0} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-2">
               CIS Docker Benchmark Standards
             </p>
@@ -56,16 +55,16 @@ const SecurityCompliance = () => {
             <div>
               <div className="flex justify-between mb-1">
                 <span className="text-xs">PCI DSS</span>
-                <span className="text-xs">{securityScan?.pciDssScore || 0}%</span>
+                <span className="text-xs">{securityScans?.pciDssScore || 0}%</span>
               </div>
-              <Progress value={securityScan?.pciDssScore || 0} className="h-1.5" />
+              <Progress value={securityScans?.pciDssScore || 0} className="h-1.5" />
             </div>
             <div>
               <div className="flex justify-between mb-1">
                 <span className="text-xs">HIPAA</span>
-                <span className="text-xs">{securityScan?.hipaaScore || 0}%</span>
+                <span className="text-xs">{securityScans?.hipaaScore || 0}%</span>
               </div>
-              <Progress value={securityScan?.hipaaScore || 0} className="h-1.5" />
+              <Progress value={securityScans?.hipaaScore || 0} className="h-1.5" />
             </div>
           </CardContent>
         </Card>
@@ -84,7 +83,7 @@ const SecurityCompliance = () => {
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-red-800 dark:text-red-300">Critical</p>
-                  <p className="text-2xl font-bold text-red-800 dark:text-red-300">{securityScan?.criticalVulnerabilities || 0}</p>
+                  <p className="text-2xl font-bold text-red-800 dark:text-red-300">{securityScans?.criticalVulnerabilities || 0}</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-red-500" />
               </CardContent>
@@ -94,7 +93,7 @@ const SecurityCompliance = () => {
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-amber-800 dark:text-amber-300">High</p>
-                  <p className="text-2xl font-bold text-amber-800 dark:text-amber-300">{securityScan?.highVulnerabilities || 0}</p>
+                  <p className="text-2xl font-bold text-amber-800 dark:text-amber-300">{securityScans?.highVulnerabilities || 0}</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-amber-500" />
               </CardContent>
@@ -104,7 +103,7 @@ const SecurityCompliance = () => {
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-blue-800 dark:text-blue-300">Medium</p>
-                  <p className="text-2xl font-bold text-blue-800 dark:text-blue-300">{securityScan?.mediumVulnerabilities || 0}</p>
+                  <p className="text-2xl font-bold text-blue-800 dark:text-blue-300">{securityScans?.mediumVulnerabilities || 0}</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-blue-500" />
               </CardContent>
@@ -114,7 +113,7 @@ const SecurityCompliance = () => {
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-green-800 dark:text-green-300">Low</p>
-                  <p className="text-2xl font-bold text-green-800 dark:text-green-300">{securityScan?.lowVulnerabilities || 0}</p>
+                  <p className="text-2xl font-bold text-green-800 dark:text-green-300">{securityScans?.lowVulnerabilities || 0}</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-green-500" />
               </CardContent>
