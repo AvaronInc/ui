@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,7 +5,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { InfoIcon, Smartphone, Key, FingerPrint, UserCheck } from 'lucide-react';
+import { InfoIcon, Smartphone, Key, Fingerprint, UserCheck } from 'lucide-react';
 
 const MfaSettings: React.FC = () => {
   const [requireMfa, setRequireMfa] = useState({
@@ -82,7 +81,7 @@ const MfaSettings: React.FC = () => {
       key: 'biometric',
       enabled: allowedMethods.biometric,
       setEnabled: (value: boolean) => setAllowedMethods({ ...allowedMethods, biometric: value }),
-      icon: <FingerPrint className="h-4 w-4 mr-2" />,
+      icon: <Fingerprint className="h-4 w-4 mr-2" />,
       description: 'Fingerprint, Face ID, or other biometric methods'
     }
   ];
