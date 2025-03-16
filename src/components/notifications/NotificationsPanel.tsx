@@ -39,15 +39,18 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
     }
   };
 
-  const getAlertVariant = (type: Alert['type']) => {
+  // This function is updated to return only valid variant types for the Alert component
+  const getAlertVariant = (type: Alert['type']): "default" | "destructive" => {
     switch (type) {
       case 'info':
         return 'default';
       case 'warning':
-        return 'warning';
+        return 'default'; // Changed from 'warning' to 'default'
       case 'error':
         return 'destructive';
       case 'success':
+        return 'default';
+      default:
         return 'default';
     }
   };
@@ -104,7 +107,9 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
                   <AlertComponent 
                     key={alert.id} 
                     variant={getAlertVariant(alert.type)}
-                    className={`relative ${!alert.read ? 'border-l-4' : 'opacity-80'}`}
+                    className={`relative ${!alert.read ? 'border-l-4' : 'opacity-80'} ${
+                      alert.type === 'warning' ? 'border-orange-500 bg-orange-50 dark:bg-orange-950/10' : ''
+                    }`}
                   >
                     {getAlertIcon(alert.type)}
 
