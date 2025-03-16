@@ -22,7 +22,7 @@ export const settingsSections: SectionType[] = [
   { id: 'user-access', name: 'User & Access Management', icon: Users },
   { id: 'workforce', name: 'Workforce EMS Settings', icon: Briefcase },
   { id: 'security', name: 'Security & Compliance Settings', icon: Shield },
-  { id: 'network', name: 'Network & Infrastructure Settings', icon: Network },
+  { id: 'network', name: 'Network Settings', icon: Network },
   { id: 'nest', name: 'CyberNest Management Settings', icon: MapPin },
   { id: 'storage', name: 'File Storage (MinIO) Settings', icon: HardDrive },
   { id: 'logging', name: 'Logging & Audit Settings', icon: List },

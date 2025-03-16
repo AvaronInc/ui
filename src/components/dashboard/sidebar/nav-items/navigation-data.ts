@@ -29,7 +29,7 @@ export * from './admin-items';
 // Complete navigation structure
 export const navSections: NavSection[] = [
   { title: "Core System", items: coreSystemItems },
-  { title: "Network & Infrastructure", items: networkItems },
+  { title: "Network", items: networkItems },
   { title: "Monitoring", items: monitoringItems },
   { title: "End User", items: endUserItems },
   { title: "IT Operations", items: operationsItems },
