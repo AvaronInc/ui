@@ -131,17 +131,21 @@ export const securityItems: NavItem[] = [
   {
     title: 'Logging & Audit',
     icon: FileText,
-    href: '/sdms'
+    href: '/logging'
   },
 ];
 
-// IT Assets & Storage
-export const assetsItems: NavItem[] = [
+// IT Assets (separated from Storage)
+export const assetItems: NavItem[] = [
   {
     title: 'Asset Management',
     icon: HardDrive,
     href: '/asset-management'
   },
+];
+
+// Storage (separated from IT Assets)
+export const storageItems: NavItem[] = [
   {
     title: 'Storage',
     icon: Database,
@@ -154,8 +158,8 @@ export const assetsItems: NavItem[] = [
   },
 ];
 
-// Business & Administration
-export const adminItems: NavItem[] = [
+// Business (separated from Admin)
+export const businessItems: NavItem[] = [
   {
     title: 'Billing',
     icon: CreditCard,
@@ -172,6 +176,10 @@ export const adminItems: NavItem[] = [
     icon: Puzzle,
     href: '/integrations'
   },
+];
+
+// Admin (separated from Business)
+export const adminItems: NavItem[] = [
   {
     title: 'Settings',
     icon: Settings,
@@ -192,6 +200,8 @@ export const navSections: NavSection[] = [
   { title: "End User", items: endUserItems },
   { title: "IT Operations", items: operationsItems },
   { title: "Security & Compliance", items: securityItems },
-  { title: "IT Assets & Storage", items: assetsItems },
-  { title: "Business & Admin", items: adminItems },
+  { title: "IT Assets", items: assetItems },
+  { title: "Storage", items: storageItems },
+  { title: "Business", items: businessItems },
+  { title: "Admin", items: adminItems },
 ];
