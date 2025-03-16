@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -5,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { FileText, File, Search, Shield, Mail, Users, Lock, Bell, Phone } from 'lucide-react';
+import { FileText, File, Search, Shield, Mail, Users, Lock, Bell, Phone, LayoutDashboard } from 'lucide-react';
 import AIEmailFilteringSection from './sections/AIEmailFilteringSection';
 import RiskAssessmentSection from './sections/RiskAssessmentSection';
 import IdentityVerificationSection from './sections/IdentityVerificationSection';
@@ -14,6 +15,7 @@ import LoggingComplianceSection from './sections/LoggingComplianceSection';
 import ThreatAlertsSection from './sections/ThreatAlertsSection';
 import HistoricalAnalysisSection from './sections/HistoricalAnalysisSection';
 import VoiceCallAlertsSection from './sections/VoiceCallAlertsSection';
+import OverviewSection from './sections/OverviewSection';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { EmailSecuritySettings } from '@/types/emailSecurity';
@@ -127,7 +129,7 @@ const formSchema = z.object({
 
 const EmailSecurityPanel = () => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('filtering');
+  const [activeTab, setActiveTab] = useState('overview');
   const [isSaving, setIsSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -201,7 +203,11 @@ const EmailSecurityPanel = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-        <TabsList className="grid grid-cols-8 w-full">
+        <TabsList className="grid grid-cols-9 w-full">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <LayoutDashboard className="h-4 w-4" />
+            <span className="hidden md:inline">Overview</span>
+          </TabsTrigger>
           <TabsTrigger value="filtering" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             <span className="hidden md:inline">DLP Filtering</span>
@@ -235,6 +241,14 @@ const EmailSecurityPanel = () => {
             <span className="hidden md:inline">Voice Alerts</span>
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="overview">
+          <Card>
+            <CardContent className="pt-6">
+              <OverviewSection />
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="filtering">
           <Card>
