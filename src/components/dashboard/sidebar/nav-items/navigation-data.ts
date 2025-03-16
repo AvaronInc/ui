@@ -42,11 +42,6 @@ export const coreSystemItems: NavItem[] = [
     icon: LayoutDashboard,
     href: '/'
   },
-  {
-    title: 'Projects',
-    icon: ListChecks,
-    href: '/projects'
-  },
 ];
 
 // Network & Infrastructure Management
@@ -71,6 +66,20 @@ export const networkItems: NavItem[] = [
     icon: MapPin,
     href: '/ipam'
   },
+  {
+    title: 'Containers',
+    icon: Package,
+    href: '/containers'
+  },
+];
+
+// Monitoring 
+export const monitoringItems: NavItem[] = [
+  {
+    title: 'RMM',
+    icon: Monitor,
+    href: '/rmm'
+  },
 ];
 
 // End User Management
@@ -85,19 +94,9 @@ export const endUserItems: NavItem[] = [
 // IT Operations & Automation
 export const operationsItems: NavItem[] = [
   {
-    title: 'RMM',
-    icon: Monitor,
-    href: '/rmm'
-  },
-  {
     title: 'Automation Panel',
     icon: Zap,
     href: '/automation'
-  },
-  {
-    title: 'Containers',
-    icon: Package,
-    href: '/containers'
   },
   {
     title: 'Services',
@@ -108,6 +107,20 @@ export const operationsItems: NavItem[] = [
     title: 'Tickets',
     icon: List,
     href: '/tickets'
+  },
+  {
+    title: 'SDMS',
+    icon: Scroll,
+    href: '/sdms'
+  },
+];
+
+// Identity Management
+export const identityItems: NavItem[] = [
+  {
+    title: 'Identity',
+    icon: Users,
+    href: '/identity'
   },
 ];
 
@@ -122,11 +135,6 @@ export const securityItems: NavItem[] = [
     title: 'Email Security',
     icon: Mail,
     href: '/email-security'
-  },
-  {
-    title: 'Identity',
-    icon: Users,
-    href: '/identity'
   },
   {
     title: 'Logging & Audit',
@@ -151,20 +159,14 @@ export const storageItems: NavItem[] = [
     icon: Database,
     href: '/storage'
   },
-  {
-    title: 'SDMS',
-    icon: Scroll,
-    href: '/sdms'
-  },
 ];
 
 // Business (separated from Admin)
 export const businessItems: NavItem[] = [
   {
-    title: 'Billing',
-    icon: CreditCard,
-    href: '/billing',
-    adminOnly: true
+    title: 'Projects',
+    icon: ListChecks,
+    href: '/projects'
   },
   {
     title: 'Contacts',
@@ -180,6 +182,12 @@ export const businessItems: NavItem[] = [
 
 // Admin (separated from Business)
 export const adminItems: NavItem[] = [
+  {
+    title: 'Billing',
+    icon: CreditCard,
+    href: '/billing',
+    adminOnly: true
+  },
   {
     title: 'Settings',
     icon: Settings,
@@ -197,8 +205,10 @@ export interface NavSection {
 export const navSections: NavSection[] = [
   { title: "Core System", items: coreSystemItems },
   { title: "Network & Infrastructure", items: networkItems },
+  { title: "Monitoring", items: monitoringItems },
   { title: "End User", items: endUserItems },
   { title: "IT Operations", items: operationsItems },
+  { title: "Identity", items: identityItems },
   { title: "Security & Compliance", items: securityItems },
   { title: "IT Assets", items: assetItems },
   { title: "Storage", items: storageItems },
