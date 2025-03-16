@@ -8,38 +8,37 @@ import HardwareContracts from './tabs/HardwareContracts';
 import Invoices from './tabs/Invoices';
 import UsageCostAnalytics from './tabs/UsageCostAnalytics';
 import BillingSupport from './tabs/BillingSupport';
-import PageTitle from '@/components/common/PageTitle';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const BillingPanel = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const isMobile = useIsMobile();
 
   const handleTabChange = (value: string) => {
-    // Set the active tab without affecting the sidebar state
     setActiveTab(value);
   };
 
   return (
     <div className="space-y-6">
-      <PageTitle 
-        title="Billing & Payments" 
-        description="Manage your subscriptions, payment methods, and billing information"
-        icon={<CreditCard className="h-6 w-6" />}
-      />
-
       <Tabs 
         defaultValue="overview" 
         value={activeTab} 
         onValueChange={handleTabChange} 
         className="space-y-4"
       >
-        <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-2">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="payment-methods">Payment Methods</TabsTrigger>
-          <TabsTrigger value="hardware-contracts">Hardware Contracts</TabsTrigger>
-          <TabsTrigger value="invoices">Invoices</TabsTrigger>
-          <TabsTrigger value="usage-analytics">Usage & Cost</TabsTrigger>
-          <TabsTrigger value="support">Support</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <ScrollArea className="w-full" orientation="horizontal">
+            <TabsList className="inline-flex min-w-max">
+              <TabsTrigger value="overview">{isMobile ? "Overview" : "Overview"}</TabsTrigger>
+              <TabsTrigger value="payment-methods">{isMobile ? "Payment" : "Payment Methods"}</TabsTrigger>
+              <TabsTrigger value="hardware-contracts">{isMobile ? "Hardware" : "Hardware Contracts"}</TabsTrigger>
+              <TabsTrigger value="invoices">{isMobile ? "Invoices" : "Invoices"}</TabsTrigger>
+              <TabsTrigger value="usage-analytics">{isMobile ? "Usage" : "Usage & Cost"}</TabsTrigger>
+              <TabsTrigger value="support">{isMobile ? "Support" : "Support"}</TabsTrigger>
+            </TabsList>
+          </ScrollArea>
+        </div>
 
         <TabsContent value="overview" className="space-y-4">
           <BillingOverview />

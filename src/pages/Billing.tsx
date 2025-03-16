@@ -1,22 +1,29 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { Toaster } from 'sonner';
 import BillingPanel from '@/components/billing/BillingPanel';
 import PageTransition from '@/components/transitions/PageTransition';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import PageTitle from '@/components/common/PageTitle';
+import { CreditCard } from 'lucide-react';
 
 const Billing = () => {
+  useEffect(() => {
+    document.title = 'Billing & Payments - Network Pulse Management';
+  }, []);
+
   return (
     <PageTransition>
       <DashboardLayout>
-        <motion.div
-          className="flex-1 space-y-4 p-4 md:p-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+        <div className="px-3 sm:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 flex-1 overflow-auto">
+          <PageTitle 
+            title="Billing & Payments" 
+            subtitle="Manage your billing, payments, and subscription details"
+            icon={<CreditCard className="h-6 w-6" />}
+          />
           <BillingPanel />
-        </motion.div>
+          <Toaster />
+        </div>
       </DashboardLayout>
     </PageTransition>
   );

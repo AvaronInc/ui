@@ -4,12 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Calendar, CreditCard, DollarSign, BarChart, Activity, HardDrive } from 'lucide-react';
 import { useBillingData } from '@/components/billing/hooks/useBillingData';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const BillingOverview = () => {
   const { billing } = useBillingData();
+  const isMobile = useIsMobile();
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Current Balance</CardTitle>
@@ -22,7 +24,7 @@ const BillingOverview = () => {
           </p>
         </CardContent>
         <CardFooter>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" size={isMobile ? "sm" : "default"}>
             Make Payment
           </Button>
         </CardFooter>
@@ -40,7 +42,7 @@ const BillingOverview = () => {
           </p>
         </CardContent>
         <CardFooter>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" size={isMobile ? "sm" : "default"}>
             Change Plan
           </Button>
         </CardFooter>
@@ -58,14 +60,14 @@ const BillingOverview = () => {
           </p>
         </CardContent>
         <CardFooter>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" size={isMobile ? "sm" : "default"}>
             View Hardware
           </Button>
         </CardFooter>
       </Card>
 
       {billing?.expiringContracts && billing.expiringContracts.length > 0 && (
-        <Card className="col-span-full md:col-span-2 bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800">
+        <Card className="col-span-full sm:col-span-2 bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-amber-800 dark:text-amber-400">Upcoming Renewals</CardTitle>
             <AlertCircle className="h-4 w-4 text-amber-600" />
@@ -73,7 +75,7 @@ const BillingOverview = () => {
           <CardContent>
             <ul className="space-y-2">
               {billing.expiringContracts.slice(0, 2).map((contract, i) => (
-                <li key={i} className="flex justify-between items-center">
+                <li key={i} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                   <span className="text-sm">{contract.name}</span>
                   <span className="text-xs text-amber-800 dark:text-amber-400 flex items-center">
                     <Calendar className="h-3 w-3 mr-1" />
@@ -84,7 +86,7 @@ const BillingOverview = () => {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button variant="outline" className="w-full border-amber-300 dark:border-amber-700">
+            <Button variant="outline" className="w-full border-amber-300 dark:border-amber-700" size={isMobile ? "sm" : "default"}>
               Renew Contracts
             </Button>
           </CardFooter>
@@ -102,8 +104,8 @@ const BillingOverview = () => {
           </p>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">
-            <CreditCard className="mr-2 h-4 w-4" /> Add Payment Method
+          <Button className="w-full" size={isMobile ? "sm" : "default"}>
+            <CreditCard className="mr-2 h-4 w-4" /> {isMobile ? "Add Payment" : "Add Payment Method"}
           </Button>
         </CardFooter>
       </Card>
