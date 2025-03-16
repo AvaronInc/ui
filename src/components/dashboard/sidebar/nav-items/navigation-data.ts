@@ -78,7 +78,7 @@ export const endUserItems: NavItem[] = [
   {
     title: 'Workforce EMS',
     icon: Laptop,
-    href: '/workforce-ems'
+    href: '/workforce'
   },
 ];
 
