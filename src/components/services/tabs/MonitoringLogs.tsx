@@ -9,17 +9,19 @@ import { Search, RefreshCw, Download, Activity, Clock, Terminal, AlertTriangle }
 import ServiceStatusTable from '../components/ServiceStatusTable';
 import ServiceMetricsChart from '../components/ServiceMetricsChart';
 import LogViewer from '../components/LogViewer';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const MonitoringLogs = () => {
   const [selectedService, setSelectedService] = useState<string>(activeServices[0]?.id || '');
   const [timeRange, setTimeRange] = useState('24h');
+  const isMobile = useIsMobile();
 
   const handleServiceChange = (value: string) => {
     setSelectedService(value);
   };
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col md:flex-row gap-4 justify-between">
         <div className="flex flex-col sm:flex-row gap-4">
           <Select value={selectedService} onValueChange={handleServiceChange}>
@@ -49,7 +51,7 @@ const MonitoringLogs = () => {
           </Select>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-end">
           <Button variant="outline" size="icon">
             <RefreshCw className="h-4 w-4" />
           </Button>
@@ -63,25 +65,27 @@ const MonitoringLogs = () => {
       </div>
       
       <Tabs defaultValue="status" className="w-full">
-        <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="status">
-            <Activity className="mr-2 h-4 w-4" />
-            Status & Health
-          </TabsTrigger>
-          <TabsTrigger value="metrics">
-            <Clock className="mr-2 h-4 w-4" />
-            Performance Metrics
-          </TabsTrigger>
-          <TabsTrigger value="logs">
-            <Terminal className="mr-2 h-4 w-4" />
-            Logs & Diagnostics
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
+            <TabsTrigger value="status">
+              <Activity className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Status" : "Status & Health"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="metrics">
+              <Clock className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Metrics" : "Performance"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="logs">
+              <Terminal className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Logs" : "Logs & Diagnostics"}</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
-        <TabsContent value="status" className="p-0 border-0 mt-6">
+        <TabsContent value="status" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Activity className="mr-2 h-5 w-5 text-primary" />
                 Service Health Status
               </CardTitle>
@@ -89,16 +93,18 @@ const MonitoringLogs = () => {
                 Real-time status and health checks for all services
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <ServiceStatusTable services={activeServices} />
+            <CardContent className="p-0 sm:p-0">
+              <div className="overflow-x-auto">
+                <ServiceStatusTable services={activeServices} />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="metrics" className="p-0 border-0 mt-6">
+        <TabsContent value="metrics" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Clock className="mr-2 h-5 w-5 text-primary" />
                 Performance Metrics
               </CardTitle>
@@ -106,7 +112,7 @@ const MonitoringLogs = () => {
                 Response time, throughput, and resource utilization metrics
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <ServiceMetricsChart 
                 service={activeServices.find(s => s.id === selectedService)} 
                 timeRange={timeRange}
@@ -115,10 +121,10 @@ const MonitoringLogs = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="logs" className="p-0 border-0 mt-6">
+        <TabsContent value="logs" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Terminal className="mr-2 h-5 w-5 text-primary" />
                 Service Logs
               </CardTitle>
@@ -126,11 +132,11 @@ const MonitoringLogs = () => {
                 Detailed logs for debugging and troubleshooting
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="mb-4 flex items-center justify-between">
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+              <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div className="flex items-center">
                   <AlertTriangle className="mr-2 h-5 w-5 text-amber-500" />
-                  <span className="text-sm">Log analysis detected 3 potential issues in the selected timeframe</span>
+                  <span className="text-sm">Log analysis detected 3 potential issues</span>
                 </div>
                 <Button variant="outline" size="sm">AI Analysis</Button>
               </div>

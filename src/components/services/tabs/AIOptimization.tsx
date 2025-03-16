@@ -47,15 +47,15 @@ const AIOptimization = () => {
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
             <TabsTrigger value="performance">
-              <Cpu className="mr-2 h-4 w-4" />
-              <span>{isMobile ? "Performance" : "Performance Optimization"}</span>
+              <Cpu className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Perf" : "Performance"}</span>
             </TabsTrigger>
             <TabsTrigger value="healing">
-              <Heart className="mr-2 h-4 w-4" />
+              <Heart className="mr-1 h-4 w-4" />
               <span>{isMobile ? "Auto-Heal" : "Auto-Healing"}</span>
             </TabsTrigger>
             <TabsTrigger value="recommendations">
-              <Zap className="mr-2 h-4 w-4" />
+              <Zap className="mr-1 h-4 w-4" />
               <span>{isMobile ? "AI Recs" : "AI Recommendations"}</span>
             </TabsTrigger>
           </TabsList>
@@ -63,8 +63,8 @@ const AIOptimization = () => {
         
         <TabsContent value="performance" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Cpu className="mr-2 h-5 w-5 text-primary" />
                 AI-Powered Performance Optimization
               </CardTitle>
@@ -72,7 +72,7 @@ const AIOptimization = () => {
                 Automatically optimize resource allocation and configurations
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <PerformanceOptimization 
                 service={activeServices.find(s => s.id === selectedService)} 
               />
@@ -82,8 +82,8 @@ const AIOptimization = () => {
         
         <TabsContent value="healing" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Heart className="mr-2 h-5 w-5 text-primary" />
                 Auto-Healing Mechanisms
               </CardTitle>
@@ -91,7 +91,7 @@ const AIOptimization = () => {
                 Self-repair configurations for service resilience
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <AutoHealing 
                 service={activeServices.find(s => s.id === selectedService)} 
               />
@@ -101,8 +101,8 @@ const AIOptimization = () => {
         
         <TabsContent value="recommendations" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Zap className="mr-2 h-5 w-5 text-primary" />
                 AI Service Recommendations
               </CardTitle>
@@ -110,7 +110,7 @@ const AIOptimization = () => {
                 Intelligent suggestions for optimizing your services
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <AIRecommendations 
                 service={activeServices.find(s => s.id === selectedService)} 
               />

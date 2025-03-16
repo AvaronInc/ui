@@ -17,12 +17,12 @@ const ServicesPanel = () => {
       <Tabs defaultValue="overview" className="w-full">
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-6 w-full">
-            <TabsTrigger value="overview">{isMobile ? 'Overview' : 'Overview'}</TabsTrigger>
-            <TabsTrigger value="deployment">{isMobile ? 'Deploy' : 'Deploy'}</TabsTrigger>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="deployment">{isMobile ? 'Deploy' : 'Deployment'}</TabsTrigger>
             <TabsTrigger value="monitoring">{isMobile ? 'Monitor' : 'Monitoring'}</TabsTrigger>
             <TabsTrigger value="security">{isMobile ? 'Security' : 'Security'}</TabsTrigger>
             <TabsTrigger value="optimization">{isMobile ? 'AI' : 'AI Optimization'}</TabsTrigger>
-            <TabsTrigger value="documentation">{isMobile ? 'Docs' : 'Docs'}</TabsTrigger>
+            <TabsTrigger value="documentation">{isMobile ? 'Docs' : 'Documentation'}</TabsTrigger>
           </TabsList>
         </div>
 

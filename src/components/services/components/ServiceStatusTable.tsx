@@ -5,12 +5,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, AlertTriangle, AlertCircle, Clock, Power } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ServiceStatusTableProps {
   services: Service[];
 }
 
 const ServiceStatusTable = ({ services }: ServiceStatusTableProps) => {
+  const isMobile = useIsMobile();
+  
   // Function to get status badge
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -48,39 +51,41 @@ const ServiceStatusTable = ({ services }: ServiceStatusTableProps) => {
   };
   
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[50px]">Status</TableHead>
-          <TableHead>Service Name</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Uptime</TableHead>
-          <TableHead>Version</TableHead>
-          <TableHead>Instances</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {services.map((service) => (
-          <TableRow key={service.id}>
-            <TableCell className="py-2">
-              {getStatusIcon(service.status)}
-            </TableCell>
-            <TableCell className="font-medium py-2">{service.name}</TableCell>
-            <TableCell className="capitalize py-2">{service.type.replace('_', ' ')}</TableCell>
-            <TableCell className="py-2">{service.uptime}</TableCell>
-            <TableCell className="py-2">{service.version}</TableCell>
-            <TableCell className="py-2">{service.instances}</TableCell>
-            <TableCell className="text-right py-2">
-              <div className="flex justify-end gap-2">
-                <Button variant="ghost" size="sm">Details</Button>
-                <Button variant="ghost" size="sm">Restart</Button>
-              </div>
-            </TableCell>
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[50px]">Status</TableHead>
+            <TableHead>Service Name</TableHead>
+            <TableHead className={isMobile ? "hidden sm:table-cell" : ""}>Type</TableHead>
+            <TableHead className={isMobile ? "hidden sm:table-cell" : ""}>Uptime</TableHead>
+            <TableHead className={isMobile ? "hidden lg:table-cell" : ""}>Version</TableHead>
+            <TableHead className={isMobile ? "hidden md:table-cell" : ""}>Instances</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {services.map((service) => (
+            <TableRow key={service.id}>
+              <TableCell className="py-2">
+                {getStatusIcon(service.status)}
+              </TableCell>
+              <TableCell className="font-medium py-2">{service.name}</TableCell>
+              <TableCell className={`capitalize py-2 ${isMobile ? "hidden sm:table-cell" : ""}`}>{service.type.replace('_', ' ')}</TableCell>
+              <TableCell className={`py-2 ${isMobile ? "hidden sm:table-cell" : ""}`}>{service.uptime}</TableCell>
+              <TableCell className={`py-2 ${isMobile ? "hidden lg:table-cell" : ""}`}>{service.version}</TableCell>
+              <TableCell className={`py-2 ${isMobile ? "hidden md:table-cell" : ""}`}>{service.instances}</TableCell>
+              <TableCell className="text-right py-2">
+                <div className="flex justify-end gap-1">
+                  <Button variant="ghost" size="sm">{isMobile ? "View" : "Details"}</Button>
+                  <Button variant="ghost" size="sm" className={isMobile ? "hidden sm:inline-flex" : ""}>Restart</Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 

@@ -38,7 +38,7 @@ const SecurityCompliance = () => {
         <div className="flex gap-2 flex-wrap justify-end">
           <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <RefreshCw className="h-4 w-4" />
-            {isMobile ? "Scan" : "Run Security Scan"}
+            {isMobile ? "Scan" : "Security Scan"}
           </Button>
           <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <Shield className="h-4 w-4" />
@@ -51,24 +51,24 @@ const SecurityCompliance = () => {
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
             <TabsTrigger value="overview">
-              <Shield className="mr-2 h-4 w-4" />
-              <span>{isMobile ? "Overview" : "Security Overview"}</span>
+              <Shield className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Overview" : "Security"}</span>
             </TabsTrigger>
             <TabsTrigger value="certificates">
-              <Lock className="mr-2 h-4 w-4" />
-              <span>{isMobile ? "TLS/SSL" : "TLS/SSL Management"}</span>
+              <Lock className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Certs" : "TLS/SSL"}</span>
             </TabsTrigger>
             <TabsTrigger value="compliance">
-              <FileText className="mr-2 h-4 w-4" />
-              <span>{isMobile ? "Compliance" : "Compliance & Auditing"}</span>
+              <FileText className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Comply" : "Compliance"}</span>
             </TabsTrigger>
           </TabsList>
         </div>
         
         <TabsContent value="overview" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Shield className="mr-2 h-5 w-5 text-primary" />
                 Security Overview
               </CardTitle>
@@ -76,7 +76,7 @@ const SecurityCompliance = () => {
                 Security status, threats, and vulnerabilities
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <SecurityOverview 
                 service={activeServices.find(s => s.id === selectedService)} 
               />
@@ -86,8 +86,8 @@ const SecurityCompliance = () => {
         
         <TabsContent value="certificates" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Lock className="mr-2 h-5 w-5 text-primary" />
                 TLS/SSL Certificates Management
               </CardTitle>
@@ -95,7 +95,7 @@ const SecurityCompliance = () => {
                 Manage encryption certificates and configurations
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <TLSCertificates 
                 service={activeServices.find(s => s.id === selectedService)} 
               />
@@ -105,8 +105,8 @@ const SecurityCompliance = () => {
         
         <TabsContent value="compliance" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <FileText className="mr-2 h-5 w-5 text-primary" />
                 Compliance & Auditing
               </CardTitle>
@@ -114,7 +114,7 @@ const SecurityCompliance = () => {
                 Compliance status, audit logs, and regulatory reports
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <ComplianceAudit 
                 service={activeServices.find(s => s.id === selectedService)} 
               />

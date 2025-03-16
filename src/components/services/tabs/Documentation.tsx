@@ -38,7 +38,7 @@ const Documentation = () => {
         <div className="flex gap-2 flex-wrap justify-end">
           <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <RefreshCw className="h-4 w-4" />
-            {isMobile ? "Update" : "Update Documentation"}
+            {isMobile ? "Update" : "Update Docs"}
           </Button>
           <Button variant="outline" size={isMobile ? "sm" : "default"} className="flex gap-1 items-center">
             <Download className="h-4 w-4" />
@@ -51,24 +51,24 @@ const Documentation = () => {
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
             <TabsTrigger value="topology">
-              <Network className="mr-2 h-4 w-4" />
-              <span>{isMobile ? "Topology" : "Topology Mapping"}</span>
+              <Network className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Topology" : "Topology Map"}</span>
             </TabsTrigger>
             <TabsTrigger value="api">
-              <Code className="mr-2 h-4 w-4" />
-              <span>{isMobile ? "API" : "API Documentation"}</span>
+              <Code className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "API" : "API Docs"}</span>
             </TabsTrigger>
             <TabsTrigger value="configuration">
-              <FileText className="mr-2 h-4 w-4" />
-              <span>{isMobile ? "Config" : "Configuration Docs"}</span>
+              <FileText className="mr-1 h-4 w-4" />
+              <span>{isMobile ? "Config" : "Configuration"}</span>
             </TabsTrigger>
           </TabsList>
         </div>
         
         <TabsContent value="topology" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Network className="mr-2 h-5 w-5 text-primary" />
                 Service Topology Mapping
               </CardTitle>
@@ -76,7 +76,7 @@ const Documentation = () => {
                 Visualize service dependencies and connections
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <TopologyMapping 
                 service={activeServices.find(s => s.id === selectedService)} 
               />
@@ -86,8 +86,8 @@ const Documentation = () => {
         
         <TabsContent value="api" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <Code className="mr-2 h-5 w-5 text-primary" />
                 API Documentation
               </CardTitle>
@@ -95,7 +95,7 @@ const Documentation = () => {
                 Endpoint specifications and usage examples
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <APIDocumentation 
                 service={activeServices.find(s => s.id === selectedService)} 
               />
@@ -105,8 +105,8 @@ const Documentation = () => {
         
         <TabsContent value="configuration" className="p-0 border-0 mt-4 sm:mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl flex items-center">
                 <FileText className="mr-2 h-5 w-5 text-primary" />
                 Configuration Documentation
               </CardTitle>
@@ -114,7 +114,7 @@ const Documentation = () => {
                 Service configuration settings and specifications
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <ConfigurationDocs 
                 service={activeServices.find(s => s.id === selectedService)} 
               />
