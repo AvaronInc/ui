@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
+import { Container, ContainerLog, ContainerEvent, ContainerStats, SecurityScan, AutoHealing, AIOptimization, ContainerImage, Registry } from '@/types/containers';
 
 // Sample data for demo purposes
-const sampleContainers = [
+const sampleContainers: Container[] = [
   {
     id: '1',
     name: 'api-server',
@@ -55,7 +55,7 @@ const sampleContainers = [
   }
 ];
 
-const sampleLogs = [
+const sampleLogs: ContainerLog[] = [
   {
     id: '1',
     container: 'api-server',
@@ -107,7 +107,7 @@ const sampleLogs = [
   }
 ];
 
-const sampleEvents = [
+const sampleEvents: ContainerEvent[] = [
   {
     id: '1',
     type: 'error',
@@ -134,7 +134,7 @@ const sampleEvents = [
   }
 ];
 
-const sampleStats = {
+const sampleStats: ContainerStats = {
   runningContainers: 4,
   totalContainers: 5,
   cpuUsage: 45,
@@ -153,7 +153,7 @@ const sampleStats = {
   ]
 };
 
-const sampleSecurityScans = {
+const sampleSecurityScans: SecurityScan = {
   overallScore: 82,
   lastScanTime: '2023-07-18 09:30:00',
   criticalVulnerabilities: 0,
@@ -165,7 +165,7 @@ const sampleSecurityScans = {
   hipaaScore: 84
 };
 
-const sampleAutoHealingEvents = {
+const sampleAutoHealingEvents: AutoHealing = {
   recoveredIncidents: 14,
   events: [
     {
@@ -199,7 +199,7 @@ const sampleAutoHealingEvents = {
   ]
 };
 
-const sampleAIOptimizations = {
+const sampleAIOptimizations: AIOptimization = {
   resourcesSaved: 28,
   uptimePercentage: 99.8,
   meanTimeToRecovery: 45,
@@ -221,7 +221,7 @@ const sampleAIOptimizations = {
   ]
 };
 
-const sampleImages = [
+const sampleImages: ContainerImage[] = [
   {
     id: '1',
     name: 'cybernest/api-server',
@@ -269,7 +269,7 @@ const sampleImages = [
   }
 ];
 
-const sampleRegistries = [
+const sampleRegistries: Registry[] = [
   {
     id: '1',
     name: 'Docker Hub',
@@ -297,15 +297,15 @@ const sampleRegistries = [
 ];
 
 export const useContainersData = () => {
-  const [containers, setContainers] = useState(sampleContainers);
-  const [logs, setLogs] = useState(sampleLogs);
-  const [events, setEvents] = useState(sampleEvents);
-  const [stats, setStats] = useState(sampleStats);
-  const [securityScans, setSecurityScans] = useState(sampleSecurityScans);
-  const [autoHealingEvents, setAutoHealingEvents] = useState(sampleAutoHealingEvents);
-  const [aiOptimizations, setAiOptimizations] = useState(sampleAIOptimizations);
-  const [images, setImages] = useState(sampleImages);
-  const [registries, setRegistries] = useState(sampleRegistries);
+  const [containers, setContainers] = useState<Container[]>(sampleContainers);
+  const [logs, setLogs] = useState<ContainerLog[]>(sampleLogs);
+  const [events, setEvents] = useState<ContainerEvent[]>(sampleEvents);
+  const [stats, setStats] = useState<ContainerStats>(sampleStats);
+  const [securityScans, setSecurityScans] = useState<SecurityScan>(sampleSecurityScans);
+  const [autoHealingEvents, setAutoHealingEvents] = useState<AutoHealing>(sampleAutoHealingEvents);
+  const [aiOptimizations, setAiOptimizations] = useState<AIOptimization>(sampleAIOptimizations);
+  const [images, setImages] = useState<ContainerImage[]>(sampleImages);
+  const [registries, setRegistries] = useState<Registry[]>(sampleRegistries);
   
   // This would typically involve API calls to fetch real data
   // But for demo purposes we're using the sample data
