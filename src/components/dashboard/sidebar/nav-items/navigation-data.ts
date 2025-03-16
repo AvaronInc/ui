@@ -21,6 +21,10 @@ import {
   Contact,
   Puzzle,
   Settings,
+  Laptop,
+  UserCheck,
+  Terminal,
+  Phone,
 } from 'lucide-react';
 
 // Type for navigation items
@@ -66,6 +70,15 @@ export const networkItems: NavItem[] = [
     title: 'IPAM',
     icon: MapPin,
     href: '/ipam'
+  },
+];
+
+// End User Management
+export const endUserItems: NavItem[] = [
+  {
+    title: 'Workforce EMS',
+    icon: Laptop,
+    href: '/workforce-ems'
   },
 ];
 
@@ -171,6 +184,7 @@ export interface NavSection {
 export const navSections: NavSection[] = [
   { title: "Core System", items: coreSystemItems },
   { title: "Network & Infrastructure", items: networkItems },
+  { title: "End User", items: endUserItems },
   { title: "IT Operations", items: operationsItems },
   { title: "Security & Compliance", items: securityItems },
   { title: "IT Assets & Storage", items: assetsItems },
