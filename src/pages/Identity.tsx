@@ -9,7 +9,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Home } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Home, Users, Shield, ClipboardList, KeyRound, UserCog } from 'lucide-react';
 import { User, UserFilter } from '@/types/identity';
 import UserList from '@/components/identity/UserList';
 import UserFilters from '@/components/identity/UserFilters';
@@ -17,6 +18,11 @@ import UserDetailPanel from '@/components/identity/UserDetailPanel';
 import NewUserForm from '@/components/identity/NewUserForm';
 import { useToast } from '@/hooks/use-toast';
 import PageTransition from '@/components/transitions/PageTransition';
+import OverviewTab from '@/components/identity/tabs/OverviewTab';
+import RbacControlsTab from '@/components/identity/tabs/RbacControlsTab';
+import AuthenticationTab from '@/components/identity/tabs/AuthenticationTab';
+import AccessLogsTab from '@/components/identity/tabs/AccessLogsTab';
+import ApprovalWorkflowsTab from '@/components/identity/tabs/ApprovalWorkflowsTab';
 
 // Sample mock data
 const MOCK_USERS: User[] = [
@@ -141,6 +147,7 @@ const Identity = () => {
     status: 'all',
     searchQuery: '',
   });
+  const [activeTab, setActiveTab] = useState('overview');
 
   const { toast } = useToast();
 
@@ -219,19 +226,65 @@ const Identity = () => {
             </BreadcrumbList>
           </Breadcrumb>
           
-          <UserFilters 
-            filters={filters} 
-            onFilterChange={setFilters} 
-            onOpenNewUserForm={() => setIsNewUserFormOpen(true)}
-            isLoading={isLoading}
-            onRefresh={handleRefresh}
-          />
-          
-          <UserList 
-            users={filteredUsers} 
-            onSelectUser={handleSelectUser}
-            selectedUserId={selectedUser?.id}
-          />
+          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="w-full justify-start border-b pb-0">
+              <TabsTrigger value="overview" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                <span>Overview</span>
+              </TabsTrigger>
+              <TabsTrigger value="rbac" className="flex items-center gap-2">
+                <UserCog className="h-4 w-4" />
+                <span>User & RBAC</span>
+              </TabsTrigger>
+              <TabsTrigger value="authentication" className="flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                <span>Authentication</span>
+              </TabsTrigger>
+              <TabsTrigger value="logs" className="flex items-center gap-2">
+                <ClipboardList className="h-4 w-4" />
+                <span>Access Logs</span>
+              </TabsTrigger>
+              <TabsTrigger value="workflows" className="flex items-center gap-2">
+                <KeyRound className="h-4 w-4" />
+                <span>Approval Workflows</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="overview" className="mt-6">
+              <OverviewTab 
+                users={users}
+                onSelectUser={handleSelectUser}
+                onRefresh={handleRefresh}
+                isLoading={isLoading}
+                onOpenNewUserForm={() => setIsNewUserFormOpen(true)}
+              />
+            </TabsContent>
+            
+            <TabsContent value="rbac" className="mt-6">
+              <RbacControlsTab 
+                users={filteredUsers}
+                filters={filters}
+                onFilterChange={setFilters}
+                onSelectUser={handleSelectUser}
+                selectedUserId={selectedUser?.id}
+                isLoading={isLoading}
+                onRefresh={handleRefresh}
+                onOpenNewUserForm={() => setIsNewUserFormOpen(true)}
+              />
+            </TabsContent>
+            
+            <TabsContent value="authentication" className="mt-6">
+              <AuthenticationTab />
+            </TabsContent>
+            
+            <TabsContent value="logs" className="mt-6">
+              <AccessLogsTab />
+            </TabsContent>
+            
+            <TabsContent value="workflows" className="mt-6">
+              <ApprovalWorkflowsTab />
+            </TabsContent>
+          </Tabs>
           
           <UserDetailPanel 
             user={selectedUser} 
