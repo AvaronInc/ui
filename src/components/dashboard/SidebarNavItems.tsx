@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -23,10 +24,12 @@ import {
   Contact,
   Puzzle,
   Settings,
+  ChevronDown,
 } from 'lucide-react';
 import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarGroup, SidebarGroupLabel, SidebarSeparator } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/context/AuthContext';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 // Core System Management
 const coreSystemItems = [
@@ -163,55 +166,81 @@ interface SidebarNavItemsProps {
   className?: string;
 }
 
-const NavGroup = ({ 
+const AccordionNavGroup = ({ 
   title, 
   items, 
   isAdmin = false 
 }: { 
   title: string; 
-  items: any[]; 
+  items: any[];
   isAdmin?: boolean;
 }) => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = React.useState(false);
   
+  // Check if any item in this group is active
+  const isAnyActive = React.useMemo(() => {
+    return items.some(item => location.pathname === item.href);
+  }, [items, location.pathname]);
+  
+  // Open the accordion by default if any item is active
+  React.useEffect(() => {
+    if (isAnyActive) {
+      setIsOpen(true);
+    }
+  }, [isAnyActive]);
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-xs font-semibold tracking-wide uppercase text-sidebar-foreground/60 px-1">
-        {title}
-      </SidebarGroupLabel>
-      <SidebarMenu>
-        {items.map((item) => {
-          // Skip items that require admin if user is not admin
-          if (item.adminOnly && !isAdmin) return null;
-          
-          const isActive = location.pathname === item.href;
-          
-          return (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton asChild isActive={isActive}>
-                <Link 
-                  to={item.href} 
-                  className={cn(
-                    "nav-link text-sm flex items-center",
-                    isActive && "active"
-                  )}
-                >
-                  <item.icon className="h-4 w-4 mr-3" />
-                  <span className="flex-1">{item.title}</span>
-                  {item.adminOnly && (
-                    <Badge 
-                      variant="outline" 
-                      className="ml-2 text-[0.6rem] py-0 h-4 px-1 bg-slate-100 dark:bg-slate-800"
+      <Collapsible 
+        open={isOpen} 
+        onOpenChange={setIsOpen}
+        className="w-full"
+      >
+        <CollapsibleTrigger className="flex w-full items-center justify-between px-3 py-2 text-sm font-semibold tracking-wide text-sidebar-foreground/80 hover:bg-sidebar-accent/30 rounded-md">
+          <span>{title}</span>
+          <ChevronDown 
+            className={cn("h-4 w-4 text-sidebar-foreground/70 transition-transform", 
+              isOpen && "transform rotate-180"
+            )} 
+          />
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <SidebarMenu>
+            {items.map((item) => {
+              // Skip items that require admin if user is not admin
+              if (item.adminOnly && !isAdmin) return null;
+              
+              const isActive = location.pathname === item.href;
+              
+              return (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton asChild isActive={isActive}>
+                    <Link 
+                      to={item.href} 
+                      className={cn(
+                        "nav-link text-sm flex items-center",
+                        isActive && "active"
+                      )}
                     >
-                      Admin
-                    </Badge>
-                  )}
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          );
-        })}
-      </SidebarMenu>
+                      <item.icon className="h-4 w-4 mr-3" />
+                      <span className="flex-1">{item.title}</span>
+                      {item.adminOnly && (
+                        <Badge 
+                          variant="outline" 
+                          className="ml-2 text-[0.6rem] py-0 h-4 px-1 bg-slate-100 dark:bg-slate-800"
+                        >
+                          Admin
+                        </Badge>
+                      )}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
+        </CollapsibleContent>
+      </Collapsible>
     </SidebarGroup>
   );
 };
@@ -222,32 +251,32 @@ const SidebarNavItems: React.FC<SidebarNavItemsProps> = ({ className }) => {
   return (
     <SidebarContent className={cn("px-2 py-2", className)}>
       {/* Core System Management */}
-      <NavGroup title="Core System" items={coreSystemItems} isAdmin={isAdmin} />
+      <AccordionNavGroup title="Core System" items={coreSystemItems} isAdmin={isAdmin} />
       
       <SidebarSeparator className="my-1" />
       
       {/* Network & Infrastructure Management */}
-      <NavGroup title="Network & Infrastructure" items={networkItems} isAdmin={isAdmin} />
+      <AccordionNavGroup title="Network & Infrastructure" items={networkItems} isAdmin={isAdmin} />
       
       <SidebarSeparator className="my-1" />
       
       {/* IT Operations & Automation */}
-      <NavGroup title="IT Operations" items={operationsItems} isAdmin={isAdmin} />
+      <AccordionNavGroup title="IT Operations" items={operationsItems} isAdmin={isAdmin} />
       
       <SidebarSeparator className="my-1" />
       
       {/* Security & Compliance */}
-      <NavGroup title="Security & Compliance" items={securityItems} isAdmin={isAdmin} />
+      <AccordionNavGroup title="Security & Compliance" items={securityItems} isAdmin={isAdmin} />
       
       <SidebarSeparator className="my-1" />
       
       {/* IT Assets & Storage */}
-      <NavGroup title="IT Assets & Storage" items={assetsItems} isAdmin={isAdmin} />
+      <AccordionNavGroup title="IT Assets & Storage" items={assetsItems} isAdmin={isAdmin} />
       
       <SidebarSeparator className="my-1" />
       
       {/* Business & Administration */}
-      <NavGroup title="Business & Admin" items={adminItems} isAdmin={isAdmin} />
+      <AccordionNavGroup title="Business & Admin" items={adminItems} isAdmin={isAdmin} />
     </SidebarContent>
   );
 };
