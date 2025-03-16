@@ -41,6 +41,17 @@ const ContainerListPanel: React.FC<ContainerListPanelProps> = ({
   const handleDetailClose = () => {
     setIsDetailOpen(false);
   };
+
+  const handleSheetOpenChange = (open: boolean) => {
+    if (!open) {
+      // Make sure any detail drawer is closed before closing the main sheet
+      setIsDetailOpen(false);
+      // Use setTimeout to ensure state updates complete before calling onClose
+      setTimeout(() => {
+        onClose();
+      }, 0);
+    }
+  };
   
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -61,7 +72,7 @@ const ContainerListPanel: React.FC<ContainerListPanelProps> = ({
   
   return (
     <>
-      <Sheet open={isOpen} onOpenChange={onClose}>
+      <Sheet open={isOpen} onOpenChange={handleSheetOpenChange}>
         <SheetContent className="w-[400px] sm:w-[540px] p-0 overflow-y-auto">
           <SheetHeader className="p-4 border-b sticky top-0 bg-background z-10">
             <SheetTitle className="flex items-center gap-2">
