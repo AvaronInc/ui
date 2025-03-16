@@ -1,29 +1,31 @@
 
-import React from 'react';
+import { useEffect } from 'react';
+import { Toaster } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import PageTransition from '@/components/transitions/PageTransition';
 import PageTitle from '@/components/common/PageTitle';
 import ServicesPanel from '@/components/services/ServicesPanel';
-import { Server } from 'lucide-react';
-import { motion } from 'framer-motion';
-import PageTransition from '@/components/transitions/PageTransition';
+import { useDemoNotifications } from '@/components/notifications/demoNotifications';
 
 const Services = () => {
+  // Load demo notifications
+  useDemoNotifications();
+  
+  useEffect(() => {
+    document.title = 'Services - Network Pulse Management';
+  }, []);
+
   return (
     <PageTransition>
       <DashboardLayout>
-        <motion.div
-          className="flex-1 space-y-4 p-2 sm:p-4 md:p-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+        <div className="px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 flex-1 overflow-auto">
           <PageTitle 
-            title="Services Panel" 
-            description="Deploy, manage, and monitor enterprise services"
-            icon={<Server className="h-6 w-6" />}
+            title="Service Management" 
+            subtitle="Manage service deployments, monitoring, and documentation" 
           />
           <ServicesPanel />
-        </motion.div>
+          <Toaster />
+        </div>
       </DashboardLayout>
     </PageTransition>
   );

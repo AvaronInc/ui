@@ -27,12 +27,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useAlerts } from '@/context/AlertsContext';
+import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
+  const { unreadCount } = useAlerts();
   
   useEffect(() => {
     // Set up initial company name
@@ -112,11 +116,22 @@ const DashboardHeader = () => {
       </div>
       
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="icon" asChild>
-          <Link to="/notifications">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Notifications</span>
-          </Link>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="relative"
+          onClick={() => setNotificationsPanelOpen(true)}
+        >
+          <Bell className="h-4 w-4" />
+          {unreadCount > 0 && (
+            <Badge 
+              variant="destructive" 
+              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px]"
+            >
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </Badge>
+          )}
+          <span className="sr-only">Notifications</span>
         </Button>
         
         <DropdownMenu>
@@ -182,6 +197,11 @@ const DashboardHeader = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <NotificationsPanel 
+        open={notificationsPanelOpen} 
+        onOpenChange={setNotificationsPanelOpen} 
+      />
     </header>
   );
 };
