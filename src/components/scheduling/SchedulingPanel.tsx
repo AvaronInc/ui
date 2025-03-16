@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useScheduling } from '@/hooks/use-scheduling';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
