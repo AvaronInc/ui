@@ -33,7 +33,11 @@ const EndpointDevicesList = ({ devices, onSelectDevice }: EndpointDevicesListPro
         </TableHeader>
         <TableBody>
           {devices.map((device) => (
-            <TableRow key={device.id}>
+            <TableRow 
+              key={device.id}
+              className="cursor-pointer hover:bg-muted"
+              onClick={() => onSelectDevice(device.id)}
+            >
               <TableCell className="font-medium">{device.name}</TableCell>
               <TableCell>{device.assignedUser}</TableCell>
               <TableCell>{`${device.os} ${device.version}`}</TableCell>
@@ -47,7 +51,10 @@ const EndpointDevicesList = ({ devices, onSelectDevice }: EndpointDevicesListPro
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  onClick={() => onSelectDevice(device.id)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent row click event from triggering
+                    onSelectDevice(device.id);
+                  }}
                   title="View Details"
                 >
                   <Info className="h-4 w-4" />
