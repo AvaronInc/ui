@@ -8,7 +8,7 @@ interface SidebarHeaderProps {
 
 const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
   return (
-    <Header className="px-4 py-4 flex items-center justify-start border-b border-slate-200/60 dark:border-slate-700/60">
+    <Header className="px-4 py-4 flex items-center justify-center border-b border-slate-200/60 dark:border-slate-700/60">
       <div className="flex items-center">
         <div className="relative">
           <img 
@@ -18,10 +18,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
           />
           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-sidebar"></div>
         </div>
-        <div>
-          <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">NestEdge</h2>
-          <p className="text-xs text-sidebar-foreground/60">Autonomous Response and Control</p>
-        </div>
+        <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">NestEdge A.R.C.</h2>
       </div>
     </Header>
   );
