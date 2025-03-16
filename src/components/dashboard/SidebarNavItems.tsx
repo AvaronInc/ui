@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -22,7 +21,7 @@ import {
   Scroll,
   CreditCard,
   Contact,
-  PuzzlePiece,
+  Puzzle,
   Settings,
 } from 'lucide-react';
 import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarGroup, SidebarGroupLabel, SidebarSeparator } from '@/components/ui/sidebar';
@@ -149,7 +148,7 @@ const adminItems = [
   },
   {
     title: 'Integrations',
-    icon: PuzzlePiece,
+    icon: Puzzle,
     href: '/integrations'
   },
   {

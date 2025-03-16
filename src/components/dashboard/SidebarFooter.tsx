@@ -20,7 +20,7 @@ import {
 
 const SidebarFooter: React.FC = () => {
   const navigate = useNavigate();
-  const { signOut, isAdmin, user } = useAuth();
+  const { signOut, isAdmin, user, profile } = useAuth();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   
   const confirmLogout = () => {
@@ -41,10 +41,22 @@ const SidebarFooter: React.FC = () => {
     }, 200);
   };
 
+  // Get user display name from profile or user email
+  const getDisplayName = () => {
+    if (profile?.full_name) return profile.full_name;
+    if (user?.email) return user.email.split('@')[0];
+    return 'User';
+  };
+
   // Get user initials for avatar fallback
   const getInitials = () => {
-    if (!user?.name) return 'U';
-    return user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+    const displayName = getDisplayName();
+    return displayName.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
+  // Get avatar URL from profile or default to empty string
+  const getAvatarUrl = () => {
+    return profile?.avatar_url || '';
   };
 
   return (
@@ -52,11 +64,11 @@ const SidebarFooter: React.FC = () => {
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.profileUrl || ''} />
+            <AvatarImage src={getAvatarUrl()} />
             <AvatarFallback className="bg-primary/10 text-primary">{getInitials()}</AvatarFallback>
           </Avatar>
           <div className="text-sm">
-            <p className="font-medium leading-none">{user?.name || 'User'}</p>
+            <p className="font-medium leading-none">{getDisplayName()}</p>
             <p className="text-xs text-muted-foreground">{isAdmin ? 'Administrator' : 'Standard User'}</p>
           </div>
         </div>
