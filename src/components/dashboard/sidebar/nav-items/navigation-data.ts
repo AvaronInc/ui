@@ -1,207 +1,32 @@
 
-import { 
-  LayoutDashboard, 
-  ListChecks,
-  Network,
-  Server, 
-  Share2,
-  MapPin,
-  Monitor,
-  Zap,
-  Package,
-  List,
-  Shield,
-  Mail,
-  Users,
-  FileText,
-  HardDrive,
-  Database,
-  Scroll,
-  CreditCard,
-  Contact,
-  Puzzle,
-  Settings,
-  Laptop,
-  UserCheck,
-  Terminal,
-  Phone,
-} from 'lucide-react';
+import { NavSection } from './types';
+import { coreSystemItems } from './core-items';
+import { networkItems } from './network-items';
+import { monitoringItems } from './monitoring-items';
+import { endUserItems } from './end-user-items';
+import { operationsItems } from './operations-items';
+import { identityItems } from './identity-items';
+import { securityItems } from './security-items';
+import { assetItems } from './asset-items';
+import { storageItems } from './storage-items';
+import { businessItems } from './business-items';
+import { adminItems } from './admin-items';
 
-// Type for navigation items
-export interface NavItem {
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  href: string;
-  adminOnly?: boolean;
-}
+// Export all nav item arrays for direct access
+export * from './types';
+export * from './core-items';
+export * from './network-items';
+export * from './monitoring-items';
+export * from './end-user-items';
+export * from './operations-items';
+export * from './identity-items';
+export * from './security-items';
+export * from './asset-items';
+export * from './storage-items';
+export * from './business-items';
+export * from './admin-items';
 
-// Core System Management
-export const coreSystemItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    icon: LayoutDashboard,
-    href: '/'
-  },
-];
-
-// Network & Infrastructure Management
-export const networkItems: NavItem[] = [
-  {
-    title: 'Topology',
-    icon: Network,
-    href: '/topology'
-  },
-  {
-    title: 'N.E.S.T.',
-    icon: Server,
-    href: '/nest'
-  },
-  {
-    title: 'SD-WAN',
-    icon: Share2,
-    href: '/sdwan'
-  },
-  {
-    title: 'IPAM',
-    icon: MapPin,
-    href: '/ipam'
-  },
-  {
-    title: 'Containers',
-    icon: Package,
-    href: '/containers'
-  },
-];
-
-// Monitoring 
-export const monitoringItems: NavItem[] = [
-  {
-    title: 'RMM',
-    icon: Monitor,
-    href: '/rmm'
-  },
-];
-
-// End User Management
-export const endUserItems: NavItem[] = [
-  {
-    title: 'Workforce EMS',
-    icon: Laptop,
-    href: '/workforce'
-  },
-];
-
-// IT Operations & Automation
-export const operationsItems: NavItem[] = [
-  {
-    title: 'Automation Panel',
-    icon: Zap,
-    href: '/automation'
-  },
-  {
-    title: 'Services',
-    icon: Server,
-    href: '/services'
-  },
-  {
-    title: 'Tickets',
-    icon: List,
-    href: '/tickets'
-  },
-  {
-    title: 'SDMS',
-    icon: Scroll,
-    href: '/sdms'
-  },
-];
-
-// Identity Management
-export const identityItems: NavItem[] = [
-  {
-    title: 'Identity',
-    icon: Users,
-    href: '/identity'
-  },
-];
-
-// Security & Compliance
-export const securityItems: NavItem[] = [
-  {
-    title: 'Security',
-    icon: Shield,
-    href: '/security'
-  },
-  {
-    title: 'Email Security',
-    icon: Mail,
-    href: '/email-security'
-  },
-  {
-    title: 'Logging & Audit',
-    icon: FileText,
-    href: '/logging'
-  },
-];
-
-// IT Assets (separated from Storage)
-export const assetItems: NavItem[] = [
-  {
-    title: 'Asset Management',
-    icon: HardDrive,
-    href: '/asset-management'
-  },
-];
-
-// Storage (separated from IT Assets)
-export const storageItems: NavItem[] = [
-  {
-    title: 'Storage',
-    icon: Database,
-    href: '/storage'
-  },
-];
-
-// Business (separated from Admin)
-export const businessItems: NavItem[] = [
-  {
-    title: 'Projects',
-    icon: ListChecks,
-    href: '/projects'
-  },
-  {
-    title: 'Contacts',
-    icon: Contact,
-    href: '/contacts'
-  },
-  {
-    title: 'Integrations',
-    icon: Puzzle,
-    href: '/integrations'
-  },
-];
-
-// Admin (separated from Business)
-export const adminItems: NavItem[] = [
-  {
-    title: 'Billing',
-    icon: CreditCard,
-    href: '/billing',
-    adminOnly: true
-  },
-  {
-    title: 'Settings',
-    icon: Settings,
-    href: '/settings',
-    adminOnly: true
-  },
-];
-
-// Navigation section definitions
-export interface NavSection {
-  title: string;
-  items: NavItem[];
-}
-
+// Complete navigation structure
 export const navSections: NavSection[] = [
   { title: "Core System", items: coreSystemItems },
   { title: "Network & Infrastructure", items: networkItems },
