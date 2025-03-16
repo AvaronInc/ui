@@ -33,6 +33,7 @@ import Integrations from "./pages/Integrations";
 import Billing from "./pages/Billing";
 import Containers from "./pages/Containers";
 import Services from "./pages/Services";
+import ChangeManagement from "./pages/ChangeManagement";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,6 +78,7 @@ const App = () => (
                   <Route path="/billing" element={<ProtectedRoute adminOnly><Billing /></ProtectedRoute>} />
                   <Route path="/containers" element={<ProtectedRoute><Containers /></ProtectedRoute>} />
                   <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
+                  <Route path="/change-management" element={<ProtectedRoute><ChangeManagement /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AnimatePresence>

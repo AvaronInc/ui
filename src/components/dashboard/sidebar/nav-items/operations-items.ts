@@ -1,27 +1,26 @@
 
-import { Zap, Server, List, Scroll } from 'lucide-react';
 import { NavItem } from './types';
+import { Ticket, GitMerge, FolderCog, ClipboardList } from 'lucide-react';
 
-// IT Operations & Automation
 export const operationsItems: NavItem[] = [
   {
-    title: 'Automation Panel',
-    icon: Zap,
-    href: '/automation'
-  },
-  {
-    title: 'Services',
-    icon: Server,
-    href: '/services'
-  },
-  {
     title: 'Tickets',
-    icon: List,
-    href: '/tickets'
+    icon: Ticket,
+    href: '/tickets',
   },
   {
-    title: 'SDMS',
-    icon: Scroll,
-    href: '/sdms'
+    title: 'Projects',
+    icon: GitMerge,
+    href: '/projects',
+  },
+  {
+    title: 'Automation',
+    icon: FolderCog,
+    href: '/automation',
+  },
+  {
+    title: 'Change Management',
+    icon: ClipboardList,
+    href: '/change-management',
   },
 ];
