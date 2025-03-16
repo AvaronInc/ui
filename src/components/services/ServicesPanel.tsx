@@ -12,14 +12,16 @@ const ServicesPanel = () => {
   return (
     <div className="space-y-4">
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid grid-cols-6 md:grid-cols-6 w-full">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="deployment">Deploy & Configure</TabsTrigger>
-          <TabsTrigger value="monitoring">Monitoring & Logs</TabsTrigger>
-          <TabsTrigger value="security">Security & Compliance</TabsTrigger>
-          <TabsTrigger value="optimization">AI Optimization</TabsTrigger>
-          <TabsTrigger value="documentation">Documentation</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-6 w-full">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="deployment">Deploy</TabsTrigger>
+            <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
+            <TabsTrigger value="optimization">AI Optimization</TabsTrigger>
+            <TabsTrigger value="documentation">Docs</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview" className="p-0 border-0">
           <ServicesOverview />

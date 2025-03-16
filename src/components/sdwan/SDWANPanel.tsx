@@ -11,17 +11,19 @@ import AIIntelligentFailoverTab from './tabs/AIIntelligentFailoverTab';
 
 const SDWANPanel = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <Tabs defaultValue="connectivity" className="w-full">
-        <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 mb-6">
-          <TabsTrigger value="connectivity">Network Connectivity</TabsTrigger>
-          <TabsTrigger value="failover">Failover Rules</TabsTrigger>
-          <TabsTrigger value="security">Security & Access</TabsTrigger>
-          <TabsTrigger value="bgp">BGP & Integrations</TabsTrigger>
-          <TabsTrigger value="monitoring">Monitoring & Logs</TabsTrigger>
-          <TabsTrigger value="advanced">Advanced Config</TabsTrigger>
-          <TabsTrigger value="ai-failover">AI Intelligent Failover</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 mb-4 sm:mb-6">
+            <TabsTrigger value="connectivity">Network</TabsTrigger>
+            <TabsTrigger value="failover">Failover</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
+            <TabsTrigger value="bgp">BGP</TabsTrigger>
+            <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+            <TabsTrigger value="advanced">Advanced</TabsTrigger>
+            <TabsTrigger value="ai-failover">AI Failover</TabsTrigger>
+          </TabsList>
+        </div>
         
         <TabsContent value="connectivity" className="mt-0">
           <NetworkConnectivityTab />
