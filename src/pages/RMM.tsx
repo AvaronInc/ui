@@ -1,14 +1,35 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageTransition } from '@/components/transitions/PageTransition';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { DeviceList } from '@/components/rmm/DeviceList';
 import { DeviceDetailPanel } from '@/components/rmm/DeviceDetailPanel';
 import { DeviceFilters } from '@/components/rmm/DeviceFilters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Home } from 'lucide-react';
+import { Tab, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Home, Server, RefreshCw, Wrench, Shield, Activity, Network } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Device } from '@/types/rmm';
+import StatusCardGrid from '@/components/dashboard/StatusCardGrid';
+import { toast } from 'sonner';
+import { 
+  LineChart, 
+  Line, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from 'recharts';
+import { useTheme } from '@/context/ThemeContext';
 
 // Sample data
 const devices: Device[] = [
@@ -224,10 +245,37 @@ const devices: Device[] = [
   }
 ];
 
+// Performance trend data
+const performanceData = [
+  { name: '8:00', cpu: 32, memory: 45, network: 12 },
+  { name: '10:00', cpu: 40, memory: 50, network: 14 },
+  { name: '12:00', cpu: 52, memory: 58, network: 20 },
+  { name: '14:00', cpu: 38, memory: 52, network: 15 },
+  { name: '16:00', cpu: 45, memory: 56, network: 18 },
+  { name: '18:00', cpu: 42, memory: 55, network: 16 },
+];
+
+// OS distribution data
+const osDistributionData = [
+  { name: 'Windows', value: 45 },
+  { name: 'Linux', value: 30 },
+  { name: 'macOS', value: 20 },
+  { name: 'Other', value: 5 },
+];
+
+// Issue severity data
+const issueSeverityData = [
+  { name: 'Critical', value: 5, color: '#ef4444' },
+  { name: 'Warning', value: 12, color: '#f59e0b' },
+  { name: 'Info', value: 28, color: '#3b82f6' },
+];
+
 const RMM = () => {
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [filteredDevices, setFilteredDevices] = useState<Device[]>(devices);
+  const [activeTab, setActiveTab] = useState('overview');
+  const { isDarkMode } = useTheme();
   
   const handleDeviceSelect = (device: Device) => {
     setSelectedDevice(device);
@@ -253,6 +301,39 @@ const RMM = () => {
     setFilteredDevices(filtered);
   };
 
+  const handleRunDiagnostics = () => {
+    toast.info("Running system diagnostics on all devices...");
+  };
+
+  const handleApplySecurityPatches = () => {
+    toast.info("Scheduling security patches for eligible devices...");
+  };
+
+  const handleRemoteReboot = () => {
+    toast.info("Preparing remote reboot options...");
+  };
+
+  // Calculate device metrics
+  const deviceMetrics = {
+    totalDevices: devices.length,
+    onlineDevices: devices.filter(d => d.status === 'online').length,
+    offlineDevices: devices.filter(d => d.status === 'offline').length,
+    warningDevices: devices.filter(d => d.status === 'warning').length,
+    uptime: "99.8%",
+    securityScore: 92,
+    activeUsers: 246,
+    connectedSystems: 18
+  };
+
+  // Chart colors that work in both light and dark mode
+  const chartColors = {
+    cpu: isDarkMode ? "#3B82F6" : "#3B82F6",
+    memory: isDarkMode ? "#10B981" : "#10B981",
+    network: isDarkMode ? "#F59E0B" : "#F59E0B",
+    grid: isDarkMode ? "#333333" : "#e5e7eb",
+    text: isDarkMode ? "#FFFFFF" : "#000000"
+  };
+
   return (
     <PageTransition>
       <DashboardLayout>
@@ -276,15 +357,287 @@ const RMM = () => {
                 </BreadcrumbList>
               </Breadcrumb>
               <h1 className="text-2xl font-semibold mt-2">Remote Monitoring & Management</h1>
-              <p className="text-muted-foreground">Monitor and manage all your network devices</p>
+              <p className="text-muted-foreground">Monitor, manage and automate your network devices</p>
             </div>
             <DeviceFilters onFilterChange={handleFilterChange} />
           </div>
 
-          <DeviceList 
-            devices={filteredDevices} 
-            onDeviceSelect={handleDeviceSelect} 
-          />
+          {/* System Health Overview */}
+          <div className="mb-6">
+            <StatusCardGrid metrics={deviceMetrics} onClick={(section) => {
+              if (section === 'devices') {
+                setActiveTab('devices');
+              }
+            }} />
+          </div>
+
+          {/* Quick Action Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <Card className="hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 flex flex-col items-center text-center">
+                <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 mb-3">
+                  <Activity className="h-6 w-6" />
+                </div>
+                <h3 className="font-medium mb-1">System Diagnostics</h3>
+                <p className="text-sm text-muted-foreground mb-3">Run comprehensive diagnostics on all monitored devices</p>
+                <Button size="sm" onClick={handleRunDiagnostics}>Run Diagnostics</Button>
+              </CardContent>
+            </Card>
+            <Card className="hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 flex flex-col items-center text-center">
+                <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 mb-3">
+                  <Shield className="h-6 w-6" />
+                </div>
+                <h3 className="font-medium mb-1">Security Patches</h3>
+                <p className="text-sm text-muted-foreground mb-3">Apply latest security updates to vulnerable devices</p>
+                <Button size="sm" variant="outline" onClick={handleApplySecurityPatches}>Apply Patches</Button>
+              </CardContent>
+            </Card>
+            <Card className="hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 flex flex-col items-center text-center">
+                <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 mb-3">
+                  <RefreshCw className="h-6 w-6" />
+                </div>
+                <h3 className="font-medium mb-1">Remote Actions</h3>
+                <p className="text-sm text-muted-foreground mb-3">Reboot, restart services or troubleshoot devices</p>
+                <Button size="sm" variant="outline" onClick={handleRemoteReboot}>Remote Reboot</Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid grid-cols-3 mb-4">
+              <TabsTrigger value="overview">Dashboard Overview</TabsTrigger>
+              <TabsTrigger value="devices">Device Management</TabsTrigger>
+              <TabsTrigger value="analytics">Performance Analytics</TabsTrigger>
+            </TabsList>
+
+            {/* Overview Tab */}
+            <TabsContent value="overview" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Performance Overview */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Activity className="h-5 w-5 text-blue-500" />
+                      System Performance Trends
+                    </CardTitle>
+                    <CardDescription>Average across all monitored devices</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-2">
+                    <div className="h-[240px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={performanceData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke={chartColors.text}
+                            tick={{ fill: chartColors.text }}
+                          />
+                          <YAxis 
+                            tickFormatter={(value) => `${value}%`}
+                            stroke={chartColors.text}
+                            tick={{ fill: chartColors.text }}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: isDarkMode ? '#1f2937' : 'white',
+                              color: chartColors.text,
+                              border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`
+                            }}
+                            labelStyle={{ color: chartColors.text }}
+                          />
+                          <Legend />
+                          <Line 
+                            type="monotone" 
+                            dataKey="cpu" 
+                            name="CPU Usage" 
+                            stroke={chartColors.cpu} 
+                            activeDot={{ r: 8 }} 
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="memory" 
+                            name="Memory Usage" 
+                            stroke={chartColors.memory} 
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="network" 
+                            name="Network Load" 
+                            stroke={chartColors.network} 
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Device Distribution */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Server className="h-5 w-5 text-purple-500" />
+                      Device Distribution
+                    </CardTitle>
+                    <CardDescription>OS types and alert severity</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-2">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="h-[200px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={osDistributionData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            >
+                              {osDistributionData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={
+                                  index === 0 ? '#3b82f6' : 
+                                  index === 1 ? '#10b981' : 
+                                  index === 2 ? '#f59e0b' : 
+                                  '#8b5cf6'
+                                } />
+                              ))}
+                            </Pie>
+                            <Legend />
+                            <Tooltip />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="h-[200px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={issueSeverityData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            >
+                              {issueSeverityData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                            <Legend />
+                            <Tooltip />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              {/* Recent Device Status Changes */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Network className="h-5 w-5 text-amber-500" />
+                    Recent Status Changes
+                  </CardTitle>
+                  <CardDescription>Latest device status updates and alerts</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <div className="space-y-4">
+                    {devices.slice(0, 3).map(device => (
+                      <div key={device.id} className="flex items-start gap-3 p-3 rounded-lg border border-border">
+                        <div className={`mt-1 p-1.5 rounded-full ${
+                          device.status === 'online' ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400' :
+                          device.status === 'warning' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400' :
+                          'bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                        }`}>
+                          <Server className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between">
+                            <h4 className="font-medium text-sm">{device.name}</h4>
+                            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                              device.status === 'online' ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400' :
+                              device.status === 'warning' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400' :
+                              'bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                            }`}>
+                              {device.status}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">{device.alerts[0]?.message || "No recent alerts"}</p>
+                        </div>
+                      </div>
+                    ))}
+                    <Button variant="outline" size="sm" className="w-full" onClick={() => setActiveTab('devices')}>
+                      View All Devices
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Devices Tab */}
+            <TabsContent value="devices">
+              <DeviceList 
+                devices={filteredDevices} 
+                onDeviceSelect={handleDeviceSelect} 
+              />
+            </TabsContent>
+
+            {/* Analytics Tab */}
+            <TabsContent value="analytics">
+              <div className="grid grid-cols-1 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Performance Analytics</CardTitle>
+                    <CardDescription>Resource utilization across all monitored devices</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[300px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={devices.slice(0, 5).map(device => ({
+                          name: device.name,
+                          cpu: device.metrics.cpu[device.metrics.cpu.length - 1].value,
+                          memory: device.metrics.memory[device.metrics.memory.length - 1].value,
+                          network: device.metrics.network[device.metrics.network.length - 1].value
+                        }))}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke={chartColors.text}
+                            tick={{ fill: chartColors.text }}
+                          />
+                          <YAxis 
+                            tickFormatter={(value) => `${value}%`}
+                            stroke={chartColors.text}
+                            tick={{ fill: chartColors.text }}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: isDarkMode ? '#1f2937' : 'white',
+                              color: chartColors.text,
+                              border: `1px solid ${isDarkMode ? '#374151' : '#e5e7eb'}`
+                            }}
+                            labelStyle={{ color: chartColors.text }}
+                          />
+                          <Legend />
+                          <Bar dataKey="cpu" name="CPU Usage" fill={chartColors.cpu} />
+                          <Bar dataKey="memory" name="Memory Usage" fill={chartColors.memory} />
+                          <Bar dataKey="network" name="Network Load" fill={chartColors.network} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
           
           <DeviceDetailPanel 
             device={selectedDevice} 

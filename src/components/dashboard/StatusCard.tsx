@@ -21,6 +21,9 @@ interface StatusCardProps {
   style?: React.CSSProperties;
   onClick?: () => void;
   icon?: React.ReactNode;
+  detail?: string;
+  trend?: 'up' | 'down' | 'neutral';
+  trendValue?: string;
 }
 
 const statusConfig = {
@@ -66,7 +69,10 @@ export const StatusCard = ({
   className,
   style,
   onClick,
-  icon
+  icon,
+  detail,
+  trend,
+  trendValue
 }: StatusCardProps) => {
   const config = statusConfig[status];
   const StatusIcon = config.icon;
@@ -74,10 +80,10 @@ export const StatusCard = ({
   return (
     <Card 
       className={cn(
-        "overflow-hidden transition-all duration-300 border",
+        "overflow-hidden transition-all duration-300 border hover:shadow-md",
         config.borderColor,
         config.bgColor,
-        onClick && "cursor-pointer hover:shadow-md",
+        onClick && "cursor-pointer",
         className
       )}
       style={style}
@@ -100,8 +106,20 @@ export const StatusCard = ({
           <span className={cn("font-medium", config.color)}>
             {config.label}
           </span>
+          {trend && (
+            <span className={cn("ml-auto text-xs font-medium", 
+              trend === 'up' ? 'text-green-500' : 
+              trend === 'down' ? 'text-red-500' : 
+              'text-gray-500'
+            )}>
+              {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'} {trendValue}
+            </span>
+          )}
         </div>
         <p className="text-sm text-muted-foreground">{description}</p>
+        {detail && (
+          <p className="text-xs text-muted-foreground mt-1">{detail}</p>
+        )}
         {updated && (
           <p className="text-xs text-muted-foreground mt-2">
             Updated {updated}
