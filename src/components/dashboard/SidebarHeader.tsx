@@ -13,14 +13,14 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
         <div className="relative">
           <img 
             src="/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png" 
-            alt="Network Pulse Logo" 
+            alt="NestEdge Logo" 
             className="w-8 h-8 mr-3" 
           />
           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-sidebar"></div>
         </div>
         <div>
-          <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">Network Pulse</h2>
-          <p className="text-xs text-sidebar-foreground/60">Cybersecurity Management</p>
+          <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">NestEdge</h2>
+          <p className="text-xs text-sidebar-foreground/60">Autonomous Response and Control</p>
         </div>
       </div>
     </Header>

@@ -1,10 +1,10 @@
-
 import React from 'react';
 import SidebarHeader from './SidebarHeader';
 import SidebarFooter from './SidebarFooter';
 import SidebarNavItems from './sidebar/nav-items';
 
 const SidebarNav: React.FC = () => {
+  // Keep the system name in localStorage for other functionality
   const systemName = localStorage.getItem('systemName') || 'Network Pulse Management';
 
   return (
