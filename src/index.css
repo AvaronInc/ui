@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -40,6 +41,8 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --scrollbar-thumb: 214 20% 84%;
+    --scrollbar-track: 0 0% 96%;
   }
 
   .dark {
@@ -70,6 +73,8 @@
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 240 4.9% 83.9%;
+    --scrollbar-thumb: 240 10% 25%;
+    --scrollbar-track: 240 10% 8%;
   }
 }
 
@@ -163,6 +168,31 @@
   .admin-badge {
     @apply text-[0.6rem] py-0 px-1.5 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-sm font-medium;
   }
+
+  /* Custom scrollbar */
+  .sidebar-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--scrollbar-track));
+    border-radius: 4px;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--scrollbar-thumb));
+    border-radius: 4px;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--scrollbar-thumb));
+  }
 }
 
 @layer utilities {
@@ -174,3 +204,4 @@
     display: none;  /* Chrome, Safari and Opera */
   }
 }
+

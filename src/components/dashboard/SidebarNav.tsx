@@ -10,7 +10,7 @@ const SidebarNav: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       <SidebarHeader systemName={systemName} />
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto sidebar-scrollbar">
         <SidebarNavItems />
       </div>
       <SidebarFooter />
