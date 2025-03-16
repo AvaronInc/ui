@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { SidebarContent, SidebarSeparator } from '@/components/ui/sidebar';
+import { SidebarContent } from '@/components/ui/sidebar/sidebar-structure';
+import { SidebarSeparator } from '@/components/ui/sidebar/sidebar-structure';
 import { useAuth } from '@/context/AuthContext';
 import AccordionNavGroup from './AccordionNavGroup';
 import { navSections } from './navigation-data';

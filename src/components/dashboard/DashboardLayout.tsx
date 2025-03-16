@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import DashboardHeader from './DashboardHeader';
-import { SidebarProvider, Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar } from '@/components/ui/sidebar/sidebar-base';
 import SidebarNav from './SidebarNav';
 import CopyrightFooter from '@/components/common/CopyrightFooter';
 import { useTheme } from '@/context/ThemeContext';
