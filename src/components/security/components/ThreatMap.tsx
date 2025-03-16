@@ -62,10 +62,11 @@ const ThreatMap: React.FC = () => {
       .attr("viewBox", [0, 0, width, height])
       .attr("style", "max-width: 100%; height: auto;");
     
-    // Define map projection
-    const projection = d3.geoMercator()
-      .scale((width / 6.3) / Math.PI)
-      .translate([width / 2, height / 1.6]);
+    // Define map projection with improved centering
+    const projection = d3.geoNaturalEarth1()
+      .scale(width / 5.5)
+      .translate([width / 2, height / 2])
+      .center([0, 10]); // Adjust center to better position the map
     
     // Create a path generator
     const path = d3.geoPath().projection(projection);
