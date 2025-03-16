@@ -10,7 +10,7 @@ const Containers = () => {
     <PageTransition>
       <DashboardLayout>
         <motion.div
-          className="flex-1 space-y-4 p-4 md:p-8"
+          className="flex-1 space-y-4 p-2 sm:p-4 md:p-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

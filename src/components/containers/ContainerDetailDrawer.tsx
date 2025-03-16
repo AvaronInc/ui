@@ -39,13 +39,13 @@ const ContainerDetailDrawer: React.FC<ContainerDetailDrawerProps> = ({
   
   return (
     <Drawer open={isOpen} onOpenChange={() => onClose()}>
-      <DrawerContent className="max-h-[90dvh]">
+      <DrawerContent className="max-h-[85dvh]">
         <DrawerHeader>
           <DrawerTitle className="flex items-center gap-2">
             <Container className="h-5 w-5" />
-            {container.name}
+            <span className="truncate">{container.name}</span>
           </DrawerTitle>
-          <DrawerDescription>
+          <DrawerDescription className="truncate">
             {container.image} • {container.status}
           </DrawerDescription>
         </DrawerHeader>
@@ -75,7 +75,7 @@ const ContainerDetailDrawer: React.FC<ContainerDetailDrawerProps> = ({
                 <CardTitle className="text-sm">Uptime</CardTitle>
               </CardHeader>
               <CardContent className="p-3 pt-0">
-                <div className="text-xl font-bold">{container.uptime}</div>
+                <div className="text-xl font-bold truncate">{container.uptime}</div>
               </CardContent>
             </Card>
           </div>
@@ -85,19 +85,19 @@ const ContainerDetailDrawer: React.FC<ContainerDetailDrawerProps> = ({
               <AccordionTrigger>Container Details</AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
                     <span className="font-medium">ID:</span>
-                    <span className="text-muted-foreground">{container.id}</span>
+                    <span className="text-muted-foreground break-all">{container.id}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
                     <span className="font-medium">Ports:</span>
                     <span className="text-muted-foreground">{container.ports}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
                     <span className="font-medium">Image:</span>
-                    <span className="text-muted-foreground">{container.image}</span>
+                    <span className="text-muted-foreground break-all">{container.image}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
                     <span className="font-medium">Status:</span>
                     <span className={`${container.status === 'running' ? 'text-green-500' : 'text-amber-500'}`}>
                       {container.status}
@@ -157,7 +157,7 @@ const ContainerDetailDrawer: React.FC<ContainerDetailDrawerProps> = ({
         </div>
         
         <DrawerFooter className="border-t pt-2">
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             {isRunning ? (
               <Button variant="destructive" className="flex-1">
                 <AlertTriangle className="h-4 w-4 mr-2" />

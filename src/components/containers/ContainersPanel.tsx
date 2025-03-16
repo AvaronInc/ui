@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Box, Dock, LineChart, Shield, Zap, Inbox } from 'lucide-react';
@@ -31,13 +32,13 @@ const ContainersPanel = () => {
         onValueChange={handleTabChange} 
         className="space-y-4"
       >
-        <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-2">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="deployment">Deployment</TabsTrigger>
-          <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="optimization">Auto-Healing</TabsTrigger>
-          <TabsTrigger value="registry">Registry</TabsTrigger>
+        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto">
+          <TabsTrigger value="overview" className="px-2 sm:px-4">Overview</TabsTrigger>
+          <TabsTrigger value="deployment" className="px-2 sm:px-4">Deployment</TabsTrigger>
+          <TabsTrigger value="monitoring" className="px-2 sm:px-4">Monitoring</TabsTrigger>
+          <TabsTrigger value="security" className="px-2 sm:px-4">Security</TabsTrigger>
+          <TabsTrigger value="optimization" className="px-2 sm:px-4">Auto-Healing</TabsTrigger>
+          <TabsTrigger value="registry" className="px-2 sm:px-4">Registry</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">

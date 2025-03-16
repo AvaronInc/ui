@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,7 @@ const ContainersOverview = () => {
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Running Containers</CardTitle>
@@ -49,7 +50,7 @@ const ContainersOverview = () => {
               <ContainerUsageChart data={stats?.resourceUsage || []} />
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between text-xs text-muted-foreground">
+          <CardFooter className="flex flex-wrap justify-between text-xs text-muted-foreground gap-2">
             <div className="flex items-center">
               <Cpu className="mr-1 h-3 w-3" />
               <span>CPU: {stats?.cpuUsage || '0'}%</span>
@@ -92,7 +93,7 @@ const ContainersOverview = () => {
         </Card>
 
         {events && events.length > 0 && (
-          <Card className="col-span-full md:col-span-2">
+          <Card className="col-span-full">
             <CardHeader>
               <CardTitle>Recent Events</CardTitle>
               <CardDescription>
@@ -108,7 +109,7 @@ const ContainersOverview = () => {
                       {event.type === 'warning' && <AlertTriangle className="mr-2 h-4 w-4 text-amber-500" />}
                       {event.type === 'info' && <Layers className="mr-2 h-4 w-4 text-blue-500" />}
                       <div>
-                        <p className="text-sm font-medium">{event.title}</p>
+                        <p className="text-sm font-medium truncate max-w-[200px] sm:max-w-none">{event.title}</p>
                         <p className="text-xs text-muted-foreground">{event.timestamp}</p>
                       </div>
                     </div>
@@ -130,7 +131,7 @@ const ContainersOverview = () => {
             <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
             <Layers className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
+          <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2">
             <Button className="w-full justify-start">
               <Dock className="mr-2 h-4 w-4" /> Deploy New Container
             </Button>
