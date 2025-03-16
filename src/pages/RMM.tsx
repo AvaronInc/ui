@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { PageTransition } from '@/components/transitions/PageTransition';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
@@ -6,7 +5,7 @@ import { DeviceList } from '@/components/rmm/DeviceList';
 import { DeviceDetailPanel } from '@/components/rmm/DeviceDetailPanel';
 import { DeviceFilters } from '@/components/rmm/DeviceFilters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Tab, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Home, Server, RefreshCw, Wrench, Shield, Activity, Network } from 'lucide-react';
