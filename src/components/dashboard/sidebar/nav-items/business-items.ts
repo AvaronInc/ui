@@ -1,5 +1,5 @@
 
-import { Contact, Puzzle } from 'lucide-react';
+import { Contact, Puzzle, Calendar } from 'lucide-react';
 import { NavItem } from './types';
 
 // Business
@@ -13,5 +13,10 @@ export const businessItems: NavItem[] = [
     title: 'Integrations',
     icon: Puzzle,
     href: '/integrations'
+  },
+  {
+    title: 'Scheduling',
+    icon: Calendar,
+    href: '/scheduling'
   },
 ];
