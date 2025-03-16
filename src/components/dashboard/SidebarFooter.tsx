@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
-import { Settings, LogOut } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { SidebarFooter as Footer, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,20 +19,9 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const SidebarFooter: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, isAdmin } = useAuth();
+  const { signOut, isAdmin, user } = useAuth();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  
-  const handleSettingsClick = () => {
-    navigate('/settings');
-    // Force a full page reload to ensure proper routing
-    setTimeout(() => {
-      if (location.pathname !== '/settings') {
-        window.location.href = '/settings';
-      }
-    }, 100);
-  };
   
   const confirmLogout = () => {
     // Close the dialog first
@@ -42,7 +32,6 @@ const SidebarFooter: React.FC = () => {
       try {
         await signOut();
         // After successful logout, navigate to auth page
-        // Use window.location for a complete page reload to clear any lingering state
         window.location.href = '/auth';
       } catch (error) {
         console.error('Failed to log out:', error);
@@ -52,40 +41,34 @@ const SidebarFooter: React.FC = () => {
     }, 200);
   };
 
-  // Only render the settings button if the user is an admin
+  // Get user initials for avatar fallback
+  const getInitials = () => {
+    if (!user?.name) return 'U';
+    return user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
   return (
-    <Footer className="px-3 py-4 border-t">
-      <SidebarMenu>
-        {isAdmin && (
-          <SidebarMenuItem>
-            <SidebarMenuButton>
-              <Button 
-                variant="ghost" 
-                className={cn(
-                  "nav-link w-full justify-start",
-                  location.pathname === "/settings" && "active"
-                )}
-                onClick={handleSettingsClick}
-              >
-                <Settings className="h-5 w-5 mr-3" />
-                <span>Settings</span>
-              </Button>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        )}
-        <SidebarMenuItem>
-          <SidebarMenuButton>
-            <Button 
-              variant="ghost" 
-              className="nav-link w-full justify-start"
-              onClick={() => setLogoutDialogOpen(true)}
-            >
-              <LogOut className="h-5 w-5 mr-3" />
-              <span>Log out</span>
-            </Button>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
+    <Footer className="border-t px-2 py-2 border-slate-200/60 dark:border-slate-700/60">
+      <div className="flex items-center justify-between p-2">
+        <div className="flex items-center gap-2">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={user?.profileUrl || ''} />
+            <AvatarFallback className="bg-primary/10 text-primary">{getInitials()}</AvatarFallback>
+          </Avatar>
+          <div className="text-sm">
+            <p className="font-medium leading-none">{user?.name || 'User'}</p>
+            <p className="text-xs text-muted-foreground">{isAdmin ? 'Administrator' : 'Standard User'}</p>
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full h-8 w-8"
+          onClick={() => setLogoutDialogOpen(true)}
+        >
+          <LogOut className="h-4 w-4" />
+        </Button>
+      </div>
 
       <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
         <AlertDialogContent>

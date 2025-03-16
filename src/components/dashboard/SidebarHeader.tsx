@@ -8,14 +8,20 @@ interface SidebarHeaderProps {
 
 const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
   return (
-    <Header className="px-6 py-5 flex items-center justify-center">
+    <Header className="px-4 py-4 flex items-center justify-start border-b border-slate-200/60 dark:border-slate-700/60">
       <div className="flex items-center">
-        <img 
-          src="/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png" 
-          alt="Network Pulse Logo" 
-          className="w-9 h-9 mr-2" 
-        />
-        <h2 className="text-xl font-semibold text-sidebar-foreground">{systemName}</h2>
+        <div className="relative">
+          <img 
+            src="/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png" 
+            alt="Network Pulse Logo" 
+            className="w-8 h-8 mr-3" 
+          />
+          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-sidebar"></div>
+        </div>
+        <div>
+          <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">Network Pulse</h2>
+          <p className="text-xs text-sidebar-foreground/60">Cybersecurity Management</p>
+        </div>
       </div>
     </Header>
   );

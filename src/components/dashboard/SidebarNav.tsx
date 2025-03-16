@@ -8,11 +8,13 @@ const SidebarNav: React.FC = () => {
   const systemName = localStorage.getItem('systemName') || 'Network Pulse Management';
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <SidebarHeader systemName={systemName} />
-      <SidebarNavItems />
+      <div className="flex-1 overflow-y-auto">
+        <SidebarNavItems />
+      </div>
       <SidebarFooter />
-    </>
+    </div>
   );
 };
 

@@ -1,56 +1,50 @@
+
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { 
   LayoutDashboard, 
-  Monitor, 
-  Map, 
-  Ticket, 
-  Briefcase, 
-  Users, 
-  HardDrive,
+  ListChecks,
   Network,
-  Shield,
-  Laptop,
+  Server, 
+  Share2,
   MapPin,
-  FileText,
+  Monitor,
+  Zap,
+  Package,
+  List,
+  Shield,
   Mail,
-  Server,
-  Globe,
-  Contact,
-  Puzzle,
+  Users,
+  FileText,
+  HardDrive,
+  Database,
+  Scroll,
   CreditCard,
-  Dock
+  Contact,
+  PuzzlePiece,
+  Settings,
 } from 'lucide-react';
-import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarAutomationButton } from '@/components/ui/sidebar';
+import { SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarGroup, SidebarGroupLabel, SidebarSeparator } from '@/components/ui/sidebar';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/context/AuthContext';
 
-export const navItems = [
+// Core System Management
+const coreSystemItems = [
   {
     title: 'Dashboard',
     icon: LayoutDashboard,
     href: '/'
   },
   {
-    title: 'RMM',
-    icon: Monitor,
-    href: '/rmm'
+    title: 'Projects',
+    icon: ListChecks,
+    href: '/projects'
   },
-  {
-    title: 'IPAM',
-    icon: Map,
-    href: '/ipam'
-  },
-  {
-    title: 'Tickets',
-    icon: Ticket,
-    href: '/tickets'
-  },
-  {
-    title: 'Containers',
-    icon: Dock,
-    href: '/containers'
-  },
+];
+
+// Network & Infrastructure Management
+const networkItems = [
   {
     title: 'Topology',
     icon: Network,
@@ -58,34 +52,47 @@ export const navItems = [
   },
   {
     title: 'N.E.S.T.',
-    icon: MapPin,
+    icon: Server,
     href: '/nest'
   },
   {
     title: 'SD-WAN',
-    icon: Globe,
+    icon: Share2,
     href: '/sdwan'
   },
   {
-    title: 'Projects',
-    icon: Briefcase,
-    href: '/projects'
+    title: 'IPAM',
+    icon: MapPin,
+    href: '/ipam'
+  },
+];
+
+// IT Operations & Automation
+const operationsItems = [
+  {
+    title: 'RMM',
+    icon: Monitor,
+    href: '/rmm'
   },
   {
-    title: 'Identity',
-    icon: Users,
-    href: '/identity'
+    title: 'Automation Panel',
+    icon: Zap,
+    href: '/automation'
   },
   {
-    title: 'Integrations',
-    icon: Puzzle,
-    href: '/integrations'
+    title: 'Containers',
+    icon: Package,
+    href: '/containers'
   },
   {
-    title: 'Storage',
-    icon: HardDrive,
-    href: '/storage'
+    title: 'Services',
+    icon: List,
+    href: '/tickets'
   },
+];
+
+// Security & Compliance
+const securityItems = [
   {
     title: 'Security',
     icon: Shield,
@@ -97,66 +104,151 @@ export const navItems = [
     href: '/email-security'
   },
   {
+    title: 'Identity',
+    icon: Users,
+    href: '/identity'
+  },
+  {
+    title: 'Logging & Audit',
+    icon: FileText,
+    href: '/sdms'
+  },
+];
+
+// IT Assets & Storage
+const assetsItems = [
+  {
     title: 'Asset Management',
-    icon: Server,
+    icon: HardDrive,
     href: '/asset-management'
   },
   {
-    title: 'Workforce EMS',
-    icon: Laptop,
-    href: '/workforce'
+    title: 'Storage',
+    icon: Database,
+    href: '/storage'
   },
   {
     title: 'SDMS',
-    icon: FileText,
+    icon: Scroll,
     href: '/sdms'
+  },
+];
+
+// Business & Administration
+const adminItems = [
+  {
+    title: 'Billing',
+    icon: CreditCard,
+    href: '/billing',
+    adminOnly: true
   },
   {
     title: 'Contacts',
     icon: Contact,
     href: '/contacts'
-  }
-];
-
-export const adminNavItems = [
+  },
   {
-    title: 'Billing',
-    icon: CreditCard,
-    href: '/billing'
-  }
+    title: 'Integrations',
+    icon: PuzzlePiece,
+    href: '/integrations'
+  },
+  {
+    title: 'Settings',
+    icon: Settings,
+    href: '/settings',
+    adminOnly: true
+  },
 ];
 
 interface SidebarNavItemsProps {
   className?: string;
 }
 
-const SidebarNavItems: React.FC<SidebarNavItemsProps> = ({ className }) => {
+const NavGroup = ({ 
+  title, 
+  items, 
+  isAdmin = false 
+}: { 
+  title: string; 
+  items: any[]; 
+  isAdmin?: boolean;
+}) => {
   const location = useLocation();
-  const { isAdmin } = useAuth();
-  
-  const allNavItems = [...navItems, ...(isAdmin ? adminNavItems : [])];
   
   return (
-    <SidebarContent className={cn("px-3 py-4", className)}>
+    <SidebarGroup>
+      <SidebarGroupLabel className="text-xs font-semibold tracking-wide uppercase text-sidebar-foreground/60 px-1">
+        {title}
+      </SidebarGroupLabel>
       <SidebarMenu>
-        {allNavItems.map((item) => (
-          <SidebarMenuItem key={item.href}>
-            <SidebarMenuButton asChild>
-              <Link 
-                to={item.href} 
-                className={cn(
-                  "nav-link",
-                  location.pathname === item.href && "active"
-                )}
-              >
-                <item.icon className="h-5 w-5 mr-3" />
-                <span>{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
-        <SidebarAutomationButton />
+        {items.map((item) => {
+          // Skip items that require admin if user is not admin
+          if (item.adminOnly && !isAdmin) return null;
+          
+          const isActive = location.pathname === item.href;
+          
+          return (
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton asChild isActive={isActive}>
+                <Link 
+                  to={item.href} 
+                  className={cn(
+                    "nav-link text-sm flex items-center",
+                    isActive && "active"
+                  )}
+                >
+                  <item.icon className="h-4 w-4 mr-3" />
+                  <span className="flex-1">{item.title}</span>
+                  {item.adminOnly && (
+                    <Badge 
+                      variant="outline" 
+                      className="ml-2 text-[0.6rem] py-0 h-4 px-1 bg-slate-100 dark:bg-slate-800"
+                    >
+                      Admin
+                    </Badge>
+                  )}
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          );
+        })}
       </SidebarMenu>
+    </SidebarGroup>
+  );
+};
+
+const SidebarNavItems: React.FC<SidebarNavItemsProps> = ({ className }) => {
+  const { isAdmin } = useAuth();
+  
+  return (
+    <SidebarContent className={cn("px-2 py-2", className)}>
+      {/* Core System Management */}
+      <NavGroup title="Core System" items={coreSystemItems} isAdmin={isAdmin} />
+      
+      <SidebarSeparator className="my-1" />
+      
+      {/* Network & Infrastructure Management */}
+      <NavGroup title="Network & Infrastructure" items={networkItems} isAdmin={isAdmin} />
+      
+      <SidebarSeparator className="my-1" />
+      
+      {/* IT Operations & Automation */}
+      <NavGroup title="IT Operations" items={operationsItems} isAdmin={isAdmin} />
+      
+      <SidebarSeparator className="my-1" />
+      
+      {/* Security & Compliance */}
+      <NavGroup title="Security & Compliance" items={securityItems} isAdmin={isAdmin} />
+      
+      <SidebarSeparator className="my-1" />
+      
+      {/* IT Assets & Storage */}
+      <NavGroup title="IT Assets & Storage" items={assetsItems} isAdmin={isAdmin} />
+      
+      <SidebarSeparator className="my-1" />
+      
+      {/* Business & Administration */}
+      <NavGroup title="Business & Admin" items={adminItems} isAdmin={isAdmin} />
     </SidebarContent>
   );
 };

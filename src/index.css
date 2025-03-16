@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -130,10 +131,31 @@
   }
 
   .nav-link {
-    @apply relative px-4 py-2 rounded-md text-muted-foreground font-medium transition-colors hover:text-foreground hover:bg-accent focus:outline-none focus:bg-accent;
+    @apply relative px-2.5 py-1.5 rounded-md text-muted-foreground font-medium text-sm transition-colors hover:text-foreground hover:bg-slate-100/80 dark:hover:bg-slate-800/60 focus:outline-none focus:bg-accent;
   }
 
   .nav-link.active {
-    @apply text-foreground bg-accent;
+    @apply text-primary bg-primary/5 font-semibold shadow-sm;
+  }
+  
+  /* Enterprise sidebar styling */
+  .sidebar-category-label {
+    @apply text-xs uppercase tracking-wider font-semibold text-muted-foreground/70 px-3 pt-3 pb-1;
+  }
+  
+  .sidebar-item {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:bg-accent/50 transition-colors;
+  }
+  
+  .sidebar-item.active {
+    @apply bg-primary/10 text-primary font-medium;
+  }
+  
+  .sidebar-divider {
+    @apply my-2 border-t border-slate-200/60 dark:border-slate-700/60;
+  }
+  
+  .admin-badge {
+    @apply text-[0.6rem] py-0 px-1.5 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-sm font-medium;
   }
 }
