@@ -35,6 +35,12 @@ interface TopoJSON {
   arcs: any[][];
 }
 
+// Type for GeoJSON Feature Collection
+interface GeoJSONFeatureCollection {
+  type: string;
+  features: any[];
+}
+
 const ThreatMap: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   
@@ -69,7 +75,7 @@ const ThreatMap: React.FC = () => {
       .then((world) => {
         if (!world) return;
         
-        // Properly type the topojson conversion
+        // Convert topojson to geojson with proper typing
         const countries = svg.append("g")
           .selectAll("path")
           .data(topojson.feature(world, world.objects.countries).features as any[])
