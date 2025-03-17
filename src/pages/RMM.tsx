@@ -29,8 +29,8 @@ import {
   Legend
 } from 'recharts';
 import { useTheme } from '@/context/ThemeContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-// Sample data
 const devices: Device[] = [
   {
     id: '1',
@@ -244,7 +244,6 @@ const devices: Device[] = [
   }
 ];
 
-// Performance trend data
 const performanceData = [
   { name: '8:00', cpu: 32, memory: 45, network: 12 },
   { name: '10:00', cpu: 40, memory: 50, network: 14 },
@@ -254,7 +253,6 @@ const performanceData = [
   { name: '18:00', cpu: 42, memory: 55, network: 16 },
 ];
 
-// OS distribution data
 const osDistributionData = [
   { name: 'Windows', value: 45 },
   { name: 'Linux', value: 30 },
@@ -262,7 +260,6 @@ const osDistributionData = [
   { name: 'Other', value: 5 },
 ];
 
-// Issue severity data
 const issueSeverityData = [
   { name: 'Critical', value: 5, color: '#ef4444' },
   { name: 'Warning', value: 12, color: '#f59e0b' },
@@ -275,6 +272,7 @@ const RMM = () => {
   const [filteredDevices, setFilteredDevices] = useState<Device[]>(devices);
   const [activeTab, setActiveTab] = useState('overview');
   const { isDarkMode } = useTheme();
+  const isMobile = useIsMobile();
   
   const handleDeviceSelect = (device: Device) => {
     setSelectedDevice(device);
@@ -312,7 +310,6 @@ const RMM = () => {
     toast.info("Preparing remote reboot options...");
   };
 
-  // Calculate device metrics
   const deviceMetrics = {
     totalDevices: devices.length,
     onlineDevices: devices.filter(d => d.status === 'online').length,
@@ -324,7 +321,6 @@ const RMM = () => {
     connectedSystems: 18
   };
 
-  // Chart colors that work in both light and dark mode
   const chartColors = {
     cpu: isDarkMode ? "#3B82F6" : "#3B82F6",
     memory: isDarkMode ? "#10B981" : "#10B981",
@@ -361,7 +357,6 @@ const RMM = () => {
             <DeviceFilters onFilterChange={handleFilterChange} />
           </div>
 
-          {/* System Health Overview */}
           <div className="mb-6">
             <StatusCardGrid metrics={deviceMetrics} onClick={(section) => {
               if (section === 'devices') {
@@ -370,7 +365,6 @@ const RMM = () => {
             }} />
           </div>
 
-          {/* Quick Action Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <Card className="hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 flex flex-col items-center text-center">
@@ -404,18 +398,15 @@ const RMM = () => {
             </Card>
           </div>
 
-          {/* Main Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 mb-4">
-              <TabsTrigger value="overview">Dashboard Overview</TabsTrigger>
-              <TabsTrigger value="devices">Device Management</TabsTrigger>
-              <TabsTrigger value="analytics">Performance Analytics</TabsTrigger>
+            <TabsList className="w-full overflow-x-auto flex justify-start space-x-1 p-1 mb-4">
+              <TabsTrigger value="overview" className="flex-shrink-0">{isMobile ? 'Overview' : 'Dashboard Overview'}</TabsTrigger>
+              <TabsTrigger value="devices" className="flex-shrink-0">{isMobile ? 'Devices' : 'Device Management'}</TabsTrigger>
+              <TabsTrigger value="analytics" className="flex-shrink-0">{isMobile ? 'Analytics' : 'Performance Analytics'}</TabsTrigger>
             </TabsList>
 
-            {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Performance Overview */}
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -473,7 +464,6 @@ const RMM = () => {
                   </CardContent>
                 </Card>
 
-                {/* Device Distribution */}
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -538,7 +528,6 @@ const RMM = () => {
                 </Card>
               </div>
               
-              {/* Recent Device Status Changes */}
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center gap-2">
@@ -581,7 +570,6 @@ const RMM = () => {
               </Card>
             </TabsContent>
 
-            {/* Devices Tab */}
             <TabsContent value="devices">
               <DeviceList 
                 devices={filteredDevices} 
@@ -589,7 +577,6 @@ const RMM = () => {
               />
             </TabsContent>
 
-            {/* Analytics Tab */}
             <TabsContent value="analytics">
               <div className="grid grid-cols-1 gap-6">
                 <Card>
