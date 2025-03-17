@@ -1,7 +1,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useSidebar, SIDEBAR_WIDTH_MOBILE } from "./ui/sidebar/sidebar-base"
+import { useSidebar, SIDEBAR_WIDTH_MOBILE } from "@/components/ui/sidebar/sidebar-base"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 
 const Sidebar = React.forwardRef<
