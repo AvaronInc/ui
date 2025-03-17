@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
@@ -111,7 +110,8 @@ const sampleProjects: Project[] = [
     progressPercentage: 40,
     deadline: '2024-03-01T00:00:00.000Z',
     createdAt: '2023-11-01T00:00:00.000Z',
-    updatedAt: '2024-01-05T00:00:00.000Z'
+    updatedAt: '2024-01-05T00:00:00.000Z',
+    complexity: 'large'
   },
   {
     id: '2',
@@ -161,7 +161,8 @@ const sampleProjects: Project[] = [
     progressPercentage: 0,
     deadline: '2024-05-30T00:00:00.000Z',
     createdAt: '2024-01-15T00:00:00.000Z',
-    updatedAt: '2024-01-15T00:00:00.000Z'
+    updatedAt: '2024-01-15T00:00:00.000Z',
+    complexity: 'medium'
   },
   {
     id: '3',
@@ -229,7 +230,8 @@ const sampleProjects: Project[] = [
     progressPercentage: 100,
     deadline: '2023-12-31T00:00:00.000Z',
     createdAt: '2023-09-01T00:00:00.000Z',
-    updatedAt: '2023-12-20T00:00:00.000Z'
+    updatedAt: '2023-12-20T00:00:00.000Z',
+    complexity: 'small'
   }
 ];
 
@@ -555,4 +557,3 @@ export default Projects;
 
 function cn(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
-}
