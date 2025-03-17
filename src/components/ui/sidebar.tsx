@@ -1,17 +1,44 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { useSidebar, SIDEBAR_WIDTH_MOBILE } from "./ui/sidebar/sidebar-base"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col h-full", className)}
-    {...props}
-  />
-))
+>(({ className, children, ...props }, ref) => {
+  const { isMobile, openMobile, setOpenMobile } = useSidebar()
+
+  if (isMobile) {
+    return (
+      <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+        <SheetContent
+          data-sidebar="sidebar"
+          data-mobile="true"
+          className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground"
+          style={{ "--sidebar-width": SIDEBAR_WIDTH_MOBILE } as React.CSSProperties}
+          side="left"
+          onPointerDownOutside={() => setOpenMobile(false)}
+        >
+          <div className="flex h-full w-full flex-col" {...props}>
+            {children}
+          </div>
+        </SheetContent>
+      </Sheet>
+    )
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={cn("flex flex-col h-full", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+})
 Sidebar.displayName = "Sidebar"
 
 const SidebarHeader = React.forwardRef<

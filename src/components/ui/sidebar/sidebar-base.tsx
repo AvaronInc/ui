@@ -82,7 +82,9 @@ const SidebarProvider = React.forwardRef<
   ) => {
     const isMobile = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
-    const [_open, _setOpen] = React.useState(defaultOpen)
+    // In mobile, we should start with sidebar closed
+    const effectiveDefaultOpen = isMobile ? false : defaultOpen
+    const [_open, _setOpen] = React.useState(effectiveDefaultOpen)
     const open = openProp ?? _open
     
     const setOpen = React.useCallback(
@@ -100,8 +102,8 @@ const SidebarProvider = React.forwardRef<
 
     const toggleSidebar = React.useCallback(() => {
       return isMobile
-        ? setOpenMobile((open) => !open)
-        : setOpen((open) => !open)
+        ? setOpenMobile((prevOpenMobile) => !prevOpenMobile)
+        : setOpen((prevOpen) => !prevOpen)
     }, [isMobile, setOpen, setOpenMobile])
 
     React.useEffect(() => {
