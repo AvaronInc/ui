@@ -1,16 +1,19 @@
 
 import React from 'react';
-import { ProjectFilter, ProjectStatus } from '@/types/projects';
+import { ProjectFilter, ProjectStatus, ProjectComplexity } from '@/types/projects';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { 
+  AlertOctagon,
+  AlertTriangle,
   CheckCircle, 
   Clock, 
   Filter, 
   PlayCircle, 
   Plus, 
   Search, 
-  X
+  X,
+  Gauge
 } from 'lucide-react';
 import { 
   Select, 
@@ -19,6 +22,8 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 interface ProjectFiltersProps {
   filter: ProjectFilter;
@@ -51,15 +56,36 @@ export const ProjectFilters = ({
     });
   };
 
+  const handleComplexityChange = (value: string) => {
+    onFilterChange({ 
+      ...filter, 
+      complexity: value as ProjectComplexity | 'all'
+    });
+  };
+
+  const handleAtRiskToggle = (checked: boolean) => {
+    onFilterChange({
+      ...filter,
+      showAtRisk: checked
+    });
+  };
+
   const handleResetFilters = () => {
     onFilterChange({
       status: 'all',
       teamId: 'all',
-      searchQuery: ''
+      searchQuery: '',
+      complexity: 'all',
+      showAtRisk: false
     });
   };
 
-  const isFiltersActive = filter.status !== 'all' || filter.teamId !== 'all' || !!filter.searchQuery;
+  const isFiltersActive = 
+    filter.status !== 'all' || 
+    filter.teamId !== 'all' || 
+    !!filter.searchQuery || 
+    filter.complexity !== 'all' ||
+    filter.showAtRisk;
 
   return (
     <div className="space-y-4">
@@ -98,6 +124,18 @@ export const ProjectFilters = ({
                   In Progress
                 </span>
               </SelectItem>
+              <SelectItem value="at-risk">
+                <span className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+                  At Risk
+                </span>
+              </SelectItem>
+              <SelectItem value="blocked">
+                <span className="flex items-center gap-2">
+                  <AlertOctagon className="h-4 w-4 text-red-500" />
+                  Blocked
+                </span>
+              </SelectItem>
               <SelectItem value="completed">
                 <span className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
@@ -120,6 +158,33 @@ export const ProjectFilters = ({
               ))}
             </SelectContent>
           </Select>
+          
+          <Select value={filter.complexity || 'all'} onValueChange={handleComplexityChange}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Complexity" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                <span className="flex items-center gap-2">
+                  <Gauge className="h-4 w-4" />
+                  All Complexity
+                </span>
+              </SelectItem>
+              <SelectItem value="small">Small</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="large">Large</SelectItem>
+              <SelectItem value="critical">Critical</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <div className="flex items-center gap-2 px-2">
+            <Switch 
+              id="at-risk" 
+              checked={filter.showAtRisk}
+              onCheckedChange={handleAtRiskToggle}
+            />
+            <Label htmlFor="at-risk" className="text-sm cursor-pointer">At Risk Only</Label>
+          </div>
           
           {isFiltersActive && (
             <Button 

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
 import { 
@@ -10,13 +11,23 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, Archive } from 'lucide-react';
-import { ProjectFilter, Project, Task } from '@/types/projects';
+import { ArrowUpRight, Archive, BarChart, Calendar, GanttChart } from 'lucide-react';
+import { 
+  ProjectFilter, 
+  Project, 
+  Task, 
+  ProjectStatistics, 
+  AIProjectSuggestion 
+} from '@/types/projects';
 import ProjectList from '@/components/projects/ProjectList';
 import ProjectDetailPanel from '@/components/projects/ProjectDetailPanel';
 import ProjectFilters from '@/components/projects/ProjectFilters';
+import ProjectStatCards from '@/components/projects/ProjectStatCards';
+import AIProjectPanel from '@/components/projects/AIProjectPanel';
 import { useToast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+// This is just sample data - in a real application, this would come from an API
 const sampleProjects: Project[] = [
   {
     id: '1',
@@ -222,15 +233,67 @@ const sampleProjects: Project[] = [
   }
 ];
 
+// Sample project statistics
+const projectStatistics: ProjectStatistics = {
+  activeProjects: 3,
+  atRiskProjects: 1,
+  upcomingDeadlines: 2,
+  completedProjects: 1,
+  trendDirection: 'up',
+  trendPercentage: 15
+};
+
+// Sample AI suggestions
+const aiSuggestions: AIProjectSuggestion[] = [
+  {
+    id: 'sugg-1',
+    type: 'deadline',
+    title: 'Network Infrastructure Upgrade at risk',
+    description: 'This project is delayed due to dependency issues with task "Rewire Server Room". Consider adjusting the timeline.',
+    projectId: '1',
+    actionType: 'adjust-timeline',
+    severity: 'high'
+  },
+  {
+    id: 'sugg-2',
+    type: 'resource',
+    title: 'Team members overloaded',
+    description: 'John Smith is assigned to 3 critical tasks with overlapping deadlines. Consider reassigning some tasks.',
+    projectId: '1',
+    actionType: 'reassign-tasks',
+    severity: 'medium'
+  },
+  {
+    id: 'sugg-3',
+    type: 'report',
+    title: 'Office 365 Migration completed',
+    description: 'This project is now 100% complete. Would you like to generate a completion report?',
+    projectId: '3',
+    actionType: 'generate-report',
+    severity: 'low'
+  }
+];
+
 const Projects = () => {
   const { toast } = useToast();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [projects, setProjects] = useState<Project[]>(sampleProjects);
+  const [projects, setProjects] = useState<Project[]>(() => {
+    // Add AI risk scores and complexity to sample data
+    return sampleProjects.map(project => ({
+      ...project,
+      complexity: (project.id === '1' ? 'large' : project.id === '2' ? 'medium' : 'small') as any,
+      aiRiskScore: project.id === '1' ? 75 : project.id === '2' ? 25 : 10,
+      isAtRisk: project.id === '1'
+    }));
+  });
   const [filter, setFilter] = useState<ProjectFilter>({
     status: 'all',
     teamId: 'all',
-    searchQuery: ''
+    searchQuery: '',
+    complexity: 'all',
+    showAtRisk: false
   });
+  const [viewMode, setViewMode] = useState<'list' | 'gantt'>('list');
 
   const teams = Array.from(
     new Set(projects.map(project => project.team.id))
@@ -314,12 +377,27 @@ const Projects = () => {
     });
   };
 
+  const handleAISuggestionAction = (suggestion: AIProjectSuggestion) => {
+    toast({
+      title: "AI Suggestion Action",
+      description: `Applied "${suggestion.title}" action.`,
+    });
+  };
+
   const filteredProjects = projects.filter(project => {
     if (filter.status && filter.status !== 'all' && project.status !== filter.status) {
       return false;
     }
     
     if (filter.teamId && filter.teamId !== 'all' && project.team.id !== filter.teamId) {
+      return false;
+    }
+    
+    if (filter.complexity && filter.complexity !== 'all' && project.complexity !== filter.complexity) {
+      return false;
+    }
+    
+    if (filter.showAtRisk && !project.isAtRisk) {
       return false;
     }
     
@@ -355,7 +433,24 @@ const Projects = () => {
               <h1 className="text-2xl font-bold mt-2">Projects</h1>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={() => setViewMode(viewMode === 'list' ? 'gantt' : 'list')}
+              >
+                {viewMode === 'list' ? (
+                  <>
+                    <GanttChart className="h-4 w-4" />
+                    Show Gantt
+                  </>
+                ) : (
+                  <>
+                    <BarChart className="h-4 w-4" />
+                    Show List
+                  </>
+                )}
+              </Button>
               <Button 
                 variant="outline" 
                 className="gap-2"
@@ -376,6 +471,11 @@ const Projects = () => {
             </div>
           </div>
           
+          <ProjectStatCards 
+            statistics={projectStatistics}
+            aiSuggestions={aiSuggestions} 
+          />
+          
           <ProjectFilters 
             filter={filter} 
             onFilterChange={handleFilterChange} 
@@ -383,27 +483,68 @@ const Projects = () => {
             onNewProject={handleNewProject}
           />
           
-          <div className="flex-1 overflow-hidden grid grid-cols-1 gap-6" style={{ 
-            gridTemplateColumns: selectedProject ? '3fr 1fr' : '1fr' 
-          }}>
-            <div className="overflow-auto">
-              <ProjectList 
-                projects={filteredProjects} 
-                onProjectSelect={handleProjectSelect}
-                selectedProject={selectedProject}
-              />
-            </div>
+          <Tabs defaultValue="projects" className="flex-1">
+            <TabsList className="mb-4">
+              <TabsTrigger value="projects" className="flex items-center gap-2">
+                <BarChart className="h-4 w-4" />
+                All Projects
+              </TabsTrigger>
+              <TabsTrigger value="timeline" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Timeline
+              </TabsTrigger>
+            </TabsList>
             
-            {selectedProject && (
-              <div className="border rounded-lg bg-card overflow-hidden">
-                <ProjectDetailPanel 
-                  project={selectedProject} 
-                  onClose={handleClosePanel}
-                  onTaskToggle={handleTaskToggle}
-                />
+            <TabsContent value="projects" className="flex-1 h-full">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+                <div className={cn(
+                  "overflow-auto",
+                  selectedProject ? "lg:col-span-3" : "lg:col-span-4"
+                )}>
+                  {viewMode === 'list' ? (
+                    <ProjectList 
+                      projects={filteredProjects} 
+                      onProjectSelect={handleProjectSelect}
+                      selectedProject={selectedProject}
+                    />
+                  ) : (
+                    <div className="border rounded-lg bg-card p-6 h-64 flex items-center justify-center">
+                      <p className="text-muted-foreground">
+                        Gantt chart view would be implemented here
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                {selectedProject && (
+                  <div className="space-y-4 lg:col-span-1">
+                    <div className="border rounded-lg bg-card overflow-hidden h-[calc(50%-0.5rem)]">
+                      <ProjectDetailPanel 
+                        project={selectedProject} 
+                        onClose={handleClosePanel}
+                        onTaskToggle={handleTaskToggle}
+                      />
+                    </div>
+                    <div className="h-[calc(50%-0.5rem)]">
+                      <AIProjectPanel 
+                        suggestions={aiSuggestions}
+                        onAction={handleAISuggestionAction}
+                        selectedProject={selectedProject}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </TabsContent>
+            
+            <TabsContent value="timeline">
+              <div className="border rounded-lg bg-card p-6 h-64 flex items-center justify-center">
+                <p className="text-muted-foreground">
+                  Project timeline view would be implemented here
+                </p>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </DashboardLayout>
     </PageTransition>
@@ -411,3 +552,7 @@ const Projects = () => {
 };
 
 export default Projects;
+
+function cn(...classes: any[]) {
+  return classes.filter(Boolean).join(' ');
+}
