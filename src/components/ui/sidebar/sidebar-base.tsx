@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { VariantProps } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
@@ -117,6 +118,18 @@ const SidebarProvider = React.forwardRef<
       window.addEventListener("keydown", handleKeyDown)
       return () => window.removeEventListener("keydown", handleKeyDown)
     }, [toggleSidebar])
+
+    // Close mobile sidebar on route change
+    React.useEffect(() => {
+      const handleRouteChange = () => {
+        if (isMobile && openMobile) {
+          setOpenMobile(false)
+        }
+      }
+      
+      window.addEventListener('popstate', handleRouteChange)
+      return () => window.removeEventListener('popstate', handleRouteChange)
+    }, [isMobile, openMobile])
 
     const state = open ? "expanded" : "collapsed"
 

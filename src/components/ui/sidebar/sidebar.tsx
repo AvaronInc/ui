@@ -2,7 +2,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { useSidebar, SIDEBAR_WIDTH_MOBILE } from "./sidebar-base"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,
@@ -42,17 +42,18 @@ const Sidebar = React.forwardRef<
 
     if (isMobile) {
       return (
-        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+        <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground"
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
               } as React.CSSProperties
             }
             side={side}
+            onPointerDownOutside={() => setOpenMobile(false)}
           >
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
