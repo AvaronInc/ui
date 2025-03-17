@@ -50,7 +50,7 @@ const EndpointDetailPanel = ({
   
   return (
     <Sheet open={!!device} onOpenChange={onClose}>
-      <SheetContent className="max-w-4xl overflow-y-auto">
+      <SheetContent className="w-full md:max-w-4xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex justify-between items-center">
             <span className="flex items-center gap-2">

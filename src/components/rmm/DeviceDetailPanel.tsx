@@ -94,7 +94,7 @@ export const DeviceDetailPanel = ({ device, isOpen, onClose }: DeviceDetailPanel
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="sm:max-w-xl overflow-y-auto">
+      <SheetContent className="w-full md:max-w-xl overflow-y-auto">
         <SheetHeader className="space-y-3">
           <SheetTitle className="flex items-center justify-between">
             <span>{device.name}</span>
