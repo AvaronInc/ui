@@ -1,6 +1,6 @@
 
 import { NavItem } from './types';
-import { Ticket, GitMerge, FolderCog, ClipboardList } from 'lucide-react';
+import { Ticket, GitMerge, FolderCog, ClipboardList, BookText } from 'lucide-react';
 
 export const operationsItems: NavItem[] = [
   {
@@ -22,5 +22,10 @@ export const operationsItems: NavItem[] = [
     title: 'Change Management',
     icon: ClipboardList,
     href: '/change-management',
+  },
+  {
+    title: 'SDMS',
+    icon: BookText,
+    href: '/sdms',
   },
 ];
