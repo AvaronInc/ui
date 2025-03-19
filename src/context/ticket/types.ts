@@ -97,3 +97,13 @@ export interface TicketContextProps {
   }) => void;
   refreshTickets: (forceMock?: boolean) => Promise<void>;
 }
+
+// Re-export types from the main types file to make them available to other modules
+export type { 
+  Ticket, 
+  TicketFilter, 
+  TicketStatus, 
+  TicketStatistics,
+  AITicketSuggestion,
+  TicketPriority 
+};
