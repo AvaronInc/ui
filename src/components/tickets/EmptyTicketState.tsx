@@ -23,8 +23,9 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
     console.log('💡 User clicked Refresh Tickets button');
     setIsRefreshing(true);
     
-    toast("Refreshing Tickets", {
-      description: "Attempting to reload ticket data..."
+    toast("Using Mock Data", {
+      description: "Loading development data since database connection failed",
+      duration: 3000
     });
     
     // Add a slight delay to give visual feedback
@@ -34,11 +35,17 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
     }, 800);
   };
 
+  const isCorsError = error && (error.includes('CORS') || error.includes('network'));
+  
   const errorDetails = error ? (
     <div className="text-xs text-left mt-4 bg-red-50 p-3 rounded border border-red-200">
       <p className="font-medium mb-1">Technical details:</p>
       <code className="block whitespace-pre-wrap text-red-700 bg-red-100 p-2 rounded">{error}</code>
-      <p className="mt-2">This error has been logged for our technical team to investigate.</p>
+      <p className="mt-2">
+        {isCorsError 
+          ? "This is a CORS error that often happens in development. Use mock data instead." 
+          : "This error has been logged for our technical team to investigate."}
+      </p>
     </div>
   ) : null;
 
@@ -57,7 +64,7 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
       </h3>
       <p className="text-muted-foreground mb-4">
         {error 
-          ? 'There was a problem loading tickets. This might be due to connection issues or CORS restrictions.' 
+          ? 'There was a problem loading tickets due to a CORS issue or network connection problem.' 
           : 'There are no tickets matching your current filters or no tickets have been created yet.'}
       </p>
       <div className="flex flex-col items-center gap-2">
@@ -67,11 +74,11 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
           disabled={isRefreshing}
         >
           <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-          {isRefreshing ? 'Refreshing...' : 'Refresh Tickets'}
+          {isRefreshing ? 'Loading Mock Data...' : 'Use Mock Data Instead'}
         </Button>
         <p className="text-xs text-muted-foreground max-w-md">
           {error 
-            ? 'If refreshing doesn\'t work, try checking your network connection or clearing your browser cache.' 
+            ? 'In development mode, you can use mock data instead of connecting to the database.' 
             : 'If this problem persists, check your database connection or contact support.'}
         </p>
         {errorDetails}

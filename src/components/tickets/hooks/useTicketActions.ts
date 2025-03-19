@@ -62,25 +62,19 @@ export const useTicketActions = () => {
           // This allows the component to show an error while still technically "loading"
           setIsInitialLoad(false);
           
-          // In development mode, after a timeout + delay, generate mock data
-          if (import.meta.env.DEV && refreshAttempts > 0) {
-            console.log('💡 DEV MODE: Preparing to load mock data after timeout');
-            if (mockTimer) clearTimeout(mockTimer);
+          // In development mode, after a timeout, generate mock data immediately
+          if (import.meta.env.DEV) {
+            console.log('💡 DEV MODE: Loading mock data after timeout');
             
-            const timer = setTimeout(() => {
-              console.log('💡 DEV MODE: Loading mock data now');
-              toast("Using mock data", {
-                description: "Could not connect to database, using mock data instead",
-                duration: 5000
-              });
-              // This will update the tickets with mock data in development mode
-              refreshTickets();
-            }, 2000);
+            toast("Using mock data", {
+              description: "Could not connect to database, using mock data instead",
+              duration: 5000
+            });
             
-            setMockTimer(timer);
+            refreshTickets();
           }
         }
-      }, 12000); // Setting timeout to 12 seconds
+      }, 8000); // Shorter timeout (8 seconds) to provide faster feedback
       
       setLoadingTimeout(timeout);
     } else if (!isLoading && loadingTimeout) {
@@ -117,7 +111,7 @@ export const useTicketActions = () => {
     }
   }, [isLoading, tickets, isInitialLoad]);
 
-  // Function for handling other ticket actions
+  // Function for handling ticket actions
   const handleEscalateTicket = (ticketId: string) => {
     handleStatusChange(ticketId, 'escalated');
     toast("Ticket Escalated", {
@@ -171,8 +165,8 @@ export const useTicketActions = () => {
       setLoadError(null);
       setRefreshAttempts(prev => prev + 1);
       
-      toast("Refreshing Tickets", {
-        description: "Getting the latest ticket data...",
+      toast("Using Mock Data", {
+        description: "Loading development data...",
         duration: 3000
       });
       
@@ -187,12 +181,19 @@ export const useTicketActions = () => {
         setMockTimer(null);
       }
       
-      await refreshTickets();
-      
-      toast("Refreshed", {
-        description: "Ticket data has been refreshed",
-        duration: 3000
-      });
+      // In development mode, always use mock data right away
+      if (import.meta.env.DEV) {
+        console.log('💡 DEV MODE: Using mock data immediately');
+        await refreshTickets();
+        
+        toast("Mock Data Loaded", {
+          description: "Using local development data",
+          duration: 3000
+        });
+      } else {
+        // In production, try normal refresh
+        await refreshTickets();
+      }
     } catch (error) {
       console.error("Error refreshing tickets:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
@@ -209,6 +210,13 @@ export const useTicketActions = () => {
           description: "Using local mock data instead of database",
           duration: 3000
         });
+        
+        // Try again with mock data after a short delay
+        const timer = setTimeout(() => {
+          refreshTickets();
+        }, 1000);
+        
+        setMockTimer(timer);
       }
       
       setIsInitialLoad(false); // Reset if there's an error
@@ -233,19 +241,22 @@ export const useTicketActions = () => {
     }
     
     toast("Loading Canceled", {
-      description: "You canceled the loading process. Try refreshing again in a moment."
+      description: "Switching to mock data..."
     });
     
-    // Automatically attempt to use mock data in dev mode after cancellation
+    // Automatically use mock data in dev mode after cancellation
     if (import.meta.env.DEV) {
+      console.log('💡 DEV MODE: Using mock data after cancellation');
+      
+      // Small delay to let the UI update
       const timer = setTimeout(() => {
-        console.log('💡 DEV MODE: Using mock data after cancellation');
         toast("Using mock data", {
           description: "Using local mock data instead of database",
           duration: 3000
         });
+        
         refreshTickets();
-      }, 1500);
+      }, 500);
       
       setMockTimer(timer);
     }

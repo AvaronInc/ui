@@ -43,8 +43,9 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
     setHasTriedRefresh(true);
     setIsRefreshing(true);
     
-    toast("Refreshing...", {
-      description: "Attempting to load tickets again. Please wait..."
+    toast("Canceling Current Load", {
+      description: "Switching to mock data for development...",
+      duration: 3000
     });
     
     // Simulate a delay before calling the actual cancel function
@@ -81,9 +82,9 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
               <div className="text-red-600">
                 <p className="flex items-center justify-center gap-2 mb-2">
                   <AlertCircle className="h-4 w-4" />
-                  Loading is taking longer than expected. There might be an issue with the connection.
+                  Loading is taking longer than expected
                 </p>
-                <p>There might be an issue with the connection.</p>
+                <p>There might be a CORS issue or network connection problem</p>
               </div>
             ) : (
               <p className="text-amber-600">This is taking longer than expected.</p>
@@ -98,18 +99,17 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
                 disabled={isRefreshing}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                {isRefreshing ? "Trying Again..." : (hasTriedRefresh ? "Try Again Once More" : "Try Again Once More")}
+                {isRefreshing ? "Switching to Mock Data..." : "Use Mock Data Instead"}
               </Button>
             )}
             
             {showSeriousWarning && (
               <div className="mt-3 space-y-2 text-xs text-muted-foreground">
-                <p>If this persists, possible solutions:</p>
+                <p>Error details:</p>
                 <ul className="list-disc list-inside">
-                  <li>Check your network connection</li>
-                  <li>Ensure the database is online</li>
-                  <li>Clear your browser cache</li>
-                  <li>Contact support if issues continue</li>
+                  <li>A CORS error may be preventing data from loading</li>
+                  <li>The application is running in development mode and can use mock data</li>
+                  <li>Click the button above to use mock data instead</li>
                 </ul>
               </div>
             )}
