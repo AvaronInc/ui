@@ -3,7 +3,7 @@ import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const TicketLoadingState: React.FC = () => {
-  console.log('Rendering TicketLoadingState component');
+  console.log('💡 Rendering TicketLoadingState component');
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">

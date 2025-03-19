@@ -18,11 +18,11 @@ const TicketsPage = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        console.log('TicketsPage: Checking authentication status...');
+        console.log('💡 TicketsPage: Checking authentication status...');
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('TicketsPage: Error checking authentication:', error);
+          console.error('💡 TicketsPage: Error checking authentication:', error);
           toast("Authentication Error", {
             description: "Please sign in again"
           });
@@ -31,21 +31,28 @@ const TicketsPage = () => {
         }
         
         if (!data.session) {
-          console.log('TicketsPage: No active session found, redirecting to login');
+          console.log('💡 TicketsPage: No active session found, redirecting to login');
+          // In development mode, we'll bypass authentication for easier testing
+          if (import.meta.env.DEV) {
+            console.log('💡 TicketsPage: Development mode, bypassing authentication check');
+            setAuthenticated(true);
+            setLoading(false);
+            return;
+          }
           navigate('/login');
         } else {
-          console.log('TicketsPage: User authenticated:', data.session.user.id);
+          console.log('💡 TicketsPage: User authenticated:', data.session.user.id);
           setAuthenticated(true);
         }
       } catch (err) {
-        console.error('TicketsPage: Unexpected error during auth check:', err);
+        console.error('💡 TicketsPage: Unexpected error during auth check:', err);
         toast("Unexpected Error", {
           description: "Please try again later"
         });
         navigate('/login');
       } finally {
         // Always set loading to false after authentication check
-        console.log('TicketsPage: Auth check complete, setting loading to false');
+        console.log('💡 TicketsPage: Auth check complete, setting loading to false');
         setLoading(false);
       }
     };
@@ -54,13 +61,13 @@ const TicketsPage = () => {
     
     // Add cleanup function
     return () => {
-      console.log('TicketsPage: Component unmounting');
+      console.log('💡 TicketsPage: Component unmounting');
     };
   }, [navigate]);
 
   // Render loading skeleton while checking authentication
   if (loading) {
-    console.log('TicketsPage: Rendering loading skeleton');
+    console.log('💡 TicketsPage: Rendering loading skeleton');
     return (
       <PageTransition>
         <DashboardLayout>
@@ -79,13 +86,16 @@ const TicketsPage = () => {
     );
   }
 
+  // For development, always render the ticket page regardless of authentication
+  const isDevelopment = import.meta.env.DEV;
+  
   // We don't want to render anything if not authenticated and we're redirecting
-  if (!authenticated) {
-    console.log('TicketsPage: Not authenticated, returning null');
+  if (!authenticated && !isDevelopment) {
+    console.log('💡 TicketsPage: Not authenticated, returning null');
     return null;
   }
 
-  console.log('TicketsPage: Rendering authenticated Tickets page');
+  console.log('💡 TicketsPage: Rendering authenticated Tickets page');
   return (
     <PageTransition>
       <DashboardLayout>

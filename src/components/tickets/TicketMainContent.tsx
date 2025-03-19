@@ -5,6 +5,7 @@ import { useTickets, sampleTechnicians } from '@/context/TicketContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTicketActions } from '@/components/tickets/hooks/useTicketActions';
 import TicketLoadingState from '@/components/tickets/TicketLoadingState';
+import EmptyTicketState from '@/components/tickets/EmptyTicketState';
 import MobileTicketTabs from '@/components/tickets/MobileTicketTabs';
 import DesktopTicketView from '@/components/tickets/DesktopTicketView';
 
@@ -40,20 +41,23 @@ const TicketMainContent = () => {
 
   // Log state changes for debugging
   useEffect(() => {
-    console.log('TicketMainContent - isLoading state:', isLoading, 'isInitialLoad:', isInitialLoad);
-  }, [isLoading, isInitialLoad]);
+    console.log('💡 TicketMainContent - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
+    console.log('💡 TicketMainContent - filteredTickets:', filteredTickets?.length);
+  }, [isLoading, isInitialLoad, filteredTickets]);
 
-  // Log filtered tickets for debugging
-  useEffect(() => {
-    console.log('TicketMainContent - filteredTickets:', filteredTickets?.length);
-  }, [filteredTickets]);
-
-  // Show empty state if we're not in initial load and not loading but have no tickets
-  const showEmptyState = !isLoading && !isInitialLoad && (!filteredTickets || filteredTickets.length === 0);
-
-  if (isLoading) {
-    console.log('Rendering TicketLoadingState...');
+  // Show loading state if we're in the initial loading phase
+  if (isLoading || isInitialLoad) {
+    console.log('💡 Showing loading state - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
     return <TicketLoadingState />;
+  }
+
+  // Determine if we should show empty state
+  // Only show empty state when we're not loading and have no tickets
+  const showEmptyState = !isLoading && !isInitialLoad && (!filteredTickets || filteredTickets.length === 0);
+  
+  if (showEmptyState) {
+    console.log('💡 Showing empty state');
+    return <EmptyTicketState onRefresh={handleRefresh} />;
   }
 
   // Ensure we have the statistics object with all required properties
@@ -67,7 +71,7 @@ const TicketMainContent = () => {
     escalationTrend: 'stable' as const
   };
 
-  console.log('TicketMainContent - rendering main content with stats:', stats);
+  console.log('💡 TicketMainContent - rendering main content with stats:', stats);
 
   return (
     <>
@@ -79,7 +83,7 @@ const TicketMainContent = () => {
           aiSuggestions={aiSuggestions || []}
           filters={filters}
           filteredTickets={filteredTickets || []}
-          showEmptyState={showEmptyState}
+          showEmptyState={false} // Already handled above
           selectedTicket={selectedTicket}
           technicians={sampleTechnicians}
           onApplySuggestion={handleApplySuggestion}
@@ -95,7 +99,7 @@ const TicketMainContent = () => {
           aiSuggestions={aiSuggestions || []}
           filters={filters}
           filteredTickets={filteredTickets || []}
-          showEmptyState={showEmptyState}
+          showEmptyState={false} // Already handled above
           selectedTicket={selectedTicket}
           technicians={sampleTechnicians}
           onApplySuggestion={handleApplySuggestion}

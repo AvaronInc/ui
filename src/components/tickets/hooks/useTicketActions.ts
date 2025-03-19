@@ -14,12 +14,20 @@ export const useTicketActions = () => {
     aiSuggestions
   } = useTickets();
 
-  // Track when initial load completes
+  // Use useEffect to properly manage the loading state
   useEffect(() => {
-    console.log('useTicketActions - isLoading changed:', isLoading);
+    console.log('💡 useTicketActions - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
+    
+    // Only transition from initial load to loaded once
     if (!isLoading && isInitialLoad) {
-      console.log('Initial load complete, setting isInitialLoad to false');
-      setIsInitialLoad(false);
+      console.log('💡 Initial load complete, setting isInitialLoad to false');
+      
+      // Small timeout to ensure UI updates properly
+      const timer = setTimeout(() => {
+        setIsInitialLoad(false);
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [isLoading, isInitialLoad]);
 
@@ -69,8 +77,9 @@ export const useTicketActions = () => {
   };
 
   const handleRefresh = async () => {
-    console.log('Manually refreshing tickets...');
+    console.log('💡 Manually refreshing tickets...');
     try {
+      setIsInitialLoad(true); // Set back to initial load state when refreshing
       await refreshTickets();
       toast("Refreshed", {
         description: "Ticket data has been refreshed"
@@ -80,6 +89,7 @@ export const useTicketActions = () => {
       toast("Refresh Failed", {
         description: "Could not refresh ticket data"
       });
+      setIsInitialLoad(false); // Reset if there's an error
     }
   };
 

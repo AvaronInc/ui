@@ -8,7 +8,7 @@ interface EmptyTicketStateProps {
 }
 
 const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh }) => {
-  console.log('Rendering EmptyTicketState component');
+  console.log('💡 Rendering EmptyTicketState component');
   return (
     <div className="text-center p-8 bg-muted rounded-lg">
       <h3 className="text-xl font-medium mb-2">No tickets found</h3>
