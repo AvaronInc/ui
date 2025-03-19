@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import PageTransition from '@/components/transitions/PageTransition';
 import { AuthCard } from '@/components/auth';
+import { toast } from 'sonner';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Auth = () => {
       (event, session) => {
         console.log('Auth state changed:', event);
         if (session) {
+          toast.success('Successfully authenticated!');
           navigate('/');
         }
       }

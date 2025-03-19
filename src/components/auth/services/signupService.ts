@@ -20,15 +20,8 @@ export async function checkExistingUser(email: string) {
 export async function createUser(values: SignupFormValues) {
   console.log('Starting signup process...');
   
-  // First check if the user already exists
-  const { existingUser } = await checkExistingUser(values.email);
-  
-  if (existingUser) {
-    toast.error('An account with this email already exists');
-    return { success: false, data: null, error: 'User already exists' };
-  }
-  
-  // Proceed with signup
+  // Proceed with signup - removed the existing user check which was causing issues
+  // since the user_profiles table might not exist or might not have the email field
   const { data, error } = await supabase.auth.signUp({
     email: values.email,
     password: values.password,
