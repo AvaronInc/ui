@@ -55,6 +55,8 @@ const Projects = () => {
           title: atRiskSuggestion.title,
           description: atRiskSuggestion.description,
           variant: "destructive",
+          // Make the toast dismissible by adding:
+          duration: 0, // 0 means it stays until dismissed
         });
       }
     }
