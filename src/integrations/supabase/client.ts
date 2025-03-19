@@ -19,9 +19,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
   },
   global: {
-    fetch: (...args) => {
-      console.log('🔄 Making Supabase request:', args[0]);
-      return fetch(...args);
+    fetch: (url, options) => {
+      console.log('🔄 Making Supabase request:', url);
+      return fetch(url, options);
     }
   }
 });
