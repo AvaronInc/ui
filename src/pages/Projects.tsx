@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
 import { 
@@ -21,8 +21,10 @@ import ProjectListContent from '@/components/projects/ProjectListContent';
 import ProjectDetailPanels from '@/components/projects/ProjectDetailPanels';
 import { useProjectsData } from '@/hooks/useProjectsData';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const Projects = () => {
+  const { toast } = useToast();
   const {
     selectedProject,
     filteredProjects,
@@ -41,6 +43,22 @@ const Projects = () => {
     handleArchiveCompleted,
     handleAISuggestionAction
   } = useProjectsData();
+
+  // Show the at-risk project toast when component mounts
+  useEffect(() => {
+    const atRiskProject = projects.find(p => p.isAtRisk);
+    if (atRiskProject) {
+      const atRiskSuggestion = aiSuggestions.find(s => s.projectId === atRiskProject.id && s.severity === 'high');
+      
+      if (atRiskSuggestion) {
+        toast({
+          title: atRiskSuggestion.title,
+          description: atRiskSuggestion.description,
+          variant: "destructive",
+        });
+      }
+    }
+  }, []);
 
   return (
     <PageTransition>
