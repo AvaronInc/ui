@@ -1,7 +1,7 @@
-
 import React, { useEffect } from 'react';
 import { TicketDetailPanel } from '@/components/tickets/detail';
-import { useTickets, sampleTechnicians } from '@/context/TicketContext';
+import { useTickets } from '@/context/ticket/TicketContext';
+import { sampleTechnicians } from '@/context/ticket/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTicketActions } from '@/components/tickets/hooks/useTicketActions';
 import TicketLoadingState from '@/components/tickets/TicketLoadingState';

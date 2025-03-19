@@ -100,11 +100,16 @@ export const createTicket = async (
   console.log(`🎫 Creating new ticket: ${ticketData.title}`);
   // In a real app, you'd make an API call here
   // For now, we'll just return a mock ticket
+  
+  // Define if ticket is resolved here since it doesn't exist in outer scope
+  const status: TicketStatus = 'open'; // New tickets are always open
+  const isResolved = false; // New tickets are never resolved
+  
   return {
     id: `TK-${Math.floor(1000 + Math.random() * 9000)}`,
     title: ticketData.title,
     description: ticketData.description,
-    status: 'open',
+    status: status,
     priority: ticketData.priority,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

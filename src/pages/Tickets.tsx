@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { PageTransition } from '@/components/transitions/PageTransition';
-import { TicketProvider } from '@/context/TicketContext';
+import { TicketProvider } from '@/context/ticket/TicketContext';
 import TicketPageHeader from '@/components/tickets/TicketPageHeader';
 import TicketMainContent from '@/components/tickets/TicketMainContent';
 import { useNavigate } from 'react-router-dom';
