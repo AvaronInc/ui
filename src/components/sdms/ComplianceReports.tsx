@@ -5,9 +5,10 @@ import { ComplianceReport } from '@/types/sdms';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { FormItem, FormLabel } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileCheck, AlertTriangle, Calendar, Download } from 'lucide-react';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const mockReports: ComplianceReport[] = [
   {
@@ -69,6 +70,7 @@ const mockReports: ComplianceReport[] = [
 const ComplianceReports = () => {
   const [selectedReport, setSelectedReport] = useState<ComplianceReport | null>(null);
   const [reportFrequency, setReportFrequency] = useState("monthly");
+  const [activeTab, setActiveTab] = useState("reports");
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -118,7 +120,7 @@ const ComplianceReports = () => {
         AI-generated compliance reports for various regulatory standards.
       </p>
       
-      <Tabs defaultValue="reports" className="space-y-6">
+      <Tabs defaultValue="reports" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList>
           <TabsTrigger value="reports">Compliance Reports</TabsTrigger>
           <TabsTrigger value="schedule">Schedule</TabsTrigger>
@@ -274,102 +276,98 @@ const ComplianceReports = () => {
         </TabsContent>
         
         <TabsContent value="schedule">
-          <Card>
-            <CardHeader>
-              <CardTitle>Report Schedule</CardTitle>
-              <CardDescription>
-                Configure automatic generation of compliance reports
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <div className="space-y-4">
-                    <div>
-                      <FormLabel>Report Frequency</FormLabel>
-                      <Select defaultValue={reportFrequency} onValueChange={setReportFrequency}>
-                        <FormControl>
+          <TooltipProvider>
+            <Card>
+              <CardHeader>
+                <CardTitle>Report Schedule</CardTitle>
+                <CardDescription>
+                  Configure automatic generation of compliance reports
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <div className="space-y-4">
+                      <div>
+                        <FormLabel>Report Frequency</FormLabel>
+                        <Select defaultValue={reportFrequency} onValueChange={setReportFrequency}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select frequency" />
                           </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="daily">Daily</SelectItem>
-                          <SelectItem value="weekly">Weekly</SelectItem>
-                          <SelectItem value="monthly">Monthly</SelectItem>
-                          <SelectItem value="quarterly">Quarterly</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <FormLabel>Compliance Standards</FormLabel>
-                      <Select defaultValue="all">
-                        <FormControl>
+                          <SelectContent>
+                            <SelectItem value="daily">Daily</SelectItem>
+                            <SelectItem value="weekly">Weekly</SelectItem>
+                            <SelectItem value="monthly">Monthly</SelectItem>
+                            <SelectItem value="quarterly">Quarterly</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <FormLabel>Compliance Standards</FormLabel>
+                        <Select defaultValue="all">
                           <SelectTrigger>
                             <SelectValue placeholder="Select standards" />
                           </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="all">All Standards</SelectItem>
-                          <SelectItem value="gdpr">GDPR</SelectItem>
-                          <SelectItem value="hipaa">HIPAA</SelectItem>
-                          <SelectItem value="soc2">SOC 2</SelectItem>
-                          <SelectItem value="pci">PCI DSS</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <FormLabel>Delivery Method</FormLabel>
-                      <Select defaultValue="email">
-                        <FormControl>
+                          <SelectContent>
+                            <SelectItem value="all">All Standards</SelectItem>
+                            <SelectItem value="gdpr">GDPR</SelectItem>
+                            <SelectItem value="hipaa">HIPAA</SelectItem>
+                            <SelectItem value="soc2">SOC 2</SelectItem>
+                            <SelectItem value="pci">PCI DSS</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <FormLabel>Delivery Method</FormLabel>
+                        <Select defaultValue="email">
                           <SelectTrigger>
                             <SelectValue placeholder="Select delivery method" />
                           </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="email">Email</SelectItem>
-                          <SelectItem value="storage">Save to Storage</SelectItem>
-                          <SelectItem value="both">Email & Storage</SelectItem>
-                        </SelectContent>
-                      </Select>
+                          <SelectContent>
+                            <SelectItem value="email">Email</SelectItem>
+                            <SelectItem value="storage">Save to Storage</SelectItem>
+                            <SelectItem value="both">Email & Storage</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <Button className="w-full">Save Schedule</Button>
                     </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium">Active Schedules</h3>
                     
-                    <Button className="w-full">Save Schedule</Button>
+                    <Card>
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-sm flex items-center justify-between">
+                          <span>Monthly Compliance Report</span>
+                          <Badge>Active</Badge>
+                        </CardTitle>
+                        <CardDescription className="text-xs">
+                          All Standards • First day of month • Email & Storage
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-sm flex items-center justify-between">
+                          <span>HIPAA Weekly Check</span>
+                          <Badge>Active</Badge>
+                        </CardTitle>
+                        <CardDescription className="text-xs">
+                          HIPAA • Every Monday • Email
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
                   </div>
                 </div>
-                
-                <div className="space-y-4">
-                  <h3 className="text-sm font-medium">Active Schedules</h3>
-                  
-                  <Card>
-                    <CardHeader className="py-3">
-                      <CardTitle className="text-sm flex items-center justify-between">
-                        <span>Monthly Compliance Report</span>
-                        <Badge>Active</Badge>
-                      </CardTitle>
-                      <CardDescription className="text-xs">
-                        All Standards • First day of month • Email & Storage
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader className="py-3">
-                      <CardTitle className="text-sm flex items-center justify-between">
-                        <span>HIPAA Weekly Check</span>
-                        <Badge>Active</Badge>
-                      </CardTitle>
-                      <CardDescription className="text-xs">
-                        HIPAA • Every Monday • Email
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </TooltipProvider>
         </TabsContent>
         
         <TabsContent value="standards">

@@ -26,4 +26,9 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+// Create a safe wrapper for elements that might be used in forms
+const SafeTooltipWrapper = ({ children }: { children: React.ReactNode }) => {
+  return <>{children}</>;
+};
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SafeTooltipWrapper }
