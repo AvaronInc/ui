@@ -35,6 +35,7 @@ const TicketMainContent = () => {
     setActiveTab,
     isInitialLoad,
     loadError,
+    loadingTime,
     handleEscalateTicket,
     handleCloseTicket,
     handleApplySuggestion,
@@ -53,9 +54,10 @@ const TicketMainContent = () => {
       rawTicketsCount: tickets?.length,
       hasStatistics: !!ticketStatistics,
       isTicketsNull: tickets === null,
-      isTicketsUndefined: tickets === undefined
+      isTicketsUndefined: tickets === undefined,
+      loadingTime
     });
-  }, [isLoading, isInitialLoad, loadError, filteredTickets, tickets, ticketStatistics]);
+  }, [isLoading, isInitialLoad, loadError, filteredTickets, tickets, ticketStatistics, loadingTime]);
 
   // Force debug display of empty state
   const forceDebug = false;
@@ -63,7 +65,10 @@ const TicketMainContent = () => {
   // Show loading state if we're in the initial loading phase
   if (isLoading || isInitialLoad) {
     console.log('💡 SHOWING LOADING STATE - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
-    return <TicketLoadingState onCancel={handleCancelLoading} />;
+    return <TicketLoadingState 
+      onCancel={handleCancelLoading} 
+      loadingTime={loadingTime} 
+    />;
   }
 
   // Make sure tickets array exists

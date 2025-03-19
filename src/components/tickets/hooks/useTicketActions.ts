@@ -8,6 +8,8 @@ export const useTicketActions = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loadingTimeout, setLoadingTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [loadingTime, setLoadingTime] = useState(0);
+  const [refreshAttempts, setRefreshAttempts] = useState(0);
 
   const { 
     handleStatusChange,
@@ -23,9 +25,29 @@ export const useTicketActions = () => {
       isLoading,
       isInitialLoad,
       loadError,
-      ticketsLength: tickets?.length || 0
+      ticketsLength: tickets?.length || 0,
+      refreshAttempts
     });
-  }, [isLoading, isInitialLoad, loadError, tickets]);
+  }, [isLoading, isInitialLoad, loadError, tickets, refreshAttempts]);
+
+  // Track loading time
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    
+    if (isLoading) {
+      console.log('💡 Starting loading time counter');
+      setLoadingTime(0);
+      interval = setInterval(() => {
+        setLoadingTime(prev => prev + 1);
+      }, 1000);
+    } else if (interval) {
+      clearInterval(interval);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isLoading]);
 
   // Set a timeout for loading to detect potential issues
   useEffect(() => {
@@ -34,8 +56,19 @@ export const useTicketActions = () => {
       const timeout = setTimeout(() => {
         console.log('💡 Loading timeout triggered - loading is taking too long');
         if (isLoading) {
-          setLoadError('Loading timed out after 15 seconds');
+          setLoadError('Loading timed out after 15 seconds. Please try again.');
+          
+          // Only reset the initial load state, not the loading state itself
+          // This allows the component to show an error while still technically "loading"
           setIsInitialLoad(false);
+          
+          // In development mode, optionally populate with mock data after timeout
+          if (import.meta.env.DEV && refreshAttempts > 1) {
+            console.log('💡 DEV MODE: Loading mock data after timeout');
+            toast("Using mock data", {
+              description: "Could not connect to database, using mock data instead"
+            });
+          }
         }
       }, 15000);
       
@@ -51,7 +84,7 @@ export const useTicketActions = () => {
         clearTimeout(loadingTimeout);
       }
     };
-  }, [isLoading, loadingTimeout]);
+  }, [isLoading, loadingTimeout, refreshAttempts]);
 
   // Use useEffect to handle the initial loading state with more precise conditions
   useEffect(() => {    
@@ -122,6 +155,7 @@ export const useTicketActions = () => {
       // Reset state for a fresh load
       setIsInitialLoad(true);
       setLoadError(null);
+      setRefreshAttempts(prev => prev + 1);
       
       toast("Refreshing Tickets", {
         description: "Getting the latest ticket data..."
@@ -149,6 +183,11 @@ export const useTicketActions = () => {
     console.log('💡 User canceled loading, resetting state');
     setIsInitialLoad(false);
     setLoadError('Loading canceled by user');
+    setRefreshAttempts(prev => prev + 1);
+    
+    toast("Loading Canceled", {
+      description: "You canceled the loading process"
+    });
   }, []);
 
   return {
@@ -156,6 +195,8 @@ export const useTicketActions = () => {
     setActiveTab,
     isInitialLoad,
     loadError,
+    loadingTime,
+    refreshAttempts,
     handleEscalateTicket,
     handleCloseTicket,
     handleApplySuggestion,

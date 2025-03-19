@@ -13,16 +13,40 @@ if (import.meta.env.DEV) {
   });
 }
 
+// Custom fetch function for debugging
+const customFetch = (url: string, options: RequestInit) => {
+  console.log('🔄 Making Supabase request:', url);
+  console.log('🔄 Request options:', JSON.stringify({
+    method: options.method,
+    headers: options.headers ? 'Headers present' : 'No headers',
+    bodyLength: options.body ? (options.body as string).length : 0,
+  }));
+  
+  const startTime = Date.now();
+  
+  return fetch(url, options)
+    .then(response => {
+      const endTime = Date.now();
+      console.log(`🔄 Supabase response received in ${endTime - startTime}ms:`, {
+        status: response.status,
+        ok: response.ok,
+        statusText: response.statusText,
+      });
+      return response;
+    })
+    .catch(error => {
+      console.error('🔄 Supabase request error:', error);
+      throw error;
+    });
+};
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
   },
   global: {
-    fetch: (url, options) => {
-      console.log('🔄 Making Supabase request:', url);
-      return fetch(url, options);
-    }
+    fetch: customFetch
   }
 });
 
@@ -72,8 +96,14 @@ export const getTickets = async () => {
     console.log('Count check response:', countCheck);
     
     if (countCheck.error) {
+      // If we get a specific error about the table not existing, let's log it
+      if (countCheck.error.message.includes('does not exist')) {
+        console.error('The tickets table does not exist in the database');
+        throw new Error('Tickets table not found in database. Please create it first.');
+      }
+      
       console.error('Error during count check:', countCheck.error);
-      return [];
+      throw new Error(`Database error: ${countCheck.error.message}`);
     }
     
     console.log(`Found ${countCheck.count || 0} tickets in database`);
@@ -87,7 +117,7 @@ export const getTickets = async () => {
     if (error) {
       console.error('Error fetching tickets:', error);
       console.error('Error details:', error.message, error.details, error.hint);
-      return [];
+      throw new Error(`Could not fetch tickets: ${error.message}`);
     }
     
     if (!data || data.length === 0) {
@@ -99,8 +129,9 @@ export const getTickets = async () => {
     console.log('Sample ticket data:', data[0]);
     return data;
   } catch (e) {
-    console.error('Unexpected error in getTickets:', e);
-    return [];
+    const error = e as Error;
+    console.error('Unexpected error in getTickets:', error);
+    throw new Error(`Failed to fetch tickets: ${error.message}`);
   }
 };
 

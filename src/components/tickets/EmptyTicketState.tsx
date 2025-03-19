@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Database, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface EmptyTicketStateProps {
   onRefresh: () => void;
@@ -15,6 +16,14 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
       console.log('💡 EmptyTicketState UNMOUNTED');
     };
   }, []);
+
+  const handleRefresh = () => {
+    console.log('💡 User clicked Refresh Tickets button');
+    toast("Refreshing Tickets", {
+      description: "Attempting to reload ticket data..."
+    });
+    onRefresh();
+  };
 
   console.log('💡 Rendering EmptyTicketState component', { error });
   return (
@@ -35,13 +44,13 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
           : 'There are no tickets matching your current filters or no tickets have been created yet.'}
       </p>
       <div className="flex flex-col items-center gap-2">
-        <Button onClick={onRefresh} className="mb-2">
+        <Button onClick={handleRefresh} className="mb-2 min-w-[200px]">
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh Tickets
         </Button>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground max-w-md">
           {error 
-            ? 'Try refreshing or check your database connection.' 
+            ? 'If refreshing doesn\'t work, try checking your database connection or contact support for assistance.' 
             : 'If this problem persists, check your database connection or contact support.'}
         </p>
       </div>
