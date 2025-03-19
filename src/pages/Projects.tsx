@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
@@ -24,10 +23,10 @@ import ProjectDetailPanel from '@/components/projects/ProjectDetailPanel';
 import ProjectFilters from '@/components/projects/ProjectFilters';
 import ProjectStatCards from '@/components/projects/ProjectStatCards';
 import AIProjectPanel from '@/components/projects/AIProjectPanel';
+import GanttChartView from '@/components/projects/GanttChartView';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-// This is just sample data - in a real application, this would come from an API
 const sampleProjects: Project[] = [
   {
     id: '1',
@@ -236,7 +235,6 @@ const sampleProjects: Project[] = [
   }
 ];
 
-// Sample project statistics
 const projectStatistics: ProjectStatistics = {
   activeProjects: 3,
   atRiskProjects: 1,
@@ -246,7 +244,6 @@ const projectStatistics: ProjectStatistics = {
   trendPercentage: 15
 };
 
-// Sample AI suggestions
 const aiSuggestions: AIProjectSuggestion[] = [
   {
     id: 'sugg-1',
@@ -281,7 +278,6 @@ const Projects = () => {
   const { toast } = useToast();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>(() => {
-    // Add AI risk scores and complexity to sample data
     return sampleProjects.map(project => ({
       ...project,
       complexity: (project.id === '1' ? 'large' : project.id === '2' ? 'medium' : 'small') as any,
@@ -511,11 +507,7 @@ const Projects = () => {
                       selectedProject={selectedProject}
                     />
                   ) : (
-                    <div className="border rounded-lg bg-card p-6 h-64 flex items-center justify-center">
-                      <p className="text-muted-foreground">
-                        Gantt chart view would be implemented here
-                      </p>
-                    </div>
+                    <GanttChartView projects={filteredProjects} />
                   )}
                 </div>
                 
@@ -541,10 +533,8 @@ const Projects = () => {
             </TabsContent>
             
             <TabsContent value="timeline">
-              <div className="border rounded-lg bg-card p-6 h-64 flex items-center justify-center">
-                <p className="text-muted-foreground">
-                  Project timeline view would be implemented here
-                </p>
+              <div className="border rounded-lg bg-card h-full">
+                <GanttChartView projects={projects} />
               </div>
             </TabsContent>
           </Tabs>
