@@ -191,10 +191,13 @@ const TicketMainContent = () => {
           </div>
           
           <TicketStatCards statistics={ticketStatistics || {
-            total: 0,
-            open: 0,
-            resolved: 0,
-            escalated: 0
+            openTickets: 0,
+            resolvedToday: 0,
+            aiResolved: 0,
+            awaitingAction: 0,
+            avgResolutionTime: '0h',
+            escalationRate: 0,
+            escalationTrend: 'stable' as const
           }} />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
