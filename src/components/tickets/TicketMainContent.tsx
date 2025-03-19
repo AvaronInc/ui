@@ -32,26 +32,27 @@ const TicketMainContent = () => {
     activeTab,
     setActiveTab,
     isInitialLoad,
-    handleLoadingChange,
     handleEscalateTicket,
     handleCloseTicket,
     handleApplySuggestion,
     handleRefresh
   } = useTicketActions();
 
-  // Track when initial load completes
+  // Log state changes for debugging
   useEffect(() => {
-    console.log('TicketMainContent - isLoading state changed:', isLoading);
-    handleLoadingChange(isLoading);
-  }, [isLoading]);
+    console.log('TicketMainContent - isLoading state:', isLoading, 'isInitialLoad:', isInitialLoad);
+  }, [isLoading, isInitialLoad]);
 
-  console.log('TicketMainContent render - isLoading:', isLoading, 'filteredTickets:', filteredTickets?.length);
+  // Log filtered tickets for debugging
+  useEffect(() => {
+    console.log('TicketMainContent - filteredTickets:', filteredTickets?.length);
+  }, [filteredTickets]);
 
   // Show empty state if we're not in initial load and not loading but have no tickets
   const showEmptyState = !isLoading && !isInitialLoad && (!filteredTickets || filteredTickets.length === 0);
 
   if (isLoading) {
-    console.log('Rendering loading state...');
+    console.log('Rendering TicketLoadingState...');
     return <TicketLoadingState />;
   }
 
@@ -65,6 +66,8 @@ const TicketMainContent = () => {
     escalationRate: 0,
     escalationTrend: 'stable' as const
   };
+
+  console.log('TicketMainContent - rendering main content with stats:', stats);
 
   return (
     <>

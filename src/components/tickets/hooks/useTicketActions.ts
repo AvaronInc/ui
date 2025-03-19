@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTickets } from '@/context/TicketContext';
 import { toast } from 'sonner';
 
@@ -15,12 +15,13 @@ export const useTicketActions = () => {
   } = useTickets();
 
   // Track when initial load completes
-  const handleLoadingChange = (loading: boolean) => {
-    console.log('useTicketActions - isLoading state changed:', loading);
-    if (!loading && isInitialLoad) {
+  useEffect(() => {
+    console.log('useTicketActions - isLoading changed:', isLoading);
+    if (!isLoading && isInitialLoad) {
+      console.log('Initial load complete, setting isInitialLoad to false');
       setIsInitialLoad(false);
     }
-  };
+  }, [isLoading, isInitialLoad]);
 
   const handleEscalateTicket = (ticketId: string) => {
     handleStatusChange(ticketId, 'escalated');
@@ -86,7 +87,6 @@ export const useTicketActions = () => {
     activeTab,
     setActiveTab,
     isInitialLoad,
-    handleLoadingChange,
     handleEscalateTicket,
     handleCloseTicket,
     handleApplySuggestion,

@@ -18,11 +18,11 @@ const TicketsPage = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        console.log('Checking authentication status...');
+        console.log('TicketsPage: Checking authentication status...');
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Error checking authentication:', error);
+          console.error('TicketsPage: Error checking authentication:', error);
           toast("Authentication Error", {
             description: "Please sign in again"
           });
@@ -31,31 +31,36 @@ const TicketsPage = () => {
         }
         
         if (!data.session) {
-          console.log('No active session found, redirecting to login');
+          console.log('TicketsPage: No active session found, redirecting to login');
           navigate('/login');
-          return;
         } else {
-          console.log('User authenticated:', data.session.user.id);
+          console.log('TicketsPage: User authenticated:', data.session.user.id);
           setAuthenticated(true);
         }
       } catch (err) {
-        console.error('Unexpected error during auth check:', err);
+        console.error('TicketsPage: Unexpected error during auth check:', err);
         toast("Unexpected Error", {
           description: "Please try again later"
         });
         navigate('/login');
-        return;
       } finally {
-        // Set loading to false regardless of authentication result
+        // Always set loading to false after authentication check
+        console.log('TicketsPage: Auth check complete, setting loading to false');
         setLoading(false);
       }
     };
 
     checkAuth();
+    
+    // Add cleanup function
+    return () => {
+      console.log('TicketsPage: Component unmounting');
+    };
   }, [navigate]);
 
   // Render loading skeleton while checking authentication
   if (loading) {
+    console.log('TicketsPage: Rendering loading skeleton');
     return (
       <PageTransition>
         <DashboardLayout>
@@ -74,12 +79,13 @@ const TicketsPage = () => {
     );
   }
 
-  // We don't want to render anything while redirecting
+  // We don't want to render anything if not authenticated and we're redirecting
   if (!authenticated) {
+    console.log('TicketsPage: Not authenticated, returning null');
     return null;
   }
 
-  console.log('Rendering authenticated Tickets page');
+  console.log('TicketsPage: Rendering authenticated Tickets page');
   return (
     <PageTransition>
       <DashboardLayout>
