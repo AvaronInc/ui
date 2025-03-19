@@ -26,4 +26,14 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+// Create a SafeTooltipWrapper component to safely use tooltips
+// without worrying about nested TooltipProvider issues
+const SafeTooltipWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <TooltipProvider>
+      {children}
+    </TooltipProvider>
+  )
+}
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SafeTooltipWrapper }
