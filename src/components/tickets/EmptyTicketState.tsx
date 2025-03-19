@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Database, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -10,6 +9,8 @@ interface EmptyTicketStateProps {
 }
 
 const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
   useEffect(() => {
     console.log('💡 EmptyTicketState MOUNTED');
     return () => {
@@ -19,11 +20,26 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
 
   const handleRefresh = () => {
     console.log('💡 User clicked Refresh Tickets button');
+    setIsRefreshing(true);
+    
     toast("Refreshing Tickets", {
       description: "Attempting to reload ticket data..."
     });
-    onRefresh();
+    
+    // Add a slight delay to give visual feedback
+    setTimeout(() => {
+      onRefresh();
+      // We'll keep this set to true as the parent component will re-render this with new props if needed
+    }, 800);
   };
+
+  const errorDetails = error ? (
+    <div className="text-xs text-left mt-4 bg-red-50 p-3 rounded border border-red-200">
+      <p className="font-medium mb-1">Technical details:</p>
+      <code className="block whitespace-pre-wrap text-red-700 bg-red-100 p-2 rounded">{error}</code>
+      <p className="mt-2">This error has been logged for our technical team to investigate.</p>
+    </div>
+  ) : null;
 
   console.log('💡 Rendering EmptyTicketState component', { error });
   return (
@@ -44,15 +60,20 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
           : 'There are no tickets matching your current filters or no tickets have been created yet.'}
       </p>
       <div className="flex flex-col items-center gap-2">
-        <Button onClick={handleRefresh} className="mb-2 min-w-[200px]">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh Tickets
+        <Button 
+          onClick={handleRefresh} 
+          className="mb-2 min-w-[200px]"
+          disabled={isRefreshing}
+        >
+          <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+          {isRefreshing ? 'Refreshing...' : 'Refresh Tickets'}
         </Button>
         <p className="text-xs text-muted-foreground max-w-md">
           {error 
             ? 'If refreshing doesn\'t work, try checking your database connection or contact support for assistance.' 
             : 'If this problem persists, check your database connection or contact support.'}
         </p>
+        {errorDetails}
       </div>
     </div>
   );

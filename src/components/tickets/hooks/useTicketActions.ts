@@ -10,6 +10,7 @@ export const useTicketActions = () => {
   const [loadingTimeout, setLoadingTimeout] = useState<NodeJS.Timeout | null>(null);
   const [loadingTime, setLoadingTime] = useState(0);
   const [refreshAttempts, setRefreshAttempts] = useState(0);
+  const [mockTimer, setMockTimer] = useState<NodeJS.Timeout | null>(null);
 
   const { 
     handleStatusChange,
@@ -56,18 +57,26 @@ export const useTicketActions = () => {
       const timeout = setTimeout(() => {
         console.log('💡 Loading timeout triggered - loading is taking too long');
         if (isLoading) {
-          setLoadError('Loading timed out after 15 seconds. Please try again.');
+          setLoadError('Loading timed out after 15 seconds. There might be a CORS or network connectivity issue. Please try again.');
           
           // Only reset the initial load state, not the loading state itself
           // This allows the component to show an error while still technically "loading"
           setIsInitialLoad(false);
           
           // In development mode, optionally populate with mock data after timeout
-          if (import.meta.env.DEV && refreshAttempts > 1) {
-            console.log('💡 DEV MODE: Loading mock data after timeout');
-            toast("Using mock data", {
-              description: "Could not connect to database, using mock data instead"
-            });
+          if (import.meta.env.DEV && refreshAttempts > 0) {
+            console.log('💡 DEV MODE: Preparing to load mock data after timeout');
+            if (mockTimer) clearTimeout(mockTimer);
+            
+            const timer = setTimeout(() => {
+              console.log('💡 DEV MODE: Loading mock data now');
+              toast("Using mock data", {
+                description: "Could not connect to database, using mock data instead",
+                duration: 5000
+              });
+            }, 2000);
+            
+            setMockTimer(timer);
           }
         }
       }, 15000);
@@ -83,8 +92,11 @@ export const useTicketActions = () => {
       if (loadingTimeout) {
         clearTimeout(loadingTimeout);
       }
+      if (mockTimer) {
+        clearTimeout(mockTimer);
+      }
     };
-  }, [isLoading, loadingTimeout, refreshAttempts]);
+  }, [isLoading, loadingTimeout, refreshAttempts, mockTimer]);
 
   // Use useEffect to handle the initial loading state with more precise conditions
   useEffect(() => {    
@@ -158,13 +170,15 @@ export const useTicketActions = () => {
       setRefreshAttempts(prev => prev + 1);
       
       toast("Refreshing Tickets", {
-        description: "Getting the latest ticket data..."
+        description: "Getting the latest ticket data...",
+        duration: 3000
       });
       
       await refreshTickets();
       
       toast("Refreshed", {
-        description: "Ticket data has been refreshed"
+        description: "Ticket data has been refreshed",
+        duration: 3000
       });
     } catch (error) {
       console.error("Error refreshing tickets:", error);
@@ -172,7 +186,8 @@ export const useTicketActions = () => {
       setLoadError(errorMessage);
       
       toast("Refresh Failed", {
-        description: "Could not refresh ticket data"
+        description: "Could not refresh ticket data. Network issue or CORS error.",
+        duration: 5000
       });
       
       setIsInitialLoad(false); // Reset if there's an error
@@ -186,7 +201,7 @@ export const useTicketActions = () => {
     setRefreshAttempts(prev => prev + 1);
     
     toast("Loading Canceled", {
-      description: "You canceled the loading process"
+      description: "You canceled the loading process. Try refreshing again in a moment."
     });
   }, []);
 

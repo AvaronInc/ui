@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 // These can be found in your Supabase project settings
@@ -14,7 +13,7 @@ if (import.meta.env.DEV) {
 }
 
 // Custom fetch function for debugging
-const customFetch = (url: string, options: RequestInit) => {
+const customFetch = async (url: string, options: RequestInit) => {
   console.log('🔄 Making Supabase request:', url);
   console.log('🔄 Request options:', JSON.stringify({
     method: options.method,
@@ -24,20 +23,45 @@ const customFetch = (url: string, options: RequestInit) => {
   
   const startTime = Date.now();
   
-  return fetch(url, options)
-    .then(response => {
-      const endTime = Date.now();
-      console.log(`🔄 Supabase response received in ${endTime - startTime}ms:`, {
-        status: response.status,
-        ok: response.ok,
-        statusText: response.statusText,
-      });
-      return response;
-    })
-    .catch(error => {
-      console.error('🔄 Supabase request error:', error);
-      throw error;
+  try {
+    // Adding a short artificial delay in development mode to give a better feedback experience
+    if (import.meta.env.DEV) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    const response = await fetch(url, options);
+    const endTime = Date.now();
+    console.log(`🔄 Supabase response received in ${endTime - startTime}ms:`, {
+      status: response.status,
+      ok: response.ok,
+      statusText: response.statusText,
     });
+    
+    // If the response isn't ok, we'll still return it so Supabase can handle it properly
+    return response;
+  } catch (error) {
+    // Network errors, including CORS issues
+    console.error('🔄 Supabase network error:', error);
+    
+    // In development mode, create a mock error response
+    if (import.meta.env.DEV) {
+      console.log('🔄 Returning mock error response for development');
+      
+      // Simulate a 503 Service Unavailable response
+      return new Response(JSON.stringify({
+        error: 'Network error (possible CORS issue)',
+        message: 'Failed to connect to database. This could be due to CORS, network connectivity, or server issues.',
+        status: 503
+      }), {
+        status: 503,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+    
+    throw error;
+  }
 };
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {

@@ -16,6 +16,7 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
 }) => {
   const [internalLoadingTime, setInternalLoadingTime] = useState(0);
   const [hasTriedRefresh, setHasTriedRefresh] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Use either the external loading time (if provided) or the internal one
   const loadingTime = typeof externalLoadingTime === 'number' ? externalLoadingTime : internalLoadingTime;
@@ -33,20 +34,27 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
     };
   }, []);
 
-  const showLoadingWarning = loadingTime > 10;
-  const showSeriousWarning = loadingTime > 20;
+  const showLoadingWarning = loadingTime > 5;
+  const showSeriousWarning = loadingTime > 10;
 
   // Provide immediate feedback when the user clicks the button
   const handleTryAgain = () => {
     console.log('💡 User clicked Try Again button');
     setHasTriedRefresh(true);
+    setIsRefreshing(true);
+    
     toast("Refreshing...", {
-      description: "Attempting to load tickets again"
+      description: "Attempting to load tickets again. Please wait..."
     });
     
-    if (onCancel) {
-      onCancel();
-    }
+    // Simulate a delay before calling the actual cancel function
+    // This gives the user visual feedback that something is happening
+    setTimeout(() => {
+      if (onCancel) {
+        onCancel();
+      }
+      setIsRefreshing(false);
+    }, 1000);
   };
 
   console.log('💡 Rendering TicketLoadingState component, loadingTime:', loadingTime);
@@ -84,16 +92,23 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
                 size="sm" 
                 className="mt-3 w-full sm:w-auto" 
                 onClick={handleTryAgain}
+                disabled={isRefreshing}
               >
-                <RefreshCw className={`h-4 w-4 mr-2 ${hasTriedRefresh ? 'animate-spin' : ''}`} />
-                {hasTriedRefresh ? "Trying Again..." : "Try Again"}
+                <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+                {isRefreshing ? "Trying Again..." : (hasTriedRefresh ? "Try Again Once More" : "Try Again")}
               </Button>
             )}
             
             {showSeriousWarning && (
-              <p className="mt-3 text-xs text-muted-foreground">
-                If this persists, please check your network connection or contact support.
-              </p>
+              <div className="mt-3 space-y-2 text-xs text-muted-foreground">
+                <p>If this persists, possible solutions:</p>
+                <ul className="list-disc list-inside">
+                  <li>Check your network connection</li>
+                  <li>Ensure the database is online</li>
+                  <li>Clear your browser cache</li>
+                  <li>Contact support if issues continue</li>
+                </ul>
+              </div>
             )}
           </div>
         )}
