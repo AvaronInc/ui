@@ -23,8 +23,7 @@ const TicketsPage = () => {
         
         if (error) {
           console.error('Error checking authentication:', error);
-          toast({
-            title: "Authentication Error",
+          toast("Authentication Error", {
             description: "Please sign in again",
             variant: "destructive"
           });
@@ -41,8 +40,7 @@ const TicketsPage = () => {
         }
       } catch (err) {
         console.error('Unexpected error during auth check:', err);
-        toast({
-          title: "Unexpected Error",
+        toast("Unexpected Error", {
           description: "Please try again later",
           variant: "destructive"
         });
