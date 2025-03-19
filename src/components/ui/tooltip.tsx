@@ -26,24 +26,4 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-// Use a React context to track if we're inside a TooltipProvider
-const TooltipProviderContext = React.createContext(false);
-
-// Create a wrapper component that ensures there's only one TooltipProvider
-const SafeTooltipWrapper = ({ children }: { children: React.ReactNode }) => {
-  const hasProvider = React.useContext(TooltipProviderContext);
-  
-  if (hasProvider) {
-    return <>{children}</>;
-  }
-  
-  return (
-    <TooltipProviderContext.Provider value={true}>
-      <TooltipProvider>
-        {children}
-      </TooltipProvider>
-    </TooltipProviderContext.Provider>
-  );
-};
-
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SafeTooltipWrapper }
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
