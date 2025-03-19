@@ -8,6 +8,7 @@ import TicketMainContent from '@/components/tickets/TicketMainContent';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
 
 const TicketsPage = () => {
   const navigate = useNavigate();
@@ -17,24 +18,37 @@ const TicketsPage = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log('Checking authentication status...');
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('Error checking authentication:', error);
+          toast({
+            title: "Authentication Error",
+            description: "Please sign in again",
+            variant: "destructive"
+          });
           navigate('/login');
           return;
         }
         
         if (!data.session) {
-          // Not authenticated, redirect to login page
+          console.log('No active session found, redirecting to login');
           navigate('/login');
         } else {
+          console.log('User authenticated:', data.session.user.id);
           setAuthenticated(true);
         }
       } catch (err) {
         console.error('Unexpected error during auth check:', err);
+        toast({
+          title: "Unexpected Error",
+          description: "Please try again later",
+          variant: "destructive"
+        });
         navigate('/login');
       } finally {
+        console.log('Auth check complete, setting loading to false');
         setLoading(false);
       }
     };
@@ -67,6 +81,7 @@ const TicketsPage = () => {
     return null;
   }
 
+  console.log('Rendering authenticated Tickets page');
   return (
     <PageTransition>
       <DashboardLayout>

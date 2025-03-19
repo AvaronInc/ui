@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   Ticket, 
@@ -131,13 +130,19 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   
   // Fetch tickets from the database
   const fetchTicketsData = async () => {
+    console.log('Starting to fetch tickets data...');
     setIsLoading(true);
+    
     try {
+      console.log('Calling ticketService.fetchTickets()');
       const ticketsData = await ticketService.fetchTickets();
+      console.log(`Received ${ticketsData.length} tickets from service`);
       setTickets(ticketsData);
       
       // Calculate statistics
+      console.log('Calculating ticket statistics...');
       const stats = await ticketService.calculateTicketStatistics();
+      console.log('Ticket statistics calculated:', stats);
       if (stats) {
         setTicketStatistics(stats);
       }
@@ -148,13 +153,17 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         description: "Failed to load tickets. Please try again later.",
         variant: "destructive"
       });
+      // Set empty data so the UI can still render
+      setTickets([]);
     } finally {
+      console.log('Finished fetching tickets, setting loading to false');
       setIsLoading(false);
     }
   };
   
   // Initial data fetch
   useEffect(() => {
+    console.log('TicketProvider mounted, fetching data...');
     fetchTicketsData();
   }, []);
   

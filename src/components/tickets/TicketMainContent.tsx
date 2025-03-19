@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TicketFilters from '@/components/tickets/TicketFilters';
 import TicketList from '@/components/tickets/TicketList';
 import TicketStatCards from '@/components/tickets/TicketStatCards';
@@ -17,6 +17,7 @@ const TicketMainContent = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const { 
     filteredTickets,
@@ -35,6 +36,13 @@ const TicketMainContent = () => {
     isLoading,
     refreshTickets
   } = useTickets();
+
+  // Track when initial load completes
+  useEffect(() => {
+    if (!isLoading && isInitialLoad) {
+      setIsInitialLoad(false);
+    }
+  }, [isLoading, isInitialLoad]);
 
   const handleEscalateTicket = (ticketId: string) => {
     handleStatusChange(ticketId, 'escalated');
@@ -88,11 +96,20 @@ const TicketMainContent = () => {
   };
 
   const handleRefresh = async () => {
-    await refreshTickets();
-    toast({
-      title: "Refreshed",
-      description: "Ticket data has been refreshed"
-    });
+    try {
+      await refreshTickets();
+      toast({
+        title: "Refreshed",
+        description: "Ticket data has been refreshed"
+      });
+    } catch (error) {
+      console.error("Error refreshing tickets:", error);
+      toast({
+        title: "Refresh Failed",
+        description: "Could not refresh ticket data",
+        variant: "destructive"
+      });
+    }
   };
 
   const renderLoading = () => (
@@ -109,6 +126,9 @@ const TicketMainContent = () => {
       <Skeleton className="h-[400px]" />
     </div>
   );
+
+  // Show error state if we're not in initial load but have no tickets
+  const showEmptyState = !isLoading && !isInitialLoad && filteredTickets.length === 0;
 
   return (
     <>
@@ -143,13 +163,26 @@ const TicketMainContent = () => {
                 technicians={sampleTechnicians}
               />
               
-              <TicketList 
-                tickets={filteredTickets}
-                onTicketSelect={handleTicketSelect}
-                selectedTicket={selectedTicket}
-                onEscalateTicket={handleEscalateTicket}
-                onCloseTicket={handleCloseTicket}
-              />
+              {showEmptyState ? (
+                <div className="text-center p-8 bg-muted rounded-lg">
+                  <h3 className="text-xl font-medium mb-2">No tickets found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    There are no tickets matching your current filters or no tickets have been created yet.
+                  </p>
+                  <Button onClick={handleRefresh}>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Refresh
+                  </Button>
+                </div>
+              ) : (
+                <TicketList 
+                  tickets={filteredTickets}
+                  onTicketSelect={handleTicketSelect}
+                  selectedTicket={selectedTicket}
+                  onEscalateTicket={handleEscalateTicket}
+                  onCloseTicket={handleCloseTicket}
+                />
+              )}
             </TabsContent>
           </Tabs>
         ) : (
@@ -171,13 +204,26 @@ const TicketMainContent = () => {
                   technicians={sampleTechnicians}
                 />
                 
-                <TicketList 
-                  tickets={filteredTickets}
-                  onTicketSelect={handleTicketSelect}
-                  selectedTicket={selectedTicket}
-                  onEscalateTicket={handleEscalateTicket}
-                  onCloseTicket={handleCloseTicket}
-                />
+                {showEmptyState ? (
+                  <div className="text-center p-8 bg-muted rounded-lg">
+                    <h3 className="text-xl font-medium mb-2">No tickets found</h3>
+                    <p className="text-muted-foreground mb-4">
+                      There are no tickets matching your current filters or no tickets have been created yet.
+                    </p>
+                    <Button onClick={handleRefresh}>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Refresh
+                    </Button>
+                  </div>
+                ) : (
+                  <TicketList 
+                    tickets={filteredTickets}
+                    onTicketSelect={handleTicketSelect}
+                    selectedTicket={selectedTicket}
+                    onEscalateTicket={handleEscalateTicket}
+                    onCloseTicket={handleCloseTicket}
+                  />
+                )}
               </div>
               
               <div>

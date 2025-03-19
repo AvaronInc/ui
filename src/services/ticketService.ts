@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Ticket, TicketNote, TicketStatus, TicketPriority, ResolutionMethod, TicketStatistics } from '@/types/tickets';
 
@@ -24,6 +23,7 @@ interface CreateNotePayload {
 // Fetch all tickets
 export const fetchTickets = async (): Promise<Ticket[]> => {
   try {
+    console.log('fetchTickets: Starting database query');
     const { data, error } = await supabase
       .from('tickets')
       .select(`
@@ -34,39 +34,48 @@ export const fetchTickets = async (): Promise<Ticket[]> => {
 
     if (error) {
       console.error('Error fetching tickets:', error);
-      throw error;
+      // Return empty array instead of throwing to prevent UI from breaking
+      return [];
     }
+
+    if (!data || data.length === 0) {
+      console.log('fetchTickets: No tickets found in database');
+      return [];
+    }
+
+    console.log(`fetchTickets: Retrieved ${data.length} tickets from database`);
 
     // Transform the data to match our frontend types
     const tickets: Ticket[] = data.map(item => ({
       id: item.id,
-      title: item.title,
-      description: item.description,
-      status: item.status,
-      priority: item.priority,
+      title: item.title || 'Untitled Ticket',
+      description: item.description || '',
+      status: item.status || 'open',
+      priority: item.priority || 'medium',
       assignedTo: item.assigned_to,
       createdBy: item.created_by,
       createdAt: item.created_at,
       updatedAt: item.updated_at,
       department: item.department,
       location: item.location,
-      resolutionMethod: item.resolution_method,
-      isAIGenerated: item.is_ai_generated,
+      resolutionMethod: item.resolution_method || 'pending',
+      isAIGenerated: item.is_ai_generated || false,
       slaDeadline: item.sla_deadline,
-      attachments: item.attachments,
-      notes: item.ticket_notes.map(note => ({
+      attachments: item.attachments || [],
+      notes: Array.isArray(item.ticket_notes) ? item.ticket_notes.map(note => ({
         id: note.id,
-        content: note.content,
-        author: note.author,
-        timestamp: note.timestamp,
-        isInternal: note.is_internal,
-        isAIGenerated: note.is_ai_generated
-      }))
+        content: note.content || '',
+        author: note.author || 'System',
+        timestamp: note.timestamp || note.created_at,
+        isInternal: note.is_internal || false,
+        isAIGenerated: note.is_ai_generated || false
+      })) : []
     }));
 
     return tickets;
   } catch (error) {
     console.error('Error in fetchTickets:', error);
+    // Return empty array to prevent UI from breaking
     return [];
   }
 };
@@ -292,15 +301,40 @@ export const addTicketNote = async (noteData: CreateNotePayload): Promise<Ticket
 // Calculate ticket statistics
 export const calculateTicketStatistics = async (): Promise<TicketStatistics> => {
   try {
+    console.log('calculateTicketStatistics: Starting database query');
     const { data, error } = await supabase
       .from('tickets')
       .select('*');
 
     if (error) {
       console.error('Error fetching tickets for statistics:', error);
-      throw error;
+      // Return default values with the correct type for escalationTrend
+      return {
+        openTickets: 0,
+        resolvedToday: 0,
+        aiResolved: 0,
+        awaitingAction: 0,
+        avgResolutionTime: '0h',
+        escalationRate: 0,
+        escalationTrend: 'stable' as const
+      };
     }
 
+    if (!data || data.length === 0) {
+      console.log('calculateTicketStatistics: No tickets found in database');
+      return {
+        openTickets: 0,
+        resolvedToday: 0,
+        aiResolved: 0,
+        awaitingAction: 0,
+        avgResolutionTime: '0h',
+        escalationRate: 0,
+        escalationTrend: 'stable' as const
+      };
+    }
+
+    console.log(`calculateTicketStatistics: Retrieved ${data.length} tickets for stats calculation`);
+    
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
@@ -334,7 +368,8 @@ export const calculateTicketStatistics = async (): Promise<TicketStatistics> => 
       : '0h';
 
     // Fixed the escalationTrend to be one of the allowed literal types
-    const escalationTrend: 'up' | 'down' | 'stable' = 'down'; // This would typically be calculated by comparing with historical data
+    // Using 'as const' to ensure type safety
+    const escalationTrend: 'up' | 'down' | 'stable' = 'down' as const;
 
     return {
       openTickets,
@@ -355,7 +390,7 @@ export const calculateTicketStatistics = async (): Promise<TicketStatistics> => 
       awaitingAction: 0,
       avgResolutionTime: '0h',
       escalationRate: 0,
-      escalationTrend: 'stable'
+      escalationTrend: 'stable' as const
     };
   }
 };
