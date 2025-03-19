@@ -22,6 +22,9 @@ const TicketLoadingState: React.FC = () => {
           <Skeleton key={i} className="h-[100px]" />
         ))}
       </div>
+      <div className="border border-dashed border-gray-300 p-6 rounded-lg bg-gray-50 mb-4">
+        <p className="text-sm text-center text-muted-foreground">Loading ticket data...</p>
+      </div>
       <Skeleton className="h-[400px]" />
     </div>
   );

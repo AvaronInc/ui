@@ -47,7 +47,9 @@ const TicketMainContent = () => {
       hasFilteredTickets: filteredTickets?.length > 0,
       filteredTicketsCount: filteredTickets?.length,
       rawTicketsCount: tickets?.length,
-      hasStatistics: !!ticketStatistics
+      hasStatistics: !!ticketStatistics,
+      isTicketsNull: tickets === null,
+      isTicketsUndefined: tickets === undefined
     });
   }, [isLoading, isInitialLoad, filteredTickets, tickets, ticketStatistics]);
 
@@ -60,12 +62,18 @@ const TicketMainContent = () => {
     return <TicketLoadingState />;
   }
 
+  // Make sure tickets array exists
+  if (!tickets) {
+    console.log('💡 TICKETS ARRAY IS NULL OR UNDEFINED - showing empty state');
+    return <EmptyTicketState onRefresh={handleRefresh} />;
+  }
+
   // Determine if we should show empty state
   // Only show empty state when we're not loading and have no tickets
   const showEmptyState = forceDebug || (!isLoading && !isInitialLoad && (!filteredTickets || filteredTickets.length === 0));
   
   if (showEmptyState) {
-    console.log('💡 SHOWING EMPTY STATE');
+    console.log('💡 SHOWING EMPTY STATE - no tickets after filtering');
     return <EmptyTicketState onRefresh={handleRefresh} />;
   }
 

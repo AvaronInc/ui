@@ -68,6 +68,14 @@ const TicketsPage = () => {
     };
   }, [navigate]);
 
+  // For development purposes, we'll set authenticated to true
+  useEffect(() => {
+    if (import.meta.env.DEV && !authenticated) {
+      console.log('💡 TicketsPage: Force setting authenticated to true in DEV mode');
+      setAuthenticated(true);
+    }
+  }, [authenticated]);
+
   // Render loading skeleton while checking authentication
   if (loading) {
     console.log('💡 TicketsPage: Rendering loading skeleton');

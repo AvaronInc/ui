@@ -26,18 +26,19 @@ export const useTicketActions = () => {
 
   // Use useEffect to properly manage the loading state
   useEffect(() => {    
-    if (!isLoading && isInitialLoad) {
-      console.log('💡 Initial load complete, setting isInitialLoad to false');
+    if (!isLoading && tickets && tickets.length >= 0) {
+      console.log('💡 Initial data load detected, preparing to set isInitialLoad to false');
       
-      // Give a bit more time for the UI to render properly
+      // Force the state update to happen on the next tick to ensure UI updates correctly
       const timer = setTimeout(() => {
+        console.log('💡 Setting isInitialLoad to false now');
         setIsInitialLoad(false);
         console.log('💡 isInitialLoad is now FALSE');
       }, 500);
       
       return () => clearTimeout(timer);
     }
-  }, [isLoading, isInitialLoad]);
+  }, [isLoading, tickets]);
 
   const handleEscalateTicket = (ticketId: string) => {
     handleStatusChange(ticketId, 'escalated');
