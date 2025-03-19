@@ -26,7 +26,8 @@ const TicketMainContent = () => {
     handleAddNote,
     ticketStatistics,
     aiSuggestions,
-    isLoading
+    isLoading,
+    tickets
   } = useTickets();
 
   const {
@@ -39,24 +40,32 @@ const TicketMainContent = () => {
     handleRefresh
   } = useTicketActions();
 
-  // Log state changes for debugging
   useEffect(() => {
-    console.log('💡 TicketMainContent - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
-    console.log('💡 TicketMainContent - filteredTickets:', filteredTickets?.length);
-  }, [isLoading, isInitialLoad, filteredTickets]);
+    console.log('💡 TicketMainContent - Detailed state check:', {
+      isLoading,
+      isInitialLoad,
+      hasFilteredTickets: filteredTickets?.length > 0,
+      filteredTicketsCount: filteredTickets?.length,
+      rawTicketsCount: tickets?.length,
+      hasStatistics: !!ticketStatistics
+    });
+  }, [isLoading, isInitialLoad, filteredTickets, tickets, ticketStatistics]);
+
+  // Force debug display of empty state
+  const forceDebug = false;
 
   // Show loading state if we're in the initial loading phase
   if (isLoading || isInitialLoad) {
-    console.log('💡 Showing loading state - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
+    console.log('💡 SHOWING LOADING STATE - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
     return <TicketLoadingState />;
   }
 
   // Determine if we should show empty state
   // Only show empty state when we're not loading and have no tickets
-  const showEmptyState = !isLoading && !isInitialLoad && (!filteredTickets || filteredTickets.length === 0);
+  const showEmptyState = forceDebug || (!isLoading && !isInitialLoad && (!filteredTickets || filteredTickets.length === 0));
   
   if (showEmptyState) {
-    console.log('💡 Showing empty state');
+    console.log('💡 SHOWING EMPTY STATE');
     return <EmptyTicketState onRefresh={handleRefresh} />;
   }
 
@@ -71,7 +80,8 @@ const TicketMainContent = () => {
     escalationTrend: 'stable' as const
   };
 
-  console.log('💡 TicketMainContent - rendering main content with stats:', stats);
+  console.log('💡 TicketMainContent - RENDERING MAIN CONTENT with stats:', stats);
+  console.log('💡 TicketMainContent - Tickets available:', filteredTickets?.length);
 
   return (
     <>

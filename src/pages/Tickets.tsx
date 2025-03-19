@@ -15,10 +15,20 @@ const TicketsPage = () => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
+  // Check authentication status only once when component mounts
   useEffect(() => {
     const checkAuth = async () => {
       try {
         console.log('💡 TicketsPage: Checking authentication status...');
+        
+        // In development mode, we'll bypass authentication for easier testing
+        if (import.meta.env.DEV) {
+          console.log('💡 TicketsPage: Development mode, bypassing authentication check');
+          setAuthenticated(true);
+          setLoading(false);
+          return;
+        }
+        
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -32,13 +42,6 @@ const TicketsPage = () => {
         
         if (!data.session) {
           console.log('💡 TicketsPage: No active session found, redirecting to login');
-          // In development mode, we'll bypass authentication for easier testing
-          if (import.meta.env.DEV) {
-            console.log('💡 TicketsPage: Development mode, bypassing authentication check');
-            setAuthenticated(true);
-            setLoading(false);
-            return;
-          }
           navigate('/login');
         } else {
           console.log('💡 TicketsPage: User authenticated:', data.session.user.id);
@@ -86,11 +89,11 @@ const TicketsPage = () => {
     );
   }
 
-  // For development, always render the ticket page regardless of authentication
+  // For development mode or if authenticated, render the ticket page
   const isDevelopment = import.meta.env.DEV;
+  const shouldRenderTickets = authenticated || isDevelopment;
   
-  // We don't want to render anything if not authenticated and we're redirecting
-  if (!authenticated && !isDevelopment) {
+  if (!shouldRenderTickets) {
     console.log('💡 TicketsPage: Not authenticated, returning null');
     return null;
   }

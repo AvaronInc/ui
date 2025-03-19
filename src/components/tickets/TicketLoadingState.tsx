@@ -1,8 +1,15 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const TicketLoadingState: React.FC = () => {
+  useEffect(() => {
+    console.log('💡 TicketLoadingState MOUNTED');
+    return () => {
+      console.log('💡 TicketLoadingState UNMOUNTED');
+    };
+  }, []);
+
   console.log('💡 Rendering TicketLoadingState component');
   return (
     <div className="space-y-6">

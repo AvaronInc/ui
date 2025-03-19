@@ -11,21 +11,29 @@ export const useTicketActions = () => {
     handleStatusChange,
     refreshTickets,
     isLoading,
-    aiSuggestions
+    aiSuggestions,
+    tickets
   } = useTickets();
 
-  // Use useEffect to properly manage the loading state
+  // Debug logging for state changes
   useEffect(() => {
-    console.log('💡 useTicketActions - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
-    
-    // Only transition from initial load to loaded once
+    console.log('💡 useTicketActions - STATE CHECK:', {
+      isLoading,
+      isInitialLoad,
+      ticketsLength: tickets?.length || 0
+    });
+  }, [isLoading, isInitialLoad, tickets]);
+
+  // Use useEffect to properly manage the loading state
+  useEffect(() => {    
     if (!isLoading && isInitialLoad) {
       console.log('💡 Initial load complete, setting isInitialLoad to false');
       
-      // Small timeout to ensure UI updates properly
+      // Give a bit more time for the UI to render properly
       const timer = setTimeout(() => {
         setIsInitialLoad(false);
-      }, 100);
+        console.log('💡 isInitialLoad is now FALSE');
+      }, 500);
       
       return () => clearTimeout(timer);
     }

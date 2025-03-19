@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 
@@ -8,6 +8,13 @@ interface EmptyTicketStateProps {
 }
 
 const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh }) => {
+  useEffect(() => {
+    console.log('💡 EmptyTicketState MOUNTED');
+    return () => {
+      console.log('💡 EmptyTicketState UNMOUNTED');
+    };
+  }, []);
+
   console.log('💡 Rendering EmptyTicketState component');
   return (
     <div className="text-center p-8 bg-muted rounded-lg">
@@ -17,7 +24,7 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh }) => {
       </p>
       <Button onClick={onRefresh}>
         <RefreshCw className="h-4 w-4 mr-2" />
-        Refresh
+        Refresh Tickets
       </Button>
     </div>
   );
