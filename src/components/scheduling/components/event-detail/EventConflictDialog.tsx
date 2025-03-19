@@ -13,7 +13,7 @@ import {
 import { AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { ScheduleEvent } from '@/types/scheduling';
-import { SafeTooltipWrapper } from '@/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 interface EventConflictDialogProps {
   show: boolean;
@@ -29,7 +29,7 @@ const EventConflictDialog: React.FC<EventConflictDialogProps> = ({
   conflictingEvents,
 }) => {
   return (
-    <SafeTooltipWrapper>
+    <TooltipProvider>
       <AlertDialog open={show} onOpenChange={onClose}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -57,7 +57,7 @@ const EventConflictDialog: React.FC<EventConflictDialogProps> = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </SafeTooltipWrapper>
+    </TooltipProvider>
   );
 };
 

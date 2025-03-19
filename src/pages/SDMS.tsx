@@ -5,12 +5,12 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTitle from '@/components/common/PageTitle';
 import { Scroll } from 'lucide-react';
 import SDMSPanel from '@/components/sdms/SDMSPanel';
-import { SafeTooltipWrapper } from '@/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const SDMS = () => {
   return (
     <PageTransition>
-      <SafeTooltipWrapper>
+      <TooltipProvider>
         <DashboardLayout>
           <div className="p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
             <PageTitle 
@@ -21,7 +21,7 @@ const SDMS = () => {
             <SDMSPanel />
           </div>
         </DashboardLayout>
-      </SafeTooltipWrapper>
+      </TooltipProvider>
     </PageTransition>
   );
 };

@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
@@ -25,27 +26,23 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-// Maintain a global context to track if we're already inside a TooltipProvider
-// This avoids nesting providers which can cause issues
-const TooltipProviderTracker = React.createContext<boolean>(false);
+// Use a React context to track if we're inside a TooltipProvider
+const TooltipProviderContext = React.createContext(false);
 
-// Create a more robust wrapper component that provides TooltipProvider context when needed
+// Create a wrapper component that ensures there's only one TooltipProvider
 const SafeTooltipWrapper = ({ children }: { children: React.ReactNode }) => {
-  // Check if we're already inside a TooltipProvider
-  const hasProvider = React.useContext(TooltipProviderTracker);
+  const hasProvider = React.useContext(TooltipProviderContext);
   
-  // If we already have a provider, just render children
-  // Otherwise, wrap with TooltipProvider and mark that we've added one
   if (hasProvider) {
     return <>{children}</>;
   }
   
   return (
-    <TooltipProviderTracker.Provider value={true}>
+    <TooltipProviderContext.Provider value={true}>
       <TooltipProvider>
         {children}
       </TooltipProvider>
-    </TooltipProviderTracker.Provider>
+    </TooltipProviderContext.Provider>
   );
 };
 
