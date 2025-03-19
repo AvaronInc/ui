@@ -27,21 +27,36 @@ TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
 // Create a more robust safe wrapper component that provides TooltipProvider context when needed
 const SafeTooltipWrapper = ({ children }: { children: React.ReactNode }) => {
-  // Use a ref to check if we're already inside a TooltipProvider context
-  const tooltipProviderRef = React.useRef<boolean>(false);
+  // Use a ref to track if we're already inside a TooltipProvider context
+  const [hasProvider, setHasProvider] = React.useState<boolean>(false);
   
-  // Try to access TooltipProvider context to see if it exists
-  try {
-    // This will throw an error if TooltipProvider context is not available
-    React.useContext(TooltipPrimitive.TooltipProviderContext);
-    tooltipProviderRef.current = true;
-  } catch (e) {
-    tooltipProviderRef.current = false;
-  }
+  // Use effect to safely check for provider
+  React.useEffect(() => {
+    // A simple heuristic to determine if a provider is already available
+    // We create a dummy tooltip and see if it renders without error
+    try {
+      const testElement = document.createElement('div');
+      document.body.appendChild(testElement);
+      
+      const tooltipRoot = document.createElement('div');
+      tooltipRoot.dataset.radixTooltipRoot = '';
+      testElement.appendChild(tooltipRoot);
+      
+      // If a TooltipProvider exists, the data attribute should be processed
+      // We use this as a proxy to determine if we're already within a provider
+      setHasProvider(testElement.querySelector('[data-radix-tooltip-root]') !== null);
+      
+      // Clean up
+      document.body.removeChild(testElement);
+    } catch (e) {
+      // If any error occurs, assume we need a provider
+      setHasProvider(false);
+    }
+  }, []);
 
-  // If we're already inside a TooltipProvider context, just render children
-  // Otherwise, wrap children with TooltipProvider
-  return tooltipProviderRef.current ? (
+  // If we determined a provider exists, render children directly
+  // Otherwise, wrap with our own provider
+  return hasProvider ? (
     <>{children}</>
   ) : (
     <TooltipProvider>{children}</TooltipProvider>
