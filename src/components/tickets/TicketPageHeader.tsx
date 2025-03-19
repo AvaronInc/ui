@@ -7,7 +7,7 @@ import { Plus, Filter, Download, RefreshCw } from 'lucide-react';
 import NewTicketForm from './NewTicketForm';
 import TicketFilters from './TicketFilters';
 import { useTickets } from '@/context/ticket/TicketContext';
-import { sampleDepartments, sampleLocations } from '@/context/ticket/types';
+import { sampleDepartments, sampleLocations, sampleTechnicians } from '@/context/ticket/types';
 import { toast } from 'sonner';
 
 const TicketActionDialog = ({ action, trigger }: { action: 'new' | 'filter', trigger: React.ReactNode }) => {
@@ -48,12 +48,25 @@ const TicketActionDialog = ({ action, trigger }: { action: 'new' | 'filter', tri
         
         {action === 'new' ? (
           <NewTicketForm 
-            onSubmit={handleNewTicket} 
+            onSubmit={handleNewTicket}
+          />
+        ) : (
+          <TicketFilters 
+            filters={{
+              search: '',
+              status: 'all',
+              priority: 'all',
+              technician: 'all',
+              department: 'all',
+              location: 'all',
+              showAIResolved: false,
+              aiGeneratedOnly: false
+            }}
+            onFilterChange={handleApplyFilters}
+            technicians={sampleTechnicians}
             departments={sampleDepartments}
             locations={sampleLocations}
           />
-        ) : (
-          <TicketFilters onApplyFilters={handleApplyFilters} />
         )}
       </DialogContent>
     </Dialog>

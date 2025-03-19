@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { AITicketSuggestion } from '@/types/tickets';
 import { useTickets } from '@/context/ticket/TicketContext';
 
 export const useTicketActions = () => {
@@ -56,10 +55,10 @@ export const useTicketActions = () => {
     });
   };
   
-  const handleApplySuggestion = (suggestion: AITicketSuggestion) => {
+  const handleApplySuggestion = (suggestionId: string) => {
     toast({
       title: "AI Suggestion Applied",
-      description: `Applied suggestion for ${suggestion.relatedTickets.join(', ')}`
+      description: `Applied suggestion ${suggestionId}`
     });
   };
   

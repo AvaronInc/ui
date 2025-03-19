@@ -120,7 +120,7 @@ const TicketMainContent = () => {
           showEmptyState={false} // Already handled above
           selectedTicket={selectedTicket}
           technicians={sampleTechnicians}
-          onApplySuggestion={handleApplySuggestion}
+          onApplySuggestion={(suggestionId) => handleApplySuggestion(suggestionId)}
           onFilterChange={setFilters}
           onTicketSelect={handleTicketSelect}
           onEscalateTicket={handleEscalateTicket}
@@ -136,7 +136,7 @@ const TicketMainContent = () => {
           showEmptyState={false} // Already handled above
           selectedTicket={selectedTicket}
           technicians={sampleTechnicians}
-          onApplySuggestion={handleApplySuggestion}
+          onApplySuggestion={(suggestionId) => handleApplySuggestion(suggestionId)}
           onFilterChange={setFilters}
           onTicketSelect={handleTicketSelect}
           onEscalateTicket={handleEscalateTicket}
