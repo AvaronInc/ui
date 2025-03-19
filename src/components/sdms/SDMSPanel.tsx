@@ -20,7 +20,7 @@ const SDMSPanel = () => {
       <div className="space-y-4 sm:space-y-6">
         <Tabs defaultValue="overview" className="w-full">
           <div className="overflow-x-auto pb-2">
-            <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 mb-4 sm:mb-6">
+            <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 mb-4 sm:mb-6">
               <TabsTrigger value="overview">{isMobile ? 'Overview' : 'Overview'}</TabsTrigger>
               <TabsTrigger value="topology">{isMobile ? 'Topology' : 'Topology'}</TabsTrigger>
               <TabsTrigger value="security">{isMobile ? 'Security' : 'Security'}</TabsTrigger>
@@ -28,7 +28,8 @@ const SDMSPanel = () => {
               <TabsTrigger value="compliance">{isMobile ? 'Comply' : 'Compliance'}</TabsTrigger>
               <TabsTrigger value="custom">{isMobile ? 'Custom' : 'Custom Docs'}</TabsTrigger>
               <TabsTrigger value="search">{isMobile ? 'Search' : 'Search'}</TabsTrigger>
-              <TabsTrigger value="export">{isMobile ? 'Export' : 'Save/Export'}</TabsTrigger>
+              {/* Export tab disabled temporarily */}
+              {/*<TabsTrigger value="export">{isMobile ? 'Export' : 'Save/Export'}</TabsTrigger>*/}
             </TabsList>
           </div>
           
@@ -60,9 +61,12 @@ const SDMSPanel = () => {
             <SDMSSearch />
           </TabsContent>
           
+          {/* Export tab content disabled temporarily */}
+          {/*
           <TabsContent value="export" className="mt-0">
             <SaveExport />
           </TabsContent>
+          */}
         </Tabs>
       </div>
     </TooltipProvider>
@@ -70,3 +74,4 @@ const SDMSPanel = () => {
 };
 
 export default SDMSPanel;
+
