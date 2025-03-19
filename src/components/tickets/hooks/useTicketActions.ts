@@ -1,11 +1,13 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTickets } from '@/context/TicketContext';
 import { toast } from 'sonner';
 
 export const useTicketActions = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [loadingTimeout, setLoadingTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const { 
     handleStatusChange,
@@ -20,9 +22,36 @@ export const useTicketActions = () => {
     console.log('💡 useTicketActions - STATE CHECK:', {
       isLoading,
       isInitialLoad,
+      loadError,
       ticketsLength: tickets?.length || 0
     });
-  }, [isLoading, isInitialLoad, tickets]);
+  }, [isLoading, isInitialLoad, loadError, tickets]);
+
+  // Set a timeout for loading to detect potential issues
+  useEffect(() => {
+    if (isLoading && !loadingTimeout) {
+      console.log('💡 Setting up loading timeout detection');
+      const timeout = setTimeout(() => {
+        console.log('💡 Loading timeout triggered - loading is taking too long');
+        if (isLoading) {
+          setLoadError('Loading timed out after 15 seconds');
+          setIsInitialLoad(false);
+        }
+      }, 15000);
+      
+      setLoadingTimeout(timeout);
+    } else if (!isLoading && loadingTimeout) {
+      console.log('💡 Clearing loading timeout as loading completed');
+      clearTimeout(loadingTimeout);
+      setLoadingTimeout(null);
+    }
+    
+    return () => {
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+      }
+    };
+  }, [isLoading, loadingTimeout]);
 
   // Use useEffect to handle the initial loading state with more precise conditions
   useEffect(() => {    
@@ -87,30 +116,50 @@ export const useTicketActions = () => {
     }
   };
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     console.log('💡 Manually refreshing tickets...');
     try {
-      setIsInitialLoad(true); // Set back to initial load state when refreshing
+      // Reset state for a fresh load
+      setIsInitialLoad(true);
+      setLoadError(null);
+      
+      toast("Refreshing Tickets", {
+        description: "Getting the latest ticket data..."
+      });
+      
       await refreshTickets();
+      
       toast("Refreshed", {
         description: "Ticket data has been refreshed"
       });
     } catch (error) {
       console.error("Error refreshing tickets:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      setLoadError(errorMessage);
+      
       toast("Refresh Failed", {
         description: "Could not refresh ticket data"
       });
+      
       setIsInitialLoad(false); // Reset if there's an error
     }
-  };
+  }, [refreshTickets]);
+
+  const handleCancelLoading = useCallback(() => {
+    console.log('💡 User canceled loading, resetting state');
+    setIsInitialLoad(false);
+    setLoadError('Loading canceled by user');
+  }, []);
 
   return {
     activeTab,
     setActiveTab,
     isInitialLoad,
+    loadError,
     handleEscalateTicket,
     handleCloseTicket,
     handleApplySuggestion,
-    handleRefresh
+    handleRefresh,
+    handleCancelLoading
   };
 };

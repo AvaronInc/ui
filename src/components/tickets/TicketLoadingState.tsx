@@ -1,14 +1,30 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 
-const TicketLoadingState: React.FC = () => {
+interface TicketLoadingStateProps {
+  onCancel?: () => void;
+}
+
+const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({ onCancel }) => {
+  const [loadingTime, setLoadingTime] = useState(0);
+  
   useEffect(() => {
     console.log('💡 TicketLoadingState MOUNTED');
+    
+    const interval = setInterval(() => {
+      setLoadingTime(prev => prev + 1);
+    }, 1000);
+    
     return () => {
       console.log('💡 TicketLoadingState UNMOUNTED');
+      clearInterval(interval);
     };
   }, []);
+
+  const showLoadingWarning = loadingTime > 10;
 
   console.log('💡 Rendering TicketLoadingState component');
   return (
@@ -23,10 +39,27 @@ const TicketLoadingState: React.FC = () => {
         ))}
       </div>
       <div className="border border-dashed border-gray-300 p-6 rounded-lg bg-gray-50 mb-4">
-        <p className="text-sm text-center text-muted-foreground">Loading ticket data...</p>
+        <p className="text-sm text-center text-muted-foreground">Loading ticket data... ({loadingTime}s)</p>
         <div className="flex justify-center mt-2">
           <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full"></div>
         </div>
+        
+        {showLoadingWarning && (
+          <div className="mt-4 text-sm text-center">
+            <p className="text-amber-600">This is taking longer than expected.</p>
+            {onCancel && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-2" 
+                onClick={onCancel}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Try Again
+              </Button>
+            )}
+          </div>
+        )}
       </div>
       <Skeleton className="h-[400px]" />
     </div>

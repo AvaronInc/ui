@@ -32,6 +32,19 @@ export const fetchTickets = async (): Promise<Ticket[]> => {
     
     console.log(`fetchTickets: Count check - found ${countResult.count} tickets`);
     
+    if (countResult.error) {
+      console.error('Error checking ticket count:', countResult.error);
+      console.error('Error details:', countResult.error.message, countResult.error.details);
+      
+      // Generate some mock tickets for development/testing if there's an error
+      if (import.meta.env.DEV) {
+        console.log('DEV MODE: Generating mock tickets since table access failed');
+        return generateMockTickets();
+      }
+      
+      return [];
+    }
+    
     // Then do the full query with all the data
     const { data, error } = await supabase
       .from('tickets')
@@ -42,12 +55,27 @@ export const fetchTickets = async (): Promise<Ticket[]> => {
 
     if (error) {
       console.error('Error fetching tickets:', error);
+      console.error('Error details:', error.message, error.details);
+      
+      // Generate some mock tickets for development/testing if there's an error
+      if (import.meta.env.DEV) {
+        console.log('DEV MODE: Generating mock tickets since fetching failed');
+        return generateMockTickets();
+      }
+      
       // Return empty array instead of throwing to prevent UI from breaking
       return [];
     }
 
     if (!data || data.length === 0) {
       console.log('fetchTickets: No tickets found in database');
+      
+      // Generate some mock tickets for development/testing if no tickets exist
+      if (import.meta.env.DEV) {
+        console.log('DEV MODE: Generating mock tickets since none found');
+        return generateMockTickets();
+      }
+      
       return [];
     }
 
@@ -103,9 +131,87 @@ export const fetchTickets = async (): Promise<Ticket[]> => {
     return tickets;
   } catch (error) {
     console.error('Error in fetchTickets:', error);
+    
+    // Generate some mock tickets for development/testing if there's an exception
+    if (import.meta.env.DEV) {
+      console.log('DEV MODE: Generating mock tickets due to exception');
+      return generateMockTickets();
+    }
+    
     // Return empty array to prevent UI from breaking
     return [];
   }
+};
+
+// Helper function to generate mock tickets for development/testing
+const generateMockTickets = (): Ticket[] => {
+  console.log('Generating mock tickets for development');
+  
+  const mockTickets: Ticket[] = [
+    {
+      id: 'TK-1001',
+      title: 'Server Access Issue',
+      description: 'Unable to access the file server from remote location.',
+      status: 'open',
+      priority: 'high',
+      assignedTo: 'James Wilson',
+      createdBy: 'Maria Garcia',
+      createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+      updatedAt: new Date(Date.now() - 1800000).toISOString(),
+      department: 'IT',
+      location: 'Headquarters',
+      resolutionMethod: 'pending',
+      notes: [
+        {
+          id: 'note-1',
+          content: 'Checking VPN logs now',
+          author: 'James Wilson',
+          timestamp: new Date(Date.now() - 2700000).toISOString(),
+          isInternal: true
+        }
+      ]
+    },
+    {
+      id: 'TK-1002',
+      title: 'Email Not Working',
+      description: 'Cannot send or receive emails since this morning.',
+      status: 'in-progress',
+      priority: 'medium',
+      assignedTo: 'Sophia Lee',
+      createdBy: 'Robert Davis',
+      createdAt: new Date(Date.now() - 7200000).toISOString(),
+      updatedAt: new Date(Date.now() - 3600000).toISOString(),
+      department: 'Marketing',
+      location: 'East Branch',
+      resolutionMethod: 'pending',
+      notes: []
+    },
+    {
+      id: 'TK-1003',
+      title: 'New Software Installation',
+      description: 'Need latest version of Adobe Creative Suite installed.',
+      status: 'pending-customer',
+      priority: 'low',
+      assignedTo: 'Alex Johnson',
+      createdBy: 'James Wilson',
+      createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+      updatedAt: new Date(Date.now() - 43200000).toISOString(),
+      department: 'Design',
+      location: 'Remote',
+      resolutionMethod: 'pending',
+      notes: [
+        {
+          id: 'note-2',
+          content: 'License key required, waiting for purchase approval',
+          author: 'Alex Johnson',
+          timestamp: new Date(Date.now() - 43200000).toISOString(),
+          isInternal: false
+        }
+      ]
+    }
+  ];
+  
+  return mockTickets;
 };
 
 // Get a single ticket by ID

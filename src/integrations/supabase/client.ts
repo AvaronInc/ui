@@ -63,6 +63,22 @@ export const getFiles = async (path: string[] = ['root']) => {
 export const getTickets = async () => {
   console.log('Getting tickets from Supabase');
   try {
+    // First check if the tickets table exists by trying to count records
+    console.log('Checking if tickets table exists...');
+    const countCheck = await supabase
+      .from('tickets')
+      .select('*', { count: 'exact', head: true });
+    
+    console.log('Count check response:', countCheck);
+    
+    if (countCheck.error) {
+      console.error('Error during count check:', countCheck.error);
+      return [];
+    }
+    
+    console.log(`Found ${countCheck.count || 0} tickets in database`);
+    
+    // Now do the full query to get the ticket data
     const { data, error } = await supabase
       .from('tickets')
       .select('*, assigned_to')
@@ -70,10 +86,17 @@ export const getTickets = async () => {
     
     if (error) {
       console.error('Error fetching tickets:', error);
+      console.error('Error details:', error.message, error.details, error.hint);
       return [];
     }
     
-    console.log(`Retrieved ${data?.length || 0} tickets from Supabase`);
+    if (!data || data.length === 0) {
+      console.log('No tickets found in database');
+      return [];
+    }
+    
+    console.log(`Retrieved ${data.length} tickets from Supabase`);
+    console.log('Sample ticket data:', data[0]);
     return data;
   } catch (e) {
     console.error('Unexpected error in getTickets:', e);

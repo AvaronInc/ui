@@ -34,16 +34,20 @@ const TicketMainContent = () => {
     activeTab,
     setActiveTab,
     isInitialLoad,
+    loadError,
     handleEscalateTicket,
     handleCloseTicket,
     handleApplySuggestion,
-    handleRefresh
+    handleRefresh,
+    handleCancelLoading
   } = useTicketActions();
 
   useEffect(() => {
     console.log('💡 TicketMainContent - Detailed state check:', {
       isLoading,
       isInitialLoad,
+      hasLoadError: !!loadError,
+      loadError,
       hasFilteredTickets: filteredTickets?.length > 0,
       filteredTicketsCount: filteredTickets?.length,
       rawTicketsCount: tickets?.length,
@@ -51,7 +55,7 @@ const TicketMainContent = () => {
       isTicketsNull: tickets === null,
       isTicketsUndefined: tickets === undefined
     });
-  }, [isLoading, isInitialLoad, filteredTickets, tickets, ticketStatistics]);
+  }, [isLoading, isInitialLoad, loadError, filteredTickets, tickets, ticketStatistics]);
 
   // Force debug display of empty state
   const forceDebug = false;
@@ -59,13 +63,19 @@ const TicketMainContent = () => {
   // Show loading state if we're in the initial loading phase
   if (isLoading || isInitialLoad) {
     console.log('💡 SHOWING LOADING STATE - isLoading:', isLoading, 'isInitialLoad:', isInitialLoad);
-    return <TicketLoadingState />;
+    return <TicketLoadingState onCancel={handleCancelLoading} />;
   }
 
   // Make sure tickets array exists
   if (!tickets) {
     console.log('💡 TICKETS ARRAY IS NULL OR UNDEFINED - showing empty state');
-    return <EmptyTicketState onRefresh={handleRefresh} />;
+    return <EmptyTicketState onRefresh={handleRefresh} error="No ticket data was returned" />;
+  }
+
+  // Show empty state if there's a load error
+  if (loadError) {
+    console.log('💡 SHOWING ERROR STATE - error:', loadError);
+    return <EmptyTicketState onRefresh={handleRefresh} error={loadError} />;
   }
 
   // Determine if we should show empty state
