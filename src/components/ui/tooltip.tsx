@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
@@ -26,9 +25,27 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-// Create a safe wrapper for elements that might be used in forms
+// Create a more robust safe wrapper component that provides TooltipProvider context when needed
 const SafeTooltipWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <>{children}</>;
+  // Use a ref to check if we're already inside a TooltipProvider context
+  const tooltipProviderRef = React.useRef<boolean>(false);
+  
+  // Try to access TooltipProvider context to see if it exists
+  try {
+    // This will throw an error if TooltipProvider context is not available
+    React.useContext(TooltipPrimitive.TooltipProviderContext);
+    tooltipProviderRef.current = true;
+  } catch (e) {
+    tooltipProviderRef.current = false;
+  }
+
+  // If we're already inside a TooltipProvider context, just render children
+  // Otherwise, wrap children with TooltipProvider
+  return tooltipProviderRef.current ? (
+    <>{children}</>
+  ) : (
+    <TooltipProvider>{children}</TooltipProvider>
+  );
 };
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SafeTooltipWrapper }

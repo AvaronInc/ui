@@ -9,7 +9,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { CalendarClock } from 'lucide-react';
 import { format } from 'date-fns';
 import { ScheduleEvent } from '@/types/scheduling';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { SafeTooltipWrapper } from '@/components/ui/tooltip';
 
 interface EventTimeSectionProps {
   event: ScheduleEvent;
@@ -25,7 +25,7 @@ const EventTimeSection: React.FC<EventTimeSectionProps> = ({
   onFieldChange,
 }) => {
   return (
-    <TooltipProvider>
+    <SafeTooltipWrapper>
       <div className="space-y-4">
         <div className="flex items-center">
           <CalendarClock className="h-5 w-5 mr-2 text-muted-foreground" />
@@ -122,7 +122,7 @@ const EventTimeSection: React.FC<EventTimeSectionProps> = ({
           </div>
         )}
       </div>
-    </TooltipProvider>
+    </SafeTooltipWrapper>
   );
 };
 
