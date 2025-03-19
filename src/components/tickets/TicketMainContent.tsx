@@ -9,6 +9,9 @@ import { useTickets, sampleTechnicians } from '@/context/TicketContext';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 
 const TicketMainContent = () => {
   const { toast } = useToast();
@@ -28,7 +31,9 @@ const TicketMainContent = () => {
     handleAssignTicket,
     handleAddNote,
     ticketStatistics,
-    aiSuggestions
+    aiSuggestions,
+    isLoading,
+    refreshTickets
   } = useTickets();
 
   const handleEscalateTicket = (ticketId: string) => {
@@ -82,45 +87,56 @@ const TicketMainContent = () => {
     }
   };
 
+  const handleRefresh = async () => {
+    await refreshTickets();
+    toast({
+      title: "Refreshed",
+      description: "Ticket data has been refreshed"
+    });
+  };
+
+  const renderLoading = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-10 w-[200px]" />
+        <Skeleton className="h-10 w-[100px]" />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        {Array(4).fill(null).map((_, i) => (
+          <Skeleton key={i} className="h-[100px]" />
+        ))}
+      </div>
+      <Skeleton className="h-[400px]" />
+    </div>
+  );
+
   return (
     <>
-      {isMobile ? (
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-2">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="tickets">Tickets</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="dashboard" className="mt-4 space-y-6">
-            <TicketStatCards statistics={ticketStatistics} />
-            <AIAssistantPanel 
-              suggestions={aiSuggestions}
-              onApplySuggestion={handleApplySuggestion}
-            />
-          </TabsContent>
-          
-          <TabsContent value="tickets" className="mt-4 space-y-6">
-            <TicketFilters 
-              filters={filters}
-              onFilterChange={setFilters}
-              technicians={sampleTechnicians}
-            />
-            
-            <TicketList 
-              tickets={filteredTickets}
-              onTicketSelect={handleTicketSelect}
-              selectedTicket={selectedTicket}
-              onEscalateTicket={handleEscalateTicket}
-              onCloseTicket={handleCloseTicket}
-            />
-          </TabsContent>
-        </Tabs>
+      {isLoading ? (
+        renderLoading()
       ) : (
-        <>
-          <TicketStatCards statistics={ticketStatistics} />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div className="lg:col-span-2 space-y-6">
+        isMobile ? (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+            <TabsList className="w-full grid grid-cols-2">
+              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="tickets">Tickets</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="dashboard" className="mt-4 space-y-6">
+              <div className="flex justify-end">
+                <Button variant="outline" size="sm" onClick={handleRefresh}>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Refresh
+                </Button>
+              </div>
+              <TicketStatCards statistics={ticketStatistics} />
+              <AIAssistantPanel 
+                suggestions={aiSuggestions}
+                onApplySuggestion={handleApplySuggestion}
+              />
+            </TabsContent>
+            
+            <TabsContent value="tickets" className="mt-4 space-y-6">
               <TicketFilters 
                 filters={filters}
                 onFilterChange={setFilters}
@@ -134,16 +150,45 @@ const TicketMainContent = () => {
                 onEscalateTicket={handleEscalateTicket}
                 onCloseTicket={handleCloseTicket}
               />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <>
+            <div className="flex justify-end mb-4">
+              <Button variant="outline" size="sm" onClick={handleRefresh}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
             </div>
             
-            <div>
-              <AIAssistantPanel 
-                suggestions={aiSuggestions}
-                onApplySuggestion={handleApplySuggestion}
-              />
+            <TicketStatCards statistics={ticketStatistics} />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <div className="lg:col-span-2 space-y-6">
+                <TicketFilters 
+                  filters={filters}
+                  onFilterChange={setFilters}
+                  technicians={sampleTechnicians}
+                />
+                
+                <TicketList 
+                  tickets={filteredTickets}
+                  onTicketSelect={handleTicketSelect}
+                  selectedTicket={selectedTicket}
+                  onEscalateTicket={handleEscalateTicket}
+                  onCloseTicket={handleCloseTicket}
+                />
+              </div>
+              
+              <div>
+                <AIAssistantPanel 
+                  suggestions={aiSuggestions}
+                  onApplySuggestion={handleApplySuggestion}
+                />
+              </div>
             </div>
-          </div>
-        </>
+          </>
+        )
       )}
       
       <TicketDetailPanel 
