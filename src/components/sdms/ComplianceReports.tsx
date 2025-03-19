@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -123,7 +124,8 @@ const ComplianceReports = () => {
       <Tabs defaultValue="reports" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList>
           <TabsTrigger value="reports">Compliance Reports</TabsTrigger>
-          <TabsTrigger value="schedule">Schedule</TabsTrigger>
+          {/* Schedule tab temporarily disabled */}
+          {/*<TabsTrigger value="schedule">Schedule</TabsTrigger>*/}
           <TabsTrigger value="standards">Standards</TabsTrigger>
         </TabsList>
         
@@ -275,6 +277,7 @@ const ComplianceReports = () => {
           </div>
         </TabsContent>
         
+        {/* Schedule tab content temporarily disabled
         <TabsContent value="schedule">
           <TooltipProvider>
             <Card>
@@ -369,6 +372,7 @@ const ComplianceReports = () => {
             </Card>
           </TooltipProvider>
         </TabsContent>
+        */}
         
         <TabsContent value="standards">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
