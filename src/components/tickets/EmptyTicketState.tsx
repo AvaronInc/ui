@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Database, AlertTriangle } from 'lucide-react';
@@ -23,16 +22,21 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
     console.log('💡 User clicked Refresh Tickets button');
     setIsRefreshing(true);
     
-    toast("Using Mock Data", {
-      description: "Loading development data since database connection failed",
+    toast.success("Loading mock data", {
+      description: "Using development data since database connection failed",
       duration: 3000
     });
     
-    // Add a slight delay to give visual feedback
+    // Force a small delay before calling onRefresh to ensure state updates properly
     setTimeout(() => {
+      console.log('💡 Calling onRefresh to load mock data');
       onRefresh();
-      // We'll keep this set to true as the parent component will re-render this with new props if needed
-    }, 800);
+      
+      // Keep refresh state active briefly to show visual feedback
+      setTimeout(() => {
+        setIsRefreshing(false);
+      }, 500);
+    }, 100);
   };
 
   const isCorsError = error && (error.includes('CORS') || error.includes('network'));

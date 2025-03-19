@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -43,19 +42,23 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
     setHasTriedRefresh(true);
     setIsRefreshing(true);
     
-    toast("Canceling Current Load", {
-      description: "Switching to mock data for development...",
+    toast.success("Loading mock data", {
+      description: "Switching to development data...",
       duration: 3000
     });
     
-    // Simulate a delay before calling the actual cancel function
-    // This gives the user visual feedback that something is happening
+    // Force a small delay before calling onCancel to ensure state updates properly
     setTimeout(() => {
       if (onCancel) {
+        console.log('💡 Calling onCancel callback to force mock data');
         onCancel();
       }
-      setIsRefreshing(false);
-    }, 1000);
+      
+      // Keep refresh state active briefly to show visual feedback
+      setTimeout(() => {
+        setIsRefreshing(false);
+      }, 500);
+    }, 100);
   };
 
   console.log('💡 Rendering TicketLoadingState component, loadingTime:', loadingTime);
@@ -99,7 +102,7 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
                 disabled={isRefreshing}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                {isRefreshing ? "Switching to Mock Data..." : "Use Mock Data Instead"}
+                {isRefreshing ? "Loading Mock Data..." : "Use Mock Data Instead"}
               </Button>
             )}
             
