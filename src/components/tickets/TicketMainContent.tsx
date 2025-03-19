@@ -6,15 +6,14 @@ import TicketStatCards from '@/components/tickets/TicketStatCards';
 import AIAssistantPanel from '@/components/tickets/AIAssistantPanel';
 import { TicketDetailPanel } from '@/components/tickets/detail';
 import { useTickets, sampleTechnicians } from '@/context/TicketContext';
-import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
 
 const TicketMainContent = () => {
-  const { toast } = useToast();
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -39,6 +38,7 @@ const TicketMainContent = () => {
 
   // Track when initial load completes
   useEffect(() => {
+    console.log('TicketMainContent - isLoading state changed:', isLoading);
     if (!isLoading && isInitialLoad) {
       setIsInitialLoad(false);
     }
@@ -46,16 +46,14 @@ const TicketMainContent = () => {
 
   const handleEscalateTicket = (ticketId: string) => {
     handleStatusChange(ticketId, 'escalated');
-    toast({
-      title: "Ticket Escalated",
+    toast("Ticket Escalated", {
       description: `Ticket ${ticketId} has been escalated`
     });
   };
 
   const handleCloseTicket = (ticketId: string) => {
     handleStatusChange(ticketId, 'resolved');
-    toast({
-      title: "Ticket Closed",
+    toast("Ticket Closed", {
       description: `Ticket ${ticketId} has been marked as resolved`
     });
   };
@@ -66,29 +64,25 @@ const TicketMainContent = () => {
 
     switch (suggestion.type) {
       case 'apply-fix':
-        toast({
-          title: "Fix Applied",
+        toast("Fix Applied", {
           description: `Solution automatically applied to ticket(s)`
         });
         break;
       case 'escalate':
         if (suggestion.relatedTickets && suggestion.relatedTickets.length > 0) {
           suggestion.relatedTickets.forEach(id => handleStatusChange(id, 'escalated'));
-          toast({
-            title: "Tickets Escalated",
+          toast("Tickets Escalated", {
             description: `${suggestion.relatedTickets.length} tickets have been escalated`
           });
         }
         break;
       case 'follow-up':
-        toast({
-          title: "Follow-up Sent",
+        toast("Follow-up Sent", {
           description: "Automated follow-up message has been sent to the customer"
         });
         break;
       case 'bulk-resolution':
-        toast({
-          title: "Bulk Resolution Started",
+        toast("Bulk Resolution Started", {
           description: "Created bulk resolution ticket for similar issues"
         });
         break;
@@ -96,18 +90,16 @@ const TicketMainContent = () => {
   };
 
   const handleRefresh = async () => {
+    console.log('Manually refreshing tickets...');
     try {
       await refreshTickets();
-      toast({
-        title: "Refreshed",
+      toast("Refreshed", {
         description: "Ticket data has been refreshed"
       });
     } catch (error) {
       console.error("Error refreshing tickets:", error);
-      toast({
-        title: "Refresh Failed",
-        description: "Could not refresh ticket data",
-        variant: "destructive"
+      toast("Refresh Failed", {
+        description: "Could not refresh ticket data"
       });
     }
   };
@@ -127,36 +119,86 @@ const TicketMainContent = () => {
     </div>
   );
 
-  // Show error state if we're not in initial load but have no tickets
-  const showEmptyState = !isLoading && !isInitialLoad && filteredTickets.length === 0;
+  console.log('TicketMainContent render - isLoading:', isLoading, 'filteredTickets:', filteredTickets?.length);
+
+  // Show empty state if we're not in initial load and not loading but have no tickets
+  const showEmptyState = !isLoading && !isInitialLoad && (!filteredTickets || filteredTickets.length === 0);
+
+  if (isLoading) {
+    console.log('Rendering loading state...');
+    return renderLoading();
+  }
 
   return (
     <>
-      {isLoading ? (
-        renderLoading()
-      ) : (
-        isMobile ? (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-            <TabsList className="w-full grid grid-cols-2">
-              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-              <TabsTrigger value="tickets">Tickets</TabsTrigger>
-            </TabsList>
+      {isMobile ? (
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="w-full grid grid-cols-2">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="tickets">Tickets</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="dashboard" className="mt-4 space-y-6">
+            <div className="flex justify-end">
+              <Button variant="outline" size="sm" onClick={handleRefresh}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
+            </div>
+            <TicketStatCards statistics={ticketStatistics} />
+            <AIAssistantPanel 
+              suggestions={aiSuggestions || []}
+              onApplySuggestion={handleApplySuggestion}
+            />
+          </TabsContent>
+          
+          <TabsContent value="tickets" className="mt-4 space-y-6">
+            <TicketFilters 
+              filters={filters}
+              onFilterChange={setFilters}
+              technicians={sampleTechnicians}
+            />
             
-            <TabsContent value="dashboard" className="mt-4 space-y-6">
-              <div className="flex justify-end">
-                <Button variant="outline" size="sm" onClick={handleRefresh}>
+            {showEmptyState ? (
+              <div className="text-center p-8 bg-muted rounded-lg">
+                <h3 className="text-xl font-medium mb-2">No tickets found</h3>
+                <p className="text-muted-foreground mb-4">
+                  There are no tickets matching your current filters or no tickets have been created yet.
+                </p>
+                <Button onClick={handleRefresh}>
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Refresh
                 </Button>
               </div>
-              <TicketStatCards statistics={ticketStatistics} />
-              <AIAssistantPanel 
-                suggestions={aiSuggestions}
-                onApplySuggestion={handleApplySuggestion}
+            ) : (
+              <TicketList 
+                tickets={filteredTickets || []}
+                onTicketSelect={handleTicketSelect}
+                selectedTicket={selectedTicket}
+                onEscalateTicket={handleEscalateTicket}
+                onCloseTicket={handleCloseTicket}
               />
-            </TabsContent>
-            
-            <TabsContent value="tickets" className="mt-4 space-y-6">
+            )}
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <>
+          <div className="flex justify-end mb-4">
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+          
+          <TicketStatCards statistics={ticketStatistics || {
+            total: 0,
+            open: 0,
+            resolved: 0,
+            escalated: 0
+          }} />
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div className="lg:col-span-2 space-y-6">
               <TicketFilters 
                 filters={filters}
                 onFilterChange={setFilters}
@@ -176,65 +218,23 @@ const TicketMainContent = () => {
                 </div>
               ) : (
                 <TicketList 
-                  tickets={filteredTickets}
+                  tickets={filteredTickets || []}
                   onTicketSelect={handleTicketSelect}
                   selectedTicket={selectedTicket}
                   onEscalateTicket={handleEscalateTicket}
                   onCloseTicket={handleCloseTicket}
                 />
               )}
-            </TabsContent>
-          </Tabs>
-        ) : (
-          <>
-            <div className="flex justify-end mb-4">
-              <Button variant="outline" size="sm" onClick={handleRefresh}>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh
-              </Button>
             </div>
             
-            <TicketStatCards statistics={ticketStatistics} />
-            
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-              <div className="lg:col-span-2 space-y-6">
-                <TicketFilters 
-                  filters={filters}
-                  onFilterChange={setFilters}
-                  technicians={sampleTechnicians}
-                />
-                
-                {showEmptyState ? (
-                  <div className="text-center p-8 bg-muted rounded-lg">
-                    <h3 className="text-xl font-medium mb-2">No tickets found</h3>
-                    <p className="text-muted-foreground mb-4">
-                      There are no tickets matching your current filters or no tickets have been created yet.
-                    </p>
-                    <Button onClick={handleRefresh}>
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Refresh
-                    </Button>
-                  </div>
-                ) : (
-                  <TicketList 
-                    tickets={filteredTickets}
-                    onTicketSelect={handleTicketSelect}
-                    selectedTicket={selectedTicket}
-                    onEscalateTicket={handleEscalateTicket}
-                    onCloseTicket={handleCloseTicket}
-                  />
-                )}
-              </div>
-              
-              <div>
-                <AIAssistantPanel 
-                  suggestions={aiSuggestions}
-                  onApplySuggestion={handleApplySuggestion}
-                />
-              </div>
+            <div>
+              <AIAssistantPanel 
+                suggestions={aiSuggestions || []}
+                onApplySuggestion={handleApplySuggestion}
+              />
             </div>
-          </>
-        )
+          </div>
+        </>
       )}
       
       <TicketDetailPanel 

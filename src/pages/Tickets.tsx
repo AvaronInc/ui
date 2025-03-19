@@ -36,6 +36,7 @@ const TicketsPage = () => {
         } else {
           console.log('User authenticated:', data.session.user.id);
           setAuthenticated(true);
+          setLoading(false); // Move this here to ensure we only stop loading when authentication is confirmed
         }
       } catch (err) {
         console.error('Unexpected error during auth check:', err);
@@ -43,9 +44,6 @@ const TicketsPage = () => {
           description: "Please try again later"
         });
         navigate('/login');
-      } finally {
-        console.log('Auth check complete, setting loading to false');
-        setLoading(false);
       }
     };
 
