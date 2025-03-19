@@ -46,13 +46,20 @@ export async function createUser(values: SignupFormValues) {
         // Simulate auth state change by logging in with the same credentials
         // This helps bypass CORS issues in development
         try {
-          await supabase.auth.signInWithPassword({
+          const signInResult = await supabase.auth.signInWithPassword({
             email: values.email,
             password: values.password,
           });
+          
+          if (signInResult.error) {
+            console.log('Could not auto-sign in after mock signup:', signInResult.error);
+            // Continue anyway - the AuthContext has fallbacks for development
+          }
+          
           return { success: true, data: { user: { email: values.email } }, error: null };
         } catch (signInError) {
-          console.log('Could not auto-sign in after mock signup');
+          console.log('Exception when auto-signing in after mock signup:', signInError);
+          // Continue with success anyway - the AuthContext has fallbacks for development
         }
       }
       

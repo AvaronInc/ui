@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import PageTransition from '@/components/transitions/PageTransition';
@@ -8,13 +8,30 @@ import { toast } from 'sonner';
 
 const Auth = () => {
   const navigate = useNavigate();
+  const [isChecking, setIsChecking] = useState(true);
   
   // Check if user is already logged in
   useEffect(() => {
     const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        navigate('/');
+      try {
+        setIsChecking(true);
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error checking session:', error);
+          // Don't redirect on error - let the user try to log in manually
+          return;
+        }
+        
+        if (data.session) {
+          console.log('User already has a session, redirecting to home');
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Exception in checkSession:', error);
+        // Handle any unexpected errors 
+      } finally {
+        setIsChecking(false);
       }
     };
     
@@ -39,7 +56,14 @@ const Auth = () => {
   return (
     <PageTransition>
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-background to-secondary/20 p-4">
-        <AuthCard />
+        {isChecking ? (
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-2 text-muted-foreground">Checking authentication...</p>
+          </div>
+        ) : (
+          <AuthCard />
+        )}
       </div>
     </PageTransition>
   );
