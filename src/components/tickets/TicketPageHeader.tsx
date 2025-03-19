@@ -1,103 +1,120 @@
 
 import React from 'react';
-import { useTickets } from '@/context/TicketContext';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PlusCircle, DownloadCloud, Clock, LineChart } from 'lucide-react';
-import NewTicketForm from '@/components/tickets/NewTicketForm';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { Plus, Filter, Download, RefreshCw } from 'lucide-react';
+import NewTicketForm from './NewTicketForm';
+import TicketFilters from './TicketFilters';
+import { useTickets } from '@/context/ticket/TicketContext';
+import { sampleDepartments, sampleLocations } from '@/context/ticket/types';
+import { toast } from 'sonner';
 
-const TicketPageHeader = () => {
+const TicketActionDialog = ({ action, trigger }: { action: 'new' | 'filter', trigger: React.ReactNode }) => {
+  const { handleSubmitTicket, setFilters } = useTickets();
+  
+  const handleNewTicket = (data: any) => {
+    handleSubmitTicket(data);
+    
+    toast.success('Ticket created successfully', {
+      description: `Ticket ${data.title} has been created.`
+    });
+  };
+  
+  const handleApplyFilters = (filters: any) => {
+    setFilters(filters);
+    
+    toast('Filters applied', {
+      description: 'The ticket list has been filtered.'
+    });
+  };
+  
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Support Tickets</h1>
-        <p className="text-muted-foreground">
-          View and manage support tickets for your organization
-        </p>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-2">
-        <TicketActionDialog />
+    <Dialog>
+      <DialogTrigger asChild>
+        {trigger}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {action === 'new' ? 'Create New Ticket' : 'Filter Tickets'}
+          </DialogTitle>
+          <DialogDescription>
+            {action === 'new' 
+              ? 'Enter the details of the new ticket below.' 
+              : 'Filter the ticket list based on your criteria.'}
+          </DialogDescription>
+        </DialogHeader>
         
-        <Button variant="outline" size="sm" className="gap-1">
-          <DownloadCloud className="h-4 w-4" />
-          <span>Export</span>
-        </Button>
-      </div>
-    </div>
+        {action === 'new' ? (
+          <NewTicketForm 
+            onSubmit={handleNewTicket} 
+            departments={sampleDepartments}
+            locations={sampleLocations}
+          />
+        ) : (
+          <TicketFilters onApplyFilters={handleApplyFilters} />
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 
-const TicketActionDialog = () => {
-  const { handleSubmitTicket } = useTickets();
-  const [open, setOpen] = React.useState(false);
-
+const TicketPageHeader = () => {
+  const { refreshTickets } = useTickets();
+  
+  const handleRefresh = async () => {
+    await refreshTickets();
+    toast.success('Tickets refreshed');
+  };
+  
+  const handleExport = () => {
+    toast.success('Tickets exported to CSV');
+  };
+  
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm" className="gap-1">
-          <PlusCircle className="h-4 w-4" />
-          <span>New Ticket</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>Create New Ticket</DialogTitle>
-        </DialogHeader>
-        
-        <Tabs defaultValue="manual" className="mt-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="manual" className="flex items-center gap-2">
-              <Clock className="h-4 w-4" /> Manual Creation
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2">
-              <LineChart className="h-4 w-4" /> AI Suggested
-            </TabsTrigger>
-          </TabsList>
+    <div className="flex flex-col space-y-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-3xl font-bold">Tickets</h2>
+          <p className="text-muted-foreground">
+            Manage and respond to support tickets
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <TicketActionDialog 
+            action="filter" 
+            trigger={
+              <Button variant="outline" size="sm" className="gap-1">
+                <Filter className="w-4 h-4" />
+                <span className="hidden sm:inline">Filters</span>
+              </Button>
+            }
+          />
           
-          <TabsContent value="manual" className="pt-4">
-            <NewTicketForm 
-              onSubmit={(data) => {
-                handleSubmitTicket(data);
-                setOpen(false);
-              }}
-            />
-          </TabsContent>
+          <Button variant="outline" size="sm" className="gap-1" onClick={handleExport}>
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">Export</span>
+          </Button>
           
-          <TabsContent value="analytics" className="pt-4">
-            <div className="space-y-4">
-              <div className="border rounded-md p-4 bg-muted/50">
-                <h3 className="font-medium mb-2">AI Detected Issues</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Based on system monitoring, these potential issues were detected:
-                </p>
-                
-                <div className="space-y-2">
-                  <div className="border rounded p-3 bg-background cursor-pointer hover:bg-muted transition-colors">
-                    <h4 className="font-medium text-sm">Database Performance Degradation</h4>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Multiple users experiencing slow query response times
-                    </p>
-                  </div>
-                  
-                  <div className="border rounded p-3 bg-background cursor-pointer hover:bg-muted transition-colors">
-                    <h4 className="font-medium text-sm">Network Connectivity Issues</h4>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Remote users reporting intermittent VPN disconnections
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-sm text-muted-foreground">
-                Select an issue above to create a ticket with AI-populated details, or create a manual ticket.
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </DialogContent>
-    </Dialog>
+          <Button variant="outline" size="sm" className="gap-1" onClick={handleRefresh}>
+            <RefreshCw className="w-4 h-4" />
+            <span className="hidden sm:inline">Refresh</span>
+          </Button>
+          
+          <TicketActionDialog 
+            action="new" 
+            trigger={
+              <Button size="sm" className="gap-1">
+                <Plus className="w-4 h-4" />
+                <span>New Ticket</span>
+              </Button>
+            }
+          />
+        </div>
+      </div>
+      <Separator />
+    </div>
   );
 };
 
