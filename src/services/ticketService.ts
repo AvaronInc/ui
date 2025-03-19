@@ -24,11 +24,19 @@ interface CreateNotePayload {
 export const fetchTickets = async (): Promise<Ticket[]> => {
   try {
     console.log('fetchTickets: Starting database query');
+    
+    // For troubleshooting, let's first try to get the count of tickets
+    const countResult = await supabase
+      .from('tickets')
+      .select('*', { count: 'exact', head: true });
+    
+    console.log(`fetchTickets: Count check - found ${countResult.count} tickets`);
+    
+    // Then do the full query with all the data
     const { data, error } = await supabase
       .from('tickets')
       .select(`
-        *,
-        ticket_notes(*)
+        *
       `)
       .order('created_at', { ascending: false });
 
@@ -43,35 +51,55 @@ export const fetchTickets = async (): Promise<Ticket[]> => {
       return [];
     }
 
-    console.log(`fetchTickets: Retrieved ${data.length} tickets from database`);
+    console.log(`fetchTickets: Retrieved ${data.length} tickets from database`, data);
 
-    // Transform the data to match our frontend types
-    const tickets: Ticket[] = data.map(item => ({
-      id: item.id,
-      title: item.title || 'Untitled Ticket',
-      description: item.description || '',
-      status: item.status || 'open',
-      priority: item.priority || 'medium',
-      assignedTo: item.assigned_to,
-      createdBy: item.created_by,
-      createdAt: item.created_at,
-      updatedAt: item.updated_at,
-      department: item.department,
-      location: item.location,
-      resolutionMethod: item.resolution_method || 'pending',
-      isAIGenerated: item.is_ai_generated || false,
-      slaDeadline: item.sla_deadline,
-      attachments: item.attachments || [],
-      notes: Array.isArray(item.ticket_notes) ? item.ticket_notes.map(note => ({
+    // Fetch notes separately for better performance
+    const { data: notesData, error: notesError } = await supabase
+      .from('ticket_notes')
+      .select('*');
+      
+    if (notesError) {
+      console.error('Error fetching ticket notes:', notesError);
+    }
+    
+    // Group notes by ticket ID for easier mapping
+    const notesByTicketId = (notesData || []).reduce((acc, note) => {
+      const ticketId = note.ticket_id;
+      if (!acc[ticketId]) {
+        acc[ticketId] = [];
+      }
+      acc[ticketId].push({
         id: note.id,
         content: note.content || '',
         author: note.author || 'System',
         timestamp: note.timestamp || note.created_at,
         isInternal: note.is_internal || false,
         isAIGenerated: note.is_ai_generated || false
-      })) : []
+      });
+      return acc;
+    }, {});
+
+    // Transform the data to match our frontend types
+    const tickets: Ticket[] = data.map(item => ({
+      id: item.id || 'unknown-id',
+      title: item.title || 'Untitled Ticket',
+      description: item.description || '',
+      status: item.status || 'open',
+      priority: item.priority || 'medium',
+      assignedTo: item.assigned_to || null,
+      createdBy: item.created_by || null,
+      createdAt: item.created_at || new Date().toISOString(),
+      updatedAt: item.updated_at || new Date().toISOString(),
+      department: item.department || null,
+      location: item.location || null,
+      resolutionMethod: item.resolution_method || 'pending',
+      isAIGenerated: item.is_ai_generated || false,
+      slaDeadline: item.sla_deadline || null,
+      attachments: item.attachments || [],
+      notes: notesByTicketId[item.id] || []
     }));
 
+    console.log('fetchTickets: Processed tickets data', tickets);
     return tickets;
   } catch (error) {
     console.error('Error in fetchTickets:', error);

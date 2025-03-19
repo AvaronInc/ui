@@ -5,7 +5,26 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://ldhcbonevdxtoycfoeds.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkaGNib25ldmR4dG95Y2ZvZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg5NjI3ODUsImV4cCI6MjA1NDUzODc4NX0.ZkIh5Y16nttZBxJbvZjMV7vWp0tjuRtV2DGMAIiuv1k';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Log connection details (in development only)
+if (import.meta.env.DEV) {
+  console.log('Supabase connection info:', {
+    url: supabaseUrl,
+    hasAnonKey: !!supabaseAnonKey,
+  });
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  global: {
+    fetch: (...args) => {
+      console.log('🔄 Making Supabase request:', args[0]);
+      return fetch(...args);
+    }
+  }
+});
 
 // Helper functions to work with the Supabase tables
 
@@ -42,17 +61,24 @@ export const getFiles = async (path: string[] = ['root']) => {
 
 // Tickets
 export const getTickets = async () => {
-  const { data, error } = await supabase
-    .from('tickets')
-    .select('*, assigned_to')
-    .order('created_at', { ascending: false });
-  
-  if (error) {
-    console.error('Error fetching tickets:', error);
+  console.log('Getting tickets from Supabase');
+  try {
+    const { data, error } = await supabase
+      .from('tickets')
+      .select('*, assigned_to')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching tickets:', error);
+      return [];
+    }
+    
+    console.log(`Retrieved ${data?.length || 0} tickets from Supabase`);
+    return data;
+  } catch (e) {
+    console.error('Unexpected error in getTickets:', e);
     return [];
   }
-  
-  return data;
 };
 
 // VPN Sessions

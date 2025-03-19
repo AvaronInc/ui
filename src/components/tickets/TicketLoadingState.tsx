@@ -24,6 +24,9 @@ const TicketLoadingState: React.FC = () => {
       </div>
       <div className="border border-dashed border-gray-300 p-6 rounded-lg bg-gray-50 mb-4">
         <p className="text-sm text-center text-muted-foreground">Loading ticket data...</p>
+        <div className="flex justify-center mt-2">
+          <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full"></div>
+        </div>
       </div>
       <Skeleton className="h-[400px]" />
     </div>
