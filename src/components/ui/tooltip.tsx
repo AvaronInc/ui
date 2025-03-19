@@ -25,41 +25,27 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-// Create a more robust safe wrapper component that provides TooltipProvider context when needed
-const SafeTooltipWrapper = ({ children }: { children: React.ReactNode }) => {
-  // Use a ref to track if we're already inside a TooltipProvider context
-  const [hasProvider, setHasProvider] = React.useState<boolean>(false);
-  
-  // Use effect to safely check for provider
-  React.useEffect(() => {
-    // A simple heuristic to determine if a provider is already available
-    // We create a dummy tooltip and see if it renders without error
-    try {
-      const testElement = document.createElement('div');
-      document.body.appendChild(testElement);
-      
-      const tooltipRoot = document.createElement('div');
-      tooltipRoot.dataset.radixTooltipRoot = '';
-      testElement.appendChild(tooltipRoot);
-      
-      // If a TooltipProvider exists, the data attribute should be processed
-      // We use this as a proxy to determine if we're already within a provider
-      setHasProvider(testElement.querySelector('[data-radix-tooltip-root]') !== null);
-      
-      // Clean up
-      document.body.removeChild(testElement);
-    } catch (e) {
-      // If any error occurs, assume we need a provider
-      setHasProvider(false);
-    }
-  }, []);
+// Maintain a global context to track if we're already inside a TooltipProvider
+// This avoids nesting providers which can cause issues
+const TooltipProviderTracker = React.createContext<boolean>(false);
 
-  // If we determined a provider exists, render children directly
-  // Otherwise, wrap with our own provider
-  return hasProvider ? (
-    <>{children}</>
-  ) : (
-    <TooltipProvider>{children}</TooltipProvider>
+// Create a more robust wrapper component that provides TooltipProvider context when needed
+const SafeTooltipWrapper = ({ children }: { children: React.ReactNode }) => {
+  // Check if we're already inside a TooltipProvider
+  const hasProvider = React.useContext(TooltipProviderTracker);
+  
+  // If we already have a provider, just render children
+  // Otherwise, wrap with TooltipProvider and mark that we've added one
+  if (hasProvider) {
+    return <>{children}</>;
+  }
+  
+  return (
+    <TooltipProviderTracker.Provider value={true}>
+      <TooltipProvider>
+        {children}
+      </TooltipProvider>
+    </TooltipProviderTracker.Provider>
   );
 };
 
