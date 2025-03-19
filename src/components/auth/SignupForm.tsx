@@ -32,6 +32,7 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
       
       if (success) {
         toast.success('Account created successfully. Please check your email to confirm your account.');
+        form.reset();
         onSuccess();
       } else if (error) {
         throw error;
@@ -51,6 +52,12 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? 'Creating Account...' : 'Create Account'}
         </Button>
+        
+        {import.meta.env.DEV && (
+          <p className="text-xs text-muted-foreground mt-2">
+            Dev mode: Signup will use a local fallback if Supabase has network errors.
+          </p>
+        )}
       </form>
     </Form>
   );
