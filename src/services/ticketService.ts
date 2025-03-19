@@ -38,7 +38,7 @@ export const calculateTicketStatistics = async (): Promise<TicketStatistics> => 
     awaitingAction: 4,
     avgResolutionTime: '3.5h',
     escalationRate: 15,
-    escalationTrend: 'decreasing'
+    escalationTrend: 'down'
   };
 };
 
@@ -116,7 +116,7 @@ export const createTicket = async (
     notes: [],
     isAIGenerated: false,
     resolutionMethod: null,
-    resolutionTime: null
+    slaDeadline: isResolved ? null : new Date(Date.now() + 86400000).toISOString()
   };
 };
 
@@ -140,7 +140,7 @@ const generateTickets = (): Ticket[] => {
     const isResolved = status === 'resolved' || status === 'ai-resolved';
     
     let resolvedAt = null;
-    let resolutionTime = null;
+    let resolutionTimeHours = null;
     let resolutionMethod = null;
     
     if (isResolved) {
@@ -148,7 +148,7 @@ const generateTickets = (): Ticket[] => {
       resolvedAt.setHours(resolvedAt.getHours() + Math.floor(Math.random() * 48)); // Resolved within 48 hours
       
       const diffHours = Math.abs(resolvedAt.getTime() - createdAt.getTime()) / 36e5;
-      resolutionTime = `${diffHours.toFixed(1)}h`;
+      resolutionTimeHours = `${diffHours.toFixed(1)}h`;
       
       resolutionMethod = status === 'ai-resolved' ? 'ai-resolved' : 'manual';
     }
@@ -169,7 +169,7 @@ const generateTickets = (): Ticket[] => {
       notes: generateRandomNotes(id, createdAt, 0, 3),
       isAIGenerated: Math.random() > 0.8,
       resolutionMethod,
-      resolutionTime
+      slaDeadline: isResolved ? null : new Date(Date.now() + 86400000).toISOString()
     };
     
     mockTickets.push(ticket);
