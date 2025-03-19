@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Ticket, TicketNote, TicketStatus, TicketPriority, ResolutionMethod } from '@/types/tickets';
+import { Ticket, TicketNote, TicketStatus, TicketPriority, ResolutionMethod, TicketStatistics } from '@/types/tickets';
 
 // Type for creating a new ticket
 interface CreateTicketPayload {
@@ -290,7 +290,7 @@ export const addTicketNote = async (noteData: CreateNotePayload): Promise<Ticket
 };
 
 // Calculate ticket statistics
-export const calculateTicketStatistics = async () => {
+export const calculateTicketStatistics = async (): Promise<TicketStatistics> => {
   try {
     const { data, error } = await supabase
       .from('tickets')
@@ -333,6 +333,9 @@ export const calculateTicketStatistics = async () => {
       ? `${Math.round(totalResolutionTimeHours / resolvedTickets.length)}h`
       : '0h';
 
+    // Fixed the escalationTrend to be one of the allowed literal types
+    const escalationTrend: 'up' | 'down' | 'stable' = 'down'; // This would typically be calculated by comparing with historical data
+
     return {
       openTickets,
       resolvedToday,
@@ -340,10 +343,19 @@ export const calculateTicketStatistics = async () => {
       awaitingAction,
       avgResolutionTime,
       escalationRate,
-      escalationTrend: 'down' // This would typically be calculated by comparing with historical data
+      escalationTrend
     };
   } catch (error) {
     console.error('Error calculating ticket statistics:', error);
-    return null;
+    // Return default values with the correct type for escalationTrend
+    return {
+      openTickets: 0,
+      resolvedToday: 0,
+      aiResolved: 0,
+      awaitingAction: 0,
+      avgResolutionTime: '0h',
+      escalationRate: 0,
+      escalationTrend: 'stable'
+    };
   }
 };
