@@ -33,10 +33,10 @@ const TicketsPage = () => {
         if (!data.session) {
           console.log('No active session found, redirecting to login');
           navigate('/login');
+          return;
         } else {
           console.log('User authenticated:', data.session.user.id);
           setAuthenticated(true);
-          setLoading(false); // Move this here to ensure we only stop loading when authentication is confirmed
         }
       } catch (err) {
         console.error('Unexpected error during auth check:', err);
@@ -44,6 +44,10 @@ const TicketsPage = () => {
           description: "Please try again later"
         });
         navigate('/login');
+        return;
+      } finally {
+        // Set loading to false regardless of authentication result
+        setLoading(false);
       }
     };
 

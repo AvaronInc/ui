@@ -59,7 +59,7 @@ const TicketMainContent = () => {
   };
 
   const handleApplySuggestion = (suggestionId: string) => {
-    const suggestion = aiSuggestions.find(s => s.id === suggestionId);
+    const suggestion = aiSuggestions?.find(s => s.id === suggestionId);
     if (!suggestion) return;
 
     switch (suggestion.type) {
@@ -129,6 +129,17 @@ const TicketMainContent = () => {
     return renderLoading();
   }
 
+  // Ensure we have the statistics object with all required properties
+  const stats = ticketStatistics || {
+    openTickets: 0,
+    resolvedToday: 0,
+    aiResolved: 0,
+    awaitingAction: 0,
+    avgResolutionTime: '0h',
+    escalationRate: 0,
+    escalationTrend: 'stable' as const
+  };
+
   return (
     <>
       {isMobile ? (
@@ -145,7 +156,7 @@ const TicketMainContent = () => {
                 Refresh
               </Button>
             </div>
-            <TicketStatCards statistics={ticketStatistics} />
+            <TicketStatCards statistics={stats} />
             <AIAssistantPanel 
               suggestions={aiSuggestions || []}
               onApplySuggestion={handleApplySuggestion}
@@ -190,15 +201,7 @@ const TicketMainContent = () => {
             </Button>
           </div>
           
-          <TicketStatCards statistics={ticketStatistics || {
-            openTickets: 0,
-            resolvedToday: 0,
-            aiResolved: 0,
-            awaitingAction: 0,
-            avgResolutionTime: '0h',
-            escalationRate: 0,
-            escalationTrend: 'stable' as const
-          }} />
+          <TicketStatCards statistics={stats} />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div className="lg:col-span-2 space-y-6">
