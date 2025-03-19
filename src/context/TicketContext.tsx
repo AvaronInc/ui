@@ -80,6 +80,7 @@ interface TicketContextProps {
   ticketStatistics: TicketStatistics;
   aiSuggestions: AITicketSuggestion[];
   isLoading: boolean;
+  setLoading: (isLoading: boolean) => void;
   setFilters: (filters: TicketFilter) => void;
   setSelectedTicket: (ticket: Ticket | null) => void;
   setDetailPanelOpen: (open: boolean) => void;
@@ -96,7 +97,7 @@ interface TicketContextProps {
     location?: string;
     attachments?: File[];
   }) => void;
-  refreshTickets: () => Promise<void>;
+  refreshTickets: (forceMock?: boolean) => Promise<void>;
 }
 
 const TicketContext = createContext<TicketContextProps | undefined>(undefined);
@@ -129,13 +130,13 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   });
   
   // Fetch tickets from the database
-  const fetchTicketsData = async () => {
+  const fetchTicketsData = async (forceMock = false) => {
     console.log('Starting to fetch tickets data...');
     setIsLoading(true);
     
     try {
-      console.log('Calling ticketService.fetchTickets()');
-      const ticketsData = await ticketService.fetchTickets();
+      console.log(`Calling ticketService.fetchTickets(${forceMock ? 'true' : 'false'})`);
+      const ticketsData = await ticketService.fetchTickets(forceMock);
       console.log(`Received ${ticketsData.length} tickets from service`);
       setTickets(ticketsData);
       
@@ -464,8 +465,8 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   // Function to refresh tickets from the database
-  const refreshTickets = async () => {
-    await fetchTicketsData();
+  const refreshTickets = async (forceMock = false) => {
+    await fetchTicketsData(forceMock);
   };
 
   const value = {
@@ -477,6 +478,7 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     ticketStatistics,
     aiSuggestions,
     isLoading,
+    setLoading: setIsLoading,
     setFilters,
     setSelectedTicket,
     setDetailPanelOpen,

@@ -82,7 +82,7 @@ export const useTicketActions = () => {
             
             // Load mock data with a slight delay
             setTimeout(() => {
-              refreshTickets(true); // Pass true to force using mock data
+              refreshTickets(true); // Now correctly passing a boolean parameter
             }, 500);
           }
         }
@@ -201,7 +201,7 @@ export const useTicketActions = () => {
       
       // Small delay to ensure state is updated
       setTimeout(async () => {
-        await refreshTickets(true); // Pass true to force using mock data
+        await refreshTickets(true); // Now correctly passing a boolean parameter
         
         toast.success("Mock Data Loaded", {
           description: "Using local development data",
@@ -256,7 +256,7 @@ export const useTicketActions = () => {
         duration: 3000
       });
       
-      await refreshTickets(true); // Pass true to force using mock data
+      await refreshTickets(true); // Now correctly passing a boolean parameter
     }, 300);
   }, [loadingTimeout, mockTimer, refreshTickets, setLoading]);
 
