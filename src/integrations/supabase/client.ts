@@ -29,7 +29,16 @@ const customFetch = async (url: string, options: RequestInit) => {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
-    const response = await fetch(url, options);
+    // Modify request to handle CORS issues in development
+    const requestOptions = { ...options };
+    if (import.meta.env.DEV) {
+      // Add CORS mode - we'll try with 'cors' first (standard)
+      requestOptions.mode = 'cors';
+      // Add credentials setting for cookies
+      requestOptions.credentials = 'include';
+    }
+    
+    const response = await fetch(url, requestOptions);
     const endTime = Date.now();
     console.log(`🔄 Supabase response received in ${endTime - startTime}ms:`, {
       status: response.status,
@@ -46,6 +55,7 @@ const customFetch = async (url: string, options: RequestInit) => {
     // In development mode, create a mock error response
     if (import.meta.env.DEV) {
       console.log('🔄 Returning mock error response for development');
+      console.log('🔄 CORS or network issue detected, generating mock response');
       
       // Simulate a 503 Service Unavailable response
       return new Response(JSON.stringify({
@@ -91,7 +101,7 @@ export const getSecurityEvents = async () => {
   return data;
 };
 
-// File Storage
+// File Storage 
 export const getFiles = async (path: string[] = ['root']) => {
   const { data, error } = await supabase
     .from('file_storage')
@@ -135,8 +145,7 @@ export const getTickets = async () => {
     // Now do the full query to get the ticket data
     const { data, error } = await supabase
       .from('tickets')
-      .select('*, assigned_to')
-      .order('created_at', { ascending: false });
+      .select('*, assigned_to');
     
     if (error) {
       console.error('Error fetching tickets:', error);
@@ -144,6 +153,7 @@ export const getTickets = async () => {
       throw new Error(`Could not fetch tickets: ${error.message}`);
     }
     
+    // If connection succeeded but no tickets found - return empty array
     if (!data || data.length === 0) {
       console.log('No tickets found in database');
       return [];
@@ -155,6 +165,53 @@ export const getTickets = async () => {
   } catch (e) {
     const error = e as Error;
     console.error('Unexpected error in getTickets:', error);
+    
+    // In development mode, generate mock tickets after error
+    if (import.meta.env.DEV) {
+      console.log('DEV MODE: Generating mock tickets since fetching failed');
+      return [
+        {
+          id: 'TK-1001',
+          title: 'Server Access Issue',
+          description: 'Unable to access the file server from remote location.',
+          status: 'open',
+          priority: 'high',
+          assignedTo: 'James Wilson',
+          createdBy: 'Maria Garcia',
+          createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+          updatedAt: new Date(Date.now() - 1800000).toISOString(),
+          department: 'IT',
+          location: 'Headquarters'
+        },
+        {
+          id: 'TK-1002',
+          title: 'Email Not Working',
+          description: 'Cannot send or receive emails since this morning.',
+          status: 'in-progress',
+          priority: 'medium',
+          assignedTo: 'Sophia Lee',
+          createdBy: 'Robert Davis',
+          createdAt: new Date(Date.now() - 7200000).toISOString(),
+          updatedAt: new Date(Date.now() - 3600000).toISOString(),
+          department: 'Marketing',
+          location: 'East Branch'
+        },
+        {
+          id: 'TK-1003',
+          title: 'New Software Installation',
+          description: 'Need latest version of Adobe Creative Suite installed.',
+          status: 'pending-customer',
+          priority: 'low',
+          assignedTo: 'Alex Johnson',
+          createdBy: 'James Wilson',
+          createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+          updatedAt: new Date(Date.now() - 43200000).toISOString(),
+          department: 'Design',
+          location: 'Remote'
+        }
+      ];
+    }
+    
     throw new Error(`Failed to fetch tickets: ${error.message}`);
   }
 };

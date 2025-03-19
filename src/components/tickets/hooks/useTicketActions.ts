@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useTickets } from '@/context/TicketContext';
 import { toast } from 'sonner';
@@ -57,13 +56,13 @@ export const useTicketActions = () => {
       const timeout = setTimeout(() => {
         console.log('💡 Loading timeout triggered - loading is taking too long');
         if (isLoading) {
-          setLoadError('Loading timed out after 15 seconds. There might be a CORS or network connectivity issue. Please try again.');
+          setLoadError('Loading timed out. There might be a CORS or network connectivity issue. Please try again or check browser console for details.');
           
           // Only reset the initial load state, not the loading state itself
           // This allows the component to show an error while still technically "loading"
           setIsInitialLoad(false);
           
-          // In development mode, optionally populate with mock data after timeout
+          // In development mode, after a timeout + delay, generate mock data
           if (import.meta.env.DEV && refreshAttempts > 0) {
             console.log('💡 DEV MODE: Preparing to load mock data after timeout');
             if (mockTimer) clearTimeout(mockTimer);
@@ -74,12 +73,14 @@ export const useTicketActions = () => {
                 description: "Could not connect to database, using mock data instead",
                 duration: 5000
               });
+              // This will update the tickets with mock data in development mode
+              refreshTickets();
             }, 2000);
             
             setMockTimer(timer);
           }
         }
-      }, 15000);
+      }, 12000); // Setting timeout to 12 seconds
       
       setLoadingTimeout(timeout);
     } else if (!isLoading && loadingTimeout) {
@@ -96,7 +97,7 @@ export const useTicketActions = () => {
         clearTimeout(mockTimer);
       }
     };
-  }, [isLoading, loadingTimeout, refreshAttempts, mockTimer]);
+  }, [isLoading, loadingTimeout, refreshAttempts, mockTimer, refreshTickets]);
 
   // Use useEffect to handle the initial loading state with more precise conditions
   useEffect(() => {    
@@ -116,6 +117,7 @@ export const useTicketActions = () => {
     }
   }, [isLoading, tickets, isInitialLoad]);
 
+  // Function for handling other ticket actions
   const handleEscalateTicket = (ticketId: string) => {
     handleStatusChange(ticketId, 'escalated');
     toast("Ticket Escalated", {
@@ -174,6 +176,17 @@ export const useTicketActions = () => {
         duration: 3000
       });
       
+      // Clear any existing timers
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+        setLoadingTimeout(null);
+      }
+      
+      if (mockTimer) {
+        clearTimeout(mockTimer);
+        setMockTimer(null);
+      }
+      
       await refreshTickets();
       
       toast("Refreshed", {
@@ -190,9 +203,17 @@ export const useTicketActions = () => {
         duration: 5000
       });
       
+      // Automatically attempt to use mock data in dev mode after refresh failure
+      if (import.meta.env.DEV) {
+        toast("Switching to mock data", {
+          description: "Using local mock data instead of database",
+          duration: 3000
+        });
+      }
+      
       setIsInitialLoad(false); // Reset if there's an error
     }
-  }, [refreshTickets]);
+  }, [refreshTickets, loadingTimeout, mockTimer]);
 
   const handleCancelLoading = useCallback(() => {
     console.log('💡 User canceled loading, resetting state');
@@ -200,10 +221,35 @@ export const useTicketActions = () => {
     setLoadError('Loading canceled by user');
     setRefreshAttempts(prev => prev + 1);
     
+    // Clear any existing timers
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      setLoadingTimeout(null);
+    }
+    
+    if (mockTimer) {
+      clearTimeout(mockTimer);
+      setMockTimer(null);
+    }
+    
     toast("Loading Canceled", {
       description: "You canceled the loading process. Try refreshing again in a moment."
     });
-  }, []);
+    
+    // Automatically attempt to use mock data in dev mode after cancellation
+    if (import.meta.env.DEV) {
+      const timer = setTimeout(() => {
+        console.log('💡 DEV MODE: Using mock data after cancellation');
+        toast("Using mock data", {
+          description: "Using local mock data instead of database",
+          duration: 3000
+        });
+        refreshTickets();
+      }, 1500);
+      
+      setMockTimer(timer);
+    }
+  }, [loadingTimeout, mockTimer, refreshTickets]);
 
   return {
     activeTab,
@@ -212,9 +258,48 @@ export const useTicketActions = () => {
     loadError,
     loadingTime,
     refreshAttempts,
-    handleEscalateTicket,
-    handleCloseTicket,
-    handleApplySuggestion,
+    handleEscalateTicket: (ticketId: string) => {
+      handleStatusChange(ticketId, 'escalated');
+      toast("Ticket Escalated", {
+        description: `Ticket ${ticketId} has been escalated`
+      });
+    },
+    handleCloseTicket: (ticketId: string) => {
+      handleStatusChange(ticketId, 'resolved');
+      toast("Ticket Closed", {
+        description: `Ticket ${ticketId} has been marked as resolved`
+      });
+    },
+    handleApplySuggestion: (suggestionId: string) => {
+      const suggestion = aiSuggestions?.find(s => s.id === suggestionId);
+      if (!suggestion) return;
+
+      switch (suggestion.type) {
+        case 'apply-fix':
+          toast("Fix Applied", {
+            description: `Solution automatically applied to ticket(s)`
+          });
+          break;
+        case 'escalate':
+          if (suggestion.relatedTickets && suggestion.relatedTickets.length > 0) {
+            suggestion.relatedTickets.forEach(id => handleStatusChange(id, 'escalated'));
+            toast("Tickets Escalated", {
+              description: `${suggestion.relatedTickets.length} tickets have been escalated`
+            });
+          }
+          break;
+        case 'follow-up':
+          toast("Follow-up Sent", {
+            description: "Automated follow-up message has been sent to the customer"
+          });
+          break;
+        case 'bulk-resolution':
+          toast("Bulk Resolution Started", {
+            description: "Created bulk resolution ticket for similar issues"
+          });
+          break;
+      }
+    },
     handleRefresh,
     handleCancelLoading
   };

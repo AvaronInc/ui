@@ -78,24 +78,27 @@ const TicketLoadingState: React.FC<TicketLoadingStateProps> = ({
         {showLoadingWarning && (
           <div className="mt-4 text-sm text-center">
             {showSeriousWarning ? (
-              <p className="text-red-600 flex items-center justify-center gap-2">
-                <AlertCircle className="h-4 w-4" />
-                Loading is taking longer than expected. There might be an issue with the connection.
-              </p>
+              <div className="text-red-600">
+                <p className="flex items-center justify-center gap-2 mb-2">
+                  <AlertCircle className="h-4 w-4" />
+                  Loading is taking longer than expected. There might be an issue with the connection.
+                </p>
+                <p>There might be an issue with the connection.</p>
+              </div>
             ) : (
               <p className="text-amber-600">This is taking longer than expected.</p>
             )}
             
             {onCancel && (
               <Button 
-                variant={showSeriousWarning ? "default" : "outline"} 
+                variant="default"
                 size="sm" 
-                className="mt-3 w-full sm:w-auto" 
+                className="mt-3 w-full sm:w-auto bg-orange-500 hover:bg-orange-600" 
                 onClick={handleTryAgain}
                 disabled={isRefreshing}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                {isRefreshing ? "Trying Again..." : (hasTriedRefresh ? "Try Again Once More" : "Try Again")}
+                {isRefreshing ? "Trying Again..." : (hasTriedRefresh ? "Try Again Once More" : "Try Again Once More")}
               </Button>
             )}
             

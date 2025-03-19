@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Database, AlertTriangle } from 'lucide-react';
@@ -56,13 +57,13 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
       </h3>
       <p className="text-muted-foreground mb-4">
         {error 
-          ? `There was a problem loading tickets: ${error}` 
+          ? 'There was a problem loading tickets. This might be due to connection issues or CORS restrictions.' 
           : 'There are no tickets matching your current filters or no tickets have been created yet.'}
       </p>
       <div className="flex flex-col items-center gap-2">
         <Button 
           onClick={handleRefresh} 
-          className="mb-2 min-w-[200px]"
+          className="mb-2 min-w-[200px] bg-orange-500 hover:bg-orange-600"
           disabled={isRefreshing}
         >
           <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -70,7 +71,7 @@ const EmptyTicketState: React.FC<EmptyTicketStateProps> = ({ onRefresh, error })
         </Button>
         <p className="text-xs text-muted-foreground max-w-md">
           {error 
-            ? 'If refreshing doesn\'t work, try checking your database connection or contact support for assistance.' 
+            ? 'If refreshing doesn\'t work, try checking your network connection or clearing your browser cache.' 
             : 'If this problem persists, check your database connection or contact support.'}
         </p>
         {errorDetails}
