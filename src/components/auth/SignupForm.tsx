@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import SignupFormFields from './components/SignupFormFields';
 import { signupSchema, SignupFormValues } from './validation/signupSchema';
 import { createUser, handleSignupError } from './services/signupService';
+import { useNavigate } from 'react-router-dom';
 
 interface SignupFormProps {
   isLoading: boolean;
@@ -16,6 +17,7 @@ interface SignupFormProps {
 }
 
 const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => {
+  const navigate = useNavigate();
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -34,6 +36,13 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         toast.success('Account created successfully. Please check your email to confirm your account.');
         form.reset();
         onSuccess();
+        
+        // In development mode, explicitly navigate after simulated signup
+        if (import.meta.env.DEV) {
+          setTimeout(() => {
+            navigate('/');
+          }, 500);
+        }
       } else if (error) {
         throw error;
       }

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -22,6 +23,7 @@ interface LoginFormProps {
 }
 
 const LoginForm = ({ isLoading, setIsLoading }: LoginFormProps) => {
+  const navigate = useNavigate();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,8 +48,10 @@ const LoginForm = ({ isLoading, setIsLoading }: LoginFormProps) => {
           console.log('Development mode: Creating mock user session for login');
           toast.success('Development mode: Logged in successfully!');
           
-          // In development mode, we'll still navigate the user as if they logged in
-          // The AuthContext will create a fallback profile with admin role
+          // In development mode, explicitly navigate after simulated login
+          setTimeout(() => {
+            navigate('/');
+          }, 500);
           return;
         }
         
@@ -56,6 +60,12 @@ const LoginForm = ({ isLoading, setIsLoading }: LoginFormProps) => {
       
       toast.success('Logged in successfully');
       form.reset();
+      
+      // Explicitly navigate after successful login with a small delay
+      // to allow state updates to propagate
+      setTimeout(() => {
+        navigate('/');
+      }, 500);
     } catch (error: any) {
       // Handle empty error message or JSON object
       if (error.message === '{}' || !error.message) {
