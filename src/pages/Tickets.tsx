@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { PageTransition } from '@/components/transitions/PageTransition';
 import { TicketProvider } from '@/context/TicketContext';
@@ -11,24 +11,38 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const TicketsPage = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = React.useState(true);
-  const [authenticated, setAuthenticated] = React.useState(false);
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) {
-        // Not authenticated, redirect to login page
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error checking authentication:', error);
+          navigate('/login');
+          return;
+        }
+        
+        if (!data.session) {
+          // Not authenticated, redirect to login page
+          navigate('/login');
+        } else {
+          setAuthenticated(true);
+        }
+      } catch (err) {
+        console.error('Unexpected error during auth check:', err);
         navigate('/login');
-      } else {
-        setAuthenticated(true);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     checkAuth();
   }, [navigate]);
 
+  // Render loading skeleton while checking authentication
   if (loading) {
     return (
       <PageTransition>
@@ -48,8 +62,9 @@ const TicketsPage = () => {
     );
   }
 
+  // We don't want to render anything while redirecting
   if (!authenticated) {
-    return null; // Will redirect in the useEffect
+    return null;
   }
 
   return (
