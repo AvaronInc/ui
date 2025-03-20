@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,8 +12,7 @@ const TestingDashboard: React.FC = () => {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold mb-1">Security Testing Dashboard</h2>
-          <p className="text-muted-foreground text-sm">Monitor and manage automated security tests across your infrastructure</p>
+          {/* Removed redundant title and subtitle that were here */}
         </div>
         <Button className="sm:self-start flex items-center gap-2">
           <Play className="h-4 w-4" />
