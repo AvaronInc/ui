@@ -28,6 +28,7 @@ import Automation from "./pages/Automation";
 import Auth from "./pages/Auth";
 import SDWAN from "./pages/SDWAN";
 import SDN from "./pages/SDN";
+import DNSManagement from "./pages/DNSManagement";
 import Contacts from "./pages/Contacts";
 import Integrations from "./pages/Integrations";
 import Billing from "./pages/Billing";
@@ -77,6 +78,7 @@ const App = () => (
                 <Route path="/automation" element={<ProtectedRoute><Automation /></ProtectedRoute>} />
                 <Route path="/sdwan" element={<ProtectedRoute><SDWAN /></ProtectedRoute>} />
                 <Route path="/sdn" element={<ProtectedRoute><SDN /></ProtectedRoute>} />
+                <Route path="/dns-management" element={<ProtectedRoute><DNSManagement /></ProtectedRoute>} />
                 <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
                 <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
                 <Route path="/billing" element={<ProtectedRoute adminOnly><Billing /></ProtectedRoute>} />

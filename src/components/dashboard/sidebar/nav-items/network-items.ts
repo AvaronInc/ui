@@ -1,5 +1,5 @@
 
-import { Network, Share2, MapPin, Package, Globe } from 'lucide-react';
+import { Network, Share2, MapPin, Package, Globe, Server } from 'lucide-react';
 import { NavItem } from './types';
 
 // Network & Infrastructure Management
@@ -18,6 +18,11 @@ export const networkItems: NavItem[] = [
     title: 'SDN',
     icon: Globe,
     href: '/sdn'
+  },
+  {
+    title: 'DNS Management',
+    icon: Server,
+    href: '/dns-management'
   },
   {
     title: 'IPAM',
