@@ -5,6 +5,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Activity, BarChart2, Globe, Shield, Cog, Server } from 'lucide-react';
 import DNSOverview from './tabs/DNSOverview';
 import DNSZones from './tabs/DNSZones';
+import DNSSecurity from './tabs/DNSSecurity';
 
 const DNSPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -56,9 +57,7 @@ const DNSPanel: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
-          <div className="text-center text-muted-foreground py-8">
-            DNS Security configuration will be implemented in a future prompt.
-          </div>
+          <DNSSecurity />
         </TabsContent>
         
         <TabsContent value="performance" className="space-y-4">
@@ -78,3 +77,4 @@ const DNSPanel: React.FC = () => {
 };
 
 export default DNSPanel;
+
