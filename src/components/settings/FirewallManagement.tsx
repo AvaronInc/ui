@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import FirewallDashboard from '@/components/firewall/FirewallDashboard';
+import RulesPolicy from '@/components/firewall/components/RulesPolicy';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
@@ -27,7 +28,7 @@ const FirewallManagement = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="rules">Rules</TabsTrigger>
+          <TabsTrigger value="rules">Rules & Policies</TabsTrigger>
           <TabsTrigger value="inspection">Inspection</TabsTrigger>
           <TabsTrigger value="ai">AI & Threat</TabsTrigger>
           <TabsTrigger value="ips">IPS</TabsTrigger>
@@ -40,18 +41,7 @@ const FirewallManagement = () => {
         </TabsContent>
         
         <TabsContent value="rules" className="space-y-6">
-          <div className="space-y-4">
-            <h4 className="text-md font-medium">Firewall Rules & Policies</h4>
-            <p className="text-sm text-muted-foreground">
-              Manage firewall rules, access control lists, and security policies.
-            </p>
-          </div>
-          
-          <div className="border-t pt-4">
-            <Button onClick={handleSave}>
-              Save Changes
-            </Button>
-          </div>
+          <RulesPolicy />
         </TabsContent>
         
         <TabsContent value="inspection" className="space-y-6">
