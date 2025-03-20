@@ -1,5 +1,5 @@
 
-import { Shield, Mail, FileText } from 'lucide-react';
+import { Shield, Mail, FileText, Lock } from 'lucide-react';
 import { NavItem } from './types';
 
 // Security & Compliance
@@ -13,6 +13,11 @@ export const securityItems: NavItem[] = [
     title: 'Email Security',
     icon: Mail,
     href: '/email-security'
+  },
+  {
+    title: 'Firewall',
+    icon: Lock,
+    href: '/admin-settings?section=security&tab=firewall'
   },
   {
     title: 'Logging & Audit',
