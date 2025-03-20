@@ -52,22 +52,11 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
     // In offline or error state, always provide a dev fallback
     if (import.meta.env.DEV && !navigator.onLine) {
       console.log('[Signup] Development offline mode: Simulating successful signup');
+      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate network delay
       return { 
         success: true, 
         data: { user: { email: values.email } }, 
         error: null 
-      };
-    }
-
-    // First check if the user exists - this doesn't affect signup but is helpful for feedback
-    const { existingUser } = await checkExistingUser(values.email);
-    if (existingUser) {
-      console.log('[Signup] User already exists:', existingUser);
-      return { 
-        success: false, 
-        data: null, 
-        error: new Error('Email already registered'), 
-        errorDetails: 'This email is already registered. Please use a different email or try to log in.' 
       };
     }
 
@@ -127,7 +116,9 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
       };
     }
     
-    console.log('[Signup] Successful:', data);
+    console.log('[Signup] Successful signup. Data:', data);
+    
+    // Important: Don't try to sign in automatically as this can cause issues
     return { success: true, data, error: null };
   } catch (error) {
     console.error('[Signup] Unexpected error:', error);

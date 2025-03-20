@@ -12,7 +12,22 @@ const Auth = () => {
   const [isChecking, setIsChecking] = useState(true);
   const [checkingError, setCheckingError] = useState<string | null>(null);
   const [showDebugInfo, setShowDebugInfo] = useState(false);
+  const [networkStatus, setNetworkStatus] = useState(navigator.onLine);
   
+  // Update network status
+  useEffect(() => {
+    const handleOnline = () => setNetworkStatus(true);
+    const handleOffline = () => setNetworkStatus(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   // Check if user is already logged in
   useEffect(() => {
     let didCancel = false;
@@ -41,6 +56,15 @@ const Auth = () => {
         
         // Store the subscription for cleanup
         subscriptionObject = subscription;
+        
+        // If we're offline in development mode, don't try to check session
+        if (import.meta.env.DEV && !networkStatus) {
+          console.log('[Auth Page] Offline in development mode, skipping session check');
+          if (!didCancel) {
+            setIsChecking(false);
+          }
+          return;
+        }
         
         // Then check for existing session
         console.log('[Auth Page] Checking for existing session...');
@@ -77,7 +101,7 @@ const Auth = () => {
         console.log('[Auth Page] Session check timeout, allowing login');
         setIsChecking(false);
       }
-    }, 1500); // Reduced from 2500 to 1500ms
+    }, 1500); // Reduced timeout for better UX
     
     checkSession();
     
@@ -89,13 +113,20 @@ const Auth = () => {
         subscriptionObject.unsubscribe();
       }
     };
-  }, [navigate]);
+  }, [navigate, networkStatus]);
 
   if (isChecking) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-background to-secondary/20 p-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
         <p className="text-center text-muted-foreground">Checking authentication status...</p>
+        
+        {!networkStatus && (
+          <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-800 text-sm max-w-md text-center">
+            <AlertTriangle className="h-4 w-4 inline-block mr-2" />
+            <span>You appear to be offline. {import.meta.env.DEV ? 'Development mode enabled.' : 'Some features may be limited.'}</span>
+          </div>
+        )}
         
         {/* Show debug button after 1 second */}
         {!showDebugInfo && (
@@ -115,7 +146,8 @@ const Auth = () => {
             </h3>
             <p>Checking session: {isChecking ? 'Yes' : 'No'}</p>
             <p>Error: {checkingError || 'None'}</p>
-            <p>Online: {navigator.onLine ? 'Yes' : 'No'}</p>
+            <p>Online: {networkStatus ? 'Yes' : 'No'}</p>
+            <p>Development mode: {import.meta.env.DEV ? 'Yes' : 'No'}</p>
             <div className="mt-2 border-t pt-2">
               <p className="text-xs text-muted-foreground mt-2">
                 If this takes too long, the page will automatically continue to 
@@ -137,6 +169,14 @@ const Auth = () => {
             <span>Error checking authentication: {checkingError}</span>
           </div>
         )}
+        
+        {!networkStatus && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 px-4 py-2 rounded-lg text-sm flex items-center max-w-md text-center">
+            <AlertTriangle className="h-4 w-4 mr-2 flex-shrink-0" />
+            <span>You are currently offline. {import.meta.env.DEV ? 'Development mode enabled.' : 'Some features may be limited.'}</span>
+          </div>
+        )}
+        
         <AuthCard />
       </div>
     </PageTransition>

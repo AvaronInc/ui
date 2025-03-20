@@ -22,6 +22,7 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
   const [signupError, setSignupError] = useState<string | null>(null);
   const [debugMode, setDebugMode] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [networkStatus, setNetworkStatus] = useState(navigator.onLine);
   
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -32,6 +33,20 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
     },
   });
 
+  // Update network status
+  useEffect(() => {
+    const handleOnline = () => setNetworkStatus(true);
+    const handleOffline = () => setNetworkStatus(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   // Safety timeout to prevent UI from getting stuck in loading state
   useEffect(() => {
     let timeoutId: number | undefined;
@@ -40,6 +55,7 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
       timeoutId = window.setTimeout(() => {
         console.log('[SignupForm] Safety timeout triggered to prevent UI freeze');
         setIsLoading(false);
+        setFormSubmitted(false);
         toast.error('The request is taking longer than expected. Please try again.');
       }, 5000); // 5-second safety timeout
     }
@@ -57,12 +73,48 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
       
       console.log('[SignupForm] Starting signup process for:', values.email);
       
+      if (!networkStatus) {
+        console.log('[SignupForm] Network offline - activating mock mode');
+        toast.info('You are offline. Using development mode for signup.');
+        
+        // In development mode, simulate a successful signup
+        if (import.meta.env.DEV) {
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          console.log('[SignupForm] Development mode: Simulating successful signup');
+          setFormSubmitted(false);
+          form.reset();
+          toast.success('Development mode: Account created successfully!');
+          onSuccess();
+          
+          setTimeout(() => {
+            navigate('/');
+          }, 1000);
+          
+          setIsLoading(false);
+          return;
+        }
+      }
+      
       // First do a pre-check if the email already exists
-      const { existingUser } = await checkExistingUser(values.email);
+      const { existingUser, checkError } = await checkExistingUser(values.email);
+      
+      if (checkError) {
+        console.log('[SignupForm] Error checking user existence:', checkError);
+        if (!import.meta.env.DEV) {
+          setSignupError('Unable to verify if email already exists. Please try again.');
+          setIsLoading(false);
+          setFormSubmitted(false);
+          return;
+        }
+      }
+      
       if (existingUser) {
         console.log('[SignupForm] Email already exists:', values.email);
         setSignupError('This email is already registered. Please use a different email or try to log in.');
         setIsLoading(false);
+        setFormSubmitted(false);
         return;
       }
       
@@ -80,10 +132,7 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         
         // Short delay before navigation to ensure toast is visible
         setTimeout(() => {
-          if (import.meta.env.DEV) {
-            console.log('[SignupForm] Development mode: Redirecting to home');
-            navigate('/');
-          }
+          navigate('/');
         }, 1000);
       } else if (error) {
         console.error('[SignupForm] Signup error:', error, errorDetails);
@@ -91,10 +140,12 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
       }
     } catch (error: any) {
       console.error('[SignupForm] Exception during signup:', error);
+      const errorMessage = error.message || 'An unexpected error occurred';
       handleSignupError(error);
-      setSignupError(error.errorDetails || error.message || 'An unexpected error occurred');
+      setSignupError(error.errorDetails || errorMessage);
     } finally {
       setIsLoading(false);
+      setFormSubmitted(false);
     }
   };
 
@@ -105,6 +156,13 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
           <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-800 text-sm flex items-start">
             <AlertTriangle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
             <span>{signupError}</span>
+          </div>
+        )}
+        
+        {!networkStatus && (
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-800 text-sm flex items-start">
+            <AlertTriangle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+            <span>You are currently offline. {import.meta.env.DEV ? 'Development mode will simulate signup.' : 'Please check your internet connection.'}</span>
           </div>
         )}
         
@@ -127,7 +185,7 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
             {debugMode && (
               <div className="mt-2 p-2 border border-gray-200 rounded text-muted-foreground">
                 <p>Development mode: Signup will use a local fallback if Supabase has network errors.</p>
-                <p className="mt-1">Browser Online: {navigator.onLine ? 'Yes' : 'No'}</p>
+                <p className="mt-1">Network Status: {networkStatus ? 'Online' : 'Offline'}</p>
                 <p>Form State: {isLoading ? 'Loading' : 'Ready'}</p>
                 <p>Error: {signupError || 'None'}</p>
                 <p>Form Submitted: {formSubmitted ? 'Yes' : 'No'}</p>
