@@ -7,6 +7,7 @@ import FirewallDashboard from '@/components/firewall/FirewallDashboard';
 import RulesPolicy from '@/components/firewall/components/RulesPolicy';
 import DeepPacketInspection from '@/components/firewall/components/dpi/DeepPacketInspection';
 import { AIThreatPanel } from '@/components/firewall/components/ai';
+import { IPSThreatPanel } from '@/components/firewall/components/ips';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
@@ -34,7 +35,7 @@ const FirewallManagement = () => {
           <TabsTrigger value="rules">Rules & Policies</TabsTrigger>
           <TabsTrigger value="inspection">Inspection</TabsTrigger>
           <TabsTrigger value="ai">AI & Threat</TabsTrigger>
-          <TabsTrigger value="ips">IPS</TabsTrigger>
+          <TabsTrigger value="ips">IPS/IDS</TabsTrigger>
           <TabsTrigger value="zerotrust">Zero Trust</TabsTrigger>
           <TabsTrigger value="logging">Logging</TabsTrigger>
         </TabsList>
@@ -56,18 +57,7 @@ const FirewallManagement = () => {
         </TabsContent>
         
         <TabsContent value="ips" className="space-y-6">
-          <div className="space-y-4">
-            <h4 className="text-md font-medium">Intrusion Prevention System</h4>
-            <p className="text-sm text-muted-foreground">
-              Configure intrusion prevention system settings and policies.
-            </p>
-          </div>
-          
-          <div className="border-t pt-4">
-            <Button onClick={handleSave}>
-              Save Changes
-            </Button>
-          </div>
+          <IPSThreatPanel />
         </TabsContent>
         
         <TabsContent value="zerotrust" className="space-y-6">
