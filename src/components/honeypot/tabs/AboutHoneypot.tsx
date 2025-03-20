@@ -89,7 +89,7 @@ const AboutHoneypot: React.FC = () => {
               Types & Implementation
             </h3>
             <p className="text-sm text-muted-foreground">
-              Network Pulse's honeypot solution offers various deployment options, from 
+              Avaron.AI's honeypot solution offers various deployment options, from 
               low-interaction honeypots that emulate only parts of systems to high-interaction 
               honeypots that replicate entire operating environments. Our AI-enhanced honeypots 
               adapt to attacker behavior, creating more convincing decoys that yield higher 
