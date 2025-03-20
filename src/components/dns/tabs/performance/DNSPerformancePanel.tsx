@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Lightning, Server, BarChart2, Cog } from 'lucide-react';
+import { Zap, Server, BarChart2, Cog } from 'lucide-react';
 
 import FailoverTab from './tabs/FailoverTab';
 import LoadBalancingTab from './tabs/LoadBalancingTab';
@@ -31,7 +31,7 @@ const DNSPerformancePanel: React.FC = () => {
             <span>{isMobile ? "Failover" : "DNS Failover"}</span>
           </TabsTrigger>
           <TabsTrigger value="load-balancing" className="flex items-center gap-2">
-            <Lightning className="h-4 w-4" />
+            <Zap className="h-4 w-4" />
             <span>{isMobile ? "Load Balancing" : "DNS Load Balancing"}</span>
           </TabsTrigger>
           <TabsTrigger value="caching" className="flex items-center gap-2">
