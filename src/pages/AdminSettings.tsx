@@ -20,6 +20,8 @@ const AdminSettings = () => {
 
   // Parse URL params and fragments
   useEffect(() => {
+    console.log('Current hash:', location.hash);
+    
     // Check for hash fragment
     const hashPath = location.hash.replace('#', '');
     
@@ -33,6 +35,7 @@ const AdminSettings = () => {
           
           // Store subpath in sessionStorage for the section component to use
           if (subPath) {
+            console.log(`Setting ${sectionId}-active-tab to ${subPath}`);
             sessionStorage.setItem(`${sectionId}-active-tab`, subPath);
           }
         }

@@ -15,6 +15,7 @@ const SecuritySettings = () => {
   useEffect(() => {
     // First check URL hash for direct navigation
     if (location.hash.includes('/firewall')) {
+      console.log("Setting active tab to firewall from direct hash");
       setActiveTab('firewall');
       return;
     }
@@ -22,6 +23,7 @@ const SecuritySettings = () => {
     // Then check sessionStorage (set by AdminSettings when using fragment navigation)
     const storedTab = sessionStorage.getItem('security-active-tab');
     if (storedTab) {
+      console.log(`Setting active tab to ${storedTab} from sessionStorage`);
       setActiveTab(storedTab);
       // Clear after use
       sessionStorage.removeItem('security-active-tab');

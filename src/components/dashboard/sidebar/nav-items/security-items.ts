@@ -17,7 +17,7 @@ export const securityItems: NavItem[] = [
   {
     title: 'Firewall',
     icon: Lock,
-    href: '/admin-settings'
+    href: '/settings#security/firewall'
   },
   {
     title: 'Logging & Audit',
