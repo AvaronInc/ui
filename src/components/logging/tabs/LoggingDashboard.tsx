@@ -37,10 +37,7 @@ const LoggingDashboard: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div className="flex-1">
-          <h2 className="text-2xl font-bold">Logging & Audit Dashboard</h2>
-          <p className="text-muted-foreground">
-            Real-time monitoring of system events, user actions, and security logs
-          </p>
+          {/* Removed redundant title that was here */}
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={handleRefreshLogs}>
