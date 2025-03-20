@@ -27,11 +27,30 @@ export async function checkExistingUser(email: string) {
       return { existingUser: null, checkError: null };
     }
     
-    const { data: existingUser, error: checkError } = await supabase
-      .from('user_profiles')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
+    // Check if user exists directly in auth users since user_profiles doesn't have email field
+    const { data: existingUser, error: checkError } = await supabase.auth.admin
+      .listUsers({
+        filters: {
+          email: email
+        },
+        limit: 1
+      })
+      .catch(e => {
+        console.log('[Signup] Admin API not available, falling back to safer check');
+        // If admin API is not available (which is common), we'll fall back to a safer method
+        // Just try to sign in with a dummy password to see if the email exists
+        return supabase.auth.signInWithPassword({
+          email: email,
+          password: 'dummy_password_to_check_existence_only'
+        }).then(result => {
+          // If we get a specific error about wrong password, the user exists
+          if (result.error?.message?.includes('Invalid login credentials')) {
+            return { data: { email }, error: null };
+          }
+          // If we get another error or success (unlikely), return null
+          return { data: null, error: null };
+        });
+      });
     
     if (checkError) {
       console.error('[Signup] Error checking existing user:', checkError);
