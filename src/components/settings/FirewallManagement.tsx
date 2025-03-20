@@ -8,6 +8,7 @@ import RulesPolicy from '@/components/firewall/components/RulesPolicy';
 import DeepPacketInspection from '@/components/firewall/components/dpi/DeepPacketInspection';
 import { AIThreatPanel } from '@/components/firewall/components/ai';
 import { IPSThreatPanel } from '@/components/firewall/components/ips';
+import { ZeroTrustPanel } from '@/components/firewall/components/zerotrust';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
@@ -61,18 +62,7 @@ const FirewallManagement = () => {
         </TabsContent>
         
         <TabsContent value="zerotrust" className="space-y-6">
-          <div className="space-y-4">
-            <h4 className="text-md font-medium">Zero Trust Policy Management</h4>
-            <p className="text-sm text-muted-foreground">
-              Configure zero trust network access policies and controls.
-            </p>
-          </div>
-          
-          <div className="border-t pt-4">
-            <Button onClick={handleSave}>
-              Save Changes
-            </Button>
-          </div>
+          <ZeroTrustPanel />
         </TabsContent>
         
         <TabsContent value="logging" className="space-y-6">
