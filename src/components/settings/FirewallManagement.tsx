@@ -24,12 +24,7 @@ const FirewallManagement = () => {
   
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <h3 className="text-lg font-medium">Firewall Management</h3>
-        <p className="text-sm text-muted-foreground">
-          Configure and monitor firewall settings, rules, and security policies.
-        </p>
-      </div>
+      {/* Removed the redundant heading and description here */}
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
