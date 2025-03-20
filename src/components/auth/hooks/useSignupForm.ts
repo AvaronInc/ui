@@ -66,7 +66,13 @@ export const useSignupForm = ({ isLoading, setIsLoading, onSuccess }: UseSignupF
       
       // Skip user existence check and create user directly
       console.log('[SignupForm] Creating account for:', values.email);
-      const { success, error, errorDetails } = await createUser(values);
+      
+      // Make sure we pass the full values object with all required properties
+      const { success, error, errorDetails } = await createUser({
+        email: values.email,
+        password: values.password,
+        fullName: values.fullName
+      });
       
       if (success) {
         console.log('[SignupForm] Account created successfully');

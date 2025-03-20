@@ -12,25 +12,24 @@ export async function checkExistingUser(email: string) {
     }
     
     // For production, check if the email exists
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signInWithOtp({
       email,
-      password: 'TEMPORARY_PASSWORD_FOR_CHECK_ONLY',
       options: {
-        emailRedirectTo: window.location.origin,
+        // We're only checking if the email exists, not actually creating a user
+        shouldCreateUser: false // This is a valid option for signInWithOtp
       }
     });
     
-    // If there's no error or an error that doesn't mention "already registered", 
-    // the email doesn't exist
-    if (!error || !error.message.includes('already registered')) {
-      console.log('[Signup] Email does not exist (can proceed with signup):', email);
-      return { existingUser: null, checkError: null };
+    // If there's no error, the email exists and we can send OTP to it
+    if (!error) {
+      console.log('[Signup] Email exists (can receive OTP):', email);
+      return { existingUser: { email }, checkError: null };
     }
     
-    // If we get an error about email already registered, that means the user exists
-    if (error.message.includes('already registered')) {
-      console.log('[Signup] Email exists (cannot proceed with signup):', email);
-      return { existingUser: { email }, checkError: null };
+    // If we get an error about user not found, that means the user doesn't exist
+    if (error.message.includes('user not found')) {
+      console.log('[Signup] Email does not exist (cannot proceed with signup):', email);
+      return { existingUser: null, checkError: null };
     }
     
     // For other errors, log them and allow signup to proceed in development

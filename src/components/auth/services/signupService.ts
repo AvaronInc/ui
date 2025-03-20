@@ -2,6 +2,7 @@
 import { createUser } from './userCreationService';
 import { checkExistingUser } from './userCheckService';
 import { handleSignupError } from './errorHandlingService';
-import { SignupFormValues, SignupResult } from './types';
+import type { SignupFormValues, SignupResult } from './types';
 
-export { createUser, checkExistingUser, handleSignupError, SignupFormValues, SignupResult };
+export { createUser, checkExistingUser, handleSignupError };
+export type { SignupFormValues, SignupResult };
