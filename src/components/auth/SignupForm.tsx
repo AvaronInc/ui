@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -96,11 +95,40 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         return;
       }
       
-      // Skip check for existing user in development mode (handled inside the function)
+      // In development mode, skip existing user check
+      if (import.meta.env.DEV) {
+        console.log('[SignupForm] Development mode: Skipping existing user check');
+        
+        console.log('[SignupForm] Creating account for:', values.email);
+        const { success, error, errorDetails } = await createUser(values);
+        
+        if (success) {
+          console.log('[SignupForm] Account created successfully');
+          setFormSubmitted(false);
+          form.reset();
+          toast.success('Account created successfully!');
+          
+          // Call the onSuccess callback to trigger any parent component actions
+          onSuccess();
+          
+          // Defer navigation with setTimeout to prevent potential deadlocks with auth state change
+          setTimeout(() => {
+            navigate('/');
+          }, 100); // slightly longer delay to ensure toast visibility
+        } else if (error) {
+          console.error('[SignupForm] Signup error:', error, errorDetails);
+          setSignupError(errorDetails || error.message || 'Failed to create account');
+        }
+        
+        setIsLoading(false);
+        setFormSubmitted(false);
+        return;
+      }
+      
+      // For production, check if user exists first
       const { existingUser, checkError } = await checkExistingUser(values.email);
       
-      // In production we need to handle errors, but in dev we should continue even with errors
-      if (checkError && !import.meta.env.DEV) {
+      if (checkError) {
         console.log('[SignupForm] Error checking user existence:', checkError);
         setSignupError('Unable to verify if email already exists. Please try again.');
         setIsLoading(false);

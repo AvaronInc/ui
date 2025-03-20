@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { SignupFormValues } from '../validation/signupSchema';
 import { toast } from 'sonner';
@@ -20,35 +19,36 @@ export async function checkExistingUser(email: string) {
       return { existingUser: null, checkError: null };
     }
     
-    // Check if user already exists by attempting to sign in
-    // This is a safe way to check for existing users without admin privileges
+    // In development mode, always allow signup to proceed
+    if (import.meta.env.DEV) {
+      console.log('[Signup] Development mode: Bypassing user check');
+      return { existingUser: null, checkError: null };
+    }
+    
+    // For production, attempt to check if email exists using a sign-in attempt
+    // This approach doesn't actually log the user in, just checks if the email exists
     const { data, error } = await supabase.auth.signInWithOtp({
-      email: email,
+      email,
       options: {
-        shouldCreateUser: false // Don't create user, just check if exists
+        shouldCreateUser: false
       }
     });
     
-    // If we get an error saying user doesn't exist, then user doesn't exist
-    if (error && error.message?.includes('Email not found')) {
-      console.log('[Signup] Email does not exist:', email);
+    if (error) {
+      // If we get an error that's not about user not existing, that's a problem
+      if (!error.message.includes('Email not found')) {
+        console.error('[Signup] Error checking if user exists:', error.message);
+        return { existingUser: null, checkError: error };
+      }
+      
+      // Error about email not found means user doesn't exist, which is what we want
+      console.log('[Signup] Email does not exist (can proceed with signup):', email);
       return { existingUser: null, checkError: null };
     }
     
-    // If no error, the user exists
-    if (!error) {
-      console.log('[Signup] Email exists:', email);
-      return { existingUser: { email }, checkError: null };
-    }
-    
-    // If we got a different error, but in development mode
-    if (error && import.meta.env.DEV) {
-      console.log('[Signup] Error in DEV mode, continuing anyway:', error.message);
-      return { existingUser: null, checkError: null };
-    }
-    
-    console.log('[Signup] Auth check result:', { data, error });
-    return { existingUser: null, checkError: error };
+    // If no error, OTP was sent which means user exists
+    console.log('[Signup] Email exists (cannot proceed with signup):', email);
+    return { existingUser: { email }, checkError: null };
   } catch (error) {
     console.error('[Signup] Exception checking existing user:', error);
     // In development mode, allow signup to proceed on errors
