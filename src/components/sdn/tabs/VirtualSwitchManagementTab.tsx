@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -186,14 +185,12 @@ const VirtualSwitchManagementTab: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Virtual Switch Configuration Dialog */}
       <VirtualSwitchConfigDialog 
         open={configDialogOpen}
         onClose={() => setConfigDialogOpen(false)}
         onDeploy={handleDeploySwitch}
       />
 
-      {/* Virtual Switch Security Dialog */}
       <VirtualSwitchSecurityDialog 
         open={securityDialogOpen}
         onClose={() => setSecurityDialogOpen(false)}
