@@ -32,10 +32,10 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
   });
 
   const handleSignup = async (values: SignupFormValues) => {
-    setIsLoading(true);
-    setSignupError(null);
-    
     try {
+      setIsLoading(true);
+      setSignupError(null);
+      
       // First do a pre-check if the email already exists
       const { existingUser } = await checkExistingUser(values.email);
       if (existingUser) {
@@ -51,13 +51,16 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         console.log('[SignupForm] Account created successfully');
         toast.success('Account created successfully. Please check your email to confirm your account.');
         form.reset();
+        
+        // Call the onSuccess callback to trigger any parent component actions
         onSuccess();
         
         // In development mode, explicitly navigate after simulated signup
         if (import.meta.env.DEV) {
+          toast.success('Development mode: Redirecting to home page...');
           setTimeout(() => {
             navigate('/');
-          }, 500);
+          }, 1000);
         }
       } else if (error) {
         console.error('[SignupForm] Signup error:', error, errorDetails);

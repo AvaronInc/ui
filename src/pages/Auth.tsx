@@ -71,12 +71,13 @@ const Auth = () => {
       }
     };
     
+    // Use a shorter timeout for faster user experience
     const timeoutId = setTimeout(() => {
       if (isChecking && !didCancel) {
         console.log('[Auth Page] Session check timeout, allowing login');
         setIsChecking(false);
       }
-    }, 2500);
+    }, 1500); // Reduced from 2500 to 1500ms
     
     checkSession();
     
