@@ -3,20 +3,27 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Settings, Trash2, LinkIcon, Activity } from 'lucide-react';
+import { Plus, Settings, Trash2, LinkIcon, Activity, Server, ChartBar } from 'lucide-react';
 import VirtualSwitchDashboard from '../components/virtual-switch/VirtualSwitchDashboard';
 import NetworkVisualization from '../components/virtual-switch/NetworkVisualization';
 import SwitchPerformanceMetrics from '../components/virtual-switch/SwitchPerformanceMetrics';
+import VirtualSwitchConfigDialog from '../components/virtual-switch/VirtualSwitchConfigDialog';
 
 const VirtualSwitchManagementTab: React.FC = () => {
   const { toast } = useToast();
   const [selectedSwitch, setSelectedSwitch] = useState<string | null>(null);
+  const [configDialogOpen, setConfigDialogOpen] = useState(false);
 
   const handleCreateSwitch = () => {
+    setConfigDialogOpen(true);
+  };
+
+  const handleDeploySwitch = (values: any) => {
     toast({
-      title: "New Virtual Switch",
-      description: "Create new virtual switch dialog would open here"
+      title: "Virtual Switch Deployed",
+      description: `Switch "${values.name}" has been configured and is being deployed.`
     });
+    // In a real application, you would make an API call to create the switch here
   };
 
   const handleModifySwitch = () => {
@@ -70,7 +77,10 @@ const VirtualSwitchManagementTab: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Virtual Switch Management</h2>
+        <h2 className="text-2xl font-semibold flex items-center">
+          <Server className="mr-2 h-6 w-6 text-primary" />
+          Virtual Switch Management
+        </h2>
         <div className="flex space-x-2">
           <Button onClick={handleCreateSwitch} className="flex items-center">
             <Plus className="mr-2 h-4 w-4" />
@@ -121,7 +131,10 @@ const VirtualSwitchManagementTab: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Performance Metrics</CardTitle>
+            <CardTitle className="flex items-center">
+              <ChartBar className="mr-2 h-5 w-5 text-primary" />
+              Performance Metrics
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <SwitchPerformanceMetrics selectedSwitch={selectedSwitch} />
@@ -140,6 +153,13 @@ const VirtualSwitchManagementTab: React.FC = () => {
           />
         </CardContent>
       </Card>
+
+      {/* Virtual Switch Configuration Dialog */}
+      <VirtualSwitchConfigDialog 
+        open={configDialogOpen}
+        onClose={() => setConfigDialogOpen(false)}
+        onDeploy={handleDeploySwitch}
+      />
     </div>
   );
 };
