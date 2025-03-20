@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { SignupFormValues } from '../validation/signupSchema';
 import { toast } from 'sonner';
@@ -27,42 +26,32 @@ export async function checkExistingUser(email: string) {
       return { existingUser: null, checkError: null };
     }
     
-    // Check if user exists directly in auth users since user_profiles doesn't have email field
-    const { data: existingUser, error: checkError } = await supabase.auth.admin
-      .listUsers({
-        filters: {
-          email: email
-        },
-        limit: 1
-      })
-      .catch(e => {
-        console.log('[Signup] Admin API not available, falling back to safer check');
-        // If admin API is not available (which is common), we'll fall back to a safer method
-        // Just try to sign in with a dummy password to see if the email exists
-        return supabase.auth.signInWithPassword({
-          email: email,
-          password: 'dummy_password_to_check_existence_only'
-        }).then(result => {
-          // If we get a specific error about wrong password, the user exists
-          if (result.error?.message?.includes('Invalid login credentials')) {
-            return { data: { email }, error: null };
-          }
-          // If we get another error or success (unlikely), return null
-          return { data: null, error: null };
-        });
-      });
+    // Using signInWithPassword with a dummy password to check if email exists
+    // This is safer as it doesn't require admin privileges
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: 'dummy_password_to_check_existence_only'
+    });
     
-    if (checkError) {
-      console.error('[Signup] Error checking existing user:', checkError);
-      // In dev mode, don't block signup if we can't check (likely CORS/network issue)
+    // If we get an error about invalid credentials, it means the email exists
+    if (error?.message?.includes('Invalid login credentials')) {
+      console.log('[Signup] Email exists:', email);
+      return { existingUser: { email }, checkError: null };
+    }
+    
+    // If no error or a different error, assume email doesn't exist
+    // Note: This might not be 100% accurate, but it's a reasonable fallback
+    if (error && !error.message?.includes('Invalid login credentials')) {
+      console.log('[Signup] Email check fallback:', error.message);
+      // In dev mode, don't block signup if we can't check
       if (import.meta.env.DEV) {
         console.log('[Signup] Error in DEV mode: Continuing anyway');
         return { existingUser: null, checkError: null };
       }
-      throw checkError;
     }
     
-    return { existingUser, checkError };
+    // If there's no error (unlikely) or email doesn't exist
+    return { existingUser: null, checkError: null };
   } catch (error) {
     console.error('[Signup] Exception checking existing user:', error);
     // In development mode, allow signup to proceed on errors
