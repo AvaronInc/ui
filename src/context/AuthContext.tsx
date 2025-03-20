@@ -57,12 +57,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log('[Auth] Setting up auth provider...');
     let didCancel = false;
-    let authSubscription: { data: { subscription: any } } | null = null;
+    let subscriptionObject: { unsubscribe: () => void } | null = null;
     
     const initializeAuth = async () => {
       try {
         // First set up the auth state listener to avoid missing events
-        const { data } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
           console.log('[Auth] Auth state changed:', event, Boolean(newSession));
           
           if (didCancel) return;
@@ -88,8 +88,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         });
 
-        // Store the subscription object
-        authSubscription = data;
+        // Store the subscription for cleanup
+        subscriptionObject = subscription;
         
         // Then check for existing session
         console.log('[Auth] Checking for existing session...');
@@ -131,9 +131,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Clean up
     return () => {
       didCancel = true;
-      if (authSubscription) {
+      if (subscriptionObject) {
         // Properly unsubscribe from auth events
-        supabase.auth.onAuthStateChange(() => {}).subscription.unsubscribe();
+        subscriptionObject.unsubscribe();
       }
     };
   }, []);
