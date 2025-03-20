@@ -62,7 +62,6 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
       } else if (error) {
         console.error('[SignupForm] Signup error:', error, errorDetails);
         setSignupError(errorDetails || error.message || 'Failed to create account');
-        throw error;
       }
     } catch (error: any) {
       console.error('[SignupForm] Exception during signup:', error);

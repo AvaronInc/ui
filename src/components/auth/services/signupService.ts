@@ -47,14 +47,13 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
       };
     }
 
-    // Format user metadata properly to ensure it's compatible with the database schema
+    // Simplify the user data structure to avoid potential issues
     const userData = {
       email: values.email,
       password: values.password,
       options: {
         data: {
           full_name: values.fullName,
-          // Ensure role is a string type exactly matching one of the enum values
           role: 'user'
         },
       },
@@ -75,30 +74,12 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
         // In development mode, we'll simulate a successful signup
         toast.success('Development mode: Account created successfully!');
         
-        // Simulate auth state change by logging in with the same credentials
-        // This helps bypass CORS issues in development
-        try {
-          const signInResult = await supabase.auth.signInWithPassword({
-            email: values.email,
-            password: values.password,
-          });
-          
-          if (signInResult.error) {
-            console.log('[Signup] Could not auto-sign in after mock signup:', signInResult.error);
-            // Continue anyway - the AuthContext has fallbacks for development
-          }
-          
-          return { 
-            success: true, 
-            data: { user: { email: values.email } }, 
-            error: null 
-          };
-        } catch (signInError) {
-          console.log('[Signup] Exception when auto-signing in after mock signup:', signInError);
-          // Continue with success anyway - the AuthContext has fallbacks for development
-        }
-        
-        return { success: true, data: { user: { email: values.email } }, error: null };
+        // Don't try to sign in after simulated signup, just return success
+        return { 
+          success: true, 
+          data: { user: { email: values.email } }, 
+          error: null 
+        };
       }
       
       // Provide more context for database errors
