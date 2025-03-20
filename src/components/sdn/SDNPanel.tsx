@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Network, Activity, Shield, Share2, FileText, Settings, Globe, HeartPulse, LockKeyhole } from 'lucide-react';
+import { Network, HeartPulse, Globe, LockKeyhole } from 'lucide-react';
 import SDNOverview from './tabs/SDNOverview';
 import VirtualNetworksTab from './tabs/VirtualNetworksTab';
 import FailoverHighAvailabilityTab from './tabs/FailoverHighAvailabilityTab';
@@ -42,22 +42,6 @@ const SDNPanel: React.FC = () => {
               <LockKeyhole className="h-4 w-4" />
               <span>{isMobile ? "Security" : "Security & Compliance"}</span>
             </TabsTrigger>
-            <TabsTrigger value="traffic" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
-              <Activity className="h-4 w-4" />
-              <span>{isMobile ? "Traffic" : "Traffic Management"}</span>
-            </TabsTrigger>
-            <TabsTrigger value="tunnels" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
-              <Share2 className="h-4 w-4" />
-              <span>{isMobile ? "Tunnels" : "Tunnel Management"}</span>
-            </TabsTrigger>
-            <TabsTrigger value="logs" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
-              <FileText className="h-4 w-4" />
-              <span>{isMobile ? "Logs" : "Network Logs"}</span>
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
-              <Settings className="h-4 w-4" />
-              <span>{isMobile ? "Settings" : "SDN Settings"}</span>
-            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -75,30 +59,6 @@ const SDNPanel: React.FC = () => {
         
         <TabsContent value="security" className="space-y-4">
           <SecurityComplianceTab />
-        </TabsContent>
-
-        <TabsContent value="traffic" className="space-y-4">
-          <div className="text-center p-8 bg-muted rounded-md">
-            <p className="text-muted-foreground">Traffic Management will be available in an upcoming release.</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="tunnels" className="space-y-4">
-          <div className="text-center p-8 bg-muted rounded-md">
-            <p className="text-muted-foreground">Tunnel Management will be available in an upcoming release.</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="logs" className="space-y-4">
-          <div className="text-center p-8 bg-muted rounded-md">
-            <p className="text-muted-foreground">Network Logs will be available in an upcoming release.</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="settings" className="space-y-4">
-          <div className="text-center p-8 bg-muted rounded-md">
-            <p className="text-muted-foreground">SDN Settings will be available in an upcoming release.</p>
-          </div>
         </TabsContent>
       </Tabs>
     </div>
