@@ -11,11 +11,20 @@ const SecuritySettings = () => {
   const [activeTab, setActiveTab] = useState('general');
   const location = useLocation();
   
-  // Check for URL fragment to set active tab
+  // Check for active tab from URL or sessionStorage
   useEffect(() => {
-    const hash = location.hash.replace('#', '');
-    if (hash === 'firewall') {
+    // First check URL hash for direct navigation
+    if (location.hash.includes('/firewall')) {
       setActiveTab('firewall');
+      return;
+    }
+    
+    // Then check sessionStorage (set by AdminSettings when using fragment navigation)
+    const storedTab = sessionStorage.getItem('security-active-tab');
+    if (storedTab) {
+      setActiveTab(storedTab);
+      // Clear after use
+      sessionStorage.removeItem('security-active-tab');
     }
   }, [location]);
   

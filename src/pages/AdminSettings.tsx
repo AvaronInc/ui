@@ -20,13 +20,31 @@ const AdminSettings = () => {
 
   // Parse URL params and fragments
   useEffect(() => {
-    // Check for hash fragment first (for deep linking)
-    const hash = location.hash.replace('#', '');
-    if (hash && settingsSections.some(section => section.id === hash)) {
-      setActiveSection(hash);
+    // Check for hash fragment
+    const hashPath = location.hash.replace('#', '');
+    
+    // Handle both simple fragments and complex ones with subpaths
+    if (hashPath) {
+      if (hashPath.includes('/')) {
+        // For paths like '#security/firewall'
+        const [sectionId, subPath] = hashPath.split('/');
+        if (settingsSections.some(section => section.id === sectionId)) {
+          setActiveSection(sectionId);
+          
+          // Store subpath in sessionStorage for the section component to use
+          if (subPath) {
+            sessionStorage.setItem(`${sectionId}-active-tab`, subPath);
+          }
+        }
+      } else {
+        // For simple paths like '#security'
+        if (settingsSections.some(section => section.id === hashPath)) {
+          setActiveSection(hashPath);
+        }
+      }
     }
     
-    // Then check for query params (for compatibility with existing links)
+    // Also check for query params (for compatibility with existing links)
     const searchParams = new URLSearchParams(location.search);
     const sectionParam = searchParams.get('section');
     if (sectionParam && settingsSections.some(section => section.id === sectionParam)) {
