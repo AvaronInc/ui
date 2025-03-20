@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Network, Activity, Shield, Share2, FileText, Settings, Globe } from 'lucide-react';
+import { Network, Activity, Shield, Share2, FileText, Settings, Globe, HeartPulse } from 'lucide-react';
 import SDNOverview from './tabs/SDNOverview';
 import VirtualNetworksTab from './tabs/VirtualNetworksTab';
+import FailoverHighAvailabilityTab from './tabs/FailoverHighAvailabilityTab';
 
 const SDNPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -31,6 +32,10 @@ const SDNPanel: React.FC = () => {
             <TabsTrigger value="virtual" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Globe className="h-4 w-4" />
               <span>{isMobile ? "Virtual" : "Virtual Networks"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="failover" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <HeartPulse className="h-4 w-4" />
+              <span>{isMobile ? "Failover" : "Failover & HA"}</span>
             </TabsTrigger>
             <TabsTrigger value="traffic" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Activity className="h-4 w-4" />
@@ -61,6 +66,10 @@ const SDNPanel: React.FC = () => {
 
         <TabsContent value="virtual" className="space-y-4">
           <VirtualNetworksTab />
+        </TabsContent>
+
+        <TabsContent value="failover" className="space-y-4">
+          <FailoverHighAvailabilityTab />
         </TabsContent>
 
         <TabsContent value="traffic" className="space-y-4">

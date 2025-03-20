@@ -4,7 +4,7 @@ import { PageTransition } from '@/components/transitions/PageTransition';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTitle from '@/components/common/PageTitle';
 import SDNPanel from '@/components/sdn/SDNPanel';
-import { Globe } from 'lucide-react';
+import { Network } from 'lucide-react';
 
 const SDN = () => {
   return (
@@ -14,7 +14,7 @@ const SDN = () => {
           <PageTitle 
             title="Software Defined Networking" 
             description="Automated network configuration and control across all NEST deployments"
-            icon={<Globe className="h-6 w-6" />}
+            icon={<Network className="h-6 w-6" />}
           />
           <SDNPanel />
         </div>

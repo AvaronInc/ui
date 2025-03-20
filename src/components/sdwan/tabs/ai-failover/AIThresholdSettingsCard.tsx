@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Brain } from 'lucide-react';
 import { AIThresholdSettingsProps } from './interfaces';
 
@@ -23,60 +23,78 @@ const AIThresholdSettingsCard = ({
       <CardHeader>
         <CardTitle className="flex items-center">
           <Brain className="mr-2 h-5 w-5" />
-          AI Confidence & Threshold Settings
+          AI Confidence Settings
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="ai-confidence">AI Confidence Level for Autonomous Failover: {confidenceLevel}%</Label>
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <Label>AI Confidence Level</Label>
+            <span className="text-sm font-semibold">{confidenceLevel}%</span>
+          </div>
+          <Slider 
+            min={50} 
+            max={100} 
+            step={1}
+            value={[confidenceLevel]}
+            onValueChange={(value) => onConfidenceLevelChange(value[0])}
+          />
+          <p className="text-xs text-muted-foreground">
+            Higher confidence means AI will only suggest failover actions when it's more certain about the prediction.
+          </p>
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <Label>Minimum Required Confidence</Label>
+            <span className="text-sm font-semibold">{minimumConfidence}%</span>
+          </div>
+          <Slider 
+            min={50} 
+            max={100} 
+            step={1}
+            value={[minimumConfidence]}
+            onValueChange={(value) => onMinimumConfidenceChange(value[0])}
+          />
+          <p className="text-xs text-muted-foreground">
+            Predictions below this confidence threshold will not trigger automatic failover.
+          </p>
+        </div>
+        
+        <div className="space-y-2">
+          <Label>Recommendation Threshold</Label>
+          <RadioGroup 
+            value={threshold} 
+            onValueChange={(value) => onThresholdChange(value as 'low' | 'medium' | 'high')}
+            className="flex space-x-4 pt-1"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="low" id="low" />
+              <Label htmlFor="low">Low</Label>
             </div>
-            <Slider 
-              id="ai-confidence" 
-              value={[confidenceLevel]} 
-              max={100} 
-              step={1} 
-              onValueChange={(value) => onConfidenceLevelChange(value[0])}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="min-confidence">Minimum Confidence Required: {minimumConfidence}%</Label>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="medium" id="medium" />
+              <Label htmlFor="medium">Medium</Label>
             </div>
-            <Slider 
-              id="min-confidence" 
-              value={[minimumConfidence]} 
-              min={50} 
-              max={100} 
-              step={1} 
-              onValueChange={(value) => onMinimumConfidenceChange(value[0])}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="threshold">Threshold for AI-Generated Failover Recommendations</Label>
-            <Select 
-              value={threshold} 
-              onValueChange={(value: 'low' | 'medium' | 'high') => onThresholdChange(value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select threshold" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="high" id="high" />
+              <Label htmlFor="high">High</Label>
+            </div>
+          </RadioGroup>
+          <p className="text-xs text-muted-foreground">
+            Determines how sensitive the AI is to network changes when making recommendations.
+          </p>
+        </div>
+        
+        <div className="pt-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="admin-approval">Admin Approval Requirement</Label>
+            <div>
+              <Label htmlFor="admin-approval" className="block">Require Admin Approval</Label>
+              <p className="text-xs text-muted-foreground">For AI-driven failover decisions</p>
+            </div>
             <Switch 
               id="admin-approval" 
-              checked={requireAdminApproval} 
+              checked={requireAdminApproval}
               onCheckedChange={onAdminApprovalToggle}
             />
           </div>

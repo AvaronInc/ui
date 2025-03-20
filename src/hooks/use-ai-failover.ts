@@ -1,92 +1,76 @@
 
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { AIFailoverConfiguration } from '@/types/sdwan';
 
-const defaultAIFailoverConfig: AIFailoverConfiguration = {
-  confidenceLevel: 75,
-  minimumConfidenceRequired: 80,
+// Default configuration
+const defaultConfig: AIFailoverConfiguration = {
+  confidenceLevel: 85,
+  minimumConfidenceRequired: 70,
   thresholdForRecommendations: 'medium',
   requireAdminApproval: true,
   networkConditions: {
-    latencyThreshold: 100,
-    packetLossThreshold: 5,
-    jitterThreshold: 30,
+    latencyThreshold: 50,
+    packetLossThreshold: 2.5,
+    jitterThreshold: 10,
     connectionDownThreshold: {
       count: 3,
-      timeWindow: 5
+      timeWindow: 5,
     },
     detectBGPIssues: true,
-    ddosResponseEnabled: true
+    ddosResponseEnabled: true,
   },
   adaptiveLearning: {
     enabled: true,
-    allowRealTimeTrafficAdjustment: true
+    allowRealTimeTrafficAdjustment: false,
   },
   failoverPriority: 'performance',
   simulationModeEnabled: false,
   logging: {
     enabled: true,
-    sendAlerts: true
+    sendAlerts: true,
   },
   customRules: [
     {
       id: '1',
-      sourceIp: '10.0.1.0/24',
-      destination: 'SaaS Apps',
-      priority: 'high'
+      sourceIp: '10.0.0.0/24',
+      destination: 'Cloud Services',
+      priority: 'high',
     },
     {
       id: '2',
-      sourceIp: '10.0.2.0/24',
-      destination: 'Cloud Services',
-      priority: 'medium'
-    }
-  ]
+      sourceIp: '10.0.1.0/24',
+      destination: 'Internal Systems',
+      priority: 'medium',
+    },
+  ],
 };
 
 export const useAIFailover = () => {
-  const { toast } = useToast();
-  const [config, setConfig] = useState<AIFailoverConfiguration>(defaultAIFailoverConfig);
+  const [config, setConfig] = useState<AIFailoverConfiguration>(defaultConfig);
   const [isLoading, setIsLoading] = useState(false);
 
   const updateConfidenceLevel = (value: number) => {
-    setConfig(prev => ({
-      ...prev,
-      confidenceLevel: value
-    }));
+    setConfig(prev => ({ ...prev, confidenceLevel: value }));
   };
 
   const updateMinimumConfidence = (value: number) => {
-    setConfig(prev => ({
-      ...prev,
-      minimumConfidenceRequired: value
-    }));
+    setConfig(prev => ({ ...prev, minimumConfidenceRequired: value }));
   };
 
   const updateThreshold = (value: 'low' | 'medium' | 'high') => {
-    setConfig(prev => ({
-      ...prev,
-      thresholdForRecommendations: value
-    }));
+    setConfig(prev => ({ ...prev, thresholdForRecommendations: value }));
   };
 
   const toggleAdminApproval = () => {
-    setConfig(prev => ({
-      ...prev,
-      requireAdminApproval: !prev.requireAdminApproval
-    }));
+    setConfig(prev => ({ ...prev, requireAdminApproval: !prev.requireAdminApproval }));
   };
 
-  const updateNetworkCondition = (
-    key: keyof AIFailoverConfiguration['networkConditions'],
-    value: any
-  ) => {
+  const updateNetworkCondition = (key: keyof AIFailoverConfiguration['networkConditions'], value: any) => {
     setConfig(prev => ({
       ...prev,
       networkConditions: {
         ...prev.networkConditions,
-        [key]: value
+        [key]: value,
       }
     }));
   };
@@ -96,23 +80,17 @@ export const useAIFailover = () => {
       ...prev,
       adaptiveLearning: {
         ...prev.adaptiveLearning,
-        [key]: !prev.adaptiveLearning[key]
+        [key]: !prev.adaptiveLearning[key],
       }
     }));
   };
 
   const updateFailoverPriority = (value: 'cost' | 'performance' | 'stability') => {
-    setConfig(prev => ({
-      ...prev,
-      failoverPriority: value
-    }));
+    setConfig(prev => ({ ...prev, failoverPriority: value }));
   };
 
   const toggleSimulationMode = () => {
-    setConfig(prev => ({
-      ...prev,
-      simulationModeEnabled: !prev.simulationModeEnabled
-    }));
+    setConfig(prev => ({ ...prev, simulationModeEnabled: !prev.simulationModeEnabled }));
   };
 
   const toggleLogging = (key: keyof AIFailoverConfiguration['logging']) => {
@@ -120,7 +98,7 @@ export const useAIFailover = () => {
       ...prev,
       logging: {
         ...prev.logging,
-        [key]: !prev.logging[key]
+        [key]: !prev.logging[key],
       }
     }));
   };
@@ -128,40 +106,22 @@ export const useAIFailover = () => {
   const addCustomRule = (rule: Omit<AIFailoverConfiguration['customRules'][0], 'id'>) => {
     const newRule = {
       ...rule,
-      id: String(config.customRules.length + 1)
+      id: Date.now().toString(),
     };
-    
+
     setConfig(prev => ({
       ...prev,
-      customRules: [...prev.customRules, newRule]
+      customRules: [...prev.customRules, newRule],
     }));
   };
 
   const saveConfiguration = async () => {
     setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Success",
-        description: "AI Failover configuration has been saved",
-      });
-      
-      return true;
-    } catch (error) {
-      console.error("Failed to save AI Failover configuration", error);
-      
-      toast({
-        title: "Error",
-        description: "Failed to save AI Failover configuration",
-        variant: "destructive"
-      });
-      
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsLoading(false);
+    // In a real app, you'd save the configuration to a backend service here
+    console.log('Saved configuration:', config);
   };
 
   return {
@@ -177,6 +137,6 @@ export const useAIFailover = () => {
     toggleSimulationMode,
     toggleLogging,
     addCustomRule,
-    saveConfiguration
+    saveConfiguration,
   };
 };
