@@ -16,7 +16,7 @@ const Auth = () => {
   // Check if user is already logged in
   useEffect(() => {
     let didCancel = false;
-    let authSubscription: { unsubscribe: () => void } | null = null;
+    let authSubscription: { data: { subscription: any } } | null = null;
     
     const checkSession = async () => {
       try {
@@ -26,7 +26,7 @@ const Auth = () => {
         console.log('[Auth Page] Setting up auth listener...');
         
         // Set up auth state listener first
-        authSubscription = supabase.auth.onAuthStateChange(
+        const { data } = supabase.auth.onAuthStateChange(
           (event, session) => {
             console.log('[Auth Page] Auth state changed:', event);
             if (didCancel) return;
@@ -39,9 +39,12 @@ const Auth = () => {
           }
         );
         
+        // Store the subscription
+        authSubscription = data;
+        
         // Then check for existing session
         console.log('[Auth Page] Checking for existing session...');
-        const { data, error } = await supabase.auth.getSession();
+        const { data: sessionData, error } = await supabase.auth.getSession();
         
         if (didCancel) return;
         
@@ -52,7 +55,7 @@ const Auth = () => {
           return;
         }
         
-        if (data.session) {
+        if (sessionData.session) {
           console.log('[Auth Page] User already has a session, redirecting to home');
           navigate('/');
         }
@@ -81,7 +84,8 @@ const Auth = () => {
       didCancel = true;
       clearTimeout(timeoutId);
       if (authSubscription) {
-        authSubscription.unsubscribe();
+        // Properly unsubscribe from auth events
+        supabase.auth.onAuthStateChange(() => {}).subscription.unsubscribe();
       }
     };
   }, [navigate]);

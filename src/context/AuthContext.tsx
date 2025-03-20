@@ -57,12 +57,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log('[Auth] Setting up auth provider...');
     let didCancel = false;
-    let authSubscription: { unsubscribe: () => void } | null = null;
+    let authSubscription: { data: { subscription: any } } | null = null;
     
     const initializeAuth = async () => {
       try {
         // First set up the auth state listener to avoid missing events
-        authSubscription = supabase.auth.onAuthStateChange(async (event, newSession) => {
+        const { data } = supabase.auth.onAuthStateChange(async (event, newSession) => {
           console.log('[Auth] Auth state changed:', event, Boolean(newSession));
           
           if (didCancel) return;
@@ -88,24 +88,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         });
 
+        // Store the subscription object
+        authSubscription = data;
+        
         // Then check for existing session
         console.log('[Auth] Checking for existing session...');
-        const { data, error } = await supabase.auth.getSession();
+        const { data: sessionData, error } = await supabase.auth.getSession();
         
         if (error) {
           throw error;
         }
         
-        console.log('[Auth] Session retrieved:', data.session ? 'Valid session' : 'No session');
+        console.log('[Auth] Session retrieved:', sessionData.session ? 'Valid session' : 'No session');
         
         if (didCancel) return;
         
-        setSession(data.session);
-        setUser(data.session?.user || null);
+        setSession(sessionData.session);
+        setUser(sessionData.session?.user || null);
         
-        if (data.session?.user) {
+        if (sessionData.session?.user) {
           try {
-            await fetchUserProfile(data.session.user.id);
+            await fetchUserProfile(sessionData.session.user.id);
           } catch (error) {
             logAuthError(error, 'initial session profile fetch');
             setDevFallbackProfile();
@@ -129,7 +132,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       didCancel = true;
       if (authSubscription) {
-        authSubscription.unsubscribe();
+        // Properly unsubscribe from auth events
+        supabase.auth.onAuthStateChange(() => {}).subscription.unsubscribe();
       }
     };
   }, []);
