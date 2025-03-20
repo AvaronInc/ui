@@ -103,7 +103,7 @@ const AssetTrackingSection = () => {
               </p>
             </div>
             <Tabs defaultValue="info">
-              <TabsList className="w-full justify-start p-0 px-6 pt-2">
+              <TabsList className="w-full grid grid-cols-4 px-6 pt-2">
                 <TabsTrigger value="info">Device Info</TabsTrigger>
                 <TabsTrigger value="location">Location</TabsTrigger>
                 <TabsTrigger value="performance">Performance</TabsTrigger>
