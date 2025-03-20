@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Network, Activity, Shield, Share2, FileText, Settings, Globe, HeartPulse } from 'lucide-react';
+import { Network, Activity, Shield, Share2, FileText, Settings, Globe, HeartPulse, LockKeyhole } from 'lucide-react';
 import SDNOverview from './tabs/SDNOverview';
 import VirtualNetworksTab from './tabs/VirtualNetworksTab';
 import FailoverHighAvailabilityTab from './tabs/FailoverHighAvailabilityTab';
+import SecurityComplianceTab from './tabs/SecurityComplianceTab';
 
 const SDNPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -37,13 +38,13 @@ const SDNPanel: React.FC = () => {
               <HeartPulse className="h-4 w-4" />
               <span>{isMobile ? "Failover" : "Failover & HA"}</span>
             </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <LockKeyhole className="h-4 w-4" />
+              <span>{isMobile ? "Security" : "Security & Compliance"}</span>
+            </TabsTrigger>
             <TabsTrigger value="traffic" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Activity className="h-4 w-4" />
               <span>{isMobile ? "Traffic" : "Traffic Management"}</span>
-            </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
-              <Shield className="h-4 w-4" />
-              <span>{isMobile ? "Security" : "Network Security"}</span>
             </TabsTrigger>
             <TabsTrigger value="tunnels" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Share2 className="h-4 w-4" />
@@ -71,16 +72,14 @@ const SDNPanel: React.FC = () => {
         <TabsContent value="failover" className="space-y-4">
           <FailoverHighAvailabilityTab />
         </TabsContent>
+        
+        <TabsContent value="security" className="space-y-4">
+          <SecurityComplianceTab />
+        </TabsContent>
 
         <TabsContent value="traffic" className="space-y-4">
           <div className="text-center p-8 bg-muted rounded-md">
             <p className="text-muted-foreground">Traffic Management will be available in an upcoming release.</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="security" className="space-y-4">
-          <div className="text-center p-8 bg-muted rounded-md">
-            <p className="text-muted-foreground">Network Security will be available in an upcoming release.</p>
           </div>
         </TabsContent>
 
