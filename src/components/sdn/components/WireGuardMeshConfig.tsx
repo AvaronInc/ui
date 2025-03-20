@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,10 +6,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Lock, Shield, Zap, Settings, Plus } from 'lucide-react';
+import { Lock, Shield, Zap, Settings, Plus, Eye, EyeOff } from 'lucide-react';
 
 const WireGuardMeshConfig: React.FC = () => {
   const [isNetmakerEnabled, setIsNetmakerEnabled] = useState(true);
+  const [showPublicKey, setShowPublicKey] = useState(false);
+  
+  const toggleKeyVisibility = () => {
+    setShowPublicKey(!showPublicKey);
+  };
   
   return (
     <div className="space-y-6">
@@ -45,10 +49,18 @@ const WireGuardMeshConfig: React.FC = () => {
                 <div className="flex">
                   <Input 
                     id="public-key" 
-                    value="jA1L1egfKbZ/P4pM6jv/W5M/o5czy7VUU9GrA8oo8TU=" 
+                    value={showPublicKey ? "jA1L1egfKbZ/P4pM6jv/W5M/o5czy7VUU9GrA8oo8TU=" : "••••••••••••••••••••••••••••••••••••••••"}
                     className="font-mono text-xs"
                     readOnly
                   />
+                  <Button 
+                    variant="outline" 
+                    className="ml-2 shrink-0"
+                    onClick={toggleKeyVisibility}
+                  >
+                    {showPublicKey ? <EyeOff className="h-4 w-4 mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
+                    {showPublicKey ? "Hide" : "Show"}
+                  </Button>
                   <Button variant="outline" className="ml-2 shrink-0">
                     Copy
                   </Button>
@@ -163,86 +175,63 @@ const WireGuardMeshConfig: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
-                  <td className="py-2 px-3">Headquarters</td>
-                  <td className="py-2 px-3 font-mono text-xs">3Nrb+vHC3ZQ+ij2qXTmVgJZrL9GE6cY5UPk1S3eiHnI=</td>
-                  <td className="py-2 px-3">10.10.10.1/24</td>
-                  <td className="py-2 px-3">Main Office</td>
-                  <td className="py-2 px-3">
-                    <Badge variant="default" className="bg-green-500 hover:bg-green-600">
-                      Connected
-                    </Badge>
-                  </td>
-                  <td className="py-2 px-3 text-right">
-                    <Button variant="ghost" size="icon">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 px-3">Data Center</td>
-                  <td className="py-2 px-3 font-mono text-xs">Lx7QJ2PTNWpkcuXLrPAcuK3jHXr5sDYWZCGvQZxiMlo=</td>
-                  <td className="py-2 px-3">10.10.10.2/24</td>
-                  <td className="py-2 px-3">DC1</td>
-                  <td className="py-2 px-3">
-                    <Badge variant="default" className="bg-green-500 hover:bg-green-600">
-                      Connected
-                    </Badge>
-                  </td>
-                  <td className="py-2 px-3 text-right">
-                    <Button variant="ghost" size="icon">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 px-3">Branch Office 1</td>
-                  <td className="py-2 px-3 font-mono text-xs">rPVc1+8AEC4v1WZyGWe+K3zY2LNWYDHwJT9YBQYDbnQ=</td>
-                  <td className="py-2 px-3">10.10.10.3/24</td>
-                  <td className="py-2 px-3">East Coast</td>
-                  <td className="py-2 px-3">
-                    <Badge variant="default" className="bg-green-500 hover:bg-green-600">
-                      Connected
-                    </Badge>
-                  </td>
-                  <td className="py-2 px-3 text-right">
-                    <Button variant="ghost" size="icon">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 px-3">Branch Office 2</td>
-                  <td className="py-2 px-3 font-mono text-xs">9JkvLmVt5CzWEYRbqxLJU72j3k5FcuW4YPb1K2ZHimk=</td>
-                  <td className="py-2 px-3">10.10.10.4/24</td>
-                  <td className="py-2 px-3">West Coast</td>
-                  <td className="py-2 px-3">
-                    <Badge variant="outline" className="border-amber-200 text-amber-700">
-                      Reconnecting
-                    </Badge>
-                  </td>
-                  <td className="py-2 px-3 text-right">
-                    <Button variant="ghost" size="icon">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3">Cloud Infrastructure</td>
-                  <td className="py-2 px-3 font-mono text-xs">AmK5R1c+uY9IZJeb2LKUyT8hjK6UzJvrF9CY8LGZQnE=</td>
-                  <td className="py-2 px-3">10.10.10.5/24</td>
-                  <td className="py-2 px-3">AWS East</td>
-                  <td className="py-2 px-3">
-                    <Badge variant="default" className="bg-green-500 hover:bg-green-600">
-                      Connected
-                    </Badge>
-                  </td>
-                  <td className="py-2 px-3 text-right">
-                    <Button variant="ghost" size="icon">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
+                {[
+                  {
+                    name: "Headquarters",
+                    key: "3Nrb+vHC3ZQ+ij2qXTmVgJZrL9GE6cY5UPk1S3eiHnI=",
+                    ip: "10.10.10.1/24",
+                    location: "Main Office",
+                    status: "Connected"
+                  },
+                  {
+                    name: "Data Center",
+                    key: "Lx7QJ2PTNWpkcuXLrPAcuK3jHXr5sDYWZCGvQZxiMlo=",
+                    ip: "10.10.10.2/24",
+                    location: "DC1",
+                    status: "Connected"
+                  },
+                  {
+                    name: "Branch Office 1",
+                    key: "rPVc1+8AEC4v1WZyGWe+K3zY2LNWYDHwJT9YBQYDbnQ=",
+                    ip: "10.10.10.3/24",
+                    location: "East Coast",
+                    status: "Connected"
+                  },
+                  {
+                    name: "Branch Office 2",
+                    key: "9JkvLmVt5CzWEYRbqxLJU72j3k5FcuW4YPb1K2ZHimk=",
+                    ip: "10.10.10.4/24",
+                    location: "West Coast",
+                    status: "Reconnecting"
+                  },
+                  {
+                    name: "Cloud Infrastructure",
+                    key: "AmK5R1c+uY9IZJeb2LKUyT8hjK6UzJvrF9CY8LGZQnE=",
+                    ip: "10.10.10.5/24",
+                    location: "AWS East",
+                    status: "Connected"
+                  }
+                ].map((peer, index) => (
+                  <tr key={index} className={index < 4 ? "border-b" : ""}>
+                    <td className="py-2 px-3">{peer.name}</td>
+                    <td className="py-2 px-3 font-mono text-xs">
+                      {"••••••••••••••••••••••••••••••••••••••••"}
+                    </td>
+                    <td className="py-2 px-3">{peer.ip}</td>
+                    <td className="py-2 px-3">{peer.location}</td>
+                    <td className="py-2 px-3">
+                      <Badge variant={peer.status === "Connected" ? "default" : "outline"} 
+                        className={peer.status === "Connected" ? "bg-green-500 hover:bg-green-600" : "border-amber-200 text-amber-700"}>
+                        {peer.status}
+                      </Badge>
+                    </td>
+                    <td className="py-2 px-3 text-right">
+                      <Button variant="ghost" size="icon">
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
