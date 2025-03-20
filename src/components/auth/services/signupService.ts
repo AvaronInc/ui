@@ -35,17 +35,35 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
   console.log('[Signup] Starting signup process for:', values.email);
   
   try {
-    // Proceed with signup
-    const { data, error } = await supabase.auth.signUp({
+    // First check if the user exists - this doesn't affect signup but is helpful for feedback
+    const { existingUser } = await checkExistingUser(values.email);
+    if (existingUser) {
+      console.log('[Signup] User already exists:', existingUser);
+      return { 
+        success: false, 
+        data: null, 
+        error: new Error('Email already registered'), 
+        errorDetails: 'This email is already registered. Please use a different email or try to log in.' 
+      };
+    }
+
+    // Format user metadata properly to ensure it's compatible with the database schema
+    const userData = {
       email: values.email,
       password: values.password,
       options: {
         data: {
           full_name: values.fullName,
-          role: 'user', // Explicitly set to 'user' to match the enum value
+          // Ensure role is a string type exactly matching one of the enum values
+          role: 'user'
         },
       },
-    });
+    };
+    
+    console.log('[Signup] Sending signup request with data:', JSON.stringify(userData, null, 2));
+    
+    // Proceed with signup
+    const { data, error } = await supabase.auth.signUp(userData);
     
     if (error) {
       console.error('[Signup] Error:', error);
@@ -81,6 +99,18 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
         }
         
         return { success: true, data: { user: { email: values.email } }, error: null };
+      }
+      
+      // Provide more context for database errors
+      if (error.message?.includes('type "user_role" does not exist') || 
+          error.message?.includes('Database error saving new user')) {
+        console.error('[Signup] Database schema error:', error);
+        return { 
+          success: false, 
+          data: null, 
+          error: new Error('Database configuration error'), 
+          errorDetails: 'There is a database configuration issue. Please contact support.' 
+        };
       }
       
       return { 
@@ -124,9 +154,11 @@ export function handleSignupError(error: any) {
   // Provide more user-friendly error messages
   if (error.message?.includes('user_role')) {
     toast.error('There was an issue with your account type. Please try again later.');
-  } else if (error.message?.includes('already registered')) {
+  } else if (error.message?.includes('already registered') || error.errorDetails?.includes('already registered')) {
     toast.error('This email is already registered. Please use a different email or try to log in.');
+  } else if (error.message?.includes('Database configuration error') || error.errorDetails?.includes('database configuration')) {
+    toast.error('System error: The signup system is currently experiencing issues. Please try again later.');
   } else {
-    toast.error(error.message || 'Failed to create account. Please try again later.');
+    toast.error(error.message || error.errorDetails || 'Failed to create account. Please try again later.');
   }
 }

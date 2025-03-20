@@ -7,7 +7,7 @@ import { Form } from '@/components/ui/form';
 import { toast } from 'sonner';
 import SignupFormFields from './components/SignupFormFields';
 import { signupSchema, SignupFormValues } from './validation/signupSchema';
-import { createUser, handleSignupError } from './services/signupService';
+import { createUser, handleSignupError, checkExistingUser } from './services/signupService';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 
@@ -36,6 +36,14 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
     setSignupError(null);
     
     try {
+      // First do a pre-check if the email already exists
+      const { existingUser } = await checkExistingUser(values.email);
+      if (existingUser) {
+        setSignupError('This email is already registered. Please use a different email or try to log in.');
+        setIsLoading(false);
+        return;
+      }
+      
       console.log('[SignupForm] Creating account for:', values.email);
       const { success, error, errorDetails } = await createUser(values);
       
@@ -53,13 +61,13 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         }
       } else if (error) {
         console.error('[SignupForm] Signup error:', error, errorDetails);
-        setSignupError(error.message || 'Failed to create account');
+        setSignupError(errorDetails || error.message || 'Failed to create account');
         throw error;
       }
     } catch (error: any) {
       console.error('[SignupForm] Exception during signup:', error);
       handleSignupError(error);
-      setSignupError(error.message || 'An unexpected error occurred');
+      setSignupError(error.errorDetails || error.message || 'An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
