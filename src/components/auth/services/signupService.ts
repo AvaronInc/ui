@@ -42,7 +42,7 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
       options: {
         data: {
           full_name: values.fullName,
-          role: 'user',
+          role: 'user', // Explicitly set to 'user' to match the enum value
         },
       },
     });
