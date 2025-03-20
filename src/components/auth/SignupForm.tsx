@@ -73,42 +73,39 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
       
       console.log('[SignupForm] Starting signup process for:', values.email);
       
-      if (!networkStatus) {
+      // In development mode with network offline, use mock workflow
+      if (import.meta.env.DEV && !networkStatus) {
         console.log('[SignupForm] Network offline - activating mock mode');
         toast.info('You are offline. Using development mode for signup.');
         
-        // In development mode, simulate a successful signup
-        if (import.meta.env.DEV) {
-          // Simulate API delay
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          console.log('[SignupForm] Development mode: Simulating successful signup');
-          setFormSubmitted(false);
-          form.reset();
-          toast.success('Development mode: Account created successfully!');
-          onSuccess();
-          
-          // Defer navigation with setTimeout to prevent potential deadlocks
-          setTimeout(() => {
-            navigate('/');
-          }, 10); // very short timeout to avoid UI flicker
-          
-          setIsLoading(false);
-          return;
-        }
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        console.log('[SignupForm] Development mode: Simulating successful signup');
+        setFormSubmitted(false);
+        form.reset();
+        toast.success('Development mode: Account created successfully!');
+        onSuccess();
+        
+        // Defer navigation with setTimeout to prevent potential deadlocks
+        setTimeout(() => {
+          navigate('/');
+        }, 10); // very short timeout to avoid UI flicker
+        
+        setIsLoading(false);
+        return;
       }
       
-      // First do a pre-check if the email already exists
+      // Skip check for existing user in development mode (handled inside the function)
       const { existingUser, checkError } = await checkExistingUser(values.email);
       
-      if (checkError) {
+      // In production we need to handle errors, but in dev we should continue even with errors
+      if (checkError && !import.meta.env.DEV) {
         console.log('[SignupForm] Error checking user existence:', checkError);
-        if (!import.meta.env.DEV) {
-          setSignupError('Unable to verify if email already exists. Please try again.');
-          setIsLoading(false);
-          setFormSubmitted(false);
-          return;
-        }
+        setSignupError('Unable to verify if email already exists. Please try again.');
+        setIsLoading(false);
+        setFormSubmitted(false);
+        return;
       }
       
       if (existingUser) {
