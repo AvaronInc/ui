@@ -14,6 +14,12 @@ export async function checkExistingUser(email: string) {
   console.log('[Signup] Checking if user already exists:', email);
   
   try {
+    // For development, provide a simpler path if we encounter network issues
+    if (import.meta.env.DEV && !navigator.onLine) {
+      console.log('[Signup] Offline mode: Skipping existing user check');
+      return { existingUser: null, checkError: null };
+    }
+    
     const { data: existingUser, error: checkError } = await supabase
       .from('user_profiles')
       .select('id')
@@ -22,11 +28,19 @@ export async function checkExistingUser(email: string) {
     
     if (checkError) {
       console.error('[Signup] Error checking existing user:', checkError);
+      // In dev mode, don't block signup if we can't check (likely CORS/network issue)
+      if (import.meta.env.DEV) {
+        return { existingUser: null, checkError };
+      }
     }
     
     return { existingUser, checkError };
   } catch (error) {
     console.error('[Signup] Exception checking existing user:', error);
+    // In development mode, allow signup to proceed on errors
+    if (import.meta.env.DEV) {
+      return { existingUser: null, checkError: error };
+    }
     return { existingUser: null, checkError: error };
   }
 }
@@ -35,6 +49,16 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
   console.log('[Signup] Starting signup process for:', values.email);
   
   try {
+    // In offline or error state, always provide a dev fallback
+    if (import.meta.env.DEV && !navigator.onLine) {
+      console.log('[Signup] Development offline mode: Simulating successful signup');
+      return { 
+        success: true, 
+        data: { user: { email: values.email } }, 
+        error: null 
+      };
+    }
+
     // First check if the user exists - this doesn't affect signup but is helpful for feedback
     const { existingUser } = await checkExistingUser(values.email);
     if (existingUser) {
@@ -53,13 +77,15 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
       password: values.password,
       options: {
         data: {
-          full_name: values.fullName,
-          role: 'user'
+          full_name: values.fullName
         },
       },
     };
     
-    console.log('[Signup] Sending signup request with data:', JSON.stringify(userData, null, 2));
+    console.log('[Signup] Sending signup request with data:', JSON.stringify({
+      email: userData.email,
+      options: { data: userData.options.data }
+    }));
     
     // Proceed with signup
     const { data, error } = await supabase.auth.signUp(userData);
@@ -68,13 +94,12 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
       console.error('[Signup] Error:', error);
       
       // Special handling for development mode to avoid CORS issues
-      if (import.meta.env.DEV && (error.message === '{}' || error.message.includes('network') || error.status === 503)) {
+      if (import.meta.env.DEV && (error.message === '{}' || 
+                                  error.message.includes('network') || 
+                                  error.status === 503 ||
+                                  error.message.includes('fetch failed'))) {
         console.log('[Signup] Development mode: Creating mock user session');
-        
-        // In development mode, we'll simulate a successful signup
         toast.success('Development mode: Account created successfully!');
-        
-        // Don't try to sign in after simulated signup, just return success
         return { 
           success: true, 
           data: { user: { email: values.email } }, 
@@ -98,7 +123,7 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
         success: false, 
         data: null, 
         error: error as any, 
-        errorDetails: JSON.stringify(error) 
+        errorDetails: error.message || JSON.stringify(error) 
       };
     }
     
