@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Network, HeartPulse, Globe, LockKeyhole } from 'lucide-react';
+import { Network, HeartPulse, Globe, LockKeyhole, Layout } from 'lucide-react';
 import SDNOverview from './tabs/SDNOverview';
 import VirtualNetworksTab from './tabs/VirtualNetworksTab';
 import FailoverHighAvailabilityTab from './tabs/FailoverHighAvailabilityTab';
 import SecurityComplianceTab from './tabs/SecurityComplianceTab';
+import VirtualSwitchManagementTab from './tabs/VirtualSwitchManagementTab';
 
 const SDNPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -34,6 +35,10 @@ const SDNPanel: React.FC = () => {
               <Globe className="h-4 w-4" />
               <span>{isMobile ? "Virtual" : "Virtual Networks"}</span>
             </TabsTrigger>
+            <TabsTrigger value="switches" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <Layout className="h-4 w-4" />
+              <span>{isMobile ? "Switches" : "Virtual Switches"}</span>
+            </TabsTrigger>
             <TabsTrigger value="failover" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <HeartPulse className="h-4 w-4" />
               <span>{isMobile ? "Failover" : "Failover & HA"}</span>
@@ -51,6 +56,10 @@ const SDNPanel: React.FC = () => {
 
         <TabsContent value="virtual" className="space-y-4">
           <VirtualNetworksTab />
+        </TabsContent>
+
+        <TabsContent value="switches" className="space-y-4">
+          <VirtualSwitchManagementTab />
         </TabsContent>
 
         <TabsContent value="failover" className="space-y-4">
