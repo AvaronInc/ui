@@ -1,11 +1,10 @@
-
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import FirewallDashboard from '@/components/firewall/FirewallDashboard';
 import RulesPolicy from '@/components/firewall/components/RulesPolicy';
-import DeepPacketInspection from '@/components/firewall/components/rules/DeepPacketInspection';
+import DeepPacketInspection from '@/components/firewall/components/dpi/DeepPacketInspection';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
