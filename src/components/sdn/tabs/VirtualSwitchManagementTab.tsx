@@ -7,6 +7,7 @@ import SwitchActionButtons from '../components/virtual-switch/management/SwitchA
 import NetworkTopologySection from '../components/virtual-switch/management/NetworkTopologySection';
 import PerformanceMetricsSection from '../components/virtual-switch/management/PerformanceMetricsSection';
 import SwitchDashboardSection from '../components/virtual-switch/management/SwitchDashboardSection';
+import SwitchMonitoringSection from '../components/virtual-switch/monitoring/SwitchMonitoringSection';
 import { useVirtualSwitchManagement } from '../components/virtual-switch/management/useVirtualSwitchManagement';
 
 const VirtualSwitchManagementTab: React.FC = () => {
@@ -50,6 +51,8 @@ const VirtualSwitchManagementTab: React.FC = () => {
         />
         <PerformanceMetricsSection selectedSwitch={selectedSwitch} />
       </div>
+
+      <SwitchMonitoringSection selectedSwitch={selectedSwitch} />
 
       <SwitchDashboardSection 
         onSelectSwitch={setSelectedSwitch} 
