@@ -9,7 +9,7 @@ import DeepPacketInspection from '@/components/firewall/components/dpi/DeepPacke
 import { AIThreatPanel } from '@/components/firewall/components/ai';
 import { IPSThreatPanel } from '@/components/firewall/components/ips';
 import { ZeroTrustPanel } from '@/components/firewall/components/zerotrust';
-import LoggingCompliance from '@/components/settings/firewall/LoggingCompliance';
+import { LoggingCompliance } from '@/components/settings/firewall/logging';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
@@ -67,8 +67,7 @@ const FirewallManagement = () => {
         </TabsContent>
         
         <TabsContent value="logging" className="space-y-6">
-          {/* Using the existing LoggingCompliance component for the Logging tab */}
-          <LoggingCompliance form={undefined as any} />
+          <LoggingCompliance />
         </TabsContent>
       </Tabs>
     </div>
