@@ -1,5 +1,5 @@
 
-import { Shield, Mail, FileText, Lock, Bug } from 'lucide-react';
+import { Shield, Mail, FileText, Lock, Bug, TestTube } from 'lucide-react';
 import { NavItem } from './types';
 
 // Security & Compliance
@@ -28,5 +28,10 @@ export const securityItems: NavItem[] = [
     title: 'Honeypot',
     icon: Bug,
     href: '/honeypot'
+  },
+  {
+    title: 'Security Testing',
+    icon: TestTube,
+    href: '/security-testing'
   },
 ];
