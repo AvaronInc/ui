@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +9,15 @@ import FirewallManagement from './FirewallManagement';
 const SecuritySettings = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('general');
+  const location = useLocation();
+  
+  // Check for URL fragment to set active tab
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (hash === 'firewall') {
+      setActiveTab('firewall');
+    }
+  }, [location]);
   
   const handleSave = () => {
     toast({

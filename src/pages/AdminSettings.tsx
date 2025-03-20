@@ -18,11 +18,19 @@ const AdminSettings = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get current section from URL or default to 'general'
+  // Parse URL params and fragments
   useEffect(() => {
+    // Check for hash fragment first (for deep linking)
     const hash = location.hash.replace('#', '');
     if (hash && settingsSections.some(section => section.id === hash)) {
       setActiveSection(hash);
+    }
+    
+    // Then check for query params (for compatibility with existing links)
+    const searchParams = new URLSearchParams(location.search);
+    const sectionParam = searchParams.get('section');
+    if (sectionParam && settingsSections.some(section => section.id === sectionParam)) {
+      setActiveSection(sectionParam);
     }
   }, [location]);
 
