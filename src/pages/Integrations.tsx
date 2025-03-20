@@ -8,11 +8,13 @@ const Integrations = () => {
   return (
     <PageTransition>
       <DashboardLayout>
-        <PageTitle 
-          title="Integrations Hub" 
-          subtitle="Connect and manage your IT infrastructure integrations"
-        />
-        <IntegrationsPanel />
+        <div className="p-6">
+          <PageTitle 
+            title="Integrations Hub" 
+            subtitle="Connect and manage your IT infrastructure integrations"
+          />
+          <IntegrationsPanel />
+        </div>
       </DashboardLayout>
     </PageTransition>
   );
