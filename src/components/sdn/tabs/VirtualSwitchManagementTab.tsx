@@ -3,16 +3,18 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Settings, Trash2, LinkIcon, Activity, Server, ChartBar } from 'lucide-react';
+import { Plus, Settings, Trash2, LinkIcon, Activity, Server, ChartBar, Shield } from 'lucide-react';
 import VirtualSwitchDashboard from '../components/virtual-switch/VirtualSwitchDashboard';
 import NetworkVisualization from '../components/virtual-switch/NetworkVisualization';
 import SwitchPerformanceMetrics from '../components/virtual-switch/SwitchPerformanceMetrics';
 import VirtualSwitchConfigDialog from '../components/virtual-switch/VirtualSwitchConfigDialog';
+import VirtualSwitchSecurityDialog from '../components/virtual-switch/VirtualSwitchSecurityDialog';
 
 const VirtualSwitchManagementTab: React.FC = () => {
   const { toast } = useToast();
   const [selectedSwitch, setSelectedSwitch] = useState<string | null>(null);
   const [configDialogOpen, setConfigDialogOpen] = useState(false);
+  const [securityDialogOpen, setSecurityDialogOpen] = useState(false);
 
   const handleCreateSwitch = () => {
     setConfigDialogOpen(true);
@@ -74,6 +76,27 @@ const VirtualSwitchManagementTab: React.FC = () => {
     });
   };
 
+  const handleSecuritySettings = () => {
+    if (!selectedSwitch) {
+      toast({
+        title: "No Switch Selected",
+        description: "Please select a virtual switch to configure security",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setSecurityDialogOpen(true);
+  };
+
+  const handleApplySecurity = (values: any) => {
+    toast({
+      title: "Security Settings Applied",
+      description: `Security configuration for switch: ${selectedSwitch} has been updated.`
+    });
+    // In a real application, you would make an API call to update the security settings here
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -112,6 +135,15 @@ const VirtualSwitchManagementTab: React.FC = () => {
           >
             <LinkIcon className="mr-2 h-4 w-4" />
             Attach VLANs
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={handleSecuritySettings} 
+            disabled={!selectedSwitch}
+            className="flex items-center"
+          >
+            <Shield className="mr-2 h-4 w-4" />
+            Security
           </Button>
         </div>
       </div>
@@ -159,6 +191,14 @@ const VirtualSwitchManagementTab: React.FC = () => {
         open={configDialogOpen}
         onClose={() => setConfigDialogOpen(false)}
         onDeploy={handleDeploySwitch}
+      />
+
+      {/* Virtual Switch Security Dialog */}
+      <VirtualSwitchSecurityDialog 
+        open={securityDialogOpen}
+        onClose={() => setSecurityDialogOpen(false)}
+        selectedSwitch={selectedSwitch}
+        onApply={handleApplySecurity}
       />
     </div>
   );
