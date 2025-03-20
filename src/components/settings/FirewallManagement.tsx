@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import FirewallDashboard from '@/components/firewall/FirewallDashboard';
 import RulesPolicy from '@/components/firewall/components/RulesPolicy';
+import DeepPacketInspection from '@/components/firewall/components/rules/DeepPacketInspection';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
@@ -45,18 +47,7 @@ const FirewallManagement = () => {
         </TabsContent>
         
         <TabsContent value="inspection" className="space-y-6">
-          <div className="space-y-4">
-            <h4 className="text-md font-medium">Deep Packet Inspection</h4>
-            <p className="text-sm text-muted-foreground">
-              Configure deep packet inspection settings for enhanced security monitoring.
-            </p>
-          </div>
-          
-          <div className="border-t pt-4">
-            <Button onClick={handleSave}>
-              Save Changes
-            </Button>
-          </div>
+          <DeepPacketInspection />
         </TabsContent>
         
         <TabsContent value="ai" className="space-y-6">
