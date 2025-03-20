@@ -2,9 +2,8 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 import { AlertTriangle, Maximize2 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 interface TrafficAnalyticsTabProps {
   selectedSwitch: string;
@@ -41,12 +40,6 @@ const TrafficAnalyticsTab: React.FC<TrafficAnalyticsTabProps> = ({ selectedSwitc
     { port: "Port 15", usage: 5, status: "low" },
   ];
 
-  const chartConfig = {
-    ingress: { label: 'Ingress Traffic (Mbps)', color: '#3b82f6' },
-    egress: { label: 'Egress Traffic (Mbps)', color: '#10b981' },
-    congestion: { label: 'Congestion (%)', color: '#ef4444' },
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -62,18 +55,46 @@ const TrafficAnalyticsTab: React.FC<TrafficAnalyticsTabProps> = ({ selectedSwitc
       <div className="border rounded-lg p-4">
         <h4 className="text-sm font-medium mb-4">Traffic Flow Monitoring</h4>
         <div className="h-[300px] w-full">
-          <ChartContainer config={chartConfig}>
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart data={trafficData}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
               <XAxis dataKey="time" />
               <YAxis />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Line type="monotone" dataKey="ingress" stroke="#3b82f6" activeDot={{ r: 8 }} strokeWidth={2} />
-              <Line type="monotone" dataKey="egress" stroke="#10b981" activeDot={{ r: 8 }} strokeWidth={2} />
-              <Line type="monotone" dataKey="congestion" stroke="#ef4444" activeDot={{ r: 8 }} strokeWidth={2} />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'var(--background)', 
+                  borderColor: 'var(--border)',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                }} 
+              />
               <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="ingress" 
+                stroke="#3b82f6" 
+                name="Ingress Traffic (Mbps)"
+                activeDot={{ r: 8 }} 
+                strokeWidth={2} 
+              />
+              <Line 
+                type="monotone" 
+                dataKey="egress" 
+                stroke="#10b981" 
+                name="Egress Traffic (Mbps)"
+                activeDot={{ r: 8 }} 
+                strokeWidth={2} 
+              />
+              <Line 
+                type="monotone" 
+                dataKey="congestion" 
+                stroke="#ef4444" 
+                name="Congestion (%)"
+                activeDot={{ r: 8 }} 
+                strokeWidth={2} 
+              />
             </LineChart>
-          </ChartContainer>
+          </ResponsiveContainer>
         </div>
       </div>
 
