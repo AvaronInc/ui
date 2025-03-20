@@ -95,11 +95,10 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         return;
       }
       
-      // In development mode, skip existing user check
+      // In development mode, skip existing user check and create user directly
       if (import.meta.env.DEV) {
-        console.log('[SignupForm] Development mode: Skipping existing user check');
+        console.log('[SignupForm] Development mode: Creating account without user check');
         
-        console.log('[SignupForm] Creating account for:', values.email);
         const { success, error, errorDetails } = await createUser(values);
         
         if (success) {
@@ -107,14 +106,11 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
           setFormSubmitted(false);
           form.reset();
           toast.success('Account created successfully!');
-          
-          // Call the onSuccess callback to trigger any parent component actions
           onSuccess();
           
-          // Defer navigation with setTimeout to prevent potential deadlocks with auth state change
           setTimeout(() => {
             navigate('/');
-          }, 100); // slightly longer delay to ensure toast visibility
+          }, 100);
         } else if (error) {
           console.error('[SignupForm] Signup error:', error, errorDetails);
           setSignupError(errorDetails || error.message || 'Failed to create account');
@@ -126,10 +122,11 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
       }
       
       // For production, check if user exists first
+      console.log('[SignupForm] Checking if email already exists:', values.email);
       const { existingUser, checkError } = await checkExistingUser(values.email);
       
       if (checkError) {
-        console.log('[SignupForm] Error checking user existence:', checkError);
+        console.error('[SignupForm] Error checking user existence:', checkError);
         setSignupError('Unable to verify if email already exists. Please try again.');
         setIsLoading(false);
         setFormSubmitted(false);
@@ -152,14 +149,11 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         setFormSubmitted(false);
         form.reset();
         toast.success('Account created successfully!');
-        
-        // Call the onSuccess callback to trigger any parent component actions
         onSuccess();
         
-        // Defer navigation with setTimeout to prevent potential deadlocks with auth state change
         setTimeout(() => {
           navigate('/');
-        }, 100); // slightly longer delay to ensure toast visibility
+        }, 100);
       } else if (error) {
         console.error('[SignupForm] Signup error:', error, errorDetails);
         setSignupError(errorDetails || error.message || 'Failed to create account');
