@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Robot,
+  Bot,
   Shield,
   Zap,
   Brain,
@@ -194,7 +193,7 @@ const AIThreatPanel = () => {
       <div className="flex items-center justify-between bg-card p-4 rounded-lg border shadow-sm">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-primary/10 rounded-full">
-            <Robot className="h-6 w-6 text-primary" />
+            <Bot className="h-6 w-6 text-primary" />
           </div>
           <div>
             <h3 className="text-lg font-medium">AI-Powered Firewall Intelligence</h3>
@@ -453,7 +452,6 @@ const AIThreatPanel = () => {
             <TabsContent value="active" className="m-0">
               <div className="rounded-md border">
                 <table className="w-full">
-                  {/* Similar table structure with filtered rules */}
                   <thead>
                     <tr className="border-b bg-muted/50">
                       <th className="py-3 px-4 text-sm font-medium text-left">Rule</th>
@@ -499,7 +497,6 @@ const AIThreatPanel = () => {
             </TabsContent>
             
             <TabsContent value="proposed" className="m-0">
-              {/* Similar table for proposed rules */}
               <div className="rounded-md border">
                 <table className="w-full">
                   <thead>
@@ -560,7 +557,6 @@ const AIThreatPanel = () => {
             </TabsContent>
             
             <TabsContent value="rejected" className="m-0">
-              {/* Similar table for rejected rules */}
               <div className="rounded-md border">
                 <table className="w-full">
                   <thead>
