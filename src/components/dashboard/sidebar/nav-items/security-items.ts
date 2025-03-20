@@ -22,7 +22,7 @@ export const securityItems: NavItem[] = [
   {
     title: 'Logging & Audit',
     icon: FileText,
-    href: '/logging'
+    href: '/logging-audit'
   },
   {
     title: 'Honeypot',
