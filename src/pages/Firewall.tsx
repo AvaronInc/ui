@@ -8,9 +8,11 @@ import {
   BreadcrumbList,
   BreadcrumbPage
 } from '@/components/ui/breadcrumb';
+import { Lock } from 'lucide-react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
 import FirewallManagement from '@/components/settings/FirewallManagement';
+import PageTitle from '@/components/common/PageTitle';
 
 const Firewall = () => {
   return (
@@ -36,7 +38,11 @@ const Firewall = () => {
           
           <div className="bg-card rounded-lg border shadow-sm">
             <div className="p-4 border-b">
-              <h2 className="text-xl font-semibold">Firewall Management</h2>
+              <PageTitle 
+                title="Firewall Management" 
+                description="Monitor, configure, and secure your network perimeter"
+                icon={<Lock className="h-6 w-6 text-primary" />}
+              />
             </div>
             <div className="p-4">
               <FirewallManagement />

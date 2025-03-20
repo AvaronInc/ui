@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import FirewallDashboard from '@/components/firewall/FirewallDashboard';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
@@ -36,35 +36,7 @@ const FirewallManagement = () => {
         </TabsList>
         
         <TabsContent value="dashboard" className="space-y-6">
-          <div className="space-y-4">
-            <h4 className="text-md font-medium">Firewall Status</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="border rounded-lg p-4">
-                <h5 className="font-medium mb-2">Traffic</h5>
-                <p className="text-2xl font-bold text-blue-600">512 Mbps</p>
-                <p className="text-xs text-muted-foreground">Current throughput</p>
-              </div>
-              <div className="border rounded-lg p-4">
-                <h5 className="font-medium mb-2">Blocked</h5>
-                <p className="text-2xl font-bold text-red-600">24,153</p>
-                <p className="text-xs text-muted-foreground">Threats blocked today</p>
-              </div>
-              <div className="border rounded-lg p-4">
-                <h5 className="font-medium mb-2">Status</h5>
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                  <span className="font-medium">Active</span>
-                </div>
-                <p className="text-xs text-muted-foreground">All systems operational</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t pt-4">
-            <Button onClick={handleSave}>
-              Apply Configuration
-            </Button>
-          </div>
+          <FirewallDashboard />
         </TabsContent>
         
         <TabsContent value="rules" className="space-y-6">
