@@ -88,9 +88,10 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
           toast.success('Development mode: Account created successfully!');
           onSuccess();
           
+          // Defer navigation with setTimeout to prevent potential deadlocks
           setTimeout(() => {
             navigate('/');
-          }, 1000);
+          }, 10); // very short timeout to avoid UI flicker
           
           setIsLoading(false);
           return;
@@ -130,10 +131,10 @@ const SignupForm = ({ isLoading, setIsLoading, onSuccess }: SignupFormProps) => 
         // Call the onSuccess callback to trigger any parent component actions
         onSuccess();
         
-        // Short delay before navigation to ensure toast is visible
+        // Defer navigation with setTimeout to prevent potential deadlocks with auth state change
         setTimeout(() => {
           navigate('/');
-        }, 1000);
+        }, 100); // slightly longer delay to ensure toast visibility
       } else if (error) {
         console.error('[SignupForm] Signup error:', error, errorDetails);
         setSignupError(errorDetails || error.message || 'Failed to create account');

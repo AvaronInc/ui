@@ -62,29 +62,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initializeAuth = async () => {
       try {
         // First set up the auth state listener to avoid missing events
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+        // CRITICAL: Use non-async callback to prevent deadlocks
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
           console.log('[Auth] Auth state changed:', event, Boolean(newSession));
           
           if (didCancel) return;
           
-          // Update session and user
+          // Update session and user immediately (synchronously)
           setSession(newSession);
           setUser(newSession?.user || null);
           
+          // Use setTimeout to defer profile fetching and prevent deadlocks
           if (newSession?.user) {
-            setIsLoading(true);
-            try {
-              await fetchUserProfile(newSession.user.id);
-            } catch (error) {
-              logAuthError(error, 'auth state change profile fetch');
-              setDevFallbackProfile();
-            } finally {
-              if (!didCancel) setIsLoading(false);
-            }
+            setTimeout(async () => {
+              if (didCancel) return;
+              setIsLoading(true);
+              try {
+                await fetchUserProfile(newSession.user.id);
+              } catch (error) {
+                logAuthError(error, 'auth state change profile fetch');
+                setDevFallbackProfile();
+              } finally {
+                if (!didCancel) setIsLoading(false);
+              }
+            }, 0);
           } else {
             // Create fallback profile for development or clear for production
-            setDevFallbackProfile();
-            if (!didCancel) setIsLoading(false);
+            setTimeout(() => {
+              if (!didCancel) {
+                setDevFallbackProfile();
+                setIsLoading(false);
+              }
+            }, 0);
           }
         });
 

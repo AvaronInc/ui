@@ -40,16 +40,22 @@ const Auth = () => {
         
         console.log('[Auth Page] Setting up auth listener...');
         
-        // Set up auth state listener first
+        // Set up auth state listener first - IMPORTANT: Using non-async callback to prevent deadlocks
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           (event, session) => {
             console.log('[Auth Page] Auth state changed:', event);
             if (didCancel) return;
             
             if (session) {
-              console.log('[Auth Page] Session detected in auth change, navigating to home');
-              toast.success('Successfully authenticated!');
-              navigate('/');
+              console.log('[Auth Page] Session detected in auth change');
+              // Use setTimeout to defer navigation and avoid deadlocks
+              setTimeout(() => {
+                if (!didCancel) {
+                  console.log('[Auth Page] Navigating to home after auth change');
+                  toast.success('Successfully authenticated!');
+                  navigate('/');
+                }
+              }, 0);
             }
           }
         );
