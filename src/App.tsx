@@ -35,6 +35,7 @@ import Services from "./pages/Services";
 import ChangeManagement from "./pages/ChangeManagement";
 import Scheduling from "./pages/Scheduling";
 import Firewall from "./pages/Firewall";
+import Honeypot from "./pages/Honeypot";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -81,6 +82,7 @@ const App = () => (
                 <Route path="/change-management" element={<ProtectedRoute><ChangeManagement /></ProtectedRoute>} />
                 <Route path="/scheduling" element={<ProtectedRoute><Scheduling /></ProtectedRoute>} />
                 <Route path="/firewall" element={<ProtectedRoute><Firewall /></ProtectedRoute>} />
+                <Route path="/honeypot" element={<ProtectedRoute><Honeypot /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnimatePresence>
