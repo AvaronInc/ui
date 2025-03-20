@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Activity, BarChart2, Globe, Shield, Cog, Server } from 'lucide-react';
 import DNSOverview from './tabs/DNSOverview';
+import DNSZones from './tabs/DNSZones';
 
 const DNSPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -51,9 +52,7 @@ const DNSPanel: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="zones" className="space-y-4">
-          <div className="text-center text-muted-foreground py-8">
-            DNS Zones configuration will be implemented in a future prompt.
-          </div>
+          <DNSZones />
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
