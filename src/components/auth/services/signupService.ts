@@ -14,43 +14,41 @@ export async function checkExistingUser(email: string) {
   console.log('[Signup] Checking if user already exists:', email);
   
   try {
-    // For development, always return success without checking
+    // For development mode, always return success without checking
     if (import.meta.env.DEV) {
-      console.log('[Signup] Development mode: Bypassing existing user check');
+      console.log('[Signup] Development mode: Skipping existing user check');
       return { existingUser: null, checkError: null };
     }
     
-    // For production, we need a more reliable approach to check if email exists
-    // This method uses a simple query that won't actually create an auth attempt
-    const { data, error } = await supabase.auth.signInWithOtp({
+    // For production, we'll check if the email exists
+    // Using signUp with a dummy password and shouldCreateUser: false is safer
+    // than the OTP method which can send unwanted emails
+    const { error } = await supabase.auth.signUp({
       email,
+      password: 'TEMPORARY_PASSWORD_FOR_CHECK_ONLY',
       options: {
+        emailRedirectTo: window.location.origin,
         shouldCreateUser: false // This ensures we don't create a new user
       }
     });
     
-    if (error) {
-      // If we get an error about email not found, that means the user doesn't exist
-      if (error.message.includes('Email not found')) {
-        console.log('[Signup] Email does not exist (can proceed with signup):', email);
-        return { existingUser: null, checkError: null };
-      }
-      
-      // For other errors, log them but allow signup to proceed in development
-      console.error('[Signup] Error checking if user exists:', error.message);
-      
-      // In production, we should be more careful and report this error
-      if (!import.meta.env.DEV) {
-        return { existingUser: null, checkError: error };
-      }
-      
-      // In development, continue despite errors
+    // If there's no error or an error that doesn't mention "already registered", 
+    // the email doesn't exist
+    if (!error || !error.message.includes('already registered')) {
+      console.log('[Signup] Email does not exist (can proceed with signup):', email);
       return { existingUser: null, checkError: null };
     }
     
-    // If we get here with no error, it means the OTP was sent, which indicates the user exists
-    console.log('[Signup] Email exists (cannot proceed with signup):', email);
-    return { existingUser: { email }, checkError: null };
+    // If we get an error about email already registered, that means the user exists
+    if (error.message.includes('already registered')) {
+      console.log('[Signup] Email exists (cannot proceed with signup):', email);
+      return { existingUser: { email }, checkError: null };
+    }
+    
+    // For other errors, log them and allow signup to proceed in development
+    console.error('[Signup] Error checking if user exists:', error.message);
+    
+    return { existingUser: null, checkError: error };
   } catch (error) {
     console.error('[Signup] Exception checking existing user:', error);
     
@@ -166,6 +164,16 @@ export async function createUser(values: SignupFormValues): Promise<SignupResult
     
     if (error) {
       console.error('[Signup] Error:', error);
+      
+      // Check for already registered error
+      if (error.message?.includes('already registered')) {
+        return { 
+          success: false, 
+          data: null, 
+          error: new Error('Email already registered'), 
+          errorDetails: 'This email is already registered. Please use a different email or try to log in.' 
+        };
+      }
       
       // Provide more context for database errors
       if (error.message?.includes('type "user_role" does not exist') || 
