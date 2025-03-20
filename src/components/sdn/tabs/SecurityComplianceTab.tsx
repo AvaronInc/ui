@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Shield, UserCheck, Firewall, FileCheck, Zap, Server, Lock } from 'lucide-react';
+import { Shield, UserCheck, Shield as ShieldIcon, FileCheck, Zap, Server, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import NetworkIntrusionPreventionPanel from '../components/security/NetworkIntrusionPreventionPanel';
 import ZeroTrustNetworkingPanel from '../components/security/ZeroTrustNetworkingPanel';
@@ -30,7 +30,7 @@ const SecurityComplianceTab: React.FC = () => {
             <span>Zero Trust Networking</span>
           </TabsTrigger>
           <TabsTrigger value="firewall-policy" className="flex items-center gap-2">
-            <Firewall className="h-4 w-4" />
+            <ShieldIcon className="h-4 w-4" />
             <span>Firewall Policy</span>
           </TabsTrigger>
           <TabsTrigger value="compliance" className="flex items-center gap-2">

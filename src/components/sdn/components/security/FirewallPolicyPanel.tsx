@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { Firewall, Plus, Edit, Trash2, Copy, AlertTriangle } from 'lucide-react';
+import { Shield, Plus, Edit, Trash2, Copy, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
@@ -100,7 +99,7 @@ const FirewallPolicyPanel: React.FC = () => {
         <Card className="md:col-span-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Firewall className="h-5 w-5 text-primary" />
+              <Shield className="h-5 w-5 text-primary" />
               Firewall Policy Management
             </CardTitle>
             <CardDescription>
