@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Bug, Server, Brain, FileSearch, Settings } from 'lucide-react';
+import { Bug, Server, Brain, FileSearch, Settings, Info } from 'lucide-react';
 import HoneypotOverview from './tabs/HoneypotOverview';
 import HoneypotDeployment from './tabs/HoneypotDeployment';
 import AITraining from './tabs/AITraining';
 import HoneypotLogging from './tabs/HoneypotLogging';
 import ConfigurationPolicies from './tabs/ConfigurationPolicies';
+import AboutHoneypot from './tabs/AboutHoneypot';
 
 const HoneypotPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -47,6 +48,10 @@ const HoneypotPanel: React.FC = () => {
               <Settings className="h-4 w-4" />
               <span>{isMobile ? "Config" : "Configuration & Policies"}</span>
             </TabsTrigger>
+            <TabsTrigger value="about" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <Info className="h-4 w-4" />
+              <span>{isMobile ? "About" : "About Honeypots"}</span>
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -68,6 +73,10 @@ const HoneypotPanel: React.FC = () => {
 
         <TabsContent value="config" className="space-y-4">
           <ConfigurationPolicies />
+        </TabsContent>
+
+        <TabsContent value="about" className="space-y-4">
+          <AboutHoneypot />
         </TabsContent>
       </Tabs>
     </div>
