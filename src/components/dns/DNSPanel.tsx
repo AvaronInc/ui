@@ -6,6 +6,7 @@ import { Activity, BarChart2, Globe, Shield, Cog, Server } from 'lucide-react';
 import DNSOverview from './tabs/DNSOverview';
 import DNSZones from './tabs/DNSZones';
 import DNSSecurity from './tabs/DNSSecurity';
+import DNSPerformance from './tabs/DNSPerformance';
 
 const DNSPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -39,7 +40,7 @@ const DNSPanel: React.FC = () => {
             </TabsTrigger>
             <TabsTrigger value="performance" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Activity className="h-4 w-4" />
-              <span>{isMobile ? "Performance" : "Query Performance"}</span>
+              <span>{isMobile ? "Performance" : "Failover & Performance"}</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <Cog className="h-4 w-4" />
@@ -61,9 +62,7 @@ const DNSPanel: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="performance" className="space-y-4">
-          <div className="text-center text-muted-foreground py-8">
-            Query Performance configuration will be implemented in a future prompt.
-          </div>
+          <DNSPerformance />
         </TabsContent>
         
         <TabsContent value="settings" className="space-y-4">
