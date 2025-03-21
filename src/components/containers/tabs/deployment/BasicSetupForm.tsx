@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -14,6 +14,11 @@ interface DeploymentFormValues {
   ports: string;
   environment: string;
   orchestration: string;
+  nestNode: string;
+  customServerIp?: string;
+  customServerUsername?: string;
+  customServerPassword?: string;
+  customServerCertificate?: string;
 }
 
 interface BasicSetupFormProps {
@@ -22,6 +27,13 @@ interface BasicSetupFormProps {
 }
 
 const BasicSetupForm: React.FC<BasicSetupFormProps> = ({ form, onSubmit }) => {
+  const [showCustomServerFields, setShowCustomServerFields] = useState(false);
+
+  const handleNestNodeChange = (value: string) => {
+    form.setValue('nestNode', value);
+    setShowCustomServerFields(value === 'custom');
+  };
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -53,6 +65,37 @@ const BasicSetupForm: React.FC<BasicSetupFormProps> = ({ form, onSubmit }) => {
               </FormControl>
               <FormDescription>
                 Docker image to use for this container
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="nestNode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>NEST Node</FormLabel>
+              <Select 
+                onValueChange={(value) => handleNestNodeChange(value)} 
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select NEST node" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="nest-1">NEST-1 (Primary)</SelectItem>
+                  <SelectItem value="nest-2">NEST-2 (Secondary)</SelectItem>
+                  <SelectItem value="nest-3">NEST-3 (Development)</SelectItem>
+                  <SelectItem value="nest-4">NEST-4 (Testing)</SelectItem>
+                  <SelectItem value="custom">Custom Server</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Hardware node where the container will be deployed
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -116,6 +159,74 @@ const BasicSetupForm: React.FC<BasicSetupFormProps> = ({ form, onSubmit }) => {
           )}
         />
       </div>
+      
+      {showCustomServerFields && (
+        <div className="border p-4 rounded-md space-y-4 bg-muted/20">
+          <h3 className="font-medium">Custom Server Configuration</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="customServerIp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Server IP Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. 192.168.1.100" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="customServerUsername"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. admin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="customServerPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Enter password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="customServerCertificate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>SSH Certificate</FormLabel>
+                  <FormControl>
+                    <Input type="file" {...field} value={undefined} onChange={(e) => {
+                      field.onChange(e.target.files ? e.target.files[0]?.name : '');
+                    }} />
+                  </FormControl>
+                  <FormDescription>
+                    Upload SSH certificate for authentication
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+      )}
       
       <div className="flex justify-end space-x-2">
         <Button type="submit">Deploy Container</Button>

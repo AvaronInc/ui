@@ -15,6 +15,11 @@ interface DeploymentFormValues {
   ports: string;
   environment: string;
   orchestration: string;
+  nestNode: string;
+  customServerIp?: string;
+  customServerUsername?: string;
+  customServerPassword?: string;
+  customServerCertificate?: string;
 }
 
 const DeploymentConfiguration = () => {
@@ -27,6 +32,7 @@ const DeploymentConfiguration = () => {
       ports: '',
       environment: '',
       orchestration: 'docker',
+      nestNode: 'nest-1',
     },
   });
 
