@@ -113,9 +113,8 @@ const NestTable: React.FC<NestTableProps> = ({
                     size="sm" 
                     disabled={!location.hasLiveStream}
                     onClick={(e) => {
-                      e.stopPropagation();
-                      // Handle view live stream
-                      console.log('View live stream for', location.id);
+                      e.stopPropagation(); // Prevent row click event
+                      onSelectNest(location.id); // Call the same function as row click
                     }}
                   >
                     <Eye className="h-4 w-4 mr-1" />
