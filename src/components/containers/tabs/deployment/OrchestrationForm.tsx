@@ -57,7 +57,7 @@ const OrchestrationForm: React.FC = () => {
           <div className="space-y-4">
             <SecondaryNodeSelector form={form} onValueChange={handleSecondaryNodeChange} />
             
-            {showSecondaryCustomServer && <CustomServerFields form={form} isPrimary={false} />}
+            {showSecondaryCustomServer && <CustomServerFields form={form} isSecondary={true} />}
           </div>
         )}
       </form>

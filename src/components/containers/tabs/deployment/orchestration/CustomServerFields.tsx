@@ -7,18 +7,26 @@ import { OrchestrationFormValues } from './types';
 
 interface CustomServerFieldsProps {
   form: UseFormReturn<OrchestrationFormValues>;
+  isPrimary?: boolean;
   isSecondary?: boolean;
 }
 
-const CustomServerFields: React.FC<CustomServerFieldsProps> = ({ form, isSecondary = false }) => {
-  const prefix = isSecondary ? 'secondary' : '';
+const CustomServerFields: React.FC<CustomServerFieldsProps> = ({ 
+  form, 
+  isPrimary = false, 
+  isSecondary = false 
+}) => {
+  // If isPrimary is true, we're configuring primary server
+  // If isSecondary is true, we're configuring secondary server
+  // Default to primary if neither is explicitly set
+  const configType = isSecondary ? 'secondary' : '';
   
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">{isSecondary ? 'Secondary' : 'Primary'} Custom Server Configuration</h3>
       <FormField
         control={form.control}
-        name={`${prefix}customServerIp` as keyof OrchestrationFormValues}
+        name={`${configType}customServerIp` as keyof OrchestrationFormValues}
         render={({ field }) => (
           <FormItem>
             <FormControl>
@@ -34,7 +42,7 @@ const CustomServerFields: React.FC<CustomServerFieldsProps> = ({ form, isSeconda
       
       <FormField
         control={form.control}
-        name={`${prefix}customServerUsername` as keyof OrchestrationFormValues}
+        name={`${configType}customServerUsername` as keyof OrchestrationFormValues}
         render={({ field }) => (
           <FormItem>
             <FormControl>
@@ -50,7 +58,7 @@ const CustomServerFields: React.FC<CustomServerFieldsProps> = ({ form, isSeconda
       
       <FormField
         control={form.control}
-        name={`${prefix}customServerPassword` as keyof OrchestrationFormValues}
+        name={`${configType}customServerPassword` as keyof OrchestrationFormValues}
         render={({ field }) => (
           <FormItem>
             <FormControl>
@@ -67,7 +75,7 @@ const CustomServerFields: React.FC<CustomServerFieldsProps> = ({ form, isSeconda
       
       <FormField
         control={form.control}
-        name={`${prefix}customServerCertificate` as keyof OrchestrationFormValues}
+        name={`${configType}customServerCertificate` as keyof OrchestrationFormValues}
         render={({ field }) => (
           <FormItem>
             <FormControl>
