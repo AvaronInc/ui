@@ -1,4 +1,3 @@
-
 export type ServiceStatus = 'healthy' | 'warning' | 'critical' | 'offline' | 'deploying';
 
 export interface ServiceResource {
@@ -94,4 +93,43 @@ export interface ServiceTypeConfig {
     name: string;
     description: string;
   }>;
+}
+
+// System Services Types
+export type SystemServiceType = 'vpp' | 'container' | 'system';
+export type SystemServiceStatus = 'running' | 'stopped' | 'error';
+export type SystemServiceHealth = 'ok' | 'degraded' | 'critical';
+
+export interface SystemService {
+  id: string;
+  uuid: string;
+  name: string;
+  type: SystemServiceType;
+  description: string;
+  status: SystemServiceStatus;
+  cpuUsage: number;
+  memoryUsage: number;
+  lastRestart: string;
+  health: SystemServiceHealth;
+  uptime: string;
+  assignedResources: {
+    cpuCores: number;
+    ram: number;
+    networkInterfaces: string[];
+  };
+  diskIO?: {
+    read: number;
+    write: number;
+  };
+  networkIO: {
+    received: number;
+    transmitted: number;
+  };
+  dependencies: string[];
+  containerImage?: string;
+  logEntries: {
+    timestamp: string;
+    level: 'info' | 'warning' | 'error' | 'debug';
+    message: string;
+  }[];
 }
