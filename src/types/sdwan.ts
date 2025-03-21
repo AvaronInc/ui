@@ -151,16 +151,27 @@ export interface AIFailoverConfiguration {
 export interface PolicyRoute {
   id: string;
   name: string;
+  description?: string;
   sourceIp: string;
   destinationIp: string;
   protocol: 'tcp' | 'udp' | 'icmp' | 'any';
   portRangeStart: number;
   portRangeEnd: number;
+  destinationPortStart?: number;
+  destinationPortEnd?: number;
   nextHopIp: string;
   interface: string;
   matchType: '5-tuple' | 'l4' | 'l3' | 'dscp';
   priority: number; // 1-100, lower is higher priority
+  action?: 'forward' | 'drop' | 'mirror' | 'log';
+  routeTableId?: number;
+  enableLogging?: boolean;
+  enableCounters?: boolean;
   trafficHandled: number; // in MB
   packetCount: number;
+  packetRate?: number; // packets per second
+  byteRate?: number; // bytes per second
+  errorCount?: number;
+  lastUpdated: string; // ISO string timestamp
   status: 'active' | 'inactive';
 }
