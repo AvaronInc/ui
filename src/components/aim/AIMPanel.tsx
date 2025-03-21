@@ -11,10 +11,7 @@ const AIMPanel: React.FC = () => {
   
   return (
     <div className="container mx-auto py-6 space-y-6">
-      <h1 className="text-2xl font-bold">Autonomous Infrastructure Manager (AIM)</h1>
-      <p className="text-muted-foreground">
-        AI-powered assistant for managing and monitoring your network infrastructure
-      </p>
+      {/* Removed the redundant heading that was here */}
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main chat area - takes up 2/3 of the width on large screens */}
