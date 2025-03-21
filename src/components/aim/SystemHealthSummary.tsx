@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { HeartPulse, Shield, AlertTriangle, Server } from 'lucide-react';
+import { HeartPulse, Shield, AlertTriangle, Server, Activity } from 'lucide-react';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 // Mock data - in a real implementation, this would come from an API
