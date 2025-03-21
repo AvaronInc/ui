@@ -1,5 +1,5 @@
 
-import { CreditCard, Settings } from 'lucide-react';
+import { CreditCard, Settings, FileCheck } from 'lucide-react';
 import { NavItem } from './types';
 
 // Admin
@@ -14,6 +14,12 @@ export const adminItems: NavItem[] = [
     title: 'Settings',
     icon: Settings,
     href: '/settings',
+    adminOnly: true
+  },
+  {
+    title: 'License Compliance',
+    icon: FileCheck,
+    href: '/license-compliance',
     adminOnly: true
   },
 ];

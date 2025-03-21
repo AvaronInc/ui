@@ -32,6 +32,7 @@ import DNSManagement from "./pages/DNSManagement";
 import Contacts from "./pages/Contacts";
 import Integrations from "./pages/Integrations";
 import Billing from "./pages/Billing";
+import LicenseCompliance from "./pages/LicenseCompliance";
 import Containers from "./pages/Containers";
 import Services from "./pages/Services";
 import SystemServices from "./pages/SystemServices";
@@ -84,6 +85,7 @@ const App = () => (
                 <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
                 <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
                 <Route path="/billing" element={<ProtectedRoute adminOnly><Billing /></ProtectedRoute>} />
+                <Route path="/license-compliance" element={<ProtectedRoute adminOnly><LicenseCompliance /></ProtectedRoute>} />
                 <Route path="/containers" element={<ProtectedRoute><Containers /></ProtectedRoute>} />
                 <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
                 <Route path="/system-services" element={<ProtectedRoute><SystemServices /></ProtectedRoute>} />
