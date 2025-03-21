@@ -9,7 +9,7 @@ import SystemPerformance from './system-health/SystemPerformance';
 import { useHealthData } from './system-health/useHealthData';
 
 const SystemHealthSummary: React.FC = () => {
-  const { networkHealth, securityPosture, systemPerformance, refreshData, isLoading } = useHealthData();
+  const { data, isLoading, error, isRefreshing, refresh } = useHealthData();
 
   return (
     <Card className="shadow-sm">
@@ -22,30 +22,30 @@ const SystemHealthSummary: React.FC = () => {
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={refreshData}
-            disabled={isLoading}
+            onClick={refresh}
+            disabled={isLoading || isRefreshing}
             className="h-8 w-8 p-0"
           >
-            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span className="sr-only">Refresh health data</span>
           </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <NetworkHealth 
-          data={networkHealth.data} 
-          isLoading={networkHealth.isLoading} 
-          error={networkHealth.error} 
+          data={data?.networkStatus} 
+          isLoading={isLoading || isRefreshing} 
+          error={error} 
         />
         <SecurityPosture 
-          data={securityPosture.data} 
-          isLoading={securityPosture.isLoading} 
-          error={securityPosture.error} 
+          data={data?.securityPosture} 
+          isLoading={isLoading || isRefreshing} 
+          error={error} 
         />
         <SystemPerformance 
-          data={systemPerformance.data} 
-          isLoading={systemPerformance.isLoading} 
-          error={systemPerformance.error} 
+          data={data?.systemPerformance} 
+          isLoading={isLoading || isRefreshing} 
+          error={error} 
         />
       </CardContent>
     </Card>
