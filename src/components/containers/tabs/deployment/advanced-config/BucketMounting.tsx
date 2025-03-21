@@ -37,7 +37,7 @@ const BucketMounting: React.FC<BucketMountingProps> = ({ form }) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value="none">None</SelectItem>
                 {buckets.map(bucket => (
                   <SelectItem key={bucket.id} value={bucket.id}>
                     {bucket.name}
