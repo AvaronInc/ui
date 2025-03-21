@@ -30,7 +30,7 @@ const SystemServicesTable: React.FC<SystemServicesTableProps> = ({
   const getHealthBadgeVariant = (health: string) => {
     switch (health) {
       case 'ok':
-        return 'success';
+        return 'default'; // Changed from 'success' to 'default'
       case 'degraded':
         return 'warning';
       case 'critical':
