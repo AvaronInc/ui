@@ -1,4 +1,3 @@
-
 export type DeviceStatus = 'healthy' | 'needs_update' | 'insecure';
 export type PatchStatus = 'up_to_date' | 'needs_patch' | 'security_issue';
 export type Role = 'admin' | 'user' | 'manager';
@@ -12,6 +11,15 @@ export interface VPNSession {
   connectionTime: string;
   connectionDuration: string;
   location: string;
+  // Optional fields for connection statistics
+  throughput?: {
+    download?: number;
+    upload?: number;
+    latency?: number;
+    receivedData?: string;
+    sentData?: string;
+    packetLoss?: string;
+  };
 }
 
 export interface EndpointDevice {

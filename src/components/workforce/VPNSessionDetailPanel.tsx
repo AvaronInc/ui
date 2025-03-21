@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { XCircle, User, Monitor, Network, MapPin, Clock, Shield, Power } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import SpeedTesting from './SpeedTesting';
+import ConnectionThroughput from './ConnectionThroughput';
 
 interface VPNSessionDetailPanelProps {
   session: VPNSession | null;
@@ -24,7 +27,7 @@ const VPNSessionDetailPanel = ({
   
   return (
     <Sheet open={!!session} onOpenChange={onClose}>
-      <SheetContent className="max-w-md">
+      <SheetContent className="max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex justify-between items-center">
             <span>VPN Session Details</span>
@@ -78,7 +81,7 @@ const VPNSessionDetailPanel = ({
             </div>
           </div>
           
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 pb-3 border-b">
             <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
             <div>
               <p className="text-sm font-medium">Connection Security</p>
@@ -86,6 +89,20 @@ const VPNSessionDetailPanel = ({
               <p className="text-xs text-muted-foreground">2FA Verified</p>
             </div>
           </div>
+          
+          <Separator />
+          
+          {/* Connection Throughput Section */}
+          <ConnectionThroughput 
+            receivedData="2.3 GB" 
+            sentData="450 MB" 
+            packetLoss="0.02%" 
+          />
+          
+          <Separator />
+          
+          {/* Speed Testing Section */}
+          <SpeedTesting sessionId={session.id} />
         </div>
         
         <div className="mt-6 flex justify-between">
