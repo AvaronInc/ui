@@ -8,19 +8,17 @@ interface SidebarHeaderProps {
 
 const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
   return (
-    <Header className="px-4 py-4 flex items-center justify-center border-b border-slate-200/60 dark:border-slate-700/60">
-      <div className="flex items-center">
-        <div className="relative">
+    <Header className="px-4 py-5 flex flex-col items-center justify-center border-b border-slate-200/60 dark:border-slate-700/60">
+      <div className="flex flex-col items-center">
+        <div className="flex items-center justify-center mb-2">
           <img 
-            src="/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png" 
+            src="/lovable-uploads/e407f19b-556c-465a-a9c4-ea2ebac2de0e.png" 
             alt="Avaron.AI Logo" 
-            className="w-8 h-8 mr-3" 
+            className="h-10" 
           />
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-sidebar"></div>
         </div>
-        <div className="flex flex-col">
-          <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">Avaron.AI</h2>
-          <span className="text-xs text-sidebar-foreground/70">Secure Distributed Infrastructure</span>
+        <div className="flex flex-col items-center">
+          <span className="text-xs text-sidebar-foreground/70 font-medium">Secure Distributed Infrastructure</span>
         </div>
       </div>
     </Header>
