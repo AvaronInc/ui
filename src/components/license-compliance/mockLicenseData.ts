@@ -34,22 +34,7 @@ export const mockLicenseData: LicenseData[] = [
       dependencies: ['libpcap', 'Node.js']
     }
   },
-  {
-    id: '3',
-    componentName: 'Netmaker',
-    licenseType: 'AGPL',
-    licenseUrl: 'https://github.com/gravitl/netmaker/blob/master/LICENSE',
-    version: 'v0.20.0',
-    source: 'netmaker.io',
-    usedIn: ['SD-WAN', 'Network Management'],
-    riskLevel: 'High',
-    fullLicenseText: 'GNU AFFERO GENERAL PUBLIC LICENSE Version 3...',
-    usageDetails: {
-      containerName: 'netmaker-server',
-      apiCalls: ['POST /api/networks', 'GET /api/nodes'],
-      dependencies: ['WireGuard', 'Go']
-    }
-  },
+  // Netmaker entry removed
   {
     id: '4',
     componentName: 'Weaviate',
@@ -196,17 +181,19 @@ export const mockLicenseData: LicenseData[] = [
   }
 ];
 
+// Update the license summary to reflect the removal of Netmaker
 export const licenseSummary: LicenseSummary = {
-  totalLicenses: 12,
-  totalDependencies: 37,
-  restrictedLicenses: 4,
+  totalLicenses: 11, // Decreased from 12 to 11
+  totalDependencies: 35, // Decreased by 2 since Netmaker had WireGuard and Go dependencies
+  restrictedLicenses: 3, // Decreased from 4 to 3 (removing one AGPL license)
   complianceStatus: 'Review Needed'
 };
 
+// Update the license breakdown to reflect the removal of Netmaker (one less AGPL license)
 export const licenseBreakdown: LicenseBreakdown[] = [
   { licenseType: 'Apache 2.0', count: 3, color: '#4CAF50' },
   { licenseType: 'GPL', count: 3, color: '#F44336' },
-  { licenseType: 'AGPL', count: 2, color: '#D32F2F' },
+  { licenseType: 'AGPL', count: 1, color: '#D32F2F' }, // Decreased from 2 to 1
   { licenseType: 'BSD-3-Clause', count: 2, color: '#2196F3' },
   { licenseType: 'BSD-2-Clause', count: 1, color: '#03A9F4' },
   { licenseType: 'Custom', count: 1, color: '#9C27B0' }
