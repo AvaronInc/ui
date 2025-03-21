@@ -10,6 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Play, Square, RotateCcw, Clock, Cpu, HardDrive, Network, FileText, Link2, AlertTriangle } from 'lucide-react';
 import ResourceUsageCharts from './ResourceUsageCharts';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogHeader } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface SystemServiceDetailProps {
   service: SystemService;
@@ -18,6 +20,9 @@ interface SystemServiceDetailProps {
 
 const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRefresh }) => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [startDialogOpen, setStartDialogOpen] = useState(false);
+  const [stopDialogOpen, setStopDialogOpen] = useState(false);
+  const [restartDialogOpen, setRestartDialogOpen] = useState(false);
 
   // Helper function to get badge variant based on health status
   const getHealthBadgeVariant = (health: string) => {
@@ -50,7 +55,13 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
   // Mock function for service actions (start, stop, restart)
   const handleServiceAction = (action: 'start' | 'stop' | 'restart') => {
     console.log(`${action} service: ${service.id}`);
+    // Close all dialogs
+    setStartDialogOpen(false);
+    setStopDialogOpen(false);
+    setRestartDialogOpen(false);
+    
     // In a real application, this would call an API to perform the action
+    toast.success(`Service ${action}ed successfully`);
     setTimeout(onRefresh, 500); // Refresh after action completes
   };
 
@@ -84,7 +95,8 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
         </div>
         
         <div className="flex gap-2">
-          <AlertDialog>
+          {/* Start Button Dialog */}
+          <AlertDialog open={startDialogOpen} onOpenChange={setStartDialogOpen}>
             <AlertDialogTrigger asChild>
               <Button 
                 variant="outline" 
@@ -104,13 +116,14 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => setStartDialogOpen(false)}>Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={() => handleServiceAction('start')}>Start</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
           
-          <AlertDialog>
+          {/* Stop Button Dialog */}
+          <AlertDialog open={stopDialogOpen} onOpenChange={setStopDialogOpen}>
             <AlertDialogTrigger asChild>
               <Button 
                 variant="outline" 
@@ -130,7 +143,7 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => setStopDialogOpen(false)}>Cancel</AlertDialogCancel>
                 <AlertDialogAction 
                   onClick={() => handleServiceAction('stop')}
                   className="bg-destructive hover:bg-destructive/90"
@@ -141,7 +154,8 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
             </AlertDialogContent>
           </AlertDialog>
           
-          <AlertDialog>
+          {/* Restart Button Dialog */}
+          <AlertDialog open={restartDialogOpen} onOpenChange={setRestartDialogOpen}>
             <AlertDialogTrigger asChild>
               <Button 
                 variant="outline" 
@@ -161,7 +175,7 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => setRestartDialogOpen(false)}>Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={() => handleServiceAction('restart')}>Restart</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -427,3 +441,4 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
 };
 
 export default SystemServiceDetail;
+
