@@ -42,6 +42,7 @@ import Firewall from "./pages/Firewall";
 import Honeypot from "./pages/Honeypot";
 import SecurityTesting from "./pages/SecurityTesting";
 import LoggingAudit from "./pages/LoggingAudit";
+import AIM from "./pages/AIM";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,7 @@ const App = () => (
                 <Route path="/identity" element={<ProtectedRoute><Identity /></ProtectedRoute>} />
                 <Route path="/topology" element={<ProtectedRoute><Topology /></ProtectedRoute>} />
                 <Route path="/nest" element={<ProtectedRoute><Nest /></ProtectedRoute>} />
+                <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
                 <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
                 <Route path="/workforce" element={<ProtectedRoute><WorkforceEMS /></ProtectedRoute>} />
