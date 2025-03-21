@@ -174,4 +174,16 @@ export interface PolicyRoute {
   errorCount?: number;
   lastUpdated: string; // ISO string timestamp
   status: 'active' | 'inactive';
+  // New encryption-related fields
+  encryptionPolicy?: 'standard' | 'hybrid' | 'kyber-only' | 'inherit';
+  encryptionFallback?: boolean;
+  encryptionPriority?: 'high' | 'medium' | 'low';
+  applicationCategory?: 'financial' | 'healthcare' | 'general' | 'voip' | 'remote-access' | 'iot' | 'custom';
+  geoRestriction?: {
+    allowedRegions: string[];
+    blockNonKyberRegions: boolean;
+  };
+  serviceType?: 'ssh' | 'https' | 'voip' | 'rdp' | 'database' | 'file-transfer' | 'other';
+  wireguardIntegration?: boolean; // For VPP WireGuard backend integration
 }
+

@@ -15,7 +15,9 @@ import {
   RefreshCw, 
   Filter, 
   FileJson, 
-  FileSpreadsheet 
+  FileSpreadsheet,
+  Shield,
+  Lock 
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
@@ -38,6 +40,7 @@ import {
 import PolicyRouteEditor from '../components/policy-routing/PolicyRouteEditor';
 import { mockPolicyRoutes } from '../data/mockPolicyRoutingData';
 import { PolicyRoute } from '@/types/sdwan';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const PolicyRoutingTab = () => {
   const [selectedRoute, setSelectedRoute] = useState<PolicyRoute | null>(null);
@@ -45,18 +48,39 @@ const PolicyRoutingTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState<keyof PolicyRoute>('priority');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [routes, setRoutes] = useState<PolicyRoute[]>(mockPolicyRoutes);
+  const [routes, setRoutes] = useState<PolicyRoute[]>(mockPolicyRoutes.map(route => ({
+    ...route,
+    encryptionPolicy: ['inherit', 'standard', 'hybrid', 'kyber-only'][Math.floor(Math.random() * 4)] as any,
+    encryptionFallback: Math.random() > 0.5,
+    encryptionPriority: ['high', 'medium', 'low'][Math.floor(Math.random() * 3)] as any,
+    applicationCategory: ['general', 'financial', 'healthcare', 'voip', 'remote-access'][Math.floor(Math.random() * 5)] as any,
+    serviceType: ['https', 'ssh', 'voip', 'rdp', 'database'][Math.floor(Math.random() * 5)] as any,
+    wireguardIntegration: Math.random() > 0.3,
+    geoRestriction: {
+      allowedRegions: ['us', 'eu', 'uk', 'ca'].slice(0, Math.floor(Math.random() * 4) + 1),
+      blockNonKyberRegions: Math.random() > 0.7
+    }
+  })));
   const [refreshInterval, setRefreshInterval] = useState<number | null>(null);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
   const [routeToDelete, setRouteToDelete] = useState<PolicyRoute | null>(null);
+  const [showEncryptionFilter, setShowEncryptionFilter] = useState(false);
+  const [encryptionFilter, setEncryptionFilter] = useState<string | null>(null);
 
   // Filtering logic
-  const filteredRoutes = routes.filter(route => 
-    route.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    route.sourceIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    route.destinationIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (route.description && route.description.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredRoutes = routes.filter(route => {
+    // Text search filter
+    const textMatch = 
+      route.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      route.sourceIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      route.destinationIp.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (route.description && route.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    // Encryption filter
+    const encryptionMatch = !encryptionFilter || route.encryptionPolicy === encryptionFilter;
+    
+    return textMatch && encryptionMatch;
+  });
 
   // Sorting logic
   const sortedRoutes = [...filteredRoutes].sort((a, b) => {
@@ -189,6 +213,24 @@ const PolicyRoutingTab = () => {
     return "bg-green-500";
   };
 
+  const getEncryptionColor = (policy?: string) => {
+    switch (policy) {
+      case 'kyber-only': return "bg-green-500";
+      case 'hybrid': return "bg-blue-500";
+      case 'standard': return "bg-orange-500";
+      default: return "bg-gray-500";
+    }
+  };
+
+  const getEncryptionLabel = (policy?: string) => {
+    switch (policy) {
+      case 'kyber-only': return "Kyber-Only";
+      case 'hybrid': return "Hybrid";
+      case 'standard': return "Standard";
+      default: return "Inherited";
+    }
+  };
+
   const getSortIcon = (field: keyof PolicyRoute) => {
     if (field !== sortField) return <ArrowUpDown className="h-4 w-4 ml-1" />;
     return sortDirection === 'asc' 
@@ -206,7 +248,7 @@ const PolicyRoutingTab = () => {
       // Create CSV header
       const headers = [
         'id', 'name', 'description', 'sourceIp', 'destinationIp', 
-        'protocol', 'priority', 'status', 'interface', 'nextHopIp'
+        'protocol', 'priority', 'status', 'interface', 'nextHopIp', 'encryptionPolicy'
       ];
       
       data = headers.join(',') + '\n';
@@ -223,7 +265,8 @@ const PolicyRoutingTab = () => {
           route.priority,
           route.status,
           route.interface,
-          route.nextHopIp
+          route.nextHopIp,
+          route.encryptionPolicy || 'inherit'
         ].join(',');
       }).join('\n');
     }
@@ -238,6 +281,13 @@ const PolicyRoutingTab = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const toggleEncryptionFilter = () => {
+    setShowEncryptionFilter(!showEncryptionFilter);
+    if (!showEncryptionFilter) {
+      setEncryptionFilter(null);
+    }
   };
 
   return (
@@ -256,6 +306,33 @@ const PolicyRoutingTab = () => {
             </div>
           </div>
           <div className="flex space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={toggleEncryptionFilter}
+              className={showEncryptionFilter ? "bg-muted" : ""}
+            >
+              <Shield className="h-4 w-4" />
+            </Button>
+            
+            {showEncryptionFilter && (
+              <Select
+                value={encryptionFilter || ""}
+                onValueChange={(value) => setEncryptionFilter(value === "" ? null : value)}
+              >
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Encryption Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Encryption</SelectItem>
+                  <SelectItem value="kyber-only">Kyber Only</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                  <SelectItem value="standard">Standard</SelectItem>
+                  <SelectItem value="inherit">Inherited</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+            
             <Select
               value={refreshInterval ? String(refreshInterval) : "0"}
               onValueChange={(value) => setRefreshInterval(value === "0" ? null : Number(value))}
@@ -303,7 +380,7 @@ const PolicyRoutingTab = () => {
               <div>
                 <CardTitle className="text-lg">VPP Policy-Based Routes</CardTitle>
                 <CardDescription>
-                  Manage traffic flow with Vector Packet Processing policies
+                  Manage traffic flow with Vector Packet Processing policies and encryption rules
                 </CardDescription>
               </div>
               <Button 
@@ -345,15 +422,12 @@ const PolicyRoutingTab = () => {
                       </TableHead>
                       <TableHead 
                         className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSort('protocol')}
-                      >
-                        Protocol {getSortIcon('protocol')}
-                      </TableHead>
-                      <TableHead 
-                        className="cursor-pointer hover:bg-muted/50"
                         onClick={() => handleSort('priority')}
                       >
                         Priority {getSortIcon('priority')}
+                      </TableHead>
+                      <TableHead>
+                        Encryption
                       </TableHead>
                       <TableHead 
                         className="cursor-pointer hover:bg-muted/50"
@@ -378,16 +452,44 @@ const PolicyRoutingTab = () => {
                           className="cursor-pointer hover:bg-muted/50"
                           onClick={() => handleSelectRoute(route)}
                         >
-                          <TableCell className="font-medium">{route.name}</TableCell>
+                          <TableCell className="font-medium">
+                            <div className="flex flex-col">
+                              <span>{route.name}</span>
+                              {route.applicationCategory && route.applicationCategory !== 'general' && (
+                                <span className="text-xs text-muted-foreground">
+                                  {route.applicationCategory.charAt(0).toUpperCase() + route.applicationCategory.slice(1)}
+                                </span>
+                              )}
+                            </div>
+                          </TableCell>
                           <TableCell>{route.sourceIp}</TableCell>
                           <TableCell>{route.destinationIp}</TableCell>
-                          <TableCell>{route.protocol}</TableCell>
                           <TableCell>
                             <Badge 
                               className={`${getPriorityColor(route.priority)} text-white`}
                             >
                               {route.priority}
                             </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Badge 
+                                    className={`${getEncryptionColor(route.encryptionPolicy)} text-white flex items-center`}
+                                  >
+                                    <Lock className="h-3 w-3 mr-1" />
+                                    {getEncryptionLabel(route.encryptionPolicy)}
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{route.encryptionFallback ? "Fallback enabled" : "Strict enforcement"}</p>
+                                  {route.geoRestriction?.blockNonKyberRegions && (
+                                    <p>Blocks non-Kyber regions</p>
+                                  )}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </TableCell>
                           <TableCell>
                             <Badge 
