@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
+import { FormField, FormItem, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { UseFormReturn } from 'react-hook-form';
 import { AdvancedConfigFormValues } from './types';
@@ -24,6 +24,9 @@ const VolumeMounts: React.FC<VolumeMountsProps> = ({ form }) => {
                 {...field} 
               />
             </FormControl>
+            <FormDescription>
+              Mount local volumes (use NestVault section below for MinIO buckets)
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}

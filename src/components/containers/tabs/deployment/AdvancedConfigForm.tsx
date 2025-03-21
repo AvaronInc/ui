@@ -9,6 +9,7 @@ import {
   NetworkConfig,
   AdvancedConfigFormValues
 } from './advanced-config';
+import BucketMounting from './advanced-config/BucketMounting';
 
 const AdvancedConfigForm: React.FC = () => {
   const form = useForm<AdvancedConfigFormValues>({
@@ -17,6 +18,7 @@ const AdvancedConfigForm: React.FC = () => {
       portMappings: '',
       volumeMounts: '',
       networkMode: 'bridge',
+      nestVaultBucket: '',
     },
   });
 
@@ -27,6 +29,9 @@ const AdvancedConfigForm: React.FC = () => {
         <PortMappings form={form} />
         <VolumeMounts form={form} />
         <NetworkConfig form={form} />
+        <div className="md:col-span-2">
+          <BucketMounting form={form} />
+        </div>
       </form>
     </Form>
   );
