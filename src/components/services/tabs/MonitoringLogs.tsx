@@ -5,11 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { activeServices } from '@/data/servicesData';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, RefreshCw, Download, Activity, Clock, Terminal, AlertTriangle, Server } from 'lucide-react';
+import { Search, RefreshCw, Download, Activity, Clock, Terminal } from 'lucide-react';
 import ServiceStatusTable from '../components/ServiceStatusTable';
 import ServiceMetricsChart from '../components/ServiceMetricsChart';
 import LogViewer from '../components/LogViewer';
-import SystemServicesTab from './SystemServicesTab';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const MonitoringLogs = () => {
@@ -67,7 +66,7 @@ const MonitoringLogs = () => {
       
       <Tabs defaultValue="status" className="w-full">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-4">
+          <TabsList className="inline-flex min-w-full w-full sm:grid sm:grid-cols-3">
             <TabsTrigger value="status">
               <Activity className="mr-1 h-4 w-4" />
               <span>{isMobile ? "Status" : "Status & Health"}</span>
@@ -79,10 +78,6 @@ const MonitoringLogs = () => {
             <TabsTrigger value="logs">
               <Terminal className="mr-1 h-4 w-4" />
               <span>{isMobile ? "Logs" : "Logs & Diagnostics"}</span>
-            </TabsTrigger>
-            <TabsTrigger value="system-services">
-              <Server className="mr-1 h-4 w-4" />
-              <span>{isMobile ? "Services" : "System Services"}</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -140,7 +135,7 @@ const MonitoringLogs = () => {
             <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div className="flex items-center">
-                  <AlertTriangle className="mr-2 h-5 w-5 text-amber-500" />
+                  <Activity className="mr-2 h-5 w-5 text-amber-500" />
                   <span className="text-sm">Log analysis detected 3 potential issues</span>
                 </div>
                 <Button variant="outline" size="sm">AI Analysis</Button>
@@ -152,10 +147,6 @@ const MonitoringLogs = () => {
               />
             </CardContent>
           </Card>
-        </TabsContent>
-        
-        <TabsContent value="system-services" className="p-0 border-0 mt-4 sm:mt-6">
-          <SystemServicesTab />
         </TabsContent>
       </Tabs>
     </div>

@@ -34,6 +34,7 @@ import Integrations from "./pages/Integrations";
 import Billing from "./pages/Billing";
 import Containers from "./pages/Containers";
 import Services from "./pages/Services";
+import SystemServices from "./pages/SystemServices";
 import ChangeManagement from "./pages/ChangeManagement";
 import Scheduling from "./pages/Scheduling";
 import Firewall from "./pages/Firewall";
@@ -85,6 +86,7 @@ const App = () => (
                 <Route path="/billing" element={<ProtectedRoute adminOnly><Billing /></ProtectedRoute>} />
                 <Route path="/containers" element={<ProtectedRoute><Containers /></ProtectedRoute>} />
                 <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
+                <Route path="/system-services" element={<ProtectedRoute><SystemServices /></ProtectedRoute>} />
                 <Route path="/change-management" element={<ProtectedRoute><ChangeManagement /></ProtectedRoute>} />
                 <Route path="/scheduling" element={<ProtectedRoute><Scheduling /></ProtectedRoute>} />
                 <Route path="/firewall" element={<ProtectedRoute><Firewall /></ProtectedRoute>} />
