@@ -4,6 +4,8 @@ import { Server } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import StatusBadge from './StatusBadge';
+import LoadingState from './LoadingState';
+import ErrorState from './ErrorState';
 
 interface NetworkHealthProps {
   data: {
@@ -14,10 +16,16 @@ interface NetworkHealthProps {
       used: number;
       total: number;
     };
-  };
+  } | null;
+  isLoading?: boolean;
+  error?: Error | null;
 }
 
-const NetworkHealth: React.FC<NetworkHealthProps> = ({ data }) => {
+const NetworkHealth: React.FC<NetworkHealthProps> = ({ data, isLoading = false, error = null }) => {
+  if (isLoading) return <LoadingState />;
+  if (error) return <ErrorState message={error.message} />;
+  if (!data) return <ErrorState message="Network health data is unavailable" />;
+
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">

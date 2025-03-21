@@ -29,3 +29,16 @@ export const healthData = {
 };
 
 export type HealthData = typeof healthData;
+
+// This would be a real API call in a production environment
+export const fetchHealthData = (): Promise<HealthData> => {
+  return new Promise((resolve, reject) => {
+    // Simulate network delay
+    setTimeout(() => {
+      // Randomly succeed or fail to demonstrate error handling
+      Math.random() > 0.9 
+        ? reject(new Error('Failed to fetch health data')) 
+        : resolve(healthData);
+    }, 1500);
+  });
+};

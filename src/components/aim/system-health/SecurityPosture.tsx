@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import StatusBadge from './StatusBadge';
+import LoadingState from './LoadingState';
+import ErrorState from './ErrorState';
 
 interface SecurityPostureProps {
   data: {
@@ -16,10 +18,16 @@ interface SecurityPostureProps {
     };
     lastScan: string;
     complianceScore: number;
-  };
+  } | null;
+  isLoading?: boolean;
+  error?: Error | null;
 }
 
-const SecurityPosture: React.FC<SecurityPostureProps> = ({ data }) => {
+const SecurityPosture: React.FC<SecurityPostureProps> = ({ data, isLoading = false, error = null }) => {
+  if (isLoading) return <LoadingState />;
+  if (error) return <ErrorState message={error.message} />;
+  if (!data) return <ErrorState message="Security posture data is unavailable" />;
+
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">

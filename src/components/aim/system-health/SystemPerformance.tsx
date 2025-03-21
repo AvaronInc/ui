@@ -4,6 +4,8 @@ import { Activity } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import StatusBadge from './StatusBadge';
+import LoadingState from './LoadingState';
+import ErrorState from './ErrorState';
 
 interface SystemPerformanceProps {
   data: {
@@ -11,10 +13,16 @@ interface SystemPerformanceProps {
     cpu: number;
     memory: number;
     storage: number;
-  };
+  } | null;
+  isLoading?: boolean;
+  error?: Error | null;
 }
 
-const SystemPerformance: React.FC<SystemPerformanceProps> = ({ data }) => {
+const SystemPerformance: React.FC<SystemPerformanceProps> = ({ data, isLoading = false, error = null }) => {
+  if (isLoading) return <LoadingState />;
+  if (error) return <ErrorState message={error.message} />;
+  if (!data) return <ErrorState message="System performance data is unavailable" />;
+
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">
