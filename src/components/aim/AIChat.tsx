@@ -1,13 +1,11 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Avatar } from '@/components/ui/avatar';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Mic, MicOff, Send, Bot, User } from 'lucide-react';
+import { Mic, Send, Bot, User } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AIChatProps {
@@ -35,7 +33,6 @@ const AIChat: React.FC<AIChatProps> = ({ voiceMode, setVoiceMode }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -43,7 +40,6 @@ const AIChat: React.FC<AIChatProps> = ({ voiceMode, setVoiceMode }) => {
   const handleSendMessage = () => {
     if (!input.trim()) return;
     
-    // Add user message to chat
     const newMessage: MessageType = {
       id: Date.now().toString(),
       content: input,
@@ -55,7 +51,6 @@ const AIChat: React.FC<AIChatProps> = ({ voiceMode, setVoiceMode }) => {
     setInput('');
     setIsProcessing(true);
     
-    // Simulate AI response (in a real implementation, this would call an API)
     setTimeout(() => {
       const aiResponse: MessageType = {
         id: (Date.now() + 1).toString(),
@@ -77,12 +72,10 @@ const AIChat: React.FC<AIChatProps> = ({ voiceMode, setVoiceMode }) => {
       toast.info('Voice mode activated', {
         description: 'You can now speak to AIM'
       });
-      // Here we would initialize voice recognition in a real implementation
     } else {
       toast.info('Voice mode deactivated', {
         description: 'Switched back to text input'
       });
-      // Clean up voice recognition
     }
   };
 
@@ -175,6 +168,7 @@ const AIChat: React.FC<AIChatProps> = ({ voiceMode, setVoiceMode }) => {
               }
             }}
             disabled={isProcessing || voiceMode}
+            autoFocus={false}
           />
           <Button 
             size="icon" 
