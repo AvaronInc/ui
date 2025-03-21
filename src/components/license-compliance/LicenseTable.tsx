@@ -17,9 +17,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Shield, ShieldAlert, ShieldX } from 'lucide-react';
 import { mockLicenseData } from './mockLicenseData';
-import { LicenseData } from './types';
+import { LicenseData, RiskLevel } from './types';
 
 interface LicenseTableProps {
   onLicenseClick: (license: LicenseData) => void;
@@ -103,6 +103,19 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
     }
   };
 
+  const getRiskLevelIcon = (riskLevel: RiskLevel) => {
+    switch (riskLevel) {
+      case 'Low':
+        return <Shield className="h-4 w-4 text-green-500" />;
+      case 'Medium':
+        return <ShieldAlert className="h-4 w-4 text-amber-500" />;
+      case 'High':
+        return <ShieldX className="h-4 w-4 text-red-500" />;
+      default:
+        return <Shield className="h-4 w-4 text-gray-500" />;
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-3">
@@ -175,6 +188,7 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
             <TableRow>
               <TableHead>Component Name</TableHead>
               <TableHead>License Type</TableHead>
+              <TableHead>Risk Level</TableHead>
               <TableHead>Version</TableHead>
               <TableHead>Source</TableHead>
               <TableHead>Used In</TableHead>
@@ -183,7 +197,7 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
           <TableBody>
             {filteredLicenses.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
                   No licenses found matching your filters
                 </TableCell>
               </TableRow>
@@ -199,6 +213,18 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
                     <Badge variant="outline" className={getLicenseBadgeColor(license.licenseType)}>
                       {license.licenseType}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1.5">
+                      {getRiskLevelIcon(license.riskLevel)}
+                      <span className={`text-sm ${
+                        license.riskLevel === 'Low' ? 'text-green-600 dark:text-green-400' :
+                        license.riskLevel === 'Medium' ? 'text-amber-600 dark:text-amber-400' :
+                        'text-red-600 dark:text-red-400'
+                      }`}>
+                        {license.riskLevel}
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell>{license.version}</TableCell>
                   <TableCell>
@@ -236,3 +262,4 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
 };
 
 export default LicenseTable;
+

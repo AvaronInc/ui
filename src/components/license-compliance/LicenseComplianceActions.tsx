@@ -1,11 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { Download, RefreshCw, Flag, FileText } from 'lucide-react';
+import { Download, RefreshCw, Flag, FileText, RotateCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { Progress } from '@/components/ui/progress';
 
 const LicenseComplianceActions: React.FC = () => {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateProgress, setUpdateProgress] = useState(0);
+
   const handleExportPDF = () => {
     toast.success('Exporting license report as PDF');
     // In a real implementation, this would trigger a PDF download
@@ -26,6 +30,31 @@ const LicenseComplianceActions: React.FC = () => {
       description: 'This feature is not implemented in the demo',
     });
     // In a real implementation, this would open a dialog to select licenses for review
+  };
+
+  const handleCheckForUpdates = () => {
+    toast('Checking for license updates...', {
+      description: 'This may take a few moments'
+    });
+    
+    setIsUpdating(true);
+    setUpdateProgress(0);
+    
+    // Simulate an update process
+    const interval = setInterval(() => {
+      setUpdateProgress(prev => {
+        const newProgress = prev + 10;
+        if (newProgress >= 100) {
+          clearInterval(interval);
+          setIsUpdating(false);
+          toast.success('License information updated', {
+            description: '2 licenses have newer versions available'
+          });
+          return 100;
+        }
+        return newProgress;
+      });
+    }, 500);
   };
   
   return (
@@ -107,6 +136,34 @@ const LicenseComplianceActions: React.FC = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              onClick={handleCheckForUpdates}
+              variant="outline" 
+              className="w-full flex items-center justify-center gap-2"
+              disabled={isUpdating}
+            >
+              <RotateCw className={`h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+              <span>Check for Updates</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Check for license updates</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      {isUpdating && (
+        <div className="space-y-1">
+          <Progress value={updateProgress} className="h-2" />
+          <p className="text-xs text-muted-foreground text-center">
+            Updating license information...
+          </p>
+        </div>
+      )}
       
       <p className="text-xs text-muted-foreground mt-2">
         Last scan: 2 days ago
@@ -116,3 +173,4 @@ const LicenseComplianceActions: React.FC = () => {
 };
 
 export default LicenseComplianceActions;
+

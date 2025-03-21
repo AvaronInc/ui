@@ -5,7 +5,19 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { ExternalLink, FileText, Package, Shield, Code, Flag } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { 
+  ExternalLink, 
+  FileText, 
+  Package, 
+  Shield, 
+  ShieldAlert, 
+  ShieldX,
+  Code, 
+  Flag, 
+  RotateCw,
+  Download 
+} from 'lucide-react';
 import { LicenseData } from './types';
 import { toast } from 'sonner';
 
@@ -16,6 +28,7 @@ interface LicenseDetailDrawerProps {
 
 const LicenseDetailDrawer: React.FC<LicenseDetailDrawerProps> = ({ license, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [isCheckingUpdates, setIsCheckingUpdates] = useState(false);
   
   const getRiskBadgeClass = (riskLevel: string) => {
     switch (riskLevel) {
@@ -30,8 +43,49 @@ const LicenseDetailDrawer: React.FC<LicenseDetailDrawerProps> = ({ license, onCl
     }
   };
 
+  const getRiskIcon = (riskLevel: string) => {
+    switch (riskLevel) {
+      case 'Low':
+        return <Shield className="h-5 w-5 text-green-500" />;
+      case 'Medium':
+        return <ShieldAlert className="h-5 w-5 text-amber-500" />;
+      case 'High':
+        return <ShieldX className="h-5 w-5 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getRiskDescription = (riskLevel: string) => {
+    switch (riskLevel) {
+      case 'Low':
+        return 'Permissive license with minimal restrictions on usage and distribution.';
+      case 'Medium':
+        return 'Copyleft license requiring derivative works to maintain the same license.';
+      case 'High':
+        return 'Strong copyleft license with significant restrictions that may affect proprietary code.';
+      default:
+        return 'Unknown risk level.';
+    }
+  };
+
   const handleFlagForReview = () => {
     toast.success(`${license.componentName} has been flagged for legal review`);
+  };
+
+  const handleExportLicense = () => {
+    toast.success(`Exporting ${license.licenseType} license details`);
+  };
+  
+  const handleCheckForUpdates = () => {
+    setIsCheckingUpdates(true);
+    toast.info(`Checking for updates to ${license.componentName}`);
+    
+    // Simulate checking for updates
+    setTimeout(() => {
+      setIsCheckingUpdates(false);
+      toast.success(`License information for ${license.componentName} is up to date`);
+    }, 2000);
   };
   
   return (
@@ -90,14 +144,30 @@ const LicenseDetailDrawer: React.FC<LicenseDetailDrawerProps> = ({ license, onCl
               </div>
               
               <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
+                {getRiskIcon(license.riskLevel)}
                 <div>
                   <p className="text-sm font-medium">Risk Assessment</p>
                   <p className="text-xs text-muted-foreground">
-                    {license.riskLevel === 'Low' && 'Permissive license with minimal restrictions'}
-                    {license.riskLevel === 'Medium' && 'Copyleft license with some restrictions'}
-                    {license.riskLevel === 'High' && 'Strict copyleft with significant restrictions'}
+                    {getRiskDescription(license.riskLevel)}
                   </p>
+                  
+                  <div className="mt-2">
+                    <p className="text-xs font-medium mb-1">Compatibility Risk</p>
+                    <div className="flex items-center gap-2">
+                      <Progress 
+                        value={license.riskLevel === 'Low' ? 33 : license.riskLevel === 'Medium' ? 66 : 100} 
+                        className="h-2"
+                        indicatorClassName={
+                          license.riskLevel === 'Low' ? 'bg-green-500' : 
+                          license.riskLevel === 'Medium' ? 'bg-amber-500' : 
+                          'bg-red-500'
+                        }
+                      />
+                      <span className="text-xs text-muted-foreground w-7">
+                        {license.riskLevel === 'Low' ? '33%' : license.riskLevel === 'Medium' ? '66%' : '100%'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               
@@ -149,19 +219,44 @@ const LicenseDetailDrawer: React.FC<LicenseDetailDrawerProps> = ({ license, onCl
           </TabsContent>
         </Tabs>
         
-        <div className="flex justify-between mt-8">
-          <SheetClose asChild>
-            <Button variant="outline">Close</Button>
-          </SheetClose>
+        <div className="flex flex-col gap-3 mt-8">
+          <div className="flex justify-between gap-2">
+            <SheetClose asChild>
+              <Button variant="outline">Close</Button>
+            </SheetClose>
+            
+            <Button 
+              variant="secondary" 
+              className="flex items-center gap-2"
+              onClick={handleFlagForReview}
+            >
+              <Flag className="h-4 w-4" />
+              Flag for Review
+            </Button>
+          </div>
           
-          <Button 
-            variant="secondary" 
-            className="flex items-center gap-2"
-            onClick={handleFlagForReview}
-          >
-            <Flag className="h-4 w-4" />
-            Flag for Review
-          </Button>
+          <div className="flex justify-between gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2 flex-1"
+              onClick={handleExportLicense}
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2 flex-1"
+              onClick={handleCheckForUpdates}
+              disabled={isCheckingUpdates}
+            >
+              <RotateCw className={`h-4 w-4 ${isCheckingUpdates ? 'animate-spin' : ''}`} />
+              Check Updates
+            </Button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
@@ -169,3 +264,4 @@ const LicenseDetailDrawer: React.FC<LicenseDetailDrawerProps> = ({ license, onCl
 };
 
 export default LicenseDetailDrawer;
+

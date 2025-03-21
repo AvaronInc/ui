@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAlerts } from '@/context/AlertsContext';
 import LicenseSummaryCards from './LicenseSummaryCards';
 import LicenseTable from './LicenseTable';
 import LicenseBreakdownChart from './LicenseBreakdownChart';
@@ -13,6 +14,7 @@ const LicenseCompliancePanel: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [licenseTypeFilter, setLicenseTypeFilter] = useState<string[]>([]);
   const [usedInFilter, setUsedInFilter] = useState<string[]>([]);
+  const { addAlert } = useAlerts();
   
   // Close license detail drawer
   const handleCloseDetail = () => {
@@ -23,6 +25,22 @@ const LicenseCompliancePanel: React.FC = () => {
   const handleLicenseClick = (license: LicenseData) => {
     setSelectedLicense(license);
   };
+
+  // Simulate an automatic license check on page load
+  useEffect(() => {
+    // Add a timeout to make it feel like it's checking things
+    const timer = setTimeout(() => {
+      if (Math.random() > 0.5) {
+        addAlert({
+          title: 'License Update Available',
+          message: 'New version of Apache 2.0 license available for React components.',
+          type: 'info'
+        });
+      }
+    }, 3000);
+    
+    return () => clearTimeout(timer);
+  }, [addAlert]);
   
   return (
     <div className="space-y-6">
@@ -68,3 +86,4 @@ const LicenseCompliancePanel: React.FC = () => {
 };
 
 export default LicenseCompliancePanel;
+
