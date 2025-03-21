@@ -146,3 +146,21 @@ export interface AIFailoverConfiguration {
     priority: 'high' | 'medium' | 'low';
   }[];
 }
+
+// Policy Routing types
+export interface PolicyRoute {
+  id: string;
+  name: string;
+  sourceIp: string;
+  destinationIp: string;
+  protocol: 'tcp' | 'udp' | 'icmp' | 'any';
+  portRangeStart: number;
+  portRangeEnd: number;
+  nextHopIp: string;
+  interface: string;
+  matchType: '5-tuple' | 'l4' | 'l3' | 'dscp';
+  priority: number; // 1-100, lower is higher priority
+  trafficHandled: number; // in MB
+  packetCount: number;
+  status: 'active' | 'inactive';
+}
