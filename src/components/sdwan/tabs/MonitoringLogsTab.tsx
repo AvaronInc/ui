@@ -8,8 +8,15 @@ import { Monitor, Activity, List, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
+import SDWANTopologyMap from '../components/SDWANTopologyMap';
+import { NESTNode } from '@/types/sdwan';
 
 const MonitoringLogsTab = () => {
+  const handleNodeClick = (node: NESTNode) => {
+    console.log('Node clicked:', node);
+    // Additional logic if needed when node is clicked
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <Card className="md:col-span-2 row-span-2">
@@ -20,26 +27,7 @@ const MonitoringLogsTab = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="bg-muted rounded-md h-[500px] flex items-center justify-center">
-            <p className="text-muted-foreground">Network topology visualization will appear here</p>
-          </div>
-          <div className="mt-4 flex justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center">
-                <div className="h-3 w-3 rounded-full bg-green-500 mr-2"></div>
-                <span className="text-sm">Active</span>
-              </div>
-              <div className="flex items-center">
-                <div className="h-3 w-3 rounded-full bg-yellow-500 mr-2"></div>
-                <span className="text-sm">Degraded</span>
-              </div>
-              <div className="flex items-center">
-                <div className="h-3 w-3 rounded-full bg-red-500 mr-2"></div>
-                <span className="text-sm">Down</span>
-              </div>
-            </div>
-            <Button variant="outline" size="sm">Refresh</Button>
-          </div>
+          <SDWANTopologyMap onNodeClick={handleNodeClick} />
         </CardContent>
       </Card>
       
