@@ -13,7 +13,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
         <img 
           src="/lovable-uploads/e407f19b-556c-465a-a9c4-ea2ebac2de0e.png" 
           alt="Avaron.AI Logo" 
-          className="h-10" 
+          className="h-10 logo-transparent" 
         />
       </div>
     </Header>
