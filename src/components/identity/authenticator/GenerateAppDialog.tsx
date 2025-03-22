@@ -18,7 +18,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Smartphone, Android, Apple } from 'lucide-react';
+import { Smartphone, Tablet, Laptop } from 'lucide-react';
 import { MfaAppDeployment } from './AuthenticatorPanel';
 
 interface GenerateAppDialogProps {
@@ -104,14 +104,14 @@ export const GenerateAppDialog: React.FC<GenerateAppDialogProps> = ({
                 <div className="flex items-center space-x-2 mr-4">
                   <RadioGroupItem value="Android" id="android" />
                   <Label htmlFor="android" className="flex items-center">
-                    <Android className="mr-2 h-4 w-4" />
+                    <Smartphone className="mr-2 h-4 w-4" />
                     Android
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="iOS" id="ios" />
                   <Label htmlFor="ios" className="flex items-center">
-                    <Apple className="mr-2 h-4 w-4" />
+                    <Tablet className="mr-2 h-4 w-4" />
                     iOS
                   </Label>
                 </div>
