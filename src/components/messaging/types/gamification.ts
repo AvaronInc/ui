@@ -18,7 +18,7 @@ export interface Badge {
   description: string;
   icon: string;
   threshold: number;
-  category: 'solutions' | 'comments' | 'posts' | 'trending';
+  category: 'solutions' | 'comments' | 'posts' | 'trending' | 'reactions';
   level?: 'bronze' | 'silver' | 'gold' | 'platinum';
   earnedAt?: Date;
 }
