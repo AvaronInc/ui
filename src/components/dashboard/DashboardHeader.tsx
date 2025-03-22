@@ -14,7 +14,7 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar/sidebar-base";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
-import { Bell, LogOut, User, Settings, HelpCircle } from 'lucide-react';
+import { Bell, LogOut, User, Settings, HelpCircle, Moon, Sun } from 'lucide-react';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
 import { toast } from 'sonner';
 import {
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useAlerts } from '@/context/AlertsContext';
 import NotificationsPanel from '@/components/notifications/NotificationsPanel';
+import { useTheme } from '@/context/ThemeContext';
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
@@ -37,6 +38,7 @@ const DashboardHeader = () => {
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
   const { unreadCount } = useAlerts();
+  const { isDarkMode, toggleDarkMode } = useTheme();
   
   useEffect(() => {
     // Set up initial company name
@@ -116,6 +118,21 @@ const DashboardHeader = () => {
       </div>
       
       <div className="flex items-center space-x-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="relative" 
+          onClick={toggleDarkMode}
+          title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {isDarkMode ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
+          <span className="sr-only">{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
+        </Button>
+        
         <Button 
           variant="ghost" 
           size="icon" 
