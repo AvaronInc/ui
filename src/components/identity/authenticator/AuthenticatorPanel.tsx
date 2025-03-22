@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,6 @@ export type MfaAppDeployment = {
   kyberCertHash: string;
 };
 
-// Mocked sessions data
 const MOCK_SESSIONS = [
   {
     id: 'session-1',
@@ -91,7 +89,6 @@ const AuthenticatorPanel = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  // Mock data for MFA app deployments
   const [mfaDeployments, setMfaDeployments] = useState<MfaAppDeployment[]>([
     {
       id: 'deploy-1',
@@ -147,22 +144,18 @@ const AuthenticatorPanel = () => {
     },
   ]);
 
-  // Mocked sessions state
   const [sessions, setSessions] = useState(MOCK_SESSIONS);
 
   const handleGenerateLink = (userId: string, deviceType: 'Android' | 'iOS', options: MfaAppOptions) => {
     setIsLoading(true);
     
-    // Simulate API call delay
     setTimeout(() => {
       const userIndex = mfaDeployments.findIndex(d => d.userId === userId);
       const updatedDeployments = [...mfaDeployments];
       
-      // Calculate expiry time based on the options
       const expiryDate = new Date(Date.now() + options.expiryHours * 60 * 60 * 1000);
       
       if (userIndex >= 0) {
-        // Update existing deployment
         updatedDeployments[userIndex] = {
           ...updatedDeployments[userIndex],
           deviceType,
@@ -171,8 +164,6 @@ const AuthenticatorPanel = () => {
           status: 'pending'
         };
       } else {
-        // User doesn't have a deployment yet, we'd need to add them
-        // This would typically come from the user list, but we're just mocking
         toast({
           title: "User not found",
           description: "The selected user does not exist in the system.",
@@ -194,7 +185,6 @@ const AuthenticatorPanel = () => {
   const handleRevokeApp = (deploymentId: string) => {
     setIsLoading(true);
     
-    // Simulate API call delay
     setTimeout(() => {
       const updatedDeployments = mfaDeployments.map(d => {
         if (d.id === deploymentId) {
@@ -220,7 +210,6 @@ const AuthenticatorPanel = () => {
   const handleResetLink = (deploymentId: string) => {
     setIsLoading(true);
     
-    // Simulate API call delay
     setTimeout(() => {
       const deploymentIndex = mfaDeployments.findIndex(d => d.id === deploymentId);
       
@@ -248,7 +237,6 @@ const AuthenticatorPanel = () => {
   const handleTerminateSession = (sessionId: string) => {
     setIsLoading(true);
     
-    // Simulate API call delay
     setTimeout(() => {
       const updatedSessions = sessions.filter(s => s.id !== sessionId);
       setSessions(updatedSessions);
@@ -264,7 +252,6 @@ const AuthenticatorPanel = () => {
   const handleLockDevice = (sessionId: string, deviceId: string) => {
     setIsLoading(true);
     
-    // Simulate API call delay
     setTimeout(() => {
       const updatedSessions = sessions.map(s => {
         if (s.id === sessionId) {
@@ -289,7 +276,6 @@ const AuthenticatorPanel = () => {
   const handleForceMFAReset = () => {
     setIsLoading(true);
     
-    // Simulate API call delay
     setTimeout(() => {
       const updatedDeployments = mfaDeployments.map(d => {
         if (d.status === 'active') {
@@ -315,7 +301,6 @@ const AuthenticatorPanel = () => {
   const handleRefresh = () => {
     setIsLoading(true);
     
-    // Simulate refresh delay
     setTimeout(() => {
       setIsLoading(false);
       
@@ -326,14 +311,12 @@ const AuthenticatorPanel = () => {
     }, 1000);
   };
 
-  // Filter deployments based on search query
   const filteredDeployments = mfaDeployments.filter(
     deployment => 
       deployment.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       deployment.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Filter sessions based on search query
   const filteredSessions = sessions.filter(
     session => 
       session.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
