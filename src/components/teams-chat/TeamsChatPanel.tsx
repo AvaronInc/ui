@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import ChatSidebar from './components/ChatSidebar';
 import ChatMainArea from './components/ChatMainArea';
@@ -15,7 +14,6 @@ const TeamsChatPanel = () => {
   const [userStatus, setUserStatus] = useState<UserStatus>(mockCurrentUser.status);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Get current active channel or DM conversation
   const getActiveConversation = (): ActiveConversation | null => {
     if (activeChannelId) {
       for (const team of teams) {
@@ -34,12 +32,10 @@ const TeamsChatPanel = () => {
 
   const activeConversation = getActiveConversation();
   
-  // Toggle info sidebar
   const toggleInfoSidebar = () => {
     setShowInfoSidebar(!showInfoSidebar);
   };
 
-  // Set active conversation (channel or DM)
   const setActiveConversation = (type: 'channel' | 'dm', id: string) => {
     if (type === 'channel') {
       setActiveChannelId(id);
@@ -50,14 +46,11 @@ const TeamsChatPanel = () => {
     }
   };
 
-  // Change user status
   const changeUserStatus = (status: UserStatus) => {
     setUserStatus(status);
   };
 
-  // Send message to active conversation
   const sendMessage = (content: string) => {
-    // This would be connected to a real backend in production
     console.log('Sending message to', activeConversation?.type, activeConversation?.data?.id, content);
   };
 
