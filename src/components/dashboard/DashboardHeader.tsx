@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
 import { ThemeToggle } from './header/ThemeToggle';
 import { AIMButton } from './header/AIMButton';

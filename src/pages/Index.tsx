@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth';
 import MultiTenantView from '@/components/dashboard/MultiTenantView';
 import MainDashboard from '@/components/dashboard/MainDashboard';
 import PageTransition from '@/components/transitions/PageTransition';

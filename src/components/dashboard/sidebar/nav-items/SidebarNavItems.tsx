@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { SidebarContent } from '@/components/ui/sidebar/sidebar-structure';
 import { SidebarSeparator } from '@/components/ui/sidebar/sidebar-structure';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth';
 import AccordionNavGroup from './AccordionNavGroup';
 import { navSections } from './navigation-data';
 
