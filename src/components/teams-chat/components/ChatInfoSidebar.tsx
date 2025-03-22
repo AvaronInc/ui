@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import { Hash, Lock, Pin, Users, Star, Shield, BrainCircuit } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Switch } from '@/components/ui/switch';
 import { ActiveConversation } from '../types';
 import UserStatusIndicator from './UserStatusIndicator';
 import ChatMessage from './ChatMessage';
@@ -14,6 +16,7 @@ interface ChatInfoSidebarProps {
 
 const ChatInfoSidebar = ({ activeConversation }: ChatInfoSidebarProps) => {
   const [activeTab, setActiveTab] = useState('info');
+  const [aimChatbotEnabled, setAimChatbotEnabled] = useState(false);
   const { type, data, team } = activeConversation;
   const isChannel = type === 'channel';
   
@@ -145,6 +148,27 @@ const ChatInfoSidebar = ({ activeConversation }: ChatInfoSidebarProps) => {
             <div className="flex items-center space-x-2">
               <BrainCircuit className="h-5 w-5 text-blue-500" />
               <h3 className="font-semibold">AI Assistant</h3>
+            </div>
+            
+            <div className="rounded-lg border bg-muted/20 p-3">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src="/placeholder.svg" alt="AIM" />
+                    <AvatarFallback>AIM</AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium">AIM Chatbot</span>
+                </div>
+                <Switch
+                  checked={aimChatbotEnabled}
+                  onCheckedChange={setAimChatbotEnabled}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {aimChatbotEnabled 
+                  ? "AIM Chatbot is active and can answer questions about the platform." 
+                  : "Enable AIM Chatbot to get answers to your questions within this chat."}
+              </p>
             </div>
             
             <div className="rounded-lg border bg-muted/20 p-3">
