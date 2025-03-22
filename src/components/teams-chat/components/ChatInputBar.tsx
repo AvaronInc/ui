@@ -165,7 +165,7 @@ const ChatInputBar = ({
             </Button>
             
             <Button 
-              variant="primary" 
+              variant="default" 
               size="sm" 
               className="rounded-full px-3"
               onClick={onSendMessage}

@@ -8,7 +8,7 @@ import {
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
-} from '@/components/ui/dialog';
+} from '@/components/ui/dropdown-menu';
 import { Message } from '../types';
 import UserStatusIndicator from './UserStatusIndicator';
 import { formatMessageTime } from '../utils/formatTime';

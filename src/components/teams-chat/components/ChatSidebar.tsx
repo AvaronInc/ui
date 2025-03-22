@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Search, Plus, Settings, ChevronDown, ChevronRight, MessageSquare, Users, Lock, Hashtag } from 'lucide-react';
+import { Search, Plus, Settings, ChevronDown, ChevronRight, MessageSquare, Users, Lock, Hash } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import {
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
-} from '@/components/ui/dialog';
+} from '@/components/ui/dropdown-menu';
 import { Team, DirectMessage, UserStatus } from '../types';
 import UserStatusIndicator from './UserStatusIndicator';
 import { mockCurrentUser } from '../mockData';
@@ -169,7 +169,7 @@ const ChatSidebar = ({
                         <div className="flex items-center">
                           {channel.isPrivate ? 
                             <Lock className="mr-2 h-3 w-3" /> : 
-                            <Hashtag className="mr-2 h-3 w-3" />
+                            <Hash className="mr-2 h-3 w-3" />
                           }
                           <span className="truncate text-sm">{channel.name}</span>
                         </div>

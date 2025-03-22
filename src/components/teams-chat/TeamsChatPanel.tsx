@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ChatSidebar from './components/ChatSidebar';
 import ChatMainArea from './components/ChatMainArea';
 import ChatInfoSidebar from './components/ChatInfoSidebar';
-import { Channel, DirectMessage, Team, Message, UserStatus } from './types';
+import { Channel, DirectMessage, Team, Message, UserStatus, ActiveConversation } from './types';
 import { mockTeams, mockDirectMessages, mockCurrentUser } from './mockData';
 
 const TeamsChatPanel = () => {
@@ -16,7 +16,7 @@ const TeamsChatPanel = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Get current active channel or DM conversation
-  const getActiveConversation = () => {
+  const getActiveConversation = (): ActiveConversation | null => {
     if (activeChannelId) {
       for (const team of teams) {
         const channel = team.channels.find(ch => ch.id === activeChannelId);
