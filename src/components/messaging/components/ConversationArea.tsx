@@ -23,7 +23,7 @@ export const ConversationArea = ({
   handleSendMessage 
 }: ConversationAreaProps) => {
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="flex-1 flex flex-col h-full w-full">
       <ConversationHeader conversation={currentConversation} />
       
       <ScrollArea className="flex-1 p-4">

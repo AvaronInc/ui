@@ -23,7 +23,7 @@ export const ConversationSidebar = ({
   setSearchQuery
 }: ConversationSidebarProps) => {
   return (
-    <div className="w-80 border-r flex flex-col h-full">
+    <div className="w-80 min-w-80 border-r flex flex-col h-full">
       <div className="p-4 border-b">
         <PageTitle 
           title="Messaging" 

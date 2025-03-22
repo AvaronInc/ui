@@ -13,7 +13,7 @@ const Messaging = () => {
   return (
     <PageTransition>
       <DashboardLayout>
-        <div className="px-0 py-0 flex h-[calc(100vh-4rem)] overflow-hidden">
+        <div className="flex h-[calc(100vh-4rem)] w-full overflow-hidden">
           <MessagingPanel />
           <Toaster />
         </div>

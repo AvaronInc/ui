@@ -35,7 +35,7 @@ export const MessagingPanel = () => {
   }
   
   return (
-    <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="flex h-[calc(100vh-4rem)] w-full overflow-hidden">
       <ConversationSidebar 
         conversations={filteredConversations} 
         activeConversation={activeConversation}
