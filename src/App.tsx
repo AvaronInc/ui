@@ -45,6 +45,8 @@ import LoggingAudit from "./pages/LoggingAudit";
 import AIM from "./pages/AIM";
 import QuantumEncryption from "./pages/QuantumEncryption";
 import Authenticator from "./pages/Authenticator";
+import Messaging from "./pages/Messaging";
+import TeamsChat from "./pages/TeamsChat";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,6 +82,8 @@ const App = () => (
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
                 <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
                 <Route path="/workforce" element={<ProtectedRoute><WorkforceEMS /></ProtectedRoute>} />
+                <Route path="/messaging" element={<ProtectedRoute><Messaging /></ProtectedRoute>} />
+                <Route path="/teams-chat" element={<ProtectedRoute><TeamsChat /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
                 <Route path="/sdms" element={<ProtectedRoute><SDMS /></ProtectedRoute>} />
                 <Route path="/email-security" element={<ProtectedRoute><EmailSecurity /></ProtectedRoute>} />

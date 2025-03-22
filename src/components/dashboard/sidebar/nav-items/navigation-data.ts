@@ -5,6 +5,7 @@ import { networkItems } from './network-items';
 import { monitoringItems } from './monitoring-items';
 import { endUserItems } from './end-user-items';
 import { operationsItems } from './operations-items';
+import { communicationItems } from './communication-items';
 import { identityItems } from './identity-items';
 import { securityItems } from './security-items';
 import { assetItems } from './asset-items';
@@ -19,6 +20,7 @@ export * from './network-items';
 export * from './monitoring-items';
 export * from './end-user-items';
 export * from './operations-items';
+export * from './communication-items';
 export * from './identity-items';
 export * from './security-items';
 export * from './asset-items';
@@ -33,6 +35,7 @@ export const navSections: NavSection[] = [
   { title: "Monitoring", items: monitoringItems },
   { title: "End User", items: endUserItems },
   { title: "IT Operations", items: operationsItems },
+  { title: "Communication", items: communicationItems },
   { title: "Identity", items: identityItems },
   { title: "Security & Compliance", items: securityItems },
   { title: "IT Assets", items: assetItems },
