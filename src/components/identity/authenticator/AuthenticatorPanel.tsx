@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,8 +26,7 @@ export type MfaAppDeployment = {
   kyberCertHash: string;
 };
 
-// Define session type to match MFASessionsTable interface
-type MFASession = {
+export type MFASession = {
   id: string;
   userId: string;
   userName: string;
@@ -42,19 +40,19 @@ type MFASession = {
   status: 'active' | 'suspicious' | 'locked';
 };
 
-const MOCK_SESSIONS = [
+const MOCK_SESSIONS: MFASession[] = [
   {
     id: 'session-1',
     userId: 'user-1',
     userName: 'Admin User',
     deviceId: 'device-123',
     deviceModel: 'Samsung Galaxy S22',
-    deviceType: 'Android' as const,
+    deviceType: 'Android',
     loginTime: new Date(Date.now() - 120 * 60 * 1000).toISOString(), // 2 hours ago
     lastActivity: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
     ipAddress: '192.168.1.45',
     riskScore: 15,
-    status: 'active' as const
+    status: 'active'
   },
   {
     id: 'session-2',
@@ -62,12 +60,12 @@ const MOCK_SESSIONS = [
     userName: 'John Engineer',
     deviceId: 'device-456',
     deviceModel: 'iPhone 13 Pro',
-    deviceType: 'iOS' as const,
+    deviceType: 'iOS',
     loginTime: new Date(Date.now() - 60 * 60 * 1000).toISOString(), // 1 hour ago
     lastActivity: new Date(Date.now() - 12 * 60 * 1000).toISOString(), // 12 minutes ago
     ipAddress: '10.0.1.25',
     riskScore: 25,
-    status: 'active' as const
+    status: 'active'
   },
   {
     id: 'session-3',
@@ -75,12 +73,12 @@ const MOCK_SESSIONS = [
     userName: 'Security Admin',
     deviceId: 'device-789',
     deviceModel: 'Google Pixel 6',
-    deviceType: 'Android' as const,
+    deviceType: 'Android',
     loginTime: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
     lastActivity: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2 minutes ago
     ipAddress: '172.16.254.1',
     riskScore: 5,
-    status: 'active' as const
+    status: 'active'
   },
   {
     id: 'session-4',
@@ -88,12 +86,12 @@ const MOCK_SESSIONS = [
     userName: 'Jane User',
     deviceId: 'device-321',
     deviceModel: 'iPhone 12',
-    deviceType: 'iOS' as const,
+    deviceType: 'iOS',
     loginTime: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
     lastActivity: new Date(Date.now() - 45 * 60 * 1000).toISOString(), // 45 minutes ago
     ipAddress: '198.51.100.42',
     riskScore: 68,
-    status: 'suspicious' as const
+    status: 'suspicious'
   },
 ];
 
@@ -160,7 +158,7 @@ const AuthenticatorPanel = () => {
     },
   ]);
 
-  const [sessions, setSessions] = useState(MOCK_SESSIONS);
+  const [sessions, setSessions] = useState<MFASession[]>(MOCK_SESSIONS);
 
   const handleGenerateLink = (userId: string, deviceType: 'Android' | 'iOS', options: MfaAppOptions) => {
     setIsLoading(true);
