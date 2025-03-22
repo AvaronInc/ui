@@ -13,13 +13,13 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
         <div className="relative">
           <img 
             src="/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png" 
-            alt="Avaron.AI Logo" 
+            alt="Avaron Logo" 
             className="w-8 h-8 mr-3" 
           />
           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-sidebar"></div>
         </div>
         <div className="flex flex-col">
-          <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">Avaron.AI</h2>
+          <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">Avaron</h2>
           <span className="text-xs text-sidebar-foreground/70">Secure Distributed Infrastructure</span>
         </div>
       </div>

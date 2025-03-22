@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,10 +12,10 @@ const AboutHoneypot: React.FC = () => {
   const handleSavePreferences = () => {
     toast({
       title: isAvaronIntegrationEnabled ? 
-        "Avaron.AI Integration Enabled" : 
+        "Avaron Integration Enabled" : 
         "Preferences Updated",
       description: isAvaronIntegrationEnabled ? 
-        "Your honeypot data will be shared with Avaron.AI. A 2% discount has been applied to your bill." : 
+        "Your honeypot data will be shared with Avaron. A 2% discount has been applied to your bill." : 
         "Your honeypot preferences have been updated.",
       duration: 5000,
     });
@@ -103,7 +102,7 @@ const AboutHoneypot: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ExternalLink className="h-5 w-5 text-purple-500" />
-            Avaron.AI Enterprise Integration
+            Avaron Enterprise Integration
           </CardTitle>
           <CardDescription>
             Enhance collective threat intelligence and receive billing benefits
@@ -111,7 +110,7 @@ const AboutHoneypot: React.FC = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            By sharing anonymized honeypot data with Avaron.AI's enterprise threat intelligence 
+            By sharing anonymized honeypot data with Avaron's enterprise threat intelligence 
             platform, you contribute to a global security ecosystem that protects organizations 
             worldwide. This collaborative approach strengthens everyone's security posture while 
             providing you with exclusive benefits.
@@ -128,7 +127,7 @@ const AboutHoneypot: React.FC = () => {
                 </h4>
                 <p className="text-xs text-blue-700 dark:text-blue-400">
                   Organizations that opt-in to share their anonymized honeypot data with 
-                  Avaron.AI receive an automatic 2% discount on their monthly subscription. 
+                  Avaron receive an automatic 2% discount on their monthly subscription. 
                   This incentive recognizes your contribution to the collective security 
                   community.
                 </p>
@@ -146,7 +145,7 @@ const AboutHoneypot: React.FC = () => {
               htmlFor="avaron-integration" 
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
-              Enable Avaron.AI integration and apply 2% billing discount
+              Enable Avaron integration and apply 2% billing discount
             </label>
           </div>
         </CardContent>

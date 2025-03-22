@@ -20,14 +20,14 @@ export const licenseItemsAI: LicenseData[] = [
   },
   {
     id: '14',
-    componentName: 'Avaron AI Engine',
+    componentName: 'Avaron Engine',
     licenseType: 'Proprietary',
     licenseUrl: 'https://avaron.ai/license',
     version: 'v2.3.1',
     source: 'avaron.ai',
     usedIn: ['AI/ML', 'Security Analytics', 'Threat Detection'],
     riskLevel: 'Medium',
-    fullLicenseText: 'Avaron AI Engine License. All rights reserved...',
+    fullLicenseText: 'Avaron Engine License. All rights reserved...',
     usageDetails: {
       containerName: 'avaron-engine',
       apiCalls: ['POST /api/analyze', 'GET /api/models', 'POST /api/predict'],
