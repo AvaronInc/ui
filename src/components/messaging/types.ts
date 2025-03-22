@@ -93,3 +93,6 @@ export interface Conversation {
   };
   unreadCount?: number;
 }
+
+// Export gamification types for easier importing throughout the app
+export * from './types/gamification';
