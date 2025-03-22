@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import { LicenseData } from '../types';
 import { LicenseFilters } from './LicenseFilters';
 import { LicenseTableRow } from './LicenseTableRow';
 import { EmptyTableState } from './EmptyTableState';
+import { useLicenseFilter } from '../hooks/useLicenseFilter';
 
 interface LicenseTableProps {
   onLicenseClick: (license: LicenseData) => void;
@@ -33,25 +34,12 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
   usedInFilter,
   setUsedInFilter,
 }) => {
-  const filteredLicenses = useMemo(() => {
-    return mockLicenseData.filter(license => {
-      const matchesSearch = 
-        !searchTerm || 
-        license.componentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        license.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        license.version.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesLicenseType = 
-        licenseTypeFilter.length === 0 || 
-        licenseTypeFilter.includes(license.licenseType);
-      
-      const matchesUsedIn = 
-        usedInFilter.length === 0 || 
-        license.usedIn.some(location => usedInFilter.includes(location));
-      
-      return matchesSearch && matchesLicenseType && matchesUsedIn;
-    });
-  }, [searchTerm, licenseTypeFilter, usedInFilter]);
+  const { filteredLicenses, totalCount, filteredCount } = useLicenseFilter({
+    licenses: mockLicenseData,
+    searchTerm,
+    licenseTypeFilter,
+    usedInFilter
+  });
 
   return (
     <div className="space-y-4">
@@ -93,7 +81,7 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
       </div>
       
       <div className="text-xs text-muted-foreground mt-2">
-        Showing {filteredLicenses.length} of {mockLicenseData.length} licenses
+        Showing {filteredCount} of {totalCount} licenses
       </div>
     </div>
   );
