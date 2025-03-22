@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,21 @@ export type MfaAppDeployment = {
   linkExpiry: string | null;
   status: MfaDeploymentStatus;
   kyberCertHash: string;
+};
+
+// Define session type to match MFASessionsTable interface
+type MFASession = {
+  id: string;
+  userId: string;
+  userName: string;
+  deviceId: string;
+  deviceModel: string;
+  deviceType: 'Android' | 'iOS';
+  loginTime: string;
+  lastActivity: string;
+  ipAddress: string;
+  riskScore: number;
+  status: 'active' | 'suspicious' | 'locked';
 };
 
 const MOCK_SESSIONS = [
