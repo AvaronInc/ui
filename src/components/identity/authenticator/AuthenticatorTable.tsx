@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Smartphone, RefreshCw, Link, Ban, Eye } from 'lucide-react';
+import { Smartphone, RefreshCw, Link, Ban, Eye, ShieldCheck, RotateCw, Lock } from 'lucide-react';
 import { formatDistanceToNow, parseISO, isPast } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { MfaAppDeployment } from './AuthenticatorPanel';
@@ -117,7 +117,7 @@ export const AuthenticatorTable: React.FC<AuthenticatorTableProps> = ({
             </TableRow>
           ) : (
             deployments.map((deployment) => (
-              <TableRow key={deployment.id}>
+              <TableRow key={deployment.id} className={deployment.status === 'revoked' ? 'bg-muted/30' : ''}>
                 <TableCell>
                   <div className="font-medium">{deployment.userName}</div>
                   <div className="text-sm text-muted-foreground">{deployment.email}</div>
@@ -178,23 +178,51 @@ export const AuthenticatorTable: React.FC<AuthenticatorTableProps> = ({
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     {deployment.status === 'pending' ? (
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => onResetLink(deployment.id)}
-                      >
-                        <RefreshCw className="h-3.5 w-3.5 mr-1" />
-                        Reset Link
-                      </Button>
+                      <>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => onResetLink(deployment.id)}
+                        >
+                          <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                          Reset Link
+                        </Button>
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => onRevokeApp(deployment.id)}
+                        >
+                          <Ban className="h-3.5 w-3.5 mr-1" />
+                          Revoke
+                        </Button>
+                      </>
                     ) : deployment.status === 'active' ? (
-                      <Button 
-                        variant="destructive" 
-                        size="sm"
-                        onClick={() => onRevokeApp(deployment.id)}
-                      >
-                        <Ban className="h-3.5 w-3.5 mr-1" />
-                        Revoke
-                      </Button>
+                      <>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {}}
+                        >
+                          <Lock className="h-3.5 w-3.5 mr-1" />
+                          Lock
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {}}
+                        >
+                          <RotateCw className="h-3.5 w-3.5 mr-1" />
+                          Reset
+                        </Button>
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => onRevokeApp(deployment.id)}
+                        >
+                          <Ban className="h-3.5 w-3.5 mr-1" />
+                          Revoke
+                        </Button>
+                      </>
                     ) : (
                       <Button 
                         variant="outline" 

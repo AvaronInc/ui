@@ -18,14 +18,23 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Smartphone, Tablet, Laptop } from 'lucide-react';
+import { Smartphone, Tablet, Laptop, ShieldCheck, Link as LinkIcon } from 'lucide-react';
 import { MfaAppDeployment } from './AuthenticatorPanel';
+import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface GenerateAppDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onGenerate: (userId: string, deviceType: 'Android' | 'iOS') => void;
+  onGenerate: (userId: string, deviceType: 'Android' | 'iOS', options: MfaAppOptions) => void;
   existingDeployments: MfaAppDeployment[];
+}
+
+export interface MfaAppOptions {
+  requireDeviceVerification: boolean;
+  restrictToCompanyDevices: boolean;
+  enforceStrongBiometrics: boolean;
+  expiryHours: number;
 }
 
 export const GenerateAppDialog: React.FC<GenerateAppDialogProps> = ({
@@ -36,6 +45,12 @@ export const GenerateAppDialog: React.FC<GenerateAppDialogProps> = ({
 }) => {
   const [userId, setUserId] = useState('');
   const [deviceType, setDeviceType] = useState<'Android' | 'iOS'>('Android');
+  const [options, setOptions] = useState<MfaAppOptions>({
+    requireDeviceVerification: true,
+    restrictToCompanyDevices: false,
+    enforceStrongBiometrics: true,
+    expiryHours: 0.5, // 30 minutes
+  });
   
   // Mock data for users
   const users = [
@@ -49,19 +64,25 @@ export const GenerateAppDialog: React.FC<GenerateAppDialogProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (userId && deviceType) {
-      onGenerate(userId, deviceType);
+      onGenerate(userId, deviceType, options);
     }
   };
 
   const handleClose = () => {
     setUserId('');
     setDeviceType('Android');
+    setOptions({
+      requireDeviceVerification: true,
+      restrictToCompanyDevices: false,
+      enforceStrongBiometrics: true,
+      expiryHours: 0.5,
+    });
     onOpenChange(false);
   };
   
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle className="flex items-center">
@@ -118,13 +139,78 @@ export const GenerateAppDialog: React.FC<GenerateAppDialogProps> = ({
               </RadioGroup>
             </div>
             
+            <div className="border rounded-md p-3">
+              <h4 className="font-medium mb-2 text-sm flex items-center">
+                <ShieldCheck className="h-4 w-4 mr-1 text-primary" />
+                Security Options
+              </h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="device-verification" className="text-sm">Require Device Verification</Label>
+                    <p className="text-xs text-muted-foreground">User must prove device ownership</p>
+                  </div>
+                  <Switch 
+                    id="device-verification" 
+                    checked={options.requireDeviceVerification}
+                    onCheckedChange={(checked) => setOptions({...options, requireDeviceVerification: checked})}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="company-devices" className="text-sm">Restrict to Company Devices</Label>
+                    <p className="text-xs text-muted-foreground">Only allow install on registered devices</p>
+                  </div>
+                  <Switch 
+                    id="company-devices" 
+                    checked={options.restrictToCompanyDevices}
+                    onCheckedChange={(checked) => setOptions({...options, restrictToCompanyDevices: checked})}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="strong-biometrics" className="text-sm">Enforce Strong Biometrics</Label>
+                    <p className="text-xs text-muted-foreground">Require highest level of biometric security</p>
+                  </div>
+                  <Switch 
+                    id="strong-biometrics" 
+                    checked={options.enforceStrongBiometrics}
+                    onCheckedChange={(checked) => setOptions({...options, enforceStrongBiometrics: checked})}
+                  />
+                </div>
+                
+                <div className="pt-2">
+                  <Label htmlFor="link-expiry" className="text-sm">Link Expiry Time</Label>
+                  <Select
+                    value={options.expiryHours.toString()}
+                    onValueChange={(value) => setOptions({...options, expiryHours: parseFloat(value)})}
+                  >
+                    <SelectTrigger id="link-expiry" className="mt-1">
+                      <SelectValue placeholder="Select expiry time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0.5">30 minutes</SelectItem>
+                      <SelectItem value="1">1 hour</SelectItem>
+                      <SelectItem value="4">4 hours</SelectItem>
+                      <SelectItem value="24">24 hours</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            
             <div className="bg-muted rounded-md p-3 text-sm">
               <p className="font-medium mb-1">Important Security Information:</p>
               <ul className="list-disc pl-4 space-y-1 text-xs">
                 <li>The app will be configured for biometric authentication</li>
                 <li>A unique Kyber Certificate will be generated for the user</li>
                 <li>The APK will be digitally signed for security validation</li>
-                <li>The link will automatically expire after 30 minutes</li>
+                <li>The link will automatically expire after the selected time</li>
+                {options.restrictToCompanyDevices && (
+                  <li className="text-primary">Device binding enforced: Only registered company devices allowed</li>
+                )}
               </ul>
             </div>
           </div>
