@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Shield, ShieldAlert, ShieldX } from 'lucide-react';
 import { LicenseType, RiskLevel } from '../types';
 
@@ -46,15 +47,15 @@ export const getRiskLevelTextColor = (riskLevel: RiskLevel): string => {
 /**
  * Get the appropriate risk level icon component
  */
-export const getRiskLevelIcon = (riskLevel: RiskLevel) => {
+export const getRiskLevelIcon = (riskLevel: RiskLevel): React.ReactNode => {
   switch (riskLevel) {
     case 'Low':
-      return <Shield className="h-4 w-4 text-green-500" />;
+      return React.createElement(Shield, { className: "h-4 w-4 text-green-500" });
     case 'Medium':
-      return <ShieldAlert className="h-4 w-4 text-amber-500" />;
+      return React.createElement(ShieldAlert, { className: "h-4 w-4 text-amber-500" });
     case 'High':
-      return <ShieldX className="h-4 w-4 text-red-500" />;
+      return React.createElement(ShieldX, { className: "h-4 w-4 text-red-500" });
     default:
-      return <Shield className="h-4 w-4 text-gray-500" />;
+      return React.createElement(Shield, { className: "h-4 w-4 text-gray-500" });
   }
 };
