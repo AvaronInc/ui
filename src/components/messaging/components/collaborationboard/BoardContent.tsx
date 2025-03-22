@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Post, User } from '../../types';
 import PostItem from './PostItem';
+import SidebarToggle from './SidebarToggle';
 
 interface BoardContentProps {
   sortedPosts: Post[];
@@ -13,6 +14,8 @@ interface BoardContentProps {
   onAddReaction: (postId: string, reactionType: string) => void;
   onResetFilters: () => void;
   onShowNewPostDialog: () => void;
+  showLeftSidebar: boolean;
+  onToggleLeftSidebar: () => void;
 }
 
 const BoardContent = ({
@@ -22,7 +25,9 @@ const BoardContent = ({
   onTogglePin,
   onAddReaction,
   onResetFilters,
-  onShowNewPostDialog
+  onShowNewPostDialog,
+  showLeftSidebar,
+  onToggleLeftSidebar
 }: BoardContentProps) => {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-background">
@@ -36,6 +41,14 @@ const BoardContent = ({
         </div>
         
         <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={onToggleLeftSidebar} className="flex items-center">
+            <Filter 
+              size={18} 
+              fill={showLeftSidebar ? 'currentColor' : 'none'} 
+              className="mr-2"
+            />
+            {showLeftSidebar ? 'Hide Filters' : 'Show Filters'}
+          </Button>
           <Button onClick={onShowNewPostDialog}>
             <Plus size={16} className="mr-1" /> New Post
           </Button>

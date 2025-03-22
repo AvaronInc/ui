@@ -45,13 +45,6 @@ const CollaborationBoardPanel = () => {
         )}
       </div>
       
-      {/* Left Sidebar Toggle Button */}
-      <SidebarToggle 
-        position="left"
-        isVisible={showLeftSidebar}
-        onToggle={() => setShowLeftSidebar(!showLeftSidebar)}
-      />
-      
       {/* Main Content (Post Feed) */}
       <BoardContent 
         sortedPosts={sortedPosts}
@@ -61,6 +54,8 @@ const CollaborationBoardPanel = () => {
         onAddReaction={handleAddReaction}
         onResetFilters={handleResetFilters}
         onShowNewPostDialog={() => setShowNewPostDialog(true)}
+        showLeftSidebar={showLeftSidebar}
+        onToggleLeftSidebar={() => setShowLeftSidebar(!showLeftSidebar)}
       />
       
       {/* Right Sidebar Toggle Button */}
