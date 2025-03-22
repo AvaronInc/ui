@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, Server, Bot, Fingerprint } from 'lucide-react';
+import { LayoutDashboard, Server, Brain, Fingerprint } from 'lucide-react';
 import { NavItem } from './types';
 
 // Core System Management
@@ -16,7 +16,7 @@ export const coreSystemItems: NavItem[] = [
   },
   {
     title: 'AIM',
-    icon: Bot,
+    icon: Brain,
     href: '/aim'
   },
   {
