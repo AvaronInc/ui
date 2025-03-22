@@ -5,6 +5,7 @@ export interface User {
   avatar?: string;
   department: string;
   role: string;
+  status?: UserStatus;
 }
 
 export interface Reaction {
@@ -55,3 +56,40 @@ export type FilterOption = {
   };
   searchQuery: string;
 };
+
+// Adding type definitions for messaging components
+export type UserStatus = 'online' | 'away' | 'dnd' | 'offline';
+
+export interface Message {
+  id: string;
+  sender: User;
+  content: string;
+  timestamp: Date;
+  attachments?: {
+    id: string;
+    name: string;
+    type: string;
+    url: string;
+  }[];
+  reactions?: {
+    emoji: string;
+    count: number;
+  }[];
+  isPinned?: boolean;
+}
+
+export interface Conversation {
+  id: string;
+  name: string;
+  type: 'direct' | 'channel' | 'group';
+  avatar?: string;
+  description?: string;
+  participants?: User[];
+  isGroup?: boolean;
+  lastMessage?: {
+    sender: User;
+    content: string;
+    timestamp: Date;
+  };
+  unreadCount?: number;
+}

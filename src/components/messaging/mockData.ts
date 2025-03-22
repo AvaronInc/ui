@@ -1,4 +1,13 @@
-import { Conversation, Message } from './types';
+import { Conversation, Message, User } from './types';
+
+export const currentUser: User = {
+  id: 'user1',
+  name: 'Alex Johnson',
+  avatar: '/lovable-uploads/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png',
+  department: 'Network Operations',
+  role: 'Senior Network Engineer',
+  status: 'online'
+};
 
 export const mockConversations: Conversation[] = [
   {
@@ -7,7 +16,37 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Discussions about network infrastructure and security.',
-    lastMessage: 'Alex: Updated firewall rules.'
+    isGroup: true,
+    participants: [
+      currentUser,
+      {
+        id: 'user2',
+        name: 'Sarah Chen',
+        avatar: '/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        department: 'Security',
+        role: 'CISO',
+        status: 'online'
+      },
+      {
+        id: 'user3',
+        name: 'Marcus Williams',
+        avatar: '/lovable-uploads/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png',
+        department: 'Infrastructure',
+        role: 'Systems Administrator',
+        status: 'away'
+      }
+    ],
+    lastMessage: {
+      sender: {
+        id: 'user3',
+        name: 'Marcus Williams',
+        department: 'Infrastructure',
+        role: 'Systems Administrator'
+      },
+      content: 'Updated firewall rules.',
+      timestamp: new Date()
+    },
+    unreadCount: 0
   },
   {
     id: '2',
@@ -15,7 +54,29 @@ export const mockConversations: Conversation[] = [
     type: 'direct',
     avatar: '/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
     description: 'Direct messages with Sarah Chen',
-    lastMessage: 'Sarah: Let\'s schedule a call.'
+    isGroup: false,
+    participants: [
+      currentUser,
+      {
+        id: 'user2',
+        name: 'Sarah Chen',
+        avatar: '/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        department: 'Security',
+        role: 'CISO',
+        status: 'online'
+      }
+    ],
+    lastMessage: {
+      sender: {
+        id: 'user2',
+        name: 'Sarah Chen',
+        department: 'Security',
+        role: 'CISO'
+      },
+      content: 'Let\'s schedule a call.',
+      timestamp: new Date()
+    },
+    unreadCount: 1
   },
   {
     id: '3',
@@ -87,15 +148,27 @@ export const mockMessages: { [key: string]: Message[] } = {
   '1': [
     {
       id: 'm1',
-      sender: 'Alex Johnson',
+      sender: {
+        id: 'user3',
+        name: 'Marcus Williams',
+        avatar: '/lovable-uploads/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png',
+        department: 'Infrastructure',
+        role: 'Systems Administrator'
+      },
       content: 'Updated firewall rules to block suspicious IPs.',
       timestamp: new Date(),
       attachments: [],
     },
     {
       id: 'm2',
-      sender: 'Sarah Chen',
-      content: 'Thanks, Alex! Can you share the list of blocked IPs?',
+      sender: {
+        id: 'user2',
+        name: 'Sarah Chen',
+        avatar: '/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        department: 'Security',
+        role: 'CISO'
+      },
+      content: 'Thanks, Marcus! Can you share the list of blocked IPs?',
       timestamp: new Date(Date.now() + 3600000),
       attachments: [],
     },
@@ -103,14 +176,20 @@ export const mockMessages: { [key: string]: Message[] } = {
   '2': [
     {
       id: 'm3',
-      sender: 'You',
+      sender: currentUser,
       content: 'Hi Sarah, are you available for a quick call?',
       timestamp: new Date(),
       attachments: [],
     },
     {
       id: 'm4',
-      sender: 'Sarah Chen',
+      sender: {
+        id: 'user2',
+        name: 'Sarah Chen',
+        avatar: '/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        department: 'Security',
+        role: 'CISO'
+      },
       content: 'Yes, I am. Let\'s schedule it for tomorrow morning.',
       timestamp: new Date(Date.now() + 3600000),
       attachments: [],
@@ -119,35 +198,30 @@ export const mockMessages: { [key: string]: Message[] } = {
 };
 
 // Add mock data for the collaboration board
-import { Post, User } from './types';
-
 export const mockUsers: User[] = [
-  {
-    id: 'user1',
-    name: 'Alex Johnson',
-    avatar: '/lovable-uploads/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png',
-    department: 'Network Operations',
-    role: 'Senior Network Engineer'
-  },
+  currentUser,
   {
     id: 'user2',
     name: 'Sarah Chen',
     avatar: '/lovable-uploads/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
     department: 'Security',
-    role: 'CISO'
+    role: 'CISO',
+    status: 'online'
   },
   {
     id: 'user3',
     name: 'Marcus Williams',
     avatar: '/lovable-uploads/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png',
     department: 'Infrastructure',
-    role: 'Systems Administrator'
+    role: 'Systems Administrator',
+    status: 'away'
   },
   {
     id: 'user4',
     name: 'Priya Patel',
     department: 'DevOps',
-    role: 'DevOps Engineer'
+    role: 'DevOps Engineer',
+    status: 'offline'
   }
 ];
 
