@@ -6,9 +6,16 @@ import QuickAccessQueries from './QuickAccessQueries';
 import SystemHealthSummary from './SystemHealthSummary';
 import CustomizationPanel from './CustomizationPanel';
 
+type MessageType = {
+  id: string;
+  content: string;
+  sender: 'user' | 'assistant';
+  timestamp: Date;
+};
+
 const AIMPanel: React.FC = () => {
   const [voiceMode, setVoiceMode] = useState(false);
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<MessageType[]>([
     {
       id: '1',
       content: "Welcome to AIM. How can I assist you with your infrastructure management today?",
@@ -19,7 +26,7 @@ const AIMPanel: React.FC = () => {
   
   // Handle when a quick query is selected
   const handleQuickQuery = (queryText: string) => {
-    const userMessage = {
+    const userMessage: MessageType = {
       id: Date.now().toString(),
       content: queryText,
       sender: 'user',
@@ -30,7 +37,7 @@ const AIMPanel: React.FC = () => {
     
     // Simulate AI response after a short delay
     setTimeout(() => {
-      const aiResponse = {
+      const aiResponse: MessageType = {
         id: (Date.now() + 1).toString(),
         content: `I'm processing your request: "${queryText}". This is a placeholder response while the actual AI integration is being developed.`,
         sender: 'assistant',
