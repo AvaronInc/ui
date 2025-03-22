@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import { Plus, Filter, ArrowLeft, ArrowRight, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Post, FilterOption, SortOption, User } from '../../types';
-import { mockPosts, mockUsers } from '../../mockData';
+import { mockPosts, mockUsers, mockTags } from '../../mockData';
 import PostItem from './PostItem';
 import NewPostDialog from './NewPostDialog';
 import FilterSidebar from './FilterSidebar';
@@ -104,6 +103,10 @@ const CollaborationBoardPanel = () => {
     };
     
     setPosts([newPost, ...posts]);
+    toast({
+      title: "Post created",
+      description: "Your post has been published successfully"
+    });
   };
   
   const handleTogglePin = (postId: string) => {
@@ -303,7 +306,8 @@ const CollaborationBoardPanel = () => {
       <NewPostDialog
         open={showNewPostDialog}
         onOpenChange={setShowNewPostDialog}
-        onCreatePost={handleCreatePost}
+        onSubmit={handleCreatePost}
+        availableTags={mockTags}
       />
     </div>
   );

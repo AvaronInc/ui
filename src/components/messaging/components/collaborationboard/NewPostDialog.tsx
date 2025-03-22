@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 interface NewPostDialogProps {
   open: boolean;
@@ -21,6 +22,38 @@ interface NewPostDialogProps {
 }
 
 const NewPostDialog = ({ open, onOpenChange, onSubmit, availableTags }: NewPostDialogProps) => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [visibility, setVisibility] = useState<'admin' | 'network' | 'everyone'>('everyone');
+  const [attachments, setAttachments] = useState<File[]>([]);
+
+  const handleSubmit = () => {
+    onSubmit({
+      title,
+      content,
+      tags: selectedTags,
+      visibility,
+      attachments
+    });
+    
+    // Reset form
+    setTitle("");
+    setContent("");
+    setSelectedTags([]);
+    setVisibility('everyone');
+    setAttachments([]);
+    
+    // Close dialog
+    onOpenChange(false);
+  };
+
+  const handleTagChange = (value: string) => {
+    if (!selectedTags.includes(value)) {
+      setSelectedTags([...selectedTags, value]);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
@@ -34,12 +67,17 @@ const NewPostDialog = ({ open, onOpenChange, onSubmit, availableTags }: NewPostD
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="title">Title</Label>
-            <Input id="title" placeholder="Enter a descriptive title..." />
+            <Input 
+              id="title" 
+              placeholder="Enter a descriptive title..." 
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
           
           <div className="grid gap-2">
             <Label htmlFor="tags">Tags</Label>
-            <Select>
+            <Select onValueChange={handleTagChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select tags" />
               </SelectTrigger>
@@ -49,6 +87,21 @@ const NewPostDialog = ({ open, onOpenChange, onSubmit, availableTags }: NewPostD
                 ))}
               </SelectContent>
             </Select>
+            {selectedTags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {selectedTags.map(tag => (
+                  <div key={tag} className="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm">
+                    {tag}
+                    <button 
+                      className="ml-2 text-secondary-foreground/70 hover:text-secondary-foreground"
+                      onClick={() => setSelectedTags(selectedTags.filter(t => t !== tag))}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           
           <div className="grid gap-2">
@@ -56,13 +109,19 @@ const NewPostDialog = ({ open, onOpenChange, onSubmit, availableTags }: NewPostD
             <Textarea 
               id="content" 
               placeholder="Write your post content. Markdown is supported." 
-              className="min-h-[200px]" 
+              className="min-h-[200px]"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             />
           </div>
           
           <div className="grid gap-2">
             <Label htmlFor="visibility">Visibility</Label>
-            <Select defaultValue="everyone">
+            <Select 
+              defaultValue="everyone"
+              value={visibility}
+              onValueChange={(value: 'admin' | 'network' | 'everyone') => setVisibility(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select visibility" />
               </SelectTrigger>
@@ -90,7 +149,7 @@ const NewPostDialog = ({ open, onOpenChange, onSubmit, availableTags }: NewPostD
         
         <DialogFooter>
           <Button onClick={() => onOpenChange(false)} variant="outline">Cancel</Button>
-          <Button>Post</Button>
+          <Button onClick={handleSubmit}>Post</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

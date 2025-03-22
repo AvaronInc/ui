@@ -1,4 +1,5 @@
-import { Conversation, Message, User } from './types';
+
+import { Conversation, Message, User, Post } from './types';
 
 export const currentUser: User = {
   id: 'user1',
@@ -84,7 +85,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Coordination for security incidents.',
-    lastMessage: 'Marcus: Investigating the recent breach attempt.'
+    lastMessage: {
+      sender: {
+        id: 'user3',
+        name: 'Marcus Williams',
+        department: 'Infrastructure',
+        role: 'Systems Administrator'
+      },
+      content: 'Investigating the recent breach attempt.',
+      timestamp: new Date()
+    }
   },
   {
     id: '4',
@@ -92,7 +102,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Announcements about infrastructure changes.',
-    lastMessage: 'Priya: Migrated database to new server.'
+    lastMessage: {
+      sender: {
+        id: 'user4',
+        name: 'Priya Patel',
+        department: 'DevOps',
+        role: 'DevOps Engineer'
+      },
+      content: 'Migrated database to new server.',
+      timestamp: new Date()
+    }
   },
   {
     id: '5',
@@ -100,7 +119,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'General troubleshooting discussions.',
-    lastMessage: 'Robert: Having issues with VPN connectivity.'
+    lastMessage: {
+      sender: {
+        id: 'user5',
+        name: 'Robert',
+        department: 'Support',
+        role: 'Technical Support'
+      },
+      content: 'Having issues with VPN connectivity.',
+      timestamp: new Date()
+    }
   },
   {
     id: '6',
@@ -108,7 +136,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Discussions about database management and optimization.',
-    lastMessage: 'Emily: Optimized query performance.'
+    lastMessage: {
+      sender: {
+        id: 'user6',
+        name: 'Emily',
+        department: 'Database',
+        role: 'Database Administrator'
+      },
+      content: 'Optimized query performance.',
+      timestamp: new Date()
+    }
   },
   {
     id: '7',
@@ -116,7 +153,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Coordination for DevOps tasks.',
-    lastMessage: 'David: Automated deployment pipeline.'
+    lastMessage: {
+      sender: {
+        id: 'user7',
+        name: 'David',
+        department: 'DevOps',
+        role: 'DevOps Engineer'
+      },
+      content: 'Automated deployment pipeline.',
+      timestamp: new Date()
+    }
   },
   {
     id: '8',
@@ -124,7 +170,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Discussions about cloud services and architecture.',
-    lastMessage: 'Jessica: Implemented autoscaling for web servers.'
+    lastMessage: {
+      sender: {
+        id: 'user8',
+        name: 'Jessica',
+        department: 'Cloud',
+        role: 'Cloud Architect'
+      },
+      content: 'Implemented autoscaling for web servers.',
+      timestamp: new Date()
+    }
   },
   {
     id: '9',
@@ -132,7 +187,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Real-time security alerts and notifications.',
-    lastMessage: 'Kevin: Detected suspicious activity on the network.'
+    lastMessage: {
+      sender: {
+        id: 'user9',
+        name: 'Kevin',
+        department: 'Security',
+        role: 'Security Analyst'
+      },
+      content: 'Detected suspicious activity on the network.',
+      timestamp: new Date()
+    }
   },
   {
     id: '10',
@@ -140,7 +204,16 @@ export const mockConversations: Conversation[] = [
     type: 'channel',
     avatar: '/placeholder.svg',
     description: 'Discussions about system monitoring and performance.',
-    lastMessage: 'Linda: Set up new monitoring dashboards.'
+    lastMessage: {
+      sender: {
+        id: 'user10',
+        name: 'Linda',
+        department: 'Operations',
+        role: 'System Monitor'
+      },
+      content: 'Set up new monitoring dashboards.',
+      timestamp: new Date()
+    }
   }
 ];
 
