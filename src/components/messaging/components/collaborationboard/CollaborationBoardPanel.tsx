@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Plus, Filter, ArrowLeft, ArrowRight, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -104,9 +103,7 @@ const CollaborationBoardPanel = () => {
     };
     
     setPosts([newPost, ...posts]);
-    toast({
-      description: "Your post has been published successfully",
-    });
+    toast("Your post has been published successfully");
   };
   
   const handleTogglePin = (postId: string) => {
@@ -157,7 +154,6 @@ const CollaborationBoardPanel = () => {
   };
   
   const handlePostClick = (postId: string) => {
-    // Scroll to the post
     const postElement = document.getElementById(`post-${postId}`);
     if (postElement) {
       postElement.scrollIntoView({ behavior: 'smooth' });
