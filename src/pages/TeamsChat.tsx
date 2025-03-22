@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTransition from '@/components/transitions/PageTransition';
 import PageTitle from '@/components/common/PageTitle';
+import { Card } from '@/components/ui/card';
 
 const TeamsChat = () => {
   useEffect(() => {
@@ -19,13 +20,13 @@ const TeamsChat = () => {
             subtitle="Private & team-based real-time chat system" 
           />
           <div className="grid grid-cols-1 gap-4">
-            <div className="bg-card rounded-lg border shadow-sm p-6">
+            <Card className="p-6">
               <h2 className="text-lg font-semibold mb-4">Welcome to Teams Chat</h2>
               <p className="text-muted-foreground">
                 This panel will contain the team-based real-time chat system. 
                 You can use this system to communicate with your team members in real-time.
               </p>
-            </div>
+            </Card>
           </div>
           <Toaster />
         </div>
