@@ -1,39 +1,57 @@
 
-export type UserStatus = 'online' | 'away' | 'dnd' | 'offline';
-
 export interface User {
   id: string;
   name: string;
   avatar?: string;
-  status: UserStatus;
+  department: string;
   role: string;
 }
 
-export interface Message {
+export interface Reaction {
+  type: 'like' | 'heart' | 'rocket' | 'laugh';
+  count: number;
+  reactedBy: string[]; // User IDs
+}
+
+export interface Comment {
   id: string;
+  author: User;
   content: string;
-  sender: User;
   timestamp: Date;
-  attachments?: Array<{
+  reactions: Reaction[];
+}
+
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  author: User;
+  timestamp: Date;
+  tags: string[];
+  reactions: {
+    like: Reaction;
+    heart: Reaction;
+    rocket: Reaction;
+    laugh: Reaction;
+  };
+  attachments?: {
     id: string;
     name: string;
     type: string;
     url: string;
-  }>;
-  reactions?: Array<{
-    emoji: string;
-    count: number;
-    users: string[];
-  }>;
-  isPinned?: boolean;
-  replyTo?: string;
+  }[];
+  comments: Comment[];
+  isPinned: boolean;
+  visibility: 'admin' | 'network' | 'everyone';
 }
 
-export interface Conversation {
-  id: string;
-  name: string;
-  isGroup: boolean;
-  participants: User[];
-  lastMessage?: Message;
-  unreadCount: number;
-}
+export type SortOption = 'newest' | 'oldest' | 'most-liked' | 'most-commented';
+export type FilterOption = {
+  tags: string[];
+  authors: string[];
+  dateRange?: {
+    start: Date | null;
+    end: Date | null;
+  };
+  searchQuery: string;
+};
