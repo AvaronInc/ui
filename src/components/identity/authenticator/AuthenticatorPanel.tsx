@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import { MFAStatusDashboard } from './MFAStatusDashboard';
 import { MFASessionsTable } from './MFASessionsTable';
 import { MfaDeploymentStatus } from '@/types/identity';
 import { useToast } from '@/hooks/use-toast';
+import { ConfirmActionDialog } from './ConfirmActionDialog';
 
 export type MfaAppDeployment = {
   id: string;
@@ -102,6 +104,23 @@ const AuthenticatorPanel = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  // State for confirmation dialogs
+  const [confirmRevokeApp, setConfirmRevokeApp] = useState<{open: boolean; deploymentId: string | null}>({
+    open: false,
+    deploymentId: null
+  });
+  const [confirmForceReset, setConfirmForceReset] = useState(false);
+  const [confirmTerminateAllSessions, setConfirmTerminateAllSessions] = useState(false);
+  const [confirmTerminateSession, setConfirmTerminateSession] = useState<{open: boolean; sessionId: string | null}>({
+    open: false,
+    sessionId: null
+  });
+  const [confirmLockDevice, setConfirmLockDevice] = useState<{open: boolean; sessionId: string | null; deviceId: string | null}>({
+    open: false,
+    sessionId: null,
+    deviceId: null
+  });
 
   const [mfaDeployments, setMfaDeployments] = useState<MfaAppDeployment[]>([
     {
@@ -263,6 +282,20 @@ const AuthenticatorPanel = () => {
     }, 1000);
   };
 
+  const handleTerminateAllSessions = () => {
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      setSessions([]);
+      setIsLoading(false);
+      
+      toast({
+        title: "All Sessions Terminated",
+        description: "All user MFA sessions have been successfully terminated.",
+      });
+    }, 1500);
+  };
+
   const handleLockDevice = (sessionId: string, deviceId: string) => {
     setIsLoading(true);
     
@@ -408,11 +441,22 @@ const AuthenticatorPanel = () => {
                   <Button 
                     variant="destructive" 
                     size="sm"
-                    onClick={handleForceMFAReset}
+                    onClick={() => setConfirmForceReset(true)}
                     disabled={isLoading}
                   >
                     <Lock className="h-4 w-4 mr-1" />
                     Force MFA Reset
+                  </Button>
+                )}
+                {activeTab === 'sessions' && (
+                  <Button 
+                    variant="destructive" 
+                    size="sm"
+                    onClick={() => setConfirmTerminateAllSessions(true)}
+                    disabled={isLoading || sessions.length === 0}
+                  >
+                    <Lock className="h-4 w-4 mr-1" />
+                    Terminate All Sessions
                   </Button>
                 )}
                 {activeTab === 'deployments' && (
@@ -429,7 +473,12 @@ const AuthenticatorPanel = () => {
                 deployments={filteredDeployments}
                 onGenerateLink={() => setIsGenerateDialogOpen(true)}
                 onResetLink={handleResetLink}
-                onRevokeApp={handleRevokeApp}
+                onRevokeApp={(deploymentId) => {
+                  setConfirmRevokeApp({
+                    open: true,
+                    deploymentId
+                  });
+                }}
                 isLoading={isLoading}
               />
             </TabsContent>
@@ -446,8 +495,19 @@ const AuthenticatorPanel = () => {
               <MFASessionsTable 
                 sessions={filteredSessions}
                 isLoading={isLoading}
-                onTerminateSession={handleTerminateSession}
-                onLockDevice={handleLockDevice}
+                onTerminateSession={(sessionId) => {
+                  setConfirmTerminateSession({
+                    open: true,
+                    sessionId
+                  });
+                }}
+                onLockDevice={(sessionId, deviceId) => {
+                  setConfirmLockDevice({
+                    open: true,
+                    sessionId,
+                    deviceId
+                  });
+                }}
               />
             </TabsContent>
             
@@ -463,11 +523,83 @@ const AuthenticatorPanel = () => {
         </CardContent>
       </Card>
       
+      {/* Dialogs */}
       <GenerateAppDialog 
         open={isGenerateDialogOpen} 
         onOpenChange={setIsGenerateDialogOpen}
         onGenerate={handleGenerateLink}
         existingDeployments={mfaDeployments}
+      />
+
+      {/* Revoke App Confirmation */}
+      <ConfirmActionDialog
+        open={confirmRevokeApp.open}
+        onOpenChange={(open) => setConfirmRevokeApp({ open, deploymentId: confirmRevokeApp.deploymentId })}
+        onConfirm={() => {
+          if (confirmRevokeApp.deploymentId) {
+            handleRevokeApp(confirmRevokeApp.deploymentId);
+          }
+        }}
+        title="Revoke MFA App"
+        description="This action will immediately revoke the user's MFA application access. The user will need to re-enroll to regain access. Are you sure you want to continue?"
+        confirmText="Revoke App"
+        variant="destructive"
+      />
+
+      {/* Force MFA Reset Confirmation */}
+      <ConfirmActionDialog
+        open={confirmForceReset}
+        onOpenChange={setConfirmForceReset}
+        onConfirm={handleForceMFAReset}
+        title="Force MFA Reset"
+        description="WARNING: This action will revoke ALL users' MFA certificates across the entire system. All users will need to re-enroll their MFA apps. This is a drastic security measure and should only be used in case of a security breach. Are you sure you want to continue?"
+        confirmText="Reset All MFA Apps"
+        variant="destructive"
+      />
+      
+      {/* Terminate All Sessions Confirmation */}
+      <ConfirmActionDialog
+        open={confirmTerminateAllSessions}
+        onOpenChange={setConfirmTerminateAllSessions}
+        onConfirm={handleTerminateAllSessions}
+        title="Terminate All Sessions"
+        description="This action will forcibly terminate all active MFA sessions for all users. All users will need to reauthenticate. Are you sure you want to continue?"
+        confirmText="Terminate All"
+        variant="destructive"
+      />
+      
+      {/* Terminate Individual Session Confirmation */}
+      <ConfirmActionDialog
+        open={confirmTerminateSession.open}
+        onOpenChange={(open) => setConfirmTerminateSession({ open, sessionId: confirmTerminateSession.sessionId })}
+        onConfirm={() => {
+          if (confirmTerminateSession.sessionId) {
+            handleTerminateSession(confirmTerminateSession.sessionId);
+          }
+        }}
+        title="Terminate Session"
+        description="This action will forcibly terminate the user's active MFA session. The user will need to reauthenticate. Are you sure you want to continue?"
+        confirmText="Terminate Session"
+        variant="destructive"
+      />
+      
+      {/* Lock Device Confirmation */}
+      <ConfirmActionDialog
+        open={confirmLockDevice.open}
+        onOpenChange={(open) => setConfirmLockDevice({ 
+          open, 
+          sessionId: confirmLockDevice.sessionId,
+          deviceId: confirmLockDevice.deviceId
+        })}
+        onConfirm={() => {
+          if (confirmLockDevice.sessionId && confirmLockDevice.deviceId) {
+            handleLockDevice(confirmLockDevice.sessionId, confirmLockDevice.deviceId);
+          }
+        }}
+        title="Lock Device"
+        description="This action will lock the device and require the user to re-verify their identity. Are you sure you want to continue?"
+        confirmText="Lock Device"
+        variant="destructive"
       />
     </div>
   );

@@ -33,7 +33,7 @@ interface MFASession {
   ipAddress: string;
   lastActivity: string;
   riskScore: number;
-  status: 'active' | 'suspicious' | 'locked';  // Updated to include 'locked'
+  status: 'active' | 'suspicious' | 'locked';
 }
 
 interface MFASessionsTableProps {
