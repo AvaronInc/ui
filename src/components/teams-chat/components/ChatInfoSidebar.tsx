@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Hash, Lock, Pin, Users, Star, Shield, BrainCircuit } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -116,9 +115,9 @@ const ChatInfoSidebar = ({ activeConversation }: ChatInfoSidebarProps) => {
           </div>
         </TabsContent>
         
-        <TabsContent value="members" className="flex-1 flex flex-col overflow-hidden">
+        <TabsContent value="members" className="flex-1 flex flex-col pt-3">
           <ScrollArea className="flex-1">
-            <div className="p-3 space-y-1">
+            <div className="px-3 space-y-1">
               {members.map((member: any) => (
                 <div key={member.id} className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent">
                   <div className="relative">
