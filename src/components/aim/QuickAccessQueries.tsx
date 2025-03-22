@@ -4,6 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Search, Activity, Shield, AlertTriangle, Clock, Network, HelpCircle } from 'lucide-react';
 
+interface QuickAccessQueriesProps {
+  onQuerySelect: (query: string) => void;
+}
+
 const quickQueries = [
   {
     id: 'security-alerts',
@@ -37,7 +41,7 @@ const quickQueries = [
   },
 ];
 
-const QuickAccessQueries: React.FC = () => {
+const QuickAccessQueries: React.FC<QuickAccessQueriesProps> = ({ onQuerySelect }) => {
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-3">
@@ -54,8 +58,7 @@ const QuickAccessQueries: React.FC = () => {
               variant="outline"
               className="justify-start h-auto py-3 text-sm"
               onClick={() => {
-                // This would trigger the query in a real implementation
-                console.log(`Executing query: ${query.text}`);
+                onQuerySelect(query.text);
               }}
             >
               <query.icon className="h-4 w-4 mr-2 text-primary" />

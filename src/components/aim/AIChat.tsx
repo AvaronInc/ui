@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,11 +9,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mic, Send, Bot, User } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface AIChatProps {
-  voiceMode: boolean;
-  setVoiceMode: (mode: boolean) => void;
-}
-
 type MessageType = {
   id: string;
   content: string;
@@ -20,15 +16,19 @@ type MessageType = {
   timestamp: Date;
 };
 
-const AIChat: React.FC<AIChatProps> = ({ voiceMode, setVoiceMode }) => {
-  const [messages, setMessages] = useState<MessageType[]>([
-    {
-      id: '1',
-      content: "Welcome to AIM. How can I assist you with your infrastructure management today?",
-      sender: 'assistant',
-      timestamp: new Date(),
-    },
-  ]);
+interface AIChatProps {
+  voiceMode: boolean;
+  setVoiceMode: (mode: boolean) => void;
+  messages: MessageType[];
+  setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
+}
+
+const AIChat: React.FC<AIChatProps> = ({ 
+  voiceMode, 
+  setVoiceMode, 
+  messages, 
+  setMessages 
+}) => {
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
