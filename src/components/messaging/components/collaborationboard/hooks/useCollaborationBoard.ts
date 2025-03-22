@@ -9,7 +9,7 @@ export const useCollaborationBoard = () => {
   const [posts, setPosts] = useState<Post[]>(mockPosts);
   const [currentUser, setCurrentUser] = useState<User>(mockUsers[0]);
   const [showNewPostDialog, setShowNewPostDialog] = useState(false);
-  const [showLeftSidebar, setShowLeftSidebar] = useState(true);
+  const [showLeftSidebar, setShowLeftSidebar] = useState(false); // Changed to false to be closed by default
   const [showRightSidebar, setShowRightSidebar] = useState(true);
   const [filterOptions, setFilterOptions] = useState<FilterOption>({
     tags: [],
