@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -78,6 +79,17 @@ const DashboardHeader = () => {
   };
   
   const userName = profile?.full_name || user?.email?.split('@')[0] || 'User';
+  
+  const handleProfileClick = () => {
+    toast("Profile feature coming soon", {
+      description: "This feature has not been implemented yet.",
+      duration: 3000,
+    });
+  };
+  
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
   
   const handleAIMClick = () => {
     navigate('/aim');
