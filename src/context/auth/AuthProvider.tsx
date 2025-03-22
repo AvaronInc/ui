@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const authErr = logAuthError(error, 'auth state change profile fetch');
                 setAuthError(authErr);
                 const fallbackProfile = setDevFallbackProfile(import.meta.env.DEV);
-                if (!didCancel) setProfile(fallbackProfile);
+                if (!didCancel && fallbackProfile) setProfile(fallbackProfile);
               } finally {
                 if (!didCancel) setIsLoading(false);
               }
@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const authErr = logAuthError(error, 'initial session profile fetch');
             setAuthError(authErr);
             const fallbackProfile = setDevFallbackProfile(import.meta.env.DEV);
-            if (!didCancel) setProfile(fallbackProfile);
+            if (!didCancel && fallbackProfile) setProfile(fallbackProfile);
           }
         } else {
           // Create fallback profile for development
@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setAuthError(loggedError);
         toast.error(`Authentication error: ${loggedError.message}`);
         const fallbackProfile = setDevFallbackProfile(import.meta.env.DEV);
-        if (!didCancel) setProfile(fallbackProfile);
+        if (!didCancel && fallbackProfile) setProfile(fallbackProfile);
       } finally {
         if (!didCancel) setIsLoading(false);
       }

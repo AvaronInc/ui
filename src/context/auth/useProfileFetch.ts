@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { UserProfile } from './types';
 import { logAuthError } from './auth-utils';
 
-export const fetchUserProfile = async (userId: string) => {
+export const fetchUserProfile = async (userId: string): Promise<UserProfile> => {
   console.log('[Auth] Fetching user profile for:', userId);
   
   try {
@@ -21,9 +21,14 @@ export const fetchUserProfile = async (userId: string) => {
     if (data) {
       console.log('[Auth] Profile found in database:', data);
       // Ensure admin role for development
+      const role = import.meta.env.DEV ? 'admin' : (data as UserProfile).role;
+      
+      // Make sure the role is valid
+      const validRole = (role === 'admin' || role === 'manager' || role === 'user') ? role : 'user';
+      
       return {
-        ...data as UserProfile,
-        role: import.meta.env.DEV ? 'admin' : (data as UserProfile).role  // Force admin role in dev
+        ...data as Omit<UserProfile, 'role'>,
+        role: validRole,
       };
     } else {
       console.log('[Auth] No profile found in database, creating fallback profile');

@@ -1,5 +1,6 @@
 
 import { toast } from 'sonner';
+import { UserProfile, AuthError } from './types';
 
 export const logAuthError = (error: any, context: string) => {
   const timestamp = new Date().toISOString();
@@ -15,12 +16,12 @@ export const logAuthError = (error: any, context: string) => {
   };
 };
 
-export const setDevFallbackProfile = (isDev: boolean) => {
+export const setDevFallbackProfile = (isDev: boolean): UserProfile | null => {
   if (isDev) {
     console.log('[Auth] Development mode: Creating fallback admin profile');
     return {
       id: 'dev-user',
-      role: 'admin',
+      role: 'admin' as 'admin', // Explicitly type as 'admin'
     };
   }
   return null;
