@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -30,6 +29,11 @@ import {
 import { useAlerts } from '@/context/AlertsContext';
 import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 import { useTheme } from '@/context/ThemeContext';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const DashboardHeader = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
@@ -41,20 +45,17 @@ const DashboardHeader = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
   
   useEffect(() => {
-    // Set up initial company name
     const storedCompanyName = localStorage.getItem('companyName');
     if (storedCompanyName) {
       setCompanyName(storedCompanyName);
     }
     
-    // Load company name from database if user is logged in
     if (user) {
       const fetchCompanyName = async () => {
         try {
           const generalSettings = await loadUserSettings(SettingsCategory.GENERAL);
           if (generalSettings && generalSettings.companyName) {
             setCompanyName(generalSettings.companyName);
-            // Also update localStorage for components that rely on it
             localStorage.setItem('companyName', generalSettings.companyName);
           }
         } catch (error) {
@@ -78,35 +79,18 @@ const DashboardHeader = () => {
   
   const userName = profile?.full_name || user?.email?.split('@')[0] || 'User';
   
-  const handleSettingsClick = () => {
-    navigate('/settings');
-  };
-  
-  const handleProfileClick = () => {
-    toast("Profile feature coming soon", {
-      description: "This feature has not been implemented yet.",
-      duration: 3000,
-    });
-  };
-  
   const handleAIMClick = () => {
     navigate('/aim');
   };
 
   const confirmLogout = () => {
-    // Close the dialog first
     setLogoutDialogOpen(false);
-    
-    // Then perform the signOut operation in a separate tick with a longer timeout
     setTimeout(async () => {
       try {
         await signOut();
-        // After successful logout, navigate to auth page
-        // Use window.location for a complete page reload to clear any lingering state
         window.location.href = '/auth';
       } catch (error) {
         console.error('Failed to log out:', error);
-        // Even if there's an error, navigate to auth page
         window.location.href = '/auth';
       }
     }, 200);
@@ -122,16 +106,22 @@ const DashboardHeader = () => {
       </div>
       
       <div className="flex items-center space-x-2">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="relative" 
-          onClick={handleAIMClick}
-          title="AI Infrastructure Manager"
-        >
-          <Cpu className="h-4 w-4" />
-          <span className="sr-only">AIM Engine</span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative" 
+              onClick={handleAIMClick}
+            >
+              <Cpu className="h-4 w-4" />
+              <span className="sr-only">AIM Engine</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>AI Infrastructure Manager (AIM)</p>
+          </TooltipContent>
+        </Tooltip>
         
         <Button 
           variant="ghost" 
