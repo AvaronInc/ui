@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import {
   Table,
@@ -17,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Search, Filter, Shield, ShieldAlert, ShieldX } from 'lucide-react';
-import { mockLicenseData } from './mockLicenseData';
+import { mockLicenseData } from './data';
 import { LicenseData, RiskLevel } from './types';
 
 interface LicenseTableProps {
