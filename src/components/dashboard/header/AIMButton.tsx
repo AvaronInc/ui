@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Cpu } from 'lucide-react';
+import { Brain } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +25,7 @@ export const AIMButton: React.FC = () => {
           className="relative"
           onClick={handleAIMClick}
         >
-          <Cpu className="h-4 w-4" />
+          <Brain className="h-4 w-4" />
           <span className="sr-only">AIM Engine</span>
         </Button>
       </TooltipTrigger>
