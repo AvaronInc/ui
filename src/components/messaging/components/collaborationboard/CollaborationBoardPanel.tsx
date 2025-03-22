@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Plus, Filter, ArrowLeft, ArrowRight, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -104,8 +105,7 @@ const CollaborationBoardPanel = () => {
     
     setPosts([newPost, ...posts]);
     toast({
-      title: "Post created",
-      description: "Your post has been published successfully"
+      description: "Your post has been published successfully",
     });
   };
   
