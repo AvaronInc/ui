@@ -1,4 +1,3 @@
-
 import { LicenseData, LicenseSummary, LicenseBreakdown } from './types';
 
 export const mockLicenseData: LicenseData[] = [
@@ -34,7 +33,6 @@ export const mockLicenseData: LicenseData[] = [
       dependencies: ['libpcap', 'Node.js']
     }
   },
-  // Netmaker entry removed
   {
     id: '4',
     componentName: 'Weaviate',
@@ -131,7 +129,6 @@ export const mockLicenseData: LicenseData[] = [
       dependencies: []
     }
   },
-  // OpenVPN entry removed (id: '10')
   {
     id: '11',
     componentName: 'OpenSearch',
@@ -179,27 +176,38 @@ export const mockLicenseData: LicenseData[] = [
       apiCalls: ['POST /v1/completions', 'POST /v1/chat/completions'],
       dependencies: ['PyTorch', 'CUDA']
     }
+  },
+  {
+    id: '14',
+    componentName: 'Avaron AI Engine',
+    licenseType: 'Proprietary',
+    licenseUrl: 'https://avaron.ai/license',
+    version: 'v2.3.1',
+    source: 'avaron.ai',
+    usedIn: ['AI/ML', 'Security Analytics', 'Threat Detection'],
+    riskLevel: 'Medium',
+    fullLicenseText: 'Avaron AI Engine License. All rights reserved...',
+    usageDetails: {
+      containerName: 'avaron-engine',
+      apiCalls: ['POST /api/analyze', 'GET /api/models', 'POST /api/predict'],
+      dependencies: ['CUDA', 'TensorRT', 'cuDNN']
+    }
   }
 ];
 
-// Update the license summary to reflect the changes:
-// 1. Removed OpenVPN (one less GPL license)
-// 2. Added Mixtral (one more Apache 2.0 license)
 export const licenseSummary: LicenseSummary = {
-  totalLicenses: 11, // No net change: removed 1, added 1
-  totalDependencies: 35, // We're replacing OpenVPN dependencies with Mixtral's
-  restrictedLicenses: 2, // Decreased by 1 (removing GPL license from OpenVPN)
+  totalLicenses: 12,
+  totalDependencies: 38,
+  restrictedLicenses: 3,
   complianceStatus: 'Review Needed'
 };
 
-// Update the license breakdown to reflect the changes:
-// 1. Removed one GPL license (OpenVPN)
-// 2. Added one Apache 2.0 license (Mixtral)
 export const licenseBreakdown: LicenseBreakdown[] = [
-  { licenseType: 'Apache 2.0', count: 4, color: '#4CAF50' }, // Increased from 3 to 4
-  { licenseType: 'GPL', count: 2, color: '#F44336' }, // Decreased from 3 to 2
+  { licenseType: 'Apache 2.0', count: 4, color: '#4CAF50' },
+  { licenseType: 'GPL', count: 2, color: '#F44336' },
   { licenseType: 'AGPL', count: 1, color: '#D32F2F' },
   { licenseType: 'BSD-3-Clause', count: 2, color: '#2196F3' },
   { licenseType: 'BSD-2-Clause', count: 1, color: '#03A9F4' },
-  { licenseType: 'Custom', count: 1, color: '#9C27B0' }
+  { licenseType: 'Custom', count: 1, color: '#9C27B0' },
+  { licenseType: 'Proprietary', count: 1, color: '#FF9800' }
 ];

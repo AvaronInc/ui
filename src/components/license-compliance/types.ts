@@ -1,5 +1,5 @@
 
-export type LicenseType = 'MIT' | 'Apache 2.0' | 'GPL' | 'AGPL' | 'LGPL' | 'BSD-3-Clause' | 'BSD-2-Clause' | 'MPL' | 'Custom' | 'Unknown';
+export type LicenseType = 'MIT' | 'Apache 2.0' | 'GPL' | 'AGPL' | 'LGPL' | 'BSD-3-Clause' | 'BSD-2-Clause' | 'MPL' | 'Custom' | 'Unknown' | 'Proprietary';
 
 export type RiskLevel = 'Low' | 'Medium' | 'High';
 

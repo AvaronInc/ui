@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import {
   Table,
@@ -40,7 +39,6 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
   usedInFilter,
   setUsedInFilter,
 }) => {
-  // Get unique license types and usage locations for filters
   const uniqueLicenseTypes = useMemo(() => {
     const types = new Set<string>();
     mockLicenseData.forEach(license => {
@@ -59,22 +57,18 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
     return Array.from(locations);
   }, []);
 
-  // Filter the license data based on search term and filters
   const filteredLicenses = useMemo(() => {
     return mockLicenseData.filter(license => {
-      // Filter by search term
       const matchesSearch = 
         !searchTerm || 
         license.componentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         license.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
         license.version.toLowerCase().includes(searchTerm.toLowerCase());
       
-      // Filter by license type
       const matchesLicenseType = 
         licenseTypeFilter.length === 0 || 
         licenseTypeFilter.includes(license.licenseType);
       
-      // Filter by used in location
       const matchesUsedIn = 
         usedInFilter.length === 0 || 
         license.usedIn.some(location => usedInFilter.includes(location));
@@ -95,6 +89,8 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
         return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
       case 'AGPL':
         return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
+      case 'Proprietary':
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
       case 'Custom':
       case 'MPL':
         return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
@@ -262,4 +258,3 @@ const LicenseTable: React.FC<LicenseTableProps> = ({
 };
 
 export default LicenseTable;
-
