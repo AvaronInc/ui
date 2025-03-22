@@ -1,5 +1,5 @@
 
-import { ArrowLeft, ArrowRight, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, SafeTooltipWrapper } from '@/components/ui/tooltip';
 
@@ -22,15 +22,25 @@ const SidebarToggle = ({ position, isVisible, onToggle }: SidebarToggleProps) =>
             <Button
               variant="secondary"
               onClick={onToggle}
-              className="h-10 w-10 rounded-full shadow-md flex flex-col items-center justify-center"
+              className="h-10 w-10 rounded-full shadow-md flex items-center justify-center"
             >
               {position === 'left' ? (
-                <>
-                  {isVisible ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
-                  {position === 'left' && <Filter size={14} className="mt-1" />}
-                </>
+                <Filter 
+                  size={18} 
+                  fill={isVisible ? 'currentColor' : 'none'} 
+                />
               ) : (
-                isVisible ? <ArrowRight size={18} /> : <ArrowLeft size={18} />
+                isVisible ? (
+                  <Filter 
+                    size={18} 
+                    fill={isVisible ? 'currentColor' : 'none'} 
+                  />
+                ) : (
+                  <Filter 
+                    size={18} 
+                    fill={isVisible ? 'currentColor' : 'none'} 
+                  />
+                )
               )}
             </Button>
           </TooltipTrigger>
