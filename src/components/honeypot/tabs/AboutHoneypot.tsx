@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -88,7 +89,7 @@ const AboutHoneypot: React.FC = () => {
               Types & Implementation
             </h3>
             <p className="text-sm text-muted-foreground">
-              Avaron.AI's honeypot solution offers various deployment options, from 
+              Avaron's honeypot solution offers various deployment options, from 
               low-interaction honeypots that emulate only parts of systems to high-interaction 
               honeypots that replicate entire operating environments. Our AI-enhanced honeypots 
               adapt to attacker behavior, creating more convincing decoys that yield higher 
