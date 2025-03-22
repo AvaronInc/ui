@@ -58,7 +58,7 @@ export const mockLicenseData: LicenseData[] = [
     licenseUrl: 'https://github.com/FDio/vpp/blob/master/LICENSE',
     version: 'v23.02',
     source: 'fd.io',
-    usedIn: ['Firewall', 'SDN'],
+    usedIn: ['Firewall', 'SDN', 'SD-WAN'],
     riskLevel: 'Low',
     fullLicenseText: 'Apache License Version 2.0, January 2004...',
     usageDetails: {
@@ -131,22 +131,7 @@ export const mockLicenseData: LicenseData[] = [
       dependencies: []
     }
   },
-  {
-    id: '10',
-    componentName: 'OpenVPN',
-    licenseType: 'GPL',
-    licenseUrl: 'https://github.com/OpenVPN/openvpn/blob/master/COPYING',
-    version: 'v2.6.0',
-    source: 'openvpn.net',
-    usedIn: ['VPN', 'Security'],
-    riskLevel: 'Medium',
-    fullLicenseText: 'GNU GENERAL PUBLIC LICENSE Version 2...',
-    usageDetails: {
-      containerName: 'openvpn-server',
-      apiCalls: ['Management Interface Calls'],
-      dependencies: ['OpenSSL', 'LZO']
-    }
-  },
+  // OpenVPN entry removed (id: '10')
   {
     id: '11',
     componentName: 'OpenSearch',
@@ -178,22 +163,42 @@ export const mockLicenseData: LicenseData[] = [
       apiCalls: ['HTTP Requests'],
       dependencies: ['OpenSSL', 'PCRE']
     }
+  },
+  {
+    id: '13',
+    componentName: 'Mixtral',
+    licenseType: 'Apache 2.0',
+    licenseUrl: 'https://github.com/mistralai/mistral-src/blob/main/LICENSE',
+    version: 'v0.1',
+    source: 'mistralai.com',
+    usedIn: ['AI/ML', 'Natural Language Processing'],
+    riskLevel: 'Low',
+    fullLicenseText: 'Apache License Version 2.0, January 2004...',
+    usageDetails: {
+      containerName: 'mixtral-inference',
+      apiCalls: ['POST /v1/completions', 'POST /v1/chat/completions'],
+      dependencies: ['PyTorch', 'CUDA']
+    }
   }
 ];
 
-// Update the license summary to reflect the removal of Netmaker
+// Update the license summary to reflect the changes:
+// 1. Removed OpenVPN (one less GPL license)
+// 2. Added Mixtral (one more Apache 2.0 license)
 export const licenseSummary: LicenseSummary = {
-  totalLicenses: 11, // Decreased from 12 to 11
-  totalDependencies: 35, // Decreased by 2 since Netmaker had WireGuard and Go dependencies
-  restrictedLicenses: 3, // Decreased from 4 to 3 (removing one AGPL license)
+  totalLicenses: 11, // No net change: removed 1, added 1
+  totalDependencies: 35, // We're replacing OpenVPN dependencies with Mixtral's
+  restrictedLicenses: 2, // Decreased by 1 (removing GPL license from OpenVPN)
   complianceStatus: 'Review Needed'
 };
 
-// Update the license breakdown to reflect the removal of Netmaker (one less AGPL license)
+// Update the license breakdown to reflect the changes:
+// 1. Removed one GPL license (OpenVPN)
+// 2. Added one Apache 2.0 license (Mixtral)
 export const licenseBreakdown: LicenseBreakdown[] = [
-  { licenseType: 'Apache 2.0', count: 3, color: '#4CAF50' },
-  { licenseType: 'GPL', count: 3, color: '#F44336' },
-  { licenseType: 'AGPL', count: 1, color: '#D32F2F' }, // Decreased from 2 to 1
+  { licenseType: 'Apache 2.0', count: 4, color: '#4CAF50' }, // Increased from 3 to 4
+  { licenseType: 'GPL', count: 2, color: '#F44336' }, // Decreased from 3 to 2
+  { licenseType: 'AGPL', count: 1, color: '#D32F2F' },
   { licenseType: 'BSD-3-Clause', count: 2, color: '#2196F3' },
   { licenseType: 'BSD-2-Clause', count: 1, color: '#03A9F4' },
   { licenseType: 'Custom', count: 1, color: '#9C27B0' }
