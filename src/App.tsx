@@ -44,6 +44,7 @@ import SecurityTesting from "./pages/SecurityTesting";
 import LoggingAudit from "./pages/LoggingAudit";
 import AIM from "./pages/AIM";
 import QuantumEncryption from "./pages/QuantumEncryption";
+import Authenticator from "./pages/Authenticator";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,7 @@ const App = () => (
                 <Route path="/tickets" element={<ProtectedRoute><Tickets /></ProtectedRoute>} />
                 <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
                 <Route path="/identity" element={<ProtectedRoute><Identity /></ProtectedRoute>} />
+                <Route path="/authenticator" element={<ProtectedRoute><Authenticator /></ProtectedRoute>} />
                 <Route path="/topology" element={<ProtectedRoute><Topology /></ProtectedRoute>} />
                 <Route path="/nest" element={<ProtectedRoute><Nest /></ProtectedRoute>} />
                 <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />

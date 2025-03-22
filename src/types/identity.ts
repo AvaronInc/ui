@@ -1,6 +1,7 @@
 
 export type UserRole = 'Admin' | 'Engineer' | 'User';
 export type UserStatus = 'Active' | 'Suspended' | 'Revoked';
+export type MfaDeploymentStatus = 'active' | 'pending' | 'revoked';
 
 export interface UserActivity {
   action: string;
