@@ -14,7 +14,7 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar/sidebar-base";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
-import { Bell, LogOut, User, Settings, HelpCircle, Moon, Sun } from 'lucide-react';
+import { Bell, LogOut, User, Settings, HelpCircle, Moon, Sun, Cpu } from 'lucide-react';
 import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
 import { toast } from 'sonner';
 import {
@@ -88,6 +88,10 @@ const DashboardHeader = () => {
       duration: 3000,
     });
   };
+  
+  const handleAIMClick = () => {
+    navigate('/aim');
+  };
 
   const confirmLogout = () => {
     // Close the dialog first
@@ -118,6 +122,17 @@ const DashboardHeader = () => {
       </div>
       
       <div className="flex items-center space-x-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="relative" 
+          onClick={handleAIMClick}
+          title="AI Infrastructure Manager"
+        >
+          <Cpu className="h-4 w-4" />
+          <span className="sr-only">AIM Engine</span>
+        </Button>
+        
         <Button 
           variant="ghost" 
           size="icon" 
