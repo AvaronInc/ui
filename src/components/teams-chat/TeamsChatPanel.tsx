@@ -84,6 +84,7 @@ const TeamsChatPanel = () => {
       {showInfoSidebar && activeConversation && (
         <ChatInfoSidebar 
           activeConversation={activeConversation}
+          sendMessage={sendMessage}
         />
       )}
     </div>

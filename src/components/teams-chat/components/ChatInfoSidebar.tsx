@@ -1,22 +1,36 @@
 
 import { useState } from 'react';
-import { Hash, Lock, Pin, Users, Star, Shield, BrainCircuit } from 'lucide-react';
+import { Hash, Lock, Pin, Users, Star, Shield, BrainCircuit, Check, X } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 import { ActiveConversation } from '../types';
 import UserStatusIndicator from './UserStatusIndicator';
 import ChatMessage from './ChatMessage';
 
 interface ChatInfoSidebarProps {
   activeConversation: ActiveConversation;
+  sendMessage?: (content: string) => void;
 }
 
-const ChatInfoSidebar = ({ activeConversation }: ChatInfoSidebarProps) => {
+const ChatInfoSidebar = ({ activeConversation, sendMessage }: ChatInfoSidebarProps) => {
   const [activeTab, setActiveTab] = useState('info');
   const [aimChatbotEnabled, setAimChatbotEnabled] = useState(false);
+  const [summaryDialogOpen, setSummaryDialogOpen] = useState(false);
+  const [discussionPoints, setDiscussionPoints] = useState<{ id: string; content: string; selected: boolean }[]>([
+    { id: '1', content: 'Firewall configuration needs to be updated before next week.', selected: false },
+    { id: '2', content: 'Alex will handle the security audit scheduled for Friday.', selected: false },
+    { id: '3', content: 'Network monitoring tools should be upgraded to version 3.5.', selected: false },
+    { id: '4', content: 'New API credentials will be distributed by the end of day.', selected: false },
+    { id: '5', content: 'Team agreed to implement zero trust model in Q3 roadmap.', selected: false },
+  ]);
+  const { toast } = useToast();
+  
   const { type, data, team } = activeConversation;
   const isChannel = type === 'channel';
   
@@ -26,6 +40,50 @@ const ChatInfoSidebar = ({ activeConversation }: ChatInfoSidebarProps) => {
   
   // Get members
   const members = isChannel ? (data as any).members : [(data as any).recipient];
+  
+  const togglePointSelection = (id: string) => {
+    setDiscussionPoints(points => 
+      points.map(point => 
+        point.id === id 
+          ? { ...point, selected: !point.selected } 
+          : point
+      )
+    );
+  };
+  
+  const insertSelectedPoints = () => {
+    const selectedPoints = discussionPoints.filter(point => point.selected);
+    
+    if (selectedPoints.length === 0) {
+      toast({
+        title: "No points selected",
+        description: "Please select at least one discussion point to include.",
+      });
+      return;
+    }
+    
+    if (sendMessage) {
+      const summary = "**Discussion Summary:**\n" + 
+        selectedPoints.map(point => `• ${point.content}`).join('\n');
+      
+      sendMessage(summary);
+      
+      toast({
+        title: "Summary added to chat",
+        description: `Added ${selectedPoints.length} discussion points to the conversation.`,
+      });
+      
+      // Reset selections
+      setDiscussionPoints(points => points.map(point => ({ ...point, selected: false })));
+      setSummaryDialogOpen(false);
+    } else {
+      toast({
+        title: "Cannot send message",
+        description: "Message sending functionality is not available.",
+        variant: "destructive"
+      });
+    }
+  };
   
   return (
     <div className="w-64 min-w-64 border-l flex flex-col h-full bg-background">
@@ -173,7 +231,7 @@ const ChatInfoSidebar = ({ activeConversation }: ChatInfoSidebarProps) => {
             
             <div className="rounded-lg border bg-muted/20 p-3">
               <p className="text-sm mb-3">Use AI to summarize discussions and highlight key points.</p>
-              <Button className="w-full" variant="outline">
+              <Button className="w-full" variant="outline" onClick={() => setSummaryDialogOpen(true)}>
                 Summarize Conversation
               </Button>
             </div>
@@ -199,6 +257,57 @@ const ChatInfoSidebar = ({ activeConversation }: ChatInfoSidebarProps) => {
           </div>
         </TabsContent>
       </Tabs>
+      
+      {/* Summary Dialog */}
+      <Dialog open={summaryDialogOpen} onOpenChange={setSummaryDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Discussion Summary</DialogTitle>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground mb-4">
+              AI has identified the following key points from your conversation. 
+              Select which points you would like to share in the chat.
+            </p>
+            
+            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+              {discussionPoints.map((point) => (
+                <div 
+                  key={point.id}
+                  className="flex items-start space-x-3 p-2 rounded border"
+                >
+                  <Checkbox 
+                    id={`point-${point.id}`}
+                    checked={point.selected}
+                    onCheckedChange={() => togglePointSelection(point.id)}
+                    className="mt-0.5"
+                  />
+                  <label 
+                    htmlFor={`point-${point.id}`}
+                    className="text-sm cursor-pointer flex-1"
+                  >
+                    {point.content}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <DialogFooter className="flex items-center justify-between sm:justify-between">
+            <DialogClose asChild>
+              <Button type="button" variant="ghost" className="gap-2">
+                <X className="h-4 w-4" />
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="button" onClick={insertSelectedPoints} className="gap-2">
+              <Check className="h-4 w-4" />
+              Add to Chat
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
