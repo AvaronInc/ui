@@ -1,19 +1,9 @@
 
-import React from 'react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
 import { ScheduleEvent } from '@/types/scheduling';
+import { ConfirmActionDialog } from '@/components/identity/authenticator/ConfirmActionDialog';
 
 interface EventDeleteDialogProps {
   event: ScheduleEvent;
@@ -26,30 +16,29 @@ const EventDeleteDialog: React.FC<EventDeleteDialogProps> = ({
   isEditing,
   onDelete,
 }) => {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive" disabled={isEditing}>
-          <Trash className="h-4 w-4 mr-1" />
-          Delete
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This will permanently delete the event "{event.title}".
-            This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+      <Button 
+        variant="destructive" 
+        disabled={isEditing}
+        onClick={() => setIsConfirmOpen(true)}
+      >
+        <Trash className="h-4 w-4 mr-1" />
+        Delete
+      </Button>
+      
+      <ConfirmActionDialog
+        open={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        onConfirm={onDelete}
+        title="Are you sure?"
+        description={`This will permanently delete the event "${event.title}". This action cannot be undone.`}
+        confirmText="Delete"
+        variant="destructive"
+      />
+    </>
   );
 };
 

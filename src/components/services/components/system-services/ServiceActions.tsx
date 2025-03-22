@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Play, Square, RotateCcw } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { ConfirmActionDialog } from "@/components/identity/authenticator/ConfirmActionDialog";
 import { SystemService } from '@/types/services';
 import { toast } from "sonner";
 
@@ -19,10 +19,6 @@ const ServiceActions: React.FC<ServiceActionsProps> = ({ service, onRefresh }) =
   // Mock function for service actions (start, stop, restart)
   const handleServiceAction = (action: 'start' | 'stop' | 'restart') => {
     console.log(`${action} service: ${service.id}`);
-    // Close all dialogs
-    setStartDialogOpen(false);
-    setStopDialogOpen(false);
-    setRestartDialogOpen(false);
     
     // In a real application, this would call an API to perform the action
     toast.success(`Service ${action}ed successfully`);
@@ -31,91 +27,72 @@ const ServiceActions: React.FC<ServiceActionsProps> = ({ service, onRefresh }) =
 
   return (
     <div className="flex gap-2">
-      {/* Start Button Dialog */}
-      <AlertDialog open={startDialogOpen} onOpenChange={setStartDialogOpen}>
-        <AlertDialogTrigger asChild>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            disabled={service.status === 'running'}
-            className="flex items-center gap-1"
-          >
-            <Play className="h-4 w-4" />
-            <span>Start</span>
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Start Service</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to start the {service.name} service?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setStartDialogOpen(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleServiceAction('start')}>Start</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Start Button */}
+      <Button 
+        variant="outline" 
+        size="sm" 
+        disabled={service.status === 'running'}
+        className="flex items-center gap-1"
+        onClick={() => setStartDialogOpen(true)}
+      >
+        <Play className="h-4 w-4" />
+        <span>Start</span>
+      </Button>
       
-      {/* Stop Button Dialog */}
-      <AlertDialog open={stopDialogOpen} onOpenChange={setStopDialogOpen}>
-        <AlertDialogTrigger asChild>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            disabled={service.status !== 'running'}
-            className="flex items-center gap-1"
-          >
-            <Square className="h-4 w-4" />
-            <span>Stop</span>
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Stop Service</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to stop the {service.name} service? This may disrupt dependent services.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setStopDialogOpen(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={() => handleServiceAction('stop')}
-              className="bg-destructive hover:bg-destructive/90"
-            >
-              Stop
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Stop Button */}
+      <Button 
+        variant="outline" 
+        size="sm" 
+        disabled={service.status !== 'running'}
+        className="flex items-center gap-1"
+        onClick={() => setStopDialogOpen(true)}
+      >
+        <Square className="h-4 w-4" />
+        <span>Stop</span>
+      </Button>
       
-      {/* Restart Button Dialog */}
-      <AlertDialog open={restartDialogOpen} onOpenChange={setRestartDialogOpen}>
-        <AlertDialogTrigger asChild>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            disabled={service.status !== 'running'}
-            className="flex items-center gap-1"
-          >
-            <RotateCcw className="h-4 w-4" />
-            <span>Restart</span>
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Restart Service</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to restart the {service.name} service? This will cause a brief disruption of service.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setRestartDialogOpen(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleServiceAction('restart')}>Restart</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Restart Button */}
+      <Button 
+        variant="outline" 
+        size="sm" 
+        disabled={service.status !== 'running'}
+        className="flex items-center gap-1"
+        onClick={() => setRestartDialogOpen(true)}
+      >
+        <RotateCcw className="h-4 w-4" />
+        <span>Restart</span>
+      </Button>
+      
+      {/* Start Confirmation Dialog */}
+      <ConfirmActionDialog
+        open={startDialogOpen}
+        onOpenChange={setStartDialogOpen}
+        onConfirm={() => handleServiceAction('start')}
+        title="Start Service"
+        description={`Are you sure you want to start the ${service.name} service?`}
+        confirmText="Start"
+      />
+      
+      {/* Stop Confirmation Dialog */}
+      <ConfirmActionDialog
+        open={stopDialogOpen}
+        onOpenChange={setStopDialogOpen}
+        onConfirm={() => handleServiceAction('stop')}
+        title="Stop Service"
+        description={`Are you sure you want to stop the ${service.name} service? This may disrupt dependent services.`}
+        confirmText="Stop"
+        variant="destructive"
+      />
+      
+      {/* Restart Confirmation Dialog */}
+      <ConfirmActionDialog
+        open={restartDialogOpen}
+        onOpenChange={setRestartDialogOpen}
+        onConfirm={() => handleServiceAction('restart')}
+        title="Restart Service"
+        description={`Are you sure you want to restart the ${service.name} service? This will cause a brief disruption of service.`}
+        confirmText="Restart"
+      />
     </div>
   );
 };
