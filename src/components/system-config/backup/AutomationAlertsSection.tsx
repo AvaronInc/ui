@@ -6,7 +6,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Check, Mail, MessageSquare, Send, Bell, Webhook, BellRing, FileWarning, Cpu, MailCheck } from 'lucide-react';
+import { Check, Mail, MessageSquare, Send, Bell, Webhook, BellRing, FileWarning, Cpu, MailCheck, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AutomationAlertsSection: React.FC = () => {
