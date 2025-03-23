@@ -31,6 +31,23 @@ const roleOptions = [
   { value: 'IoT', label: 'IoT' },
 ];
 
+// Define an interface for our network interface data structure
+interface NetworkInterface {
+  name: string;
+  type: string;
+  ipAddress: string;
+  ipv6Address: string;
+  macAddress: string;
+  status: string;
+  speed: string;
+  duplex: string;
+  role: string;
+  vlans: any[];
+  isSDNControlled: boolean;
+  vlanId?: number; // Added optional vlanId property
+  parentInterface?: string; // Added optional parentInterface property
+}
+
 const AddInterfaceForm: React.FC<AddInterfaceFormProps> = ({ onAddInterface }) => {
   const [interfaceType, setInterfaceType] = useState('physical');
   const [formState, setFormState] = useState({
@@ -81,7 +98,7 @@ const AddInterfaceForm: React.FC<AddInterfaceFormProps> = ({ onAddInterface }) =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    let newInterface = {
+    let newInterface: NetworkInterface = {
       name: '',
       type: interfaceType,
       ipAddress: formState.ipMethod === 'dhcp' ? 'DHCP' : formState.ipAddress,
