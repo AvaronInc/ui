@@ -7,11 +7,11 @@ import { useCliModal } from '@/hooks/use-cli-modal';
 
 const DashboardHeader = () => {
   const isMobile = useIsMobile();
-  const { logout } = useAuth();
+  const { signOut } = useAuth();
   const { openCliModal } = useCliModal();
   
   const handleLogout = () => {
-    logout();
+    signOut();
   };
 
   return (
