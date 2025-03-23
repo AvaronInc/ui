@@ -2,30 +2,21 @@
 import React from 'react';
 import { Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useCliModal } from '@/hooks/use-cli-modal';
 
-export const CLIButton = () => {
-  const { openCliModal } = useCliModal();
+interface CLIButtonProps {
+  onClick: () => void;
+}
 
+export const CLIButton: React.FC<CLIButtonProps> = ({ onClick }) => {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={openCliModal}
-            className="h-9 w-9"
-            aria-label="System CLI"
-          >
-            <Terminal className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>System CLI</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button 
+      variant="ghost" 
+      size="icon" 
+      onClick={onClick}
+      aria-label="Command Line Interface"
+    >
+      <Terminal className="h-4 w-4" />
+      <span className="sr-only">CLI</span>
+    </Button>
   );
 };

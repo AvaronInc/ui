@@ -1,22 +1,30 @@
 
 import React from 'react';
 import { CompanyName, ThemeToggle, UserProfileMenu, AIMButton, NotificationButton, CLIButton } from './header';
-import { useMediaQuery } from '@/hooks/use-media-query';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/context/auth';
+import { useCliModal } from '@/hooks/use-cli-modal';
 
 const DashboardHeader = () => {
-  const isMobile = useMediaQuery('(max-width: 640px)');
+  const isMobile = useIsMobile();
+  const { logout } = useAuth();
+  const { openCliModal } = useCliModal();
+  
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
       <div className="flex h-14 items-center justify-between px-4">
-        <CompanyName />
+        <CompanyName companyName="Avaron Systems" />
         
         <div className="flex items-center space-x-1">
           {!isMobile && <AIMButton />}
-          <NotificationButton />
-          <CLIButton />
+          <NotificationButton onClick={() => {}} />
+          <CLIButton onClick={openCliModal} />
           <ThemeToggle />
-          <UserProfileMenu />
+          <UserProfileMenu onLogoutConfirm={handleLogout} />
         </div>
       </div>
     </header>
