@@ -7,6 +7,7 @@ import { AIMButton } from './header/AIMButton';
 import { NotificationButton } from './header/NotificationButton';
 import { UserProfileMenu } from './header/UserProfileMenu';
 import { CompanyName } from './header/CompanyName';
+import { CLIButton } from './header/CLIButton';
 import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 
 const DashboardHeader = () => {
@@ -53,6 +54,7 @@ const DashboardHeader = () => {
         <AIMButton />
         <ThemeToggle />
         <NotificationButton onClick={() => setNotificationsPanelOpen(true)} />
+        <CLIButton />
         <UserProfileMenu onLogoutConfirm={handleLogout} />
       </div>
 
