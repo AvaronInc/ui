@@ -7,6 +7,7 @@ import { AIMButton } from './header/AIMButton';
 import { NotificationButton } from './header/NotificationButton';
 import { UserProfileMenu } from './header/UserProfileMenu';
 import { CompanyName } from './header/CompanyName';
+import { CLIButton } from './header/CLIButton';
 import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 
 const DashboardHeader = () => {
@@ -50,6 +51,7 @@ const DashboardHeader = () => {
       <CompanyName companyName={companyName} />
       
       <div className="flex items-center space-x-2">
+        <CLIButton />
         <AIMButton />
         <ThemeToggle />
         <NotificationButton onClick={() => setNotificationsPanelOpen(true)} />
