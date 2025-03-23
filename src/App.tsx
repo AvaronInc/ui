@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -8,6 +9,60 @@ import { AuthProvider } from "./context/auth";
 import { AlertsProvider } from "./context/AlertsContext";
 import { CLIProvider } from "./providers/CLIProvider";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+
+// Import all page components
+import Auth from "./pages/Auth";
+import Index from "./pages/Index";
+import IPAM from "./pages/IPAM";
+import AIM from "./pages/AIM";
+import Messaging from "./pages/Messaging";
+import Integrations from "./pages/Integrations";
+import LicenseCompliance from "./pages/LicenseCompliance";
+import Billing from "./pages/Billing";
+import EmailSecurity from "./pages/EmailSecurity";
+import AssetManagement from "./pages/AssetManagement";
+import Containers from "./pages/Containers";
+import DNSManagement from "./pages/DNSManagement";
+import NotFound from "./pages/NotFound";
+import Nest from "./pages/Nest";
+import Contacts from "./pages/Contacts";
+import Identity from "./pages/Identity";
+import Authenticator from "./pages/Authenticator";
+import Automation from "./pages/Automation";
+import Projects from "./pages/Projects";
+import Honeypot from "./pages/Honeypot";
+import LoggingAudit from "./pages/LoggingAudit";
+import Firewall from "./pages/Firewall";
+import ChangeManagement from "./pages/ChangeManagement";
+import AdminSettings from "./pages/AdminSettings";
+
+// Placeholder component for pages that haven't been implemented yet
+const PlaceholderPage = ({ pageName }: { pageName: string }) => (
+  <div className="flex items-center justify-center h-screen">
+    <div className="text-center">
+      <h1 className="text-2xl font-bold mb-4">{pageName} Page</h1>
+      <p className="text-muted-foreground">This page is under construction.</p>
+    </div>
+  </div>
+);
+
+// Create placeholders for pages that haven't been implemented
+const RMM = () => <PlaceholderPage pageName="RMM" />;
+const Tickets = () => <PlaceholderPage pageName="Tickets" />;
+const Topology = () => <PlaceholderPage pageName="Topology" />;
+const QuantumEncryption = () => <PlaceholderPage pageName="Quantum Encryption" />;
+const StorageComponent = () => <PlaceholderPage pageName="Storage" />;
+const Security = () => <PlaceholderPage pageName="Security" />;
+const WorkforceEMS = () => <PlaceholderPage pageName="Workforce EMS" />;
+const TeamsChat = () => <PlaceholderPage pageName="Teams Chat" />;
+const SDMS = () => <PlaceholderPage pageName="SDMS" />;
+const SDWAN = () => <PlaceholderPage pageName="SD-WAN" />;
+const SDN = () => <PlaceholderPage pageName="SDN" />;
+const Services = () => <PlaceholderPage pageName="Services" />;
+const SystemServices = () => <PlaceholderPage pageName="System Services" />;
+const SystemConfiguration = () => <PlaceholderPage pageName="System Configuration" />;
+const Scheduling = () => <PlaceholderPage pageName="Scheduling" />;
+const SecurityTesting = () => <PlaceholderPage pageName="Security Testing" />;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,7 +96,7 @@ const App = () => (
                   <Route path="/nest" element={<ProtectedRoute><Nest /></ProtectedRoute>} />
                   <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />
                   <Route path="/quantum-encryption" element={<ProtectedRoute><QuantumEncryption /></ProtectedRoute>} />
-                  <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
+                  <Route path="/storage" element={<ProtectedRoute><StorageComponent /></ProtectedRoute>} />
                   <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
                   <Route path="/workforce" element={<ProtectedRoute><WorkforceEMS /></ProtectedRoute>} />
                   <Route path="/messaging" element={<ProtectedRoute><Messaging /></ProtectedRoute>} />
