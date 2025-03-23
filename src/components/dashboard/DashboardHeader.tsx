@@ -1,33 +1,66 @@
 
-import React from 'react';
-import { CompanyName, ThemeToggle, UserProfileMenu, AIMButton, NotificationButton, CLIButton } from './header';
-import { useIsMobile } from '@/hooks/use-mobile';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth';
-import { useCliModal } from '@/hooks/use-cli-modal';
+import { loadUserSettings, SettingsCategory } from '@/services/settings-service';
+import { ThemeToggle } from './header/ThemeToggle';
+import { AIMButton } from './header/AIMButton';
+import { NotificationButton } from './header/NotificationButton';
+import { UserProfileMenu } from './header/UserProfileMenu';
+import { CompanyName } from './header/CompanyName';
+import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 
 const DashboardHeader = () => {
-  const isMobile = useIsMobile();
   const { signOut } = useAuth();
-  const { openCliModal } = useCliModal();
+  const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
+  const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
   
-  const handleLogout = () => {
-    signOut();
+  useEffect(() => {
+    const storedCompanyName = localStorage.getItem('companyName');
+    if (storedCompanyName) {
+      setCompanyName(storedCompanyName);
+    }
+    
+    const fetchCompanyName = async () => {
+      try {
+        const generalSettings = await loadUserSettings(SettingsCategory.GENERAL);
+        if (generalSettings && generalSettings.companyName) {
+          setCompanyName(generalSettings.companyName);
+          localStorage.setItem('companyName', generalSettings.companyName);
+        }
+      } catch (error) {
+        console.error('Error loading company name:', error);
+      }
+    };
+    
+    fetchCompanyName();
+  }, []);
+  
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      window.location.href = '/auth';
+    } catch (error) {
+      console.error('Failed to log out:', error);
+      window.location.href = '/auth';
+    }
   };
-
+  
   return (
-    <div className="w-full flex items-center justify-between px-4 h-14">
-      <div className="flex items-center">
-        <CompanyName companyName="Avaron Systems" />
-      </div>
+    <header className="w-full flex items-center justify-between">
+      <CompanyName companyName={companyName} />
       
       <div className="flex items-center space-x-2">
-        {!isMobile && <AIMButton />}
-        <NotificationButton onClick={() => {}} />
-        <CLIButton onClick={openCliModal} />
+        <AIMButton />
         <ThemeToggle />
+        <NotificationButton onClick={() => setNotificationsPanelOpen(true)} />
         <UserProfileMenu onLogoutConfirm={handleLogout} />
       </div>
-    </div>
+
+      <NotificationsPanel 
+        open={notificationsPanelOpen} 
+        onOpenChange={setNotificationsPanelOpen} 
+      />
+    </header>
   );
 };
 

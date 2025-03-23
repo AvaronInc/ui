@@ -1,16 +1,17 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Toaster } from 'sonner';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import { PageTransition } from '@/components/transitions/PageTransition';
-import SecurityPanel from '@/components/security/SecurityPanel';
 import PageTitle from '@/components/common/PageTitle';
 import { Shield } from 'lucide-react';
+import { PageTransition } from '@/components/transitions/PageTransition';
+import SecurityPanel from '@/components/security/SecurityPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Security = () => {
   const isMobile = useIsMobile();
   
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'Security Center - Network Pulse Management';
   }, []);
 
@@ -25,6 +26,7 @@ const Security = () => {
           />
           
           <SecurityPanel />
+          <Toaster />
         </div>
       </DashboardLayout>
     </PageTransition>
