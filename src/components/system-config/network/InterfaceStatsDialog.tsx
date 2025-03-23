@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LineChart, BarChart, AreaChart } from 'lucide-react';
+import { LineChart, BarChart, AreaChart, Tag, Layers, Globe, Cloud } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -41,6 +41,18 @@ const InterfaceStatsDialog: React.FC<InterfaceStatsDialogProps> = ({ interfaceDa
           <Badge variant="outline" className="ml-2">
             {interfaceData.role}
           </Badge>
+          {interfaceData.type === 'vlan' && (
+            <Badge variant="outline" className="ml-2 bg-purple-50 text-purple-700 border-purple-200">
+              <Tag className="mr-1 h-3 w-3" />
+              VLAN {interfaceData.vlanId}
+            </Badge>
+          )}
+          {interfaceData.isSDNControlled && (
+            <Badge variant="outline" className="ml-2 bg-blue-50 text-blue-700 border-blue-200">
+              <Cloud className="mr-1 h-3 w-3" />
+              SDN Controlled
+            </Badge>
+          )}
         </DialogTitle>
         <DialogDescription>
           View real-time statistics and configuration details
@@ -149,6 +161,16 @@ const InterfaceStatsDialog: React.FC<InterfaceStatsDialogProps> = ({ interfaceDa
                       <div className="text-sm">Type</div>
                       <div className="text-sm font-medium capitalize">{interfaceData.type}</div>
                       
+                      {interfaceData.type === 'vlan' && (
+                        <>
+                          <div className="text-sm">VLAN ID</div>
+                          <div className="text-sm font-medium">{interfaceData.vlanId}</div>
+                          
+                          <div className="text-sm">Parent Interface</div>
+                          <div className="text-sm font-medium">{interfaceData.parentInterface}</div>
+                        </>
+                      )}
+                      
                       <div className="text-sm">MAC Address</div>
                       <div className="text-sm font-medium">{interfaceData.macAddress}</div>
                       
@@ -166,6 +188,23 @@ const InterfaceStatsDialog: React.FC<InterfaceStatsDialogProps> = ({ interfaceDa
 
                       <div className="text-sm">Uptime</div>
                       <div className="text-sm font-medium">15d 7h 22m</div>
+                      
+                      {interfaceData.isSDNControlled && interfaceData.sdnMeta && (
+                        <>
+                          <div className="text-sm">SDN Fabric</div>
+                          <div className="text-sm font-medium">{interfaceData.sdnMeta.fabricName}</div>
+                          
+                          <div className="text-sm">Segment ID</div>
+                          <div className="text-sm font-medium">{interfaceData.sdnMeta.segment}</div>
+                          
+                          {interfaceData.sdnMeta.vxlanId && (
+                            <>
+                              <div className="text-sm">VXLAN ID</div>
+                              <div className="text-sm font-medium">{interfaceData.sdnMeta.vxlanId}</div>
+                            </>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -176,6 +215,13 @@ const InterfaceStatsDialog: React.FC<InterfaceStatsDialogProps> = ({ interfaceDa
                     <div className="grid grid-cols-2 gap-y-2">
                       <div className="text-sm">IP Address</div>
                       <div className="text-sm font-medium">{interfaceData.ipAddress}</div>
+                      
+                      {interfaceData.ipv6Address && interfaceData.ipv6Address !== '-' && (
+                        <>
+                          <div className="text-sm">IPv6 Address</div>
+                          <div className="text-sm font-medium">{interfaceData.ipv6Address}</div>
+                        </>
+                      )}
                       
                       <div className="text-sm">Gateway</div>
                       <div className="text-sm font-medium">192.168.1.254</div>
@@ -190,7 +236,7 @@ const InterfaceStatsDialog: React.FC<InterfaceStatsDialogProps> = ({ interfaceDa
                       <div className="text-sm font-medium">No</div>
                       
                       <div className="text-sm">IPv6</div>
-                      <div className="text-sm font-medium">Disabled</div>
+                      <div className="text-sm font-medium">{interfaceData.ipv6Address && interfaceData.ipv6Address !== '-' ? 'Enabled' : 'Disabled'}</div>
                     </div>
                   </div>
                   
@@ -206,6 +252,22 @@ const InterfaceStatsDialog: React.FC<InterfaceStatsDialogProps> = ({ interfaceDa
                         
                         <div className="text-sm">Hash Policy</div>
                         <div className="text-sm font-medium">layer2+3</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {interfaceData.type === 'bridge' && interfaceData.members && (
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground mb-1">Bridge Configuration</h3>
+                      <div className="grid grid-cols-2 gap-y-2">
+                        <div className="text-sm">Member Interfaces</div>
+                        <div className="text-sm font-medium">{interfaceData.members.join(', ')}</div>
+                        
+                        <div className="text-sm">STP</div>
+                        <div className="text-sm font-medium">Enabled</div>
+                        
+                        <div className="text-sm">Forwarding Mode</div>
+                        <div className="text-sm font-medium">Hardware Offload</div>
                       </div>
                     </div>
                   )}
@@ -258,29 +320,53 @@ const InterfaceStatsDialog: React.FC<InterfaceStatsDialogProps> = ({ interfaceDa
                         <Badge>Active</Badge>
                       </div>
                     )}
+                    
+                    {interfaceData.isSDNControlled && (
+                      <div className="p-3 border rounded-md flex justify-between items-center">
+                        <div>
+                          <span className="font-medium">SDN Controller</span>
+                          <p className="text-sm text-muted-foreground">Managed by SDN Fabric Controller</p>
+                        </div>
+                        <Badge>Active</Badge>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">VLANs</h3>
                   
-                  {interfaceData.role === 'LAN' ? (
+                  {interfaceData.role === 'LAN' || interfaceData.vlans?.length > 0 ? (
                     <div className="space-y-3">
-                      <div className="p-3 border rounded-md flex justify-between items-center">
-                        <div>
-                          <span className="font-medium">VLAN 10</span>
-                          <p className="text-sm text-muted-foreground">10.10.10.1/24 - Guest Network</p>
+                      {(interfaceData.vlans || []).map((vlan: any, index: number) => (
+                        <div key={index} className="p-3 border rounded-md flex justify-between items-center">
+                          <div>
+                            <span className="font-medium">VLAN {vlan.id}</span>
+                            <p className="text-sm text-muted-foreground">{vlan.name} - {vlan.role}</p>
+                          </div>
+                          <Badge>Active</Badge>
                         </div>
-                        <Badge>Active</Badge>
-                      </div>
+                      ))}
                       
-                      <div className="p-3 border rounded-md flex justify-between items-center">
-                        <div>
-                          <span className="font-medium">VLAN 20</span>
-                          <p className="text-sm text-muted-foreground">10.20.20.1/24 - IoT Devices</p>
-                        </div>
-                        <Badge>Active</Badge>
-                      </div>
+                      {interfaceData.role === 'LAN' && (
+                        <>
+                          <div className="p-3 border rounded-md flex justify-between items-center">
+                            <div>
+                              <span className="font-medium">VLAN 10</span>
+                              <p className="text-sm text-muted-foreground">10.10.10.1/24 - Guest Network</p>
+                            </div>
+                            <Badge>Active</Badge>
+                          </div>
+                          
+                          <div className="p-3 border rounded-md flex justify-between items-center">
+                            <div>
+                              <span className="font-medium">VLAN 20</span>
+                              <p className="text-sm text-muted-foreground">10.20.20.1/24 - IoT Devices</p>
+                            </div>
+                            <Badge>Active</Badge>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">No VLANs configured on this interface</p>
