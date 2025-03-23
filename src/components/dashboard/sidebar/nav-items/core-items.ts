@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, Server, Brain, Fingerprint, CircleEllipsis } from 'lucide-react';
+import { LayoutDashboard, Server, Brain, Fingerprint, CircleEllipsis, Settings } from 'lucide-react';
 import { NavItem } from './types';
 
 // Core System Management
@@ -28,5 +28,10 @@ export const coreSystemItems: NavItem[] = [
     title: 'System Services',
     icon: CircleEllipsis,
     href: '/system-services'
+  },
+  {
+    title: 'System Configuration',
+    icon: Settings,
+    href: '/system-configuration'
   },
 ];

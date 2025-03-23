@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -46,6 +47,7 @@ import QuantumEncryption from "./pages/QuantumEncryption";
 import Authenticator from "./pages/Authenticator";
 import Messaging from "./pages/Messaging";
 import TeamsChat from "./pages/TeamsChat";
+import SystemConfiguration from "./pages/SystemConfiguration";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -98,6 +100,7 @@ const App = () => (
                 <Route path="/containers" element={<ProtectedRoute><Containers /></ProtectedRoute>} />
                 <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
                 <Route path="/system-services" element={<ProtectedRoute><SystemServices /></ProtectedRoute>} />
+                <Route path="/system-configuration" element={<ProtectedRoute adminOnly><SystemConfiguration /></ProtectedRoute>} />
                 <Route path="/change-management" element={<ProtectedRoute><ChangeManagement /></ProtectedRoute>} />
                 <Route path="/scheduling" element={<ProtectedRoute><Scheduling /></ProtectedRoute>} />
                 <Route path="/firewall" element={<ProtectedRoute><Firewall /></ProtectedRoute>} />
