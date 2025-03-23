@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BackupRestoreSection from './sections/BackupRestoreSection';
+import NetworkSettingsSection from './sections/NetworkSettingsSection';
 import { toast } from 'sonner';
 
 export const SystemConfigPanel: React.FC = () => {
@@ -21,7 +22,7 @@ export const SystemConfigPanel: React.FC = () => {
       >
         <TabsList className="mb-4">
           <TabsTrigger value="backup-restore">Backup & Restore</TabsTrigger>
-          <TabsTrigger value="network" disabled>Network Settings</TabsTrigger>
+          <TabsTrigger value="network">Network Settings</TabsTrigger>
           <TabsTrigger value="identity" disabled>Identity & RBAC</TabsTrigger>
           <TabsTrigger value="security" disabled>Firewall & Security</TabsTrigger>
           <TabsTrigger value="integration" disabled>Integrations</TabsTrigger>
@@ -32,9 +33,7 @@ export const SystemConfigPanel: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="network" className="mt-0">
-          <div className="flex items-center justify-center h-60 border rounded-md bg-muted/20">
-            <p className="text-muted-foreground">Network Configuration will be available in a future update</p>
-          </div>
+          <NetworkSettingsSection />
         </TabsContent>
         
         <TabsContent value="identity" className="mt-0">
