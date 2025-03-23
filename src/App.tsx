@@ -35,6 +35,7 @@ import LoggingAudit from "./pages/LoggingAudit";
 import Firewall from "./pages/Firewall";
 import ChangeManagement from "./pages/ChangeManagement";
 import AdminSettings from "./pages/AdminSettings";
+import Security from "./pages/Security"; // Import the real Security page
 
 // Placeholder component for pages that haven't been implemented yet
 const PlaceholderPage = ({ pageName }: { pageName: string }) => (
@@ -52,7 +53,6 @@ const Tickets = () => <PlaceholderPage pageName="Tickets" />;
 const Topology = () => <PlaceholderPage pageName="Topology" />;
 const QuantumEncryption = () => <PlaceholderPage pageName="Quantum Encryption" />;
 const StorageComponent = () => <PlaceholderPage pageName="Storage" />;
-const Security = () => <PlaceholderPage pageName="Security" />;
 const WorkforceEMS = () => <PlaceholderPage pageName="Workforce EMS" />;
 const TeamsChat = () => <PlaceholderPage pageName="Teams Chat" />;
 const SDMS = () => <PlaceholderPage pageName="SDMS" />;
