@@ -15,19 +15,19 @@ const DashboardHeader = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background">
-      <div className="flex h-14 items-center justify-between px-4">
+    <div className="w-full flex items-center justify-between px-4 h-14">
+      <div className="flex items-center">
         <CompanyName companyName="Avaron Systems" />
-        
-        <div className="flex items-center space-x-1">
-          {!isMobile && <AIMButton />}
-          <NotificationButton onClick={() => {}} />
-          <CLIButton onClick={openCliModal} />
-          <ThemeToggle />
-          <UserProfileMenu onLogoutConfirm={handleLogout} />
-        </div>
       </div>
-    </header>
+      
+      <div className="flex items-center space-x-2">
+        {!isMobile && <AIMButton />}
+        <NotificationButton onClick={() => {}} />
+        <CLIButton onClick={openCliModal} />
+        <ThemeToggle />
+        <UserProfileMenu onLogoutConfirm={handleLogout} />
+      </div>
+    </div>
   );
 };
 
