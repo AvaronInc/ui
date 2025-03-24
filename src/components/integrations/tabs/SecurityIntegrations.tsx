@@ -31,7 +31,11 @@ const SecurityIntegrations = () => {
         </div>
       </Card>
 
-      <NewIntegrationDialog open={openDialog} onOpenChange={setOpenDialog} />
+      <NewIntegrationDialog 
+        open={openDialog} 
+        onOpenChange={setOpenDialog}
+        defaultCategory="security"
+      />
     </div>
   );
 };

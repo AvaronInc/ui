@@ -31,7 +31,11 @@ const CloudIntegrations = () => {
         </div>
       </Card>
 
-      <NewIntegrationDialog open={openDialog} onOpenChange={setOpenDialog} />
+      <NewIntegrationDialog 
+        open={openDialog} 
+        onOpenChange={setOpenDialog} 
+        defaultCategory="cloud" 
+      />
     </div>
   );
 };

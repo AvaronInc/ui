@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,12 +17,29 @@ import {
 interface NewIntegrationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  defaultCategory?: "itsm" | "security" | "cloud" | "monitoring" | "automation";
 }
 
-const NewIntegrationDialog = ({ open, onOpenChange }: NewIntegrationDialogProps) => {
-  const [selectedCategory, setSelectedCategory] = useState("itsm");
+const NewIntegrationDialog = ({ 
+  open, 
+  onOpenChange, 
+  defaultCategory = "itsm" 
+}: NewIntegrationDialogProps) => {
+  const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const { toast } = useToast();
+
+  // Reset selected platform when category changes
+  useEffect(() => {
+    setSelectedPlatform(null);
+  }, [selectedCategory]);
+
+  // Update selected category when defaultCategory prop changes or dialog opens
+  useEffect(() => {
+    if (open) {
+      setSelectedCategory(defaultCategory);
+    }
+  }, [defaultCategory, open]);
 
   const handleAddIntegration = () => {
     toast({
@@ -70,7 +87,7 @@ const NewIntegrationDialog = ({ open, onOpenChange }: NewIntegrationDialogProps)
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="itsm" value={selectedCategory} onValueChange={setSelectedCategory}>
+        <Tabs defaultValue={defaultCategory} value={selectedCategory} onValueChange={setSelectedCategory}>
           <TabsList className="grid grid-cols-5 mb-4">
             <TabsTrigger value="itsm">ITSM</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
