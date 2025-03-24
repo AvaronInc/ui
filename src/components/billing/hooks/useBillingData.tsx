@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 export type BillingData = {
   currentBalance: string;
   paymentDueDate: string;
-  subscriptionPlan: 'SMB' | 'Enterprise' | 'Government';
+  subscriptionPlan: 'SMB' | 'Enterprise' | 'Government' | 'Basic' | 'Professional' | 'Enterprise Plus';
   monthlySubscriptionCost: string;
   totalHardwareCount: number;
   activeNestCount: number;
@@ -12,6 +12,7 @@ export type BillingData = {
   expiringContracts: Array<{
     name: string;
     expirationDate: string;
+    renewalCost?: number;
   }>;
 };
 
@@ -40,11 +41,13 @@ export const useBillingData = () => {
           expiringContracts: [
             { 
               name: 'NEST N1000 (Denver Office)', 
-              expirationDate: 'Nov 21, 2023' 
+              expirationDate: 'Nov 21, 2023',
+              renewalCost: 599
             },
             { 
               name: 'Security Gateway (New York)', 
-              expirationDate: 'Dec 29, 2023' 
+              expirationDate: 'Dec 29, 2023',
+              renewalCost: 599
             }
           ]
         };

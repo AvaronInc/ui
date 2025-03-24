@@ -20,6 +20,9 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+// Define a more inclusive plan type that contains all possible values
+type SubscriptionPlanExtended = 'SMB' | 'Enterprise' | 'Government' | 'Basic' | 'Professional' | 'Enterprise Plus';
+
 const BillingOverview = () => {
   const { billing } = useBillingData();
   const isMobile = useIsMobile();
@@ -35,8 +38,8 @@ const BillingOverview = () => {
   const [paymentAmount, setPaymentAmount] = useState(billing?.currentBalance || '0.00');
   const [paymentMethod, setPaymentMethod] = useState('saved');
   
-  // Plan change state
-  const [selectedPlan, setSelectedPlan] = useState(billing?.subscriptionPlan || 'Enterprise');
+  // Plan change state - updated type to match available options
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlanExtended>(billing?.subscriptionPlan || 'Enterprise');
   
   // Credit card state
   const [cardNumber, setCardNumber] = useState('');
@@ -200,7 +203,10 @@ const BillingOverview = () => {
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label htmlFor="plan-select">Select Plan</Label>
-                  <Select value={selectedPlan} onValueChange={setSelectedPlan}>
+                  <Select 
+                    value={selectedPlan} 
+                    onValueChange={(value: SubscriptionPlanExtended) => setSelectedPlan(value)}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select plan" />
                     </SelectTrigger>
@@ -214,7 +220,7 @@ const BillingOverview = () => {
                 </div>
                 <div className="rounded-md bg-muted p-4">
                   <h4 className="font-medium mb-2">{selectedPlan} Plan Features:</h4>
-                  {selectedPlan === 'Basic' && (
+                  {selectedPlan === "Basic" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
                       <li>Up to 5 NEST units</li>
                       <li>Basic network monitoring</li>
@@ -222,7 +228,7 @@ const BillingOverview = () => {
                       <li>Standard SLA</li>
                     </ul>
                   )}
-                  {selectedPlan === 'Professional' && (
+                  {selectedPlan === "Professional" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
                       <li>Up to 15 NEST units</li>
                       <li>Advanced monitoring</li>
@@ -231,7 +237,7 @@ const BillingOverview = () => {
                       <li>Security insights</li>
                     </ul>
                   )}
-                  {selectedPlan === 'Enterprise' && (
+                  {selectedPlan === "Enterprise" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
                       <li>Up to 50 NEST units</li>
                       <li>Premium monitoring and alerts</li>
@@ -241,7 +247,7 @@ const BillingOverview = () => {
                       <li>Custom integrations</li>
                     </ul>
                   )}
-                  {selectedPlan === 'Enterprise Plus' && (
+                  {selectedPlan === "Enterprise Plus" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
                       <li>Unlimited NEST units</li>
                       <li>Enterprise-grade monitoring</li>
@@ -366,18 +372,23 @@ const BillingOverview = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
-                  {billing.expiringContracts.map((contract, i) => (
-                    <div key={i} className="flex items-center space-x-2">
-                      <input type="checkbox" id={`contract-${i}`} className="rounded" defaultChecked />
-                      <Label htmlFor={`contract-${i}`}>
-                        <div className="flex flex-col">
-                          <span>{contract.name}</span>
-                          <span className="text-xs text-muted-foreground">Expires {contract.expirationDate}</span>
-                        </div>
-                      </Label>
-                      <span className="ml-auto font-medium">${contract.renewalCost || '599'}</span>
-                    </div>
-                  ))}
+                  {billing.expiringContracts.map((contract, i) => {
+                    // Define mock renewal cost for each contract
+                    const mockRenewalCost = i === 0 ? 599 : 599;
+                    
+                    return (
+                      <div key={i} className="flex items-center space-x-2">
+                        <input type="checkbox" id={`contract-${i}`} className="rounded" defaultChecked />
+                        <Label htmlFor={`contract-${i}`}>
+                          <div className="flex flex-col">
+                            <span>{contract.name}</span>
+                            <span className="text-xs text-muted-foreground">Expires {contract.expirationDate}</span>
+                          </div>
+                        </Label>
+                        <span className="ml-auto font-medium">${mockRenewalCost}</span>
+                      </div>
+                    );
+                  })}
                   <div className="pt-4 border-t">
                     <div className="flex justify-between">
                       <span className="font-medium">Total Renewal Cost:</span>

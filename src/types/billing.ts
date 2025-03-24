@@ -1,5 +1,5 @@
 
-export type SubscriptionPlan = 'SMB' | 'Enterprise' | 'Government';
+export type SubscriptionPlan = 'SMB' | 'Enterprise' | 'Government' | 'Basic' | 'Professional' | 'Enterprise Plus';
 
 export type PaymentMethodType = 'credit_card' | 'ach' | 'wire_transfer' | 'crypto';
 
