@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -14,10 +13,12 @@ import {
   mockAutomationPlatforms 
 } from "@/data/integrations/mockData";
 
+type IntegrationCategory = "itsm" | "security" | "cloud" | "monitoring" | "automation";
+
 interface NewIntegrationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  defaultCategory?: "itsm" | "security" | "cloud" | "monitoring" | "automation";
+  defaultCategory?: IntegrationCategory;
 }
 
 const NewIntegrationDialog = ({ 
@@ -25,7 +26,7 @@ const NewIntegrationDialog = ({
   onOpenChange, 
   defaultCategory = "itsm" 
 }: NewIntegrationDialogProps) => {
-  const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
+  const [selectedCategory, setSelectedCategory] = useState<IntegrationCategory>(defaultCategory);
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -47,6 +48,11 @@ const NewIntegrationDialog = ({
       description: "You will be guided through the setup process for this integration.",
     });
     onOpenChange(false);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    // Ensure the value is a valid IntegrationCategory before setting state
+    setSelectedCategory(value as IntegrationCategory);
   };
 
   const renderPlatforms = (platforms: any[]) => {
@@ -87,7 +93,7 @@ const NewIntegrationDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue={defaultCategory} value={selectedCategory} onValueChange={setSelectedCategory}>
+        <Tabs defaultValue={defaultCategory} value={selectedCategory} onValueChange={handleCategoryChange}>
           <TabsList className="grid grid-cols-5 mb-4">
             <TabsTrigger value="itsm">ITSM</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
@@ -180,3 +186,4 @@ const NewIntegrationDialog = ({
 };
 
 export default NewIntegrationDialog;
+
