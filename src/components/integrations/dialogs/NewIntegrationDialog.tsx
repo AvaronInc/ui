@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ import {
   mockAutomationPlatforms 
 } from "@/data/integrations/mockData";
 
-type IntegrationCategory = "itsm" | "security" | "cloud" | "monitoring" | "automation";
+type IntegrationCategory = "itsm" | "security" | "cloud" | "monitoring" | "automation" | "customapi";
 
 interface NewIntegrationDialogProps {
   open: boolean;
@@ -94,12 +95,13 @@ const NewIntegrationDialog = ({
         </DialogHeader>
 
         <Tabs defaultValue={defaultCategory} value={selectedCategory} onValueChange={handleCategoryChange}>
-          <TabsList className="grid grid-cols-5 mb-4">
+          <TabsList className="grid grid-cols-6 mb-4">
             <TabsTrigger value="itsm">ITSM</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
             <TabsTrigger value="cloud">Cloud</TabsTrigger>
             <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
             <TabsTrigger value="automation">Automation</TabsTrigger>
+            <TabsTrigger value="customapi">Custom API</TabsTrigger>
           </TabsList>
           
           <TabsContent value="itsm">
@@ -151,9 +153,38 @@ const NewIntegrationDialog = ({
               {renderPlatforms(mockAutomationPlatforms)}
             </div>
           </TabsContent>
+          
+          <TabsContent value="customapi">
+            <div>
+              <h3 className="text-lg font-medium mb-2">Custom API & Webhook Integration</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Configure custom API endpoints and webhooks for any service
+              </p>
+              <div className="space-y-4 pt-4">
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="api-name">Integration Name</Label>
+                    <Input id="api-name" placeholder="Enter name for this integration" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="api-url">API URL</Label>
+                    <Input id="api-url" placeholder="https://api.example.com/v1" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="api-key">API Key or Token</Label>
+                    <Input id="api-key" type="password" placeholder="Enter your API key or token" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="webhook-url">Webhook URL (Optional)</Label>
+                    <Input id="webhook-url" placeholder="https://your-app.example.com/webhook" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
 
-        {selectedPlatform && (
+        {selectedPlatform && selectedCategory !== "customapi" && (
           <div className="pt-4 border-t space-y-4">
             <h3 className="text-lg font-medium">Quick Setup</h3>
             <div className="grid gap-4">
@@ -175,7 +206,7 @@ const NewIntegrationDialog = ({
           </Button>
           <Button 
             onClick={handleAddIntegration}
-            disabled={!selectedPlatform}
+            disabled={!selectedPlatform && selectedCategory !== "customapi"}
           >
             Proceed to Setup
           </Button>
@@ -186,4 +217,3 @@ const NewIntegrationDialog = ({
 };
 
 export default NewIntegrationDialog;
-
