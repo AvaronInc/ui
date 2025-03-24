@@ -44,7 +44,7 @@ const AccordionNavGroup: React.FC<AccordionNavGroupProps> = ({
       >
         <CollapsibleTrigger 
           className={cn(
-            "flex w-full items-center justify-between px-3 py-2 text-sm font-semibold tracking-wide text-sidebar-foreground/80 hover:bg-sidebar-accent/30 rounded-md transition-all duration-200",
+            "flex w-full items-center justify-between px-3 py-1.5 text-sm font-semibold tracking-wide text-sidebar-foreground/80 hover:bg-sidebar-accent/30 rounded-md transition-all duration-200",
             "hover:text-sidebar-foreground hover:translate-x-0.5",
             isOpen && "text-sidebar-foreground bg-sidebar-accent/20",
             // Add a subtle highlight when this section contains the active route but is collapsed
@@ -85,7 +85,7 @@ const AccordionNavGroup: React.FC<AccordionNavGroupProps> = ({
                       )}
                     >
                       <item.icon className={cn(
-                        "h-4 w-4 mr-3 transition-transform duration-200",
+                        "h-4 w-4 mr-2 transition-transform duration-200",
                         isActive ? "text-primary" : "text-sidebar-foreground/70",
                         "group-hover:text-sidebar-foreground"
                       )} />

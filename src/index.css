@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -135,7 +134,7 @@
   }
 
   .nav-link {
-    @apply relative px-2.5 py-1.5 rounded-md text-muted-foreground font-medium text-sm transition-all duration-200 
+    @apply relative px-2 py-1 rounded-md text-muted-foreground font-medium text-sm transition-all duration-200 
            hover:text-foreground hover:bg-slate-100/80 dark:hover:bg-slate-800/60 focus:outline-none focus:bg-accent;
   }
 
