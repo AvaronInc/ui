@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Mic, Send, Bot, User } from 'lucide-react';
+import { Mic, Send, Bot, User, MicOff } from 'lucide-react';
 import { toast } from 'sonner';
+import { useVoiceInteraction } from '@/hooks/useVoiceInteraction';
 
 type MessageType = {
   id: string;
@@ -37,12 +38,12 @@ const AIChat: React.FC<AIChatProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (!input.trim()) return;
+  const handleSendMessage = (messageText: string = input) => {
+    if (!messageText.trim()) return;
     
     const newMessage: MessageType = {
       id: Date.now().toString(),
-      content: input,
+      content: messageText,
       sender: 'user',
       timestamp: new Date(),
     };
@@ -61,6 +62,11 @@ const AIChat: React.FC<AIChatProps> = ({
       
       setMessages(prev => [...prev, aiResponse]);
       setIsProcessing(false);
+      
+      // If in voice mode, read the response aloud
+      if (voiceMode) {
+        speakText(aiResponse.content);
+      }
     }, 1500);
   };
 
@@ -69,15 +75,40 @@ const AIChat: React.FC<AIChatProps> = ({
     setVoiceMode(newMode);
     
     if (newMode) {
-      toast.info('Voice mode activated', {
-        description: 'You can now speak to AIM'
-      });
+      if (isVoiceSupported) {
+        toast.info('Voice mode activated', {
+          description: 'You can now speak to AIM'
+        });
+      } else {
+        toast.error('Voice mode not supported', {
+          description: 'Your browser does not support speech recognition'
+        });
+        setVoiceMode(false);
+      }
     } else {
       toast.info('Voice mode deactivated', {
         description: 'Switched back to text input'
       });
+      stopListening();
     }
   };
+
+  const { 
+    isListening, 
+    isSpeaking, 
+    isVoiceSupported, 
+    startListening, 
+    stopListening, 
+    speakText 
+  } = useVoiceInteraction(voiceMode, setMessages, handleSendMessage);
+
+  // Effect to speak the last assistant message when it's added
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (voiceMode && lastMessage && lastMessage.sender === 'assistant') {
+      speakText(lastMessage.content);
+    }
+  }, [messages, voiceMode, speakText]);
 
   return (
     <Card className="h-[600px] flex flex-col shadow-md">
@@ -86,6 +117,7 @@ const AIChat: React.FC<AIChatProps> = ({
           <CardTitle className="text-lg flex items-center gap-2">
             <Bot className="h-5 w-5 text-primary" />
             <span>AI Assistant</span>
+            {isSpeaking && <span className="text-xs text-muted-foreground animate-pulse">(Speaking...)</span>}
           </CardTitle>
           <div className="flex items-center gap-2">
             <Label htmlFor="voice-mode" className="text-sm cursor-pointer">Voice Mode</Label>
@@ -93,6 +125,7 @@ const AIChat: React.FC<AIChatProps> = ({
               id="voice-mode" 
               checked={voiceMode}
               onCheckedChange={toggleVoiceMode}
+              disabled={!isVoiceSupported}
             />
           </div>
         </div>
@@ -150,11 +183,17 @@ const AIChat: React.FC<AIChatProps> = ({
           {voiceMode && (
             <Button
               size="icon"
-              variant="outline"
+              variant={isListening ? "default" : "outline"}
               aria-label="Toggle microphone"
-              onClick={() => toast.info('Microphone toggled')}
+              onClick={isListening ? stopListening : startListening}
+              disabled={!isVoiceSupported}
+              className={isListening ? "bg-red-500 hover:bg-red-600" : ""}
             >
-              <Mic className="h-4 w-4 text-primary" />
+              {isListening ? (
+                <MicOff className="h-4 w-4" />
+              ) : (
+                <Mic className="h-4 w-4 text-primary" />
+              )}
             </Button>
           )}
           <Input
@@ -167,13 +206,13 @@ const AIChat: React.FC<AIChatProps> = ({
                 handleSendMessage();
               }
             }}
-            disabled={isProcessing || voiceMode}
-            autoFocus={false}
+            disabled={isProcessing || (voiceMode && isListening)}
+            autoFocus={!voiceMode}
           />
           <Button 
             size="icon" 
-            onClick={handleSendMessage}
-            disabled={isProcessing || !input.trim() || voiceMode}
+            onClick={() => handleSendMessage()}
+            disabled={isProcessing || !input.trim() || (voiceMode && isListening)}
           >
             <Send className="h-4 w-4" />
           </Button>
