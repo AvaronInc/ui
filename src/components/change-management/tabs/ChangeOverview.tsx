@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +18,15 @@ import {
 import ChangeRequestTable from '../components/ChangeRequestTable';
 import RiskDistributionChart from '../components/RiskDistributionChart';
 import ChangeTypeDistribution from '../components/ChangeTypeDistribution';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 const ChangeOverview: React.FC = () => {
   const isMobile = useIsMobile();
@@ -34,6 +43,33 @@ const ChangeOverview: React.FC = () => {
   const changesAwaitingApproval = getChangesAwaitingApproval();
   const recentlyApprovedChanges = getRecentlyApprovedChanges();
   const highRiskChanges = getHighRiskChanges();
+  
+  // Dialog states
+  const [newChangeDialogOpen, setNewChangeDialogOpen] = useState(false);
+  const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
+  const [policiesDialogOpen, setPoliciesDialogOpen] = useState(false);
+  const [calendarDialogOpen, setCalendarDialogOpen] = useState(false);
+  
+  // Handle quick action buttons
+  const handleCreateNewChange = () => {
+    setNewChangeDialogOpen(true);
+  };
+  
+  const handleViewHistory = () => {
+    setHistoryDialogOpen(true);
+  };
+  
+  const handleConfigurePolicies = () => {
+    setPoliciesDialogOpen(true);
+  };
+  
+  const handleViewCalendar = () => {
+    setCalendarDialogOpen(true);
+  };
+  
+  const handleReviewChange = (change: ChangeRequest) => {
+    toast.info(`Reviewing change: ${change.title}`);
+  };
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -81,7 +117,8 @@ const ChangeOverview: React.FC = () => {
           <CardContent className="pb-0">
             <ChangeRequestTable 
               changes={changesAwaitingApproval.slice(0, isMobile ? 3 : 5)} 
-              type="approval" 
+              type="approval"
+              onReview={handleReviewChange}
             />
           </CardContent>
           <CardFooter className="pt-0">
@@ -100,6 +137,7 @@ const ChangeOverview: React.FC = () => {
             <Button 
               className="w-full flex items-center justify-start text-sm" 
               size={isMobile ? "sm" : "default"}
+              onClick={handleCreateNewChange}
             >
               <ClipboardPlus className="mr-2 h-4 w-4" />
               Create New Change Request
@@ -108,6 +146,7 @@ const ChangeOverview: React.FC = () => {
               className="w-full flex items-center justify-start text-sm" 
               size={isMobile ? "sm" : "default"}
               variant="outline"
+              onClick={handleViewHistory}
             >
               <History className="mr-2 h-4 w-4" />
               View Change History
@@ -116,6 +155,7 @@ const ChangeOverview: React.FC = () => {
               className="w-full flex items-center justify-start text-sm" 
               size={isMobile ? "sm" : "default"}
               variant="outline"
+              onClick={handleConfigurePolicies}
             >
               <Settings className="mr-2 h-4 w-4" />
               Configure Approval Policies
@@ -124,6 +164,7 @@ const ChangeOverview: React.FC = () => {
               className="w-full flex items-center justify-start text-sm" 
               size={isMobile ? "sm" : "default"}
               variant="outline"
+              onClick={handleViewCalendar}
             >
               <Calendar className="mr-2 h-4 w-4" />
               View Change Calendar
@@ -190,6 +231,111 @@ const ChangeOverview: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Create New Change Request Dialog */}
+      <Dialog open={newChangeDialogOpen} onOpenChange={setNewChangeDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Create New Change Request</DialogTitle>
+            <DialogDescription>
+              Create a new change request to track changes across your infrastructure.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-muted-foreground">
+              This feature will allow you to create a new change request with detailed information about the proposed change, 
+              affected components, risk assessments, and approval workflows.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              The complete form implementation will be available in a future update.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setNewChangeDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* View Change History Dialog */}
+      <Dialog open={historyDialogOpen} onOpenChange={setHistoryDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Change History</DialogTitle>
+            <DialogDescription>
+              View the history of all change requests and their status.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-muted-foreground">
+              This feature will provide a comprehensive view of all change requests, including their status, 
+              approval history, implementation details, and audit logs.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              The complete implementation will be available in a future update.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setHistoryDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Configure Approval Policies Dialog */}
+      <Dialog open={policiesDialogOpen} onOpenChange={setPoliciesDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Configure Approval Policies</DialogTitle>
+            <DialogDescription>
+              Set up and manage approval workflows and policies for different types of changes.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-muted-foreground">
+              This feature will allow you to configure custom approval workflows based on change type, risk level, 
+              and affected components. You can define required approvers, escalation paths, and SLAs.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              The complete implementation will be available in a future update.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setPoliciesDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* View Change Calendar Dialog */}
+      <Dialog open={calendarDialogOpen} onOpenChange={setCalendarDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Change Calendar</DialogTitle>
+            <DialogDescription>
+              View scheduled changes in a calendar view.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-muted-foreground">
+              This feature will provide a calendar view of all scheduled changes, allowing you to plan and 
+              coordinate changes to minimize business impact. You can view conflicts, blackout periods, and 
+              maintenance windows.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              The complete implementation will be available in a future update.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setCalendarDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
