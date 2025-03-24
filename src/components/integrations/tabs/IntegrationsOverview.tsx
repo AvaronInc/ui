@@ -3,15 +3,29 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, RefreshCw, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { PlusCircle, RefreshCw, AlertTriangle, CheckCircle, XCircle, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import NewIntegrationDialog from "../dialogs/NewIntegrationDialog";
 import { mockActiveIntegrations } from "@/data/integrations/mockData";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 const IntegrationsOverview = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { toast } = useToast();
+  const [configureDialogOpen, setConfigureDialogOpen] = useState(false);
+  const [selectedIntegration, setSelectedIntegration] = useState<any>(null);
 
   const handleRefresh = () => {
     setRefreshing(true);
@@ -24,6 +38,19 @@ const IntegrationsOverview = () => {
         description: "All integration statuses have been updated",
       });
     }, 1500);
+  };
+
+  const handleConfigureIntegration = (integration: any) => {
+    setSelectedIntegration(integration);
+    setConfigureDialogOpen(true);
+  };
+
+  const handleSaveConfiguration = () => {
+    toast({
+      title: "Configuration saved",
+      description: `${selectedIntegration.name} configuration has been updated successfully`,
+    });
+    setConfigureDialogOpen(false);
   };
 
   return (
@@ -76,7 +103,13 @@ const IntegrationsOverview = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end pt-2">
-                  <Button variant="ghost" size="sm" className="text-xs">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs"
+                    onClick={() => handleConfigureIntegration(integration)}
+                  >
+                    <Settings className="h-3 w-3 mr-1" />
                     Configure
                   </Button>
                 </CardFooter>
@@ -127,6 +160,113 @@ const IntegrationsOverview = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Integration Configuration Dialog */}
+      <Dialog open={configureDialogOpen} onOpenChange={setConfigureDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          {selectedIntegration && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  Configure {selectedIntegration.name}
+                  <StatusBadge status={selectedIntegration.status as 'active' | 'inactive' | 'error' | 'warning'} />
+                </DialogTitle>
+                <DialogDescription>
+                  Manage connection details and settings for this integration
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="connection-name">Integration Name</Label>
+                  <Input id="connection-name" defaultValue={selectedIntegration.name} />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="connection-url">Connection URL</Label>
+                  <Input id="connection-url" defaultValue={`https://api.${selectedIntegration.name.toLowerCase().replace(/\s+/g, '')}.com/v1`} />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="connection-key">API Key</Label>
+                  <Input id="connection-key" type="password" defaultValue="●●●●●●●●●●●●●●●●" />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="sync-frequency">Sync Frequency</Label>
+                  <Select defaultValue="30min">
+                    <SelectTrigger id="sync-frequency">
+                      <SelectValue placeholder="Select frequency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="realtime">Real-time</SelectItem>
+                      <SelectItem value="15min">Every 15 minutes</SelectItem>
+                      <SelectItem value="30min">Every 30 minutes</SelectItem>
+                      <SelectItem value="1hour">Hourly</SelectItem>
+                      <SelectItem value="daily">Daily</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="integration-mode">Data Filtering</Label>
+                  <Select defaultValue="all">
+                    <SelectTrigger id="integration-mode">
+                      <SelectValue placeholder="Select mode" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Sync All Data</SelectItem>
+                      <SelectItem value="errors">Errors Only</SelectItem>
+                      <SelectItem value="warnings">Warnings & Errors</SelectItem>
+                      <SelectItem value="custom">Custom Filter</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="active-toggle">Active Status</Label>
+                    <p className="text-sm text-muted-foreground">Enable or disable this integration</p>
+                  </div>
+                  <Switch 
+                    id="active-toggle" 
+                    defaultChecked={selectedIntegration.status === 'active' || selectedIntegration.status === 'warning'} 
+                  />
+                </div>
+                
+                {selectedIntegration.category === 'Security' && (
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="alert-toggle">Security Alerts</Label>
+                      <p className="text-sm text-muted-foreground">Send alerts for security events</p>
+                    </div>
+                    <Switch id="alert-toggle" defaultChecked />
+                  </div>
+                )}
+                
+                {selectedIntegration.category === 'Monitoring' && (
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="dashboard-toggle">Include in Dashboard</Label>
+                      <p className="text-sm text-muted-foreground">Show metrics on main dashboard</p>
+                    </div>
+                    <Switch id="dashboard-toggle" defaultChecked />
+                  </div>
+                )}
+              </div>
+              
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setConfigureDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveConfiguration}>
+                  Save Changes
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <NewIntegrationDialog open={openDialog} onOpenChange={setOpenDialog} />
     </div>
