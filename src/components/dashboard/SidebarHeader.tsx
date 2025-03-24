@@ -20,7 +20,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
         </div>
         <div className="flex flex-col">
           <h2 className="text-base font-semibold text-sidebar-foreground leading-tight">Avaron</h2>
-          <span className="text-xs text-sidebar-foreground/70">Secure Distributed Infrastructure</span>
+          <span className="text-xs text-sidebar-foreground/70">Protecting Digital Assets</span>
         </div>
       </div>
     </Header>

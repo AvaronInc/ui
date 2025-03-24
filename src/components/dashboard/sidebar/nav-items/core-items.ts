@@ -10,14 +10,14 @@ export const coreSystemItems: NavItem[] = [
     href: '/'
   },
   {
-    title: 'N.E.S.T.',
-    icon: Server,
-    href: '/nest'
-  },
-  {
     title: 'AIM',
     icon: Brain,
     href: '/aim'
+  },
+  {
+    title: 'N.E.S.T.',
+    icon: Server,
+    href: '/nest'
   },
   {
     title: 'Quantum Encryption',
