@@ -7,29 +7,31 @@ export class SpeechRecognitionService {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       // Initialize the SpeechRecognition object
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      this.recognition = new SpeechRecognitionAPI();
-      
-      // Configure the recognition service
-      this.recognition.continuous = false;
-      this.recognition.interimResults = false;
-      this.recognition.lang = 'en-US';
-      
-      // Set up event handlers
-      this.recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        this.onResult(transcript);
-      };
-      
-      this.recognition.onend = () => {
-        this.isListening = false;
-        this.onEnd();
-      };
-      
-      this.recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        this.isListening = false;
-        this.onEnd();
-      };
+      if (SpeechRecognitionAPI) {
+        this.recognition = new SpeechRecognitionAPI();
+        
+        // Configure the recognition service
+        this.recognition.continuous = false;
+        this.recognition.interimResults = false;
+        this.recognition.lang = 'en-US';
+        
+        // Set up event handlers
+        this.recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          this.onResult(transcript);
+        };
+        
+        this.recognition.onend = () => {
+          this.isListening = false;
+          this.onEnd();
+        };
+        
+        this.recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          this.isListening = false;
+          this.onEnd();
+        };
+      }
     }
   }
 
