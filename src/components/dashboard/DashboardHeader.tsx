@@ -12,7 +12,7 @@ import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 
 const DashboardHeader = () => {
   const { signOut } = useAuth();
-  const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'SecuriCorp');
+  const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || 'Avaron Infrastructure Manager');
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
   
   useEffect(() => {

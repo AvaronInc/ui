@@ -9,7 +9,7 @@ const AIM: React.FC = () => {
     <DashboardLayout>
       <div className="container mx-auto p-6">
         <PageTitle 
-          title="Autonomous Infrastructure Manager" 
+          title="AIM" 
           subtitle="AI-powered assistant for your network infrastructure" 
         />
         <AIMPanel />
