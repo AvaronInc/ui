@@ -13,6 +13,8 @@ import { mockZones } from './mockData';
 const ZonesPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [activeZone, setActiveZone] = useState<Zone | null>(null);
+  // Change the default view to 'grid' instead of whatever it was previously
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   const handleZoneClick = (zone: Zone) => {
     setActiveZone(zone);
@@ -20,6 +22,10 @@ const ZonesPanel: React.FC = () => {
 
   const handleBackToZones = () => {
     setActiveZone(null);
+  };
+
+  const toggleViewMode = () => {
+    setViewMode(prev => prev === 'grid' ? 'table' : 'grid');
   };
 
   return (
@@ -68,7 +74,12 @@ const ZonesPanel: React.FC = () => {
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4">
-                  <ZonesOverview zones={mockZones} onZoneClick={handleZoneClick} />
+                  <ZonesOverview 
+                    zones={mockZones} 
+                    onZoneClick={handleZoneClick} 
+                    viewMode={viewMode}
+                    onViewModeChange={toggleViewMode}
+                  />
                 </TabsContent>
 
                 <TabsContent value="settings" className="space-y-4">
