@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, Server, Brain, Fingerprint, CircleEllipsis, Settings } from 'lucide-react';
+import { LayoutDashboard, Server, Brain, Fingerprint, CircleEllipsis, Settings, Layers } from 'lucide-react';
 import { NavItem } from './types';
 
 // Core System Management
@@ -18,6 +18,11 @@ export const coreSystemItems: NavItem[] = [
     title: 'N.E.S.T.',
     icon: Server,
     href: '/nest'
+  },
+  {
+    title: 'Zones',
+    icon: Layers,
+    href: '/zones'
   },
   {
     title: 'Quantum Encryption',

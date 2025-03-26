@@ -48,6 +48,7 @@ import Authenticator from "./pages/Authenticator";
 import Messaging from "./pages/Messaging";
 import TeamsChat from "./pages/TeamsChat";
 import SystemConfiguration from "./pages/SystemConfiguration";
+import Zones from "./pages/Zones";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,6 +80,7 @@ const App = () => (
                 <Route path="/topology" element={<ProtectedRoute><Topology /></ProtectedRoute>} />
                 <Route path="/nest" element={<ProtectedRoute><Nest /></ProtectedRoute>} />
                 <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />
+                <Route path="/zones" element={<ProtectedRoute adminOnly><Zones /></ProtectedRoute>} />
                 <Route path="/quantum-encryption" element={<ProtectedRoute><QuantumEncryption /></ProtectedRoute>} />
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
                 <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
