@@ -24,7 +24,7 @@ interface WidgetLibraryDrawerProps {
 }
 
 export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, onClose }) => {
-  const { availableWidgets, addWidget } = useGridLayout();
+  const { availableWidgets, addWidget, widgetCount, maxWidgets } = useGridLayout();
   const [activeCategory, setActiveCategory] = useState("all");
 
   const categories = [
@@ -69,6 +69,11 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
   };
 
   const handleAddWidget = (widget: any) => {
+    if (widgetCount >= maxWidgets) {
+      toast.error(`Maximum of ${maxWidgets} widgets allowed. Remove some widgets first.`);
+      return;
+    }
+    
     const uniqueId = `${widget.type}-${Date.now()}`;
     addWidget(uniqueId, widget.type);
     toast.success(`Added ${widget.title} widget`);
@@ -85,7 +90,7 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
         <DrawerHeader>
           <DrawerTitle>Widget Library</DrawerTitle>
           <DrawerDescription>
-            Select widgets to add to your dashboard
+            Select widgets to add to your dashboard ({widgetCount}/{maxWidgets} widgets)
           </DrawerDescription>
         </DrawerHeader>
         
@@ -111,7 +116,9 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
             {filteredWidgets.map((widget) => (
               <div
                 key={widget.id}
-                className="border rounded-lg p-4 hover:bg-accent/50 transition-colors cursor-pointer"
+                className={`border rounded-lg p-4 transition-colors cursor-pointer ${
+                  widgetCount >= maxWidgets ? 'opacity-50 hover:bg-accent/20' : 'hover:bg-accent/50'
+                }`}
                 onClick={() => handleAddWidget(widget)}
               >
                 <div className="flex items-start gap-3">
@@ -125,11 +132,14 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8 rounded-full"
+                    className={`h-8 w-8 rounded-full ${
+                      widgetCount >= maxWidgets ? 'opacity-50' : ''
+                    }`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddWidget(widget);
                     }}
+                    disabled={widgetCount >= maxWidgets}
                   >
                     <PlusCircle className="h-5 w-5" />
                   </Button>

@@ -21,6 +21,8 @@ type GridLayoutContextType = {
   removeWidget: (widgetId: string) => void;
   addWidget: (widgetId: string, widgetType: string) => void;
   availableWidgets: WidgetDefinition[];
+  widgetCount: number;
+  maxWidgets: number;
 };
 
 export type WidgetDefinition = {
@@ -303,6 +305,8 @@ export const GridLayoutContext = createContext<GridLayoutContextType>({
   removeWidget: () => {},
   addWidget: () => {},
   availableWidgets,
+  widgetCount: 0,
+  maxWidgets: 6,
 });
 
 export const useGridLayout = () => useContext(GridLayoutContext);
@@ -312,6 +316,10 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [layouts, setLayouts] = useState<{ [key: string]: Layout[] }>({ lg: defaultLayout });
   const [editMode, setEditMode] = useState(false);
   const userId = user?.id || 'anonymous';
+  const maxWidgets = 6;
+
+  // Calculate current widget count
+  const widgetCount = layouts.lg?.length || 0;
 
   // Load saved layout from localStorage on mount
   useEffect(() => {
@@ -356,6 +364,12 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   // Add a widget to the layout
   const addWidget = (widgetId: string, widgetType: string) => {
+    // Check if we've reached the maximum number of widgets
+    if (widgetCount >= maxWidgets) {
+      console.warn(`Maximum widget limit (${maxWidgets}) reached. Remove widgets before adding more.`);
+      return;
+    }
+    
     const widget = availableWidgets.find(w => w.type === widgetType);
     
     if (!widget) return;
@@ -367,11 +381,17 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const exists = updatedLayouts[breakpoint].some(item => item.i === widgetId);
       
       if (!exists) {
-        // Find a position for the new widget (top left corner of available space)
+        // Find a position for the new widget
+        // Calculate y position based on existing widgets
+        const maxY = updatedLayouts[breakpoint].reduce(
+          (max, item) => Math.max(max, item.y + item.h), 
+          0
+        );
+        
         const newWidget: Layout = {
           i: widgetId,
           x: 0,
-          y: 0,
+          y: maxY,
           w: widget.defaultSize.w,
           h: widget.defaultSize.h,
           minW: 3,
@@ -397,6 +417,8 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         removeWidget,
         addWidget,
         availableWidgets,
+        widgetCount,
+        maxWidgets,
       }}
     >
       {children}
