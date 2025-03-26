@@ -13,9 +13,10 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
   const [primaryColor, setPrimaryColor] = useState('blue');
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [showLightModeWarning, setShowLightModeWarning] = useState(false);
 
   useEffect(() => {
     // Apply dark mode
@@ -38,16 +39,28 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isDarkMode, primaryColor, backgroundImage]);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => !prev);
-    
-    // Save to localStorage
-    localStorage.setItem('darkMode', (!isDarkMode).toString());
+  const handleToggleDarkMode = () => {
+    if (isDarkMode) {
+      setShowLightModeWarning(true);
+    } else {
+      setIsDarkMode(true);
+      localStorage.setItem('darkMode', 'true');
+    }
+  };
+
+  const confirmLightMode = () => {
+    setIsDarkMode(false);
+    setShowLightModeWarning(false);
+    localStorage.setItem('darkMode', 'false');
+  };
+
+  const cancelLightMode = () => {
+    setShowLightModeWarning(false);
   };
 
   // Load saved preferences on mount
   useEffect(() => {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    const savedDarkMode = localStorage.getItem('darkMode') !== 'false'; // Default to true if not set
     const savedPrimaryColor = localStorage.getItem('primaryColor') || 'blue';
     const savedBackgroundImage = localStorage.getItem('backgroundImage') || null;
     
@@ -72,7 +85,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     <ThemeContext.Provider 
       value={{ 
         isDarkMode, 
-        toggleDarkMode, 
+        toggleDarkMode: handleToggleDarkMode, 
         primaryColor, 
         setPrimaryColor: (color) => {
           setPrimaryColor(color);
@@ -90,6 +103,13 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       {children}
+      {showLightModeWarning && (
+        <LightModeWarningDialog
+          open={showLightModeWarning}
+          onConfirm={confirmLightMode}
+          onCancel={cancelLightMode}
+        />
+      )}
     </ThemeContext.Provider>
   );
 };
