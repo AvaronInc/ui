@@ -1,6 +1,38 @@
 import { Zone, ZoneUser, ZoneAuditEvent } from './types';
 import { addDays, subDays, format, subHours, subMinutes } from 'date-fns';
 
+// Mock zone summary data for ZoneInsights
+export const mockZoneSummary = {
+  totalZones: 8,
+  healthyZones: 5,
+  warningZones: 2,
+  degradedZones: 1,
+  storageUsage: 65,
+  securityScore: 87,
+  complianceScore: 92,
+  recentEvents: [
+    {
+      id: 'event-1',
+      type: 'security',
+      message: 'New security policy applied to Financial Services zone',
+      timestamp: '2 hours ago'
+    },
+    {
+      id: 'event-2',
+      type: 'compliance',
+      message: 'PCI compliance check passed for Production Core Services',
+      timestamp: '4 hours ago'
+    },
+    {
+      id: 'event-3',
+      type: 'system',
+      message: 'Storage allocation increased for Development Environment',
+      timestamp: '1 day ago'
+    }
+  ]
+};
+
+// Create a single mockZones export with all the required properties
 export const mockZones: Zone[] = [
   {
     id: 'zone-1',
@@ -14,7 +46,8 @@ export const mockZones: Zone[] = [
       cpu: 65,
       memory: 72,
       storage: 48,
-      network: 58
+      network: 58,
+      ram: 72 // Adding ram for backward compatibility
     },
     complianceStatus: {
       pci: true,
@@ -23,6 +56,35 @@ export const mockZones: Zone[] = [
       sox: true
     },
     securityLevel: 'maximum',
+    vaultIDSettings: {
+      requireVaultID: true,
+      enforceBiometricMFA: true,
+      revalidationPeriod: 30, // days
+      lastConfigUpdate: subDays(new Date(), 15).toISOString()
+    },
+    // Add additional properties needed by protected components
+    created: '2023-05-15T08:00:00Z',
+    modified: '2023-10-20T14:35:00Z',
+    isolationLevel: 'Maximum',
+    vaultIdRequired: true,
+    adminScopes: ['Global', 'Security', 'Compliance', 'Operations'],
+    services: [
+      { id: 'svc-1', name: 'Authentication Service', type: 'identity', status: 'healthy' },
+      { id: 'svc-2', name: 'Authorization Service', type: 'identity', status: 'healthy' },
+      { id: 'svc-3', name: 'Core API Gateway', type: 'network', status: 'healthy' }
+    ],
+    storageConfig: {
+      tier: 'Enterprise',
+      size: 2048,
+      maxSize: 4096,
+      encryption: true,
+      replication: true,
+      backupEnabled: true,
+      backupFrequency: 'Daily',
+      status: 'Operational',
+      complianceFeatures: ['HIPAA', 'PCI-DSS', 'GDPR', 'SOX']
+    },
+    complianceTags: ['PCI-DSS', 'HIPAA', 'GDPR', 'SOX']
   },
   {
     id: 'zone-2',
@@ -36,7 +98,8 @@ export const mockZones: Zone[] = [
       cpu: 42,
       memory: 58,
       storage: 35,
-      network: 22
+      network: 22,
+      ram: 58 // Adding ram for backward compatibility
     },
     complianceStatus: {
       pci: false,
@@ -44,7 +107,35 @@ export const mockZones: Zone[] = [
       gdpr: true,
       sox: false
     },
-    securityLevel: 'standard'
+    securityLevel: 'standard',
+    vaultIDSettings: {
+      requireVaultID: true,
+      enforceBiometricMFA: false,
+      revalidationPeriod: 60, // days
+      lastConfigUpdate: subDays(new Date(), 30).toISOString()
+    },
+    // Add additional properties needed by protected components
+    created: '2023-06-22T10:15:00Z',
+    modified: '2023-10-18T09:45:00Z',
+    isolationLevel: 'Standard',
+    vaultIdRequired: true,
+    adminScopes: ['Development', 'Testing'],
+    services: [
+      { id: 'svc-4', name: 'Dev API Gateway', type: 'network', status: 'warning' },
+      { id: 'svc-5', name: 'Test Database', type: 'database', status: 'healthy' }
+    ],
+    storageConfig: {
+      tier: 'Standard',
+      size: 1024,
+      maxSize: 2048,
+      encryption: true,
+      replication: false,
+      backupEnabled: true,
+      backupFrequency: 'Weekly',
+      status: 'Warning',
+      complianceFeatures: ['GDPR']
+    },
+    complianceTags: ['GDPR']
   },
   {
     id: 'zone-3',
@@ -58,7 +149,8 @@ export const mockZones: Zone[] = [
       cpu: 38,
       memory: 45,
       storage: 60,
-      network: 32
+      network: 32,
+      ram: 45 // Adding ram for backward compatibility
     },
     complianceStatus: {
       pci: true,
@@ -66,7 +158,35 @@ export const mockZones: Zone[] = [
       gdpr: true,
       sox: true
     },
-    securityLevel: 'enhanced'
+    securityLevel: 'enhanced',
+    vaultIDSettings: {
+      requireVaultID: true,
+      enforceBiometricMFA: true,
+      revalidationPeriod: 45, // days
+      lastConfigUpdate: subDays(new Date(), 5).toISOString()
+    },
+    // Add additional properties needed by protected components
+    created: '2023-07-10T14:30:00Z',
+    modified: '2023-10-21T11:20:00Z',
+    isolationLevel: 'Enhanced',
+    vaultIdRequired: true,
+    adminScopes: ['Finance', 'Compliance', 'Security'],
+    services: [
+      { id: 'svc-6', name: 'Payment Processing', type: 'finance', status: 'healthy' },
+      { id: 'svc-7', name: 'Financial Database', type: 'database', status: 'healthy' }
+    ],
+    storageConfig: {
+      tier: 'Business',
+      size: 1536,
+      maxSize: 3072,
+      encryption: true,
+      replication: true,
+      backupEnabled: true,
+      backupFrequency: 'Daily',
+      status: 'Operational',
+      complianceFeatures: ['PCI-DSS', 'GDPR', 'SOX']
+    },
+    complianceTags: ['PCI-DSS', 'GDPR', 'SOX']
   }
 ];
 
@@ -279,90 +399,3 @@ export const mockZoneAuditEvents: Record<string, ZoneAuditEvent[]> = {
   ]
 };
 
-// Update mock zones with VaultID settings
-export const mockZones: Zone[] = [
-  {
-    id: 'zone-1',
-    name: 'Production Core Services',
-    description: 'Primary zone for mission-critical production services',
-    status: 'healthy',
-    createdAt: '2023-05-15T08:00:00Z',
-    updatedAt: '2023-10-20T14:35:00Z',
-    serviceCount: 12,
-    resourceUsage: {
-      cpu: 65,
-      memory: 72,
-      storage: 48,
-      network: 58
-    },
-    complianceStatus: {
-      pci: true,
-      hipaa: true,
-      gdpr: true,
-      sox: true
-    },
-    securityLevel: 'maximum',
-    vaultIDSettings: {
-      requireVaultID: true,
-      enforceBiometricMFA: true,
-      revalidationPeriod: 30, // days
-      lastConfigUpdate: subDays(new Date(), 15).toISOString()
-    }
-  },
-  {
-    id: 'zone-2',
-    name: 'Development Environment',
-    description: 'Isolated zone for development and testing',
-    status: 'warning',
-    createdAt: '2023-06-22T10:15:00Z',
-    updatedAt: '2023-10-18T09:45:00Z',
-    serviceCount: 8,
-    resourceUsage: {
-      cpu: 42,
-      memory: 58,
-      storage: 35,
-      network: 22
-    },
-    complianceStatus: {
-      pci: false,
-      hipaa: false,
-      gdpr: true,
-      sox: false
-    },
-    securityLevel: 'standard',
-    vaultIDSettings: {
-      requireVaultID: true,
-      enforceBiometricMFA: false,
-      revalidationPeriod: 60, // days
-      lastConfigUpdate: subDays(new Date(), 30).toISOString()
-    }
-  },
-  {
-    id: 'zone-3',
-    name: 'Financial Services',
-    description: 'Secure zone for financial and payment processing',
-    status: 'healthy',
-    createdAt: '2023-07-10T14:30:00Z',
-    updatedAt: '2023-10-21T11:20:00Z',
-    serviceCount: 6,
-    resourceUsage: {
-      cpu: 38,
-      memory: 45,
-      storage: 60,
-      network: 32
-    },
-    complianceStatus: {
-      pci: true,
-      hipaa: false,
-      gdpr: true,
-      sox: true
-    },
-    securityLevel: 'enhanced',
-    vaultIDSettings: {
-      requireVaultID: true,
-      enforceBiometricMFA: true,
-      revalidationPeriod: 45, // days
-      lastConfigUpdate: subDays(new Date(), 5).toISOString()
-    }
-  }
-];
