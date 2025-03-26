@@ -1,4 +1,3 @@
-
 import { StorageStatus, StorageTier, ServiceType } from '../../types';
 
 /**
@@ -17,8 +16,13 @@ export function isServiceType(value: any): value is ServiceType {
 }
 
 // This helper ensures that we always get a properly formatted ServiceType object
-export function getServiceTypeFromString(typeString: string): ServiceType {
-  // Convert string status to ServiceType object
+export function getServiceTypeFromString(typeString: string | ServiceType): ServiceType {
+  // If it's already a ServiceType object, return it
+  if (isServiceType(typeString)) {
+    return typeString;
+  }
+  
+  // Otherwise, convert string to ServiceType object
   const typeMap: Record<string, ServiceType> = {
     'identity': {
       id: 'identity',
@@ -70,7 +74,12 @@ export function isStorageStatus(value: any): value is StorageStatus {
   );
 }
 
-export function getStorageStatusFromString(statusString: string): StorageStatus {
+export function getStorageStatusFromString(statusString: string | StorageStatus): StorageStatus {
+  // If it's already a StorageStatus object, return it
+  if (isStorageStatus(statusString)) {
+    return statusString;
+  }
+  
   // Convert string status to StorageStatus object
   const statusMap: Record<string, StorageStatus> = {
     'Operational': { id: 'operational', name: 'Operational', color: 'green' },
@@ -95,7 +104,12 @@ export function isStorageTier(value: any): value is StorageTier {
   );
 }
 
-export function getStorageTierFromString(tierString: string): StorageTier {
+export function getStorageTierFromString(tierString: string | StorageTier): StorageTier {
+  // If it's already a StorageTier object, return it
+  if (isStorageTier(tierString)) {
+    return tierString;
+  }
+  
   // Convert string tier to StorageTier object
   const tierMap: Record<string, StorageTier> = {
     'Standard': { 
@@ -127,9 +141,6 @@ export function getStorageTierFromString(tierString: string): StorageTier {
 }
 
 // A unified adapter function to ensure we have a properly formatted object
-export function ensureProperType<T>(value: string | T, converter: (value: string) => T): T {
-  if (typeof value === 'string') {
-    return converter(value);
-  }
-  return value;
+export function ensureProperType<T>(value: string | T, converter: (value: string | T) => T): T {
+  return converter(value);
 }
