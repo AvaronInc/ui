@@ -6,6 +6,19 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, HardDrive, CloudOff, AlertTriangle } from 'lucide-react';
 
 const RetentionSummary = () => {
+  // Color indicator based on percentage
+  const getProgressColor = (percentage: number): string => {
+    try {
+      if (percentage > 90) return "bg-red-500";
+      if (percentage > 75) return "bg-amber-500";
+      if (percentage > 50) return "bg-yellow-500";
+      return "bg-blue-500";
+    } catch (error) {
+      console.error("Error determining progress color:", error);
+      return "bg-blue-500"; // Default color if there's an error
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Card>
@@ -26,7 +39,11 @@ const RetentionSummary = () => {
                 85% used
               </Badge>
             </div>
-            <Progress value={85} className="h-2" />
+            <Progress 
+              value={85} 
+              className="h-2" 
+              indicatorClassName={getProgressColor(85)} 
+            />
             
             <div className="flex justify-between items-center">
               <div>
@@ -37,7 +54,11 @@ const RetentionSummary = () => {
                 42% used
               </Badge>
             </div>
-            <Progress value={42} className="h-2" />
+            <Progress 
+              value={42} 
+              className="h-2" 
+              indicatorClassName={getProgressColor(42)} 
+            />
             
             <div className="flex justify-between items-center">
               <div>
@@ -48,7 +69,11 @@ const RetentionSummary = () => {
                 28% used
               </Badge>
             </div>
-            <Progress value={28} className="h-2" />
+            <Progress 
+              value={28} 
+              className="h-2" 
+              indicatorClassName={getProgressColor(28)} 
+            />
           </div>
         </CardContent>
       </Card>
@@ -71,7 +96,11 @@ const RetentionSummary = () => {
                 73% used
               </Badge>
             </div>
-            <Progress value={73} className="h-2" />
+            <Progress 
+              value={73} 
+              className="h-2" 
+              indicatorClassName={getProgressColor(73)} 
+            />
             
             <div className="flex justify-between items-center">
               <div>
@@ -82,7 +111,11 @@ const RetentionSummary = () => {
                 64% used
               </Badge>
             </div>
-            <Progress value={64} className="h-2" />
+            <Progress 
+              value={64} 
+              className="h-2" 
+              indicatorClassName={getProgressColor(64)} 
+            />
             
             <div className="flex justify-between items-center">
               <div>
@@ -93,7 +126,11 @@ const RetentionSummary = () => {
                 91% used
               </Badge>
             </div>
-            <Progress value={91} className="h-2" />
+            <Progress 
+              value={91} 
+              className="h-2" 
+              indicatorClassName={getProgressColor(91)} 
+            />
           </div>
         </CardContent>
       </Card>
@@ -116,7 +153,11 @@ const RetentionSummary = () => {
                 Synced
               </Badge>
             </div>
-            <Progress value={100} className="h-2" />
+            <Progress 
+              value={100} 
+              className="h-2" 
+              indicatorClassName="bg-green-500" 
+            />
             
             <div className="flex justify-between items-center">
               <div>
@@ -127,7 +168,11 @@ const RetentionSummary = () => {
                 Protected
               </Badge>
             </div>
-            <Progress value={100} className="h-2" />
+            <Progress 
+              value={100} 
+              className="h-2" 
+              indicatorClassName="bg-green-500" 
+            />
           </div>
         </CardContent>
       </Card>

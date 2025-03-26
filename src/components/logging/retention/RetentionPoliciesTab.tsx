@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -101,56 +101,150 @@ const RetentionPoliciesTab: React.FC = () => {
   const [isNewPolicyOpen, setIsNewPolicyOpen] = useState(false);
   const [isEditPolicyOpen, setIsEditPolicyOpen] = useState(false);
   const [selectedPolicy, setSelectedPolicy] = useState<RetentionPolicy | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleNewPolicy = () => {
-    setSelectedPolicy(null);
-    setIsNewPolicyOpen(true);
-  };
+  // Safe close functions with error handling
+  const handleCloseNewPolicy = useCallback(() => {
+    try {
+      setIsNewPolicyOpen(false);
+      setError(null);
+    } catch (err) {
+      console.error('Error closing new policy dialog:', err);
+      setError('Failed to close dialog. Please try again.');
+      toast.error('Error closing dialog', {
+        description: 'There was a problem closing the dialog. Please refresh the page if the issue persists.'
+      });
+    }
+  }, []);
 
-  const handleEditPolicy = (policy: RetentionPolicy) => {
-    setSelectedPolicy(policy);
-    setIsEditPolicyOpen(true);
-  };
+  const handleCloseEditPolicy = useCallback(() => {
+    try {
+      setIsEditPolicyOpen(false);
+      setSelectedPolicy(null);
+      setError(null);
+    } catch (err) {
+      console.error('Error closing edit policy dialog:', err);
+      setError('Failed to close dialog. Please try again.');
+      toast.error('Error closing dialog', {
+        description: 'There was a problem closing the dialog. Please refresh the page if the issue persists.'
+      });
+    }
+  }, []);
 
-  const handleClonePolicy = (policy: RetentionPolicy) => {
-    const newPolicy = {
-      ...policy,
-      id: `${parseInt(policy.id) + 100}`,
-      logType: `${policy.logType} (Copy)`,
-      lastModified: new Date().toISOString().split('T')[0]
-    };
-    setPolicies([...policies, newPolicy]);
-    toast.success('Policy cloned successfully');
-  };
+  const handleNewPolicy = useCallback(() => {
+    try {
+      setSelectedPolicy(null);
+      setIsNewPolicyOpen(true);
+      setError(null);
+    } catch (err) {
+      console.error('Error opening new policy dialog:', err);
+      setError('Failed to open dialog. Please try again.');
+      toast.error('Error opening dialog', {
+        description: 'There was a problem opening the dialog. Please try again.'
+      });
+    }
+  }, []);
 
-  const handleDeletePolicy = (id: string) => {
-    setPolicies(policies.filter(policy => policy.id !== id));
-    toast.success('Policy deleted successfully');
-  };
+  const handleEditPolicy = useCallback((policy: RetentionPolicy) => {
+    try {
+      setSelectedPolicy({...policy});
+      setIsEditPolicyOpen(true);
+      setError(null);
+    } catch (err) {
+      console.error('Error opening edit policy dialog:', err);
+      setError('Failed to open dialog. Please try again.');
+      toast.error('Error opening dialog', {
+        description: 'There was a problem opening the dialog. Please try again.'
+      });
+    }
+  }, []);
 
-  const handleApplyToTenant = (policy: RetentionPolicy) => {
-    toast.success(`Policy for ${policy.logType} applied to current tenant`);
-  };
+  const handleClonePolicy = useCallback((policy: RetentionPolicy) => {
+    try {
+      const newPolicy = {
+        ...policy,
+        id: `${parseInt(policy.id) + 100}`,
+        logType: `${policy.logType} (Copy)`,
+        lastModified: new Date().toISOString().split('T')[0]
+      };
+      setPolicies([...policies, newPolicy]);
+      toast.success('Policy cloned successfully');
+    } catch (err) {
+      console.error('Error cloning policy:', err);
+      toast.error('Failed to clone policy', {
+        description: 'There was a problem cloning the policy. Please try again.'
+      });
+    }
+  }, [policies]);
 
-  // Safe close functions that ensure state is properly reset
-  const handleCloseNewPolicy = () => {
-    setIsNewPolicyOpen(false);
-  };
+  const handleDeletePolicy = useCallback((id: string) => {
+    try {
+      setPolicies(policies.filter(policy => policy.id !== id));
+      toast.success('Policy deleted successfully');
+    } catch (err) {
+      console.error('Error deleting policy:', err);
+      toast.error('Failed to delete policy', {
+        description: 'There was a problem deleting the policy. Please try again.'
+      });
+    }
+  }, [policies]);
 
-  const handleCloseEditPolicy = () => {
-    setIsEditPolicyOpen(false);
-    setSelectedPolicy(null);
-  };
+  const handleApplyToTenant = useCallback((policy: RetentionPolicy) => {
+    try {
+      toast.success(`Policy for ${policy.logType} applied to current tenant`);
+    } catch (err) {
+      console.error('Error applying policy to tenant:', err);
+      toast.error('Failed to apply policy', {
+        description: 'There was a problem applying the policy to the tenant. Please try again.'
+      });
+    }
+  }, []);
 
-  const handleSaveNewPolicy = () => {
-    toast.success('New policy created successfully');
-    handleCloseNewPolicy();
-  };
+  const handleSaveNewPolicy = useCallback(() => {
+    try {
+      toast.success('New policy created successfully');
+      handleCloseNewPolicy();
+    } catch (err) {
+      console.error('Error saving new policy:', err);
+      toast.error('Failed to create policy', {
+        description: 'There was a problem creating the new policy. Please try again.'
+      });
+    }
+  }, [handleCloseNewPolicy]);
 
-  const handleUpdatePolicy = () => {
-    toast.success('Policy updated successfully');
-    handleCloseEditPolicy();
-  };
+  const handleUpdatePolicy = useCallback(() => {
+    try {
+      toast.success('Policy updated successfully');
+      handleCloseEditPolicy();
+    } catch (err) {
+      console.error('Error updating policy:', err);
+      toast.error('Failed to update policy', {
+        description: 'There was a problem updating the policy. Please try again.'
+      });
+    }
+  }, [handleCloseEditPolicy]);
+
+  // Display error message if there is one
+  if (error) {
+    return (
+      <div className="p-4 bg-red-50 border border-red-200 rounded-md text-red-800">
+        <h3 className="font-medium">Error</h3>
+        <p>{error}</p>
+        <Button 
+          variant="outline" 
+          className="mt-2" 
+          onClick={() => {
+            setError(null);
+            setIsNewPolicyOpen(false);
+            setIsEditPolicyOpen(false);
+            setSelectedPolicy(null);
+          }}
+        >
+          Dismiss
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -229,7 +323,10 @@ const RetentionPoliciesTab: React.FC = () => {
 
       {/* New Policy Dialog */}
       <Dialog open={isNewPolicyOpen} onOpenChange={handleCloseNewPolicy}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px]" onInteractOutside={(e) => {
+          e.preventDefault(); // Prevent default behavior
+          handleCloseNewPolicy(); // Use safe close handler
+        }}>
           <DialogHeader>
             <DialogTitle>Create New Retention Policy</DialogTitle>
             <DialogDescription>
@@ -367,7 +464,13 @@ const RetentionPoliciesTab: React.FC = () => {
       
       {/* Edit Policy Dialog */}
       <Dialog open={isEditPolicyOpen} onOpenChange={handleCloseEditPolicy}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent 
+          className="sm:max-w-[500px]" 
+          onInteractOutside={(e) => {
+            e.preventDefault(); // Prevent default behavior
+            handleCloseEditPolicy(); // Use safe close handler
+          }}
+        >
           <DialogHeader>
             <DialogTitle>Edit Retention Policy</DialogTitle>
             <DialogDescription>
