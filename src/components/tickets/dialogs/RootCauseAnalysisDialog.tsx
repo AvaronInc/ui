@@ -15,7 +15,7 @@ interface RootCauseAnalysisDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const RootCauseAnalysisDialog: React.FC<RootCauseAnalysisDialogProps> = ({
+export const RootCauseAnalysisDialog: React.FC<RootCauseAnalysisDialogProps> = ({
   ticket,
   open,
   onOpenChange,

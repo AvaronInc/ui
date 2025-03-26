@@ -9,8 +9,9 @@ import MonitoringLogsTab from './tabs/MonitoringLogsTab';
 import AdvancedConfigTab from './tabs/AdvancedConfigTab';
 import AIIntelligentFailoverTab from './tabs/AIIntelligentFailoverTab';
 import PolicyRoutingTab from './tabs/PolicyRoutingTab';
+import RCATab from './tabs/RCATab';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Network, HeartPulse, Shield, Globe, Activity, Settings, Zap, Route } from 'lucide-react';
+import { Network, HeartPulse, Shield, Globe, Activity, Settings, Zap, Route, AlertTriangle } from 'lucide-react';
 
 const SDWANPanel = () => {
   const isMobile = useIsMobile();
@@ -19,7 +20,7 @@ const SDWANPanel = () => {
     <div className="space-y-4 sm:space-y-6">
       <Tabs defaultValue="connectivity" className="w-full">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 mb-4 sm:mb-6">
+          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-9 mb-4 sm:mb-6">
             <TabsTrigger value="connectivity" className="flex items-center gap-2">
               <Network className="h-4 w-4" />
               {!isMobile && "Network"}
@@ -51,6 +52,10 @@ const SDWANPanel = () => {
             <TabsTrigger value="ai-failover" className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
               {!isMobile && "AI Failover"}
+            </TabsTrigger>
+            <TabsTrigger value="rca" className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" />
+              {!isMobile && "RCA"}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -85,6 +90,10 @@ const SDWANPanel = () => {
 
         <TabsContent value="ai-failover" className="mt-0">
           <AIIntelligentFailoverTab />
+        </TabsContent>
+
+        <TabsContent value="rca" className="mt-0">
+          <RCATab />
         </TabsContent>
       </Tabs>
     </div>
