@@ -1,23 +1,71 @@
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Clock, HardDrive, CloudOff, AlertTriangle } from 'lucide-react';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const RetentionSummary = () => {
+  // Safe state for progress data
+  const [progressError, setProgressError] = useState<boolean>(false);
+
   // Color indicator based on percentage
-  const getProgressColor = (percentage: number): string => {
+  const getProgressColor = useCallback((percentage: number): string => {
+    if (percentage > 90) return "bg-red-500";
+    if (percentage > 75) return "bg-amber-500";
+    if (percentage > 50) return "bg-yellow-500";
+    return "bg-blue-500";
+  }, []);
+
+  // Safely render progress bars with error handling
+  const renderProgressBar = useCallback((value: number, errorHandler: (error: Error) => void) => {
     try {
-      if (percentage > 90) return "bg-red-500";
-      if (percentage > 75) return "bg-amber-500";
-      if (percentage > 50) return "bg-yellow-500";
-      return "bg-blue-500";
+      if (typeof value !== 'number' || isNaN(value)) {
+        throw new Error('Invalid progress value');
+      }
+      
+      // Ensure value is within valid range
+      const safeValue = Math.max(0, Math.min(100, value));
+      
+      return (
+        <Progress 
+          value={safeValue} 
+          className="h-2" 
+          indicatorClassName={getProgressColor(safeValue)} 
+        />
+      );
     } catch (error) {
-      console.error("Error determining progress color:", error);
-      return "bg-blue-500"; // Default color if there's an error
+      console.error('Error rendering progress bar:', error);
+      errorHandler(error as Error);
+      setProgressError(true);
+      return <div className="h-2 bg-muted">Error displaying progress</div>;
     }
-  };
+  }, [getProgressColor]);
+
+  // Error boundaries for sections
+  if (progressError) {
+    return (
+      <Card className="p-6 border-destructive">
+        <CardHeader className="p-0">
+          <CardTitle className="text-destructive flex items-center">
+            <AlertTriangle className="h-5 w-5 mr-2" />
+            Error Loading Retention Data
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0 mt-4">
+          <p className="text-sm text-muted-foreground">
+            There was an error loading the retention data. Please try refreshing the page.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -39,11 +87,7 @@ const RetentionSummary = () => {
                 85% used
               </Badge>
             </div>
-            <Progress 
-              value={85} 
-              className="h-2" 
-              indicatorClassName={getProgressColor(85)} 
-            />
+            {renderProgressBar(85, (error) => console.error('System Logs Progress Error:', error))}
             
             <div className="flex justify-between items-center">
               <div>
@@ -54,11 +98,7 @@ const RetentionSummary = () => {
                 42% used
               </Badge>
             </div>
-            <Progress 
-              value={42} 
-              className="h-2" 
-              indicatorClassName={getProgressColor(42)} 
-            />
+            {renderProgressBar(42, (error) => console.error('Security Events Progress Error:', error))}
             
             <div className="flex justify-between items-center">
               <div>
@@ -69,11 +109,7 @@ const RetentionSummary = () => {
                 28% used
               </Badge>
             </div>
-            <Progress 
-              value={28} 
-              className="h-2" 
-              indicatorClassName={getProgressColor(28)} 
-            />
+            {renderProgressBar(28, (error) => console.error('Audit Trails Progress Error:', error))}
           </div>
         </CardContent>
       </Card>
@@ -96,11 +132,7 @@ const RetentionSummary = () => {
                 73% used
               </Badge>
             </div>
-            <Progress 
-              value={73} 
-              className="h-2" 
-              indicatorClassName={getProgressColor(73)} 
-            />
+            {renderProgressBar(73, (error) => console.error('Network Traffic Progress Error:', error))}
             
             <div className="flex justify-between items-center">
               <div>
@@ -111,26 +143,27 @@ const RetentionSummary = () => {
                 64% used
               </Badge>
             </div>
-            <Progress 
-              value={64} 
-              className="h-2" 
-              indicatorClassName={getProgressColor(64)} 
-            />
+            {renderProgressBar(64, (error) => console.error('Packet Captures Progress Error:', error))}
             
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-sm font-medium">Application Logs</p>
                 <p className="text-xs text-muted-foreground">350 GB capacity</p>
               </div>
-              <Badge className="text-xs bg-amber-500 hover:bg-amber-600">
-                91% used
-              </Badge>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge className="text-xs bg-amber-500 hover:bg-amber-600">
+                      91% used
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Critical: Nearing capacity limit</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
-            <Progress 
-              value={91} 
-              className="h-2" 
-              indicatorClassName={getProgressColor(91)} 
-            />
+            {renderProgressBar(91, (error) => console.error('Application Logs Progress Error:', error))}
           </div>
         </CardContent>
       </Card>
@@ -153,11 +186,7 @@ const RetentionSummary = () => {
                 Synced
               </Badge>
             </div>
-            <Progress 
-              value={100} 
-              className="h-2" 
-              indicatorClassName="bg-green-500" 
-            />
+            {renderProgressBar(100, (error) => console.error('Cold Storage Progress Error:', error))}
             
             <div className="flex justify-between items-center">
               <div>
@@ -168,11 +197,7 @@ const RetentionSummary = () => {
                 Protected
               </Badge>
             </div>
-            <Progress 
-              value={100} 
-              className="h-2" 
-              indicatorClassName="bg-green-500" 
-            />
+            {renderProgressBar(100, (error) => console.error('Legal Hold Progress Error:', error))}
           </div>
         </CardContent>
       </Card>
