@@ -5,3 +5,4 @@ export * from './NotificationButton';
 export * from './ThemeToggle';
 export * from './UserProfileMenu';
 export * from './CLIButton';
+export { default as DocumentationButton } from './DocumentationButton';
