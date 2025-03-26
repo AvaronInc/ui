@@ -1,8 +1,8 @@
-import { Zone, ZoneUser, ZoneAuditEvent } from './types';
+import { Zone, ZoneUser, ZoneAuditEvent, ZoneSummary } from './types';
 import { addDays, subDays, format, subHours, subMinutes } from 'date-fns';
 
 // Mock zone summary data for ZoneInsights
-export const mockZoneSummary = {
+export const mockZoneSummary: ZoneSummary = {
   totalZones: 8,
   healthyZones: 5,
   warningZones: 2,
@@ -29,7 +29,22 @@ export const mockZoneSummary = {
       message: 'Storage allocation increased for Development Environment',
       timestamp: '1 day ago'
     }
-  ]
+  ],
+  highTrustZones: 3,
+  zonesWithAlerts: 2,
+  storageStats: {
+    totalUsed: 3.2,
+    totalProvisioned: 5.0,
+    mostUsedZone: 'Production Core Services',
+    lowStorageAlerts: 1
+  },
+  aiTraffic: [
+    { zoneName: 'Production Core Services', trafficPercentage: 42 },
+    { zoneName: 'Development Environment', trafficPercentage: 27 },
+    { zoneName: 'Financial Services', trafficPercentage: 18 },
+    { zoneName: 'Data Analysis Zone', trafficPercentage: 13 }
+  ],
+  mixtralSummary: "Overall infrastructure health is excellent with 5 of 8 zones showing optimal performance. Storage usage trending upward with a 15% increase since last month. Consider optimizing the development zone which is generating the most alerts."
 };
 
 // Create a single mockZones export with all the required properties
@@ -62,7 +77,6 @@ export const mockZones: Zone[] = [
       revalidationPeriod: 30, // days
       lastConfigUpdate: subDays(new Date(), 15).toISOString()
     },
-    // Add additional properties needed by protected components
     created: '2023-05-15T08:00:00Z',
     modified: '2023-10-20T14:35:00Z',
     isolationLevel: 'Maximum',
@@ -82,7 +96,13 @@ export const mockZones: Zone[] = [
       backupEnabled: true,
       backupFrequency: 'Daily',
       status: 'Operational',
-      complianceFeatures: ['HIPAA', 'PCI-DSS', 'GDPR', 'SOX']
+      complianceFeatures: ['HIPAA', 'PCI-DSS', 'GDPR', 'SOX'],
+      enabled: true,
+      used: 2048,
+      provisioned: 4096,
+      erasureCoding: true,
+      publicBucketsAllowed: false,
+      customRetention: true
     },
     complianceTags: ['PCI-DSS', 'HIPAA', 'GDPR', 'SOX']
   },
@@ -114,7 +134,6 @@ export const mockZones: Zone[] = [
       revalidationPeriod: 60, // days
       lastConfigUpdate: subDays(new Date(), 30).toISOString()
     },
-    // Add additional properties needed by protected components
     created: '2023-06-22T10:15:00Z',
     modified: '2023-10-18T09:45:00Z',
     isolationLevel: 'Standard',
@@ -133,7 +152,13 @@ export const mockZones: Zone[] = [
       backupEnabled: true,
       backupFrequency: 'Weekly',
       status: 'Warning',
-      complianceFeatures: ['GDPR']
+      complianceFeatures: ['GDPR'],
+      enabled: true,
+      used: 768,
+      provisioned: 1024,
+      erasureCoding: false,
+      publicBucketsAllowed: true,
+      customRetention: false
     },
     complianceTags: ['GDPR']
   },
@@ -165,7 +190,6 @@ export const mockZones: Zone[] = [
       revalidationPeriod: 45, // days
       lastConfigUpdate: subDays(new Date(), 5).toISOString()
     },
-    // Add additional properties needed by protected components
     created: '2023-07-10T14:30:00Z',
     modified: '2023-10-21T11:20:00Z',
     isolationLevel: 'Enhanced',
@@ -184,7 +208,13 @@ export const mockZones: Zone[] = [
       backupEnabled: true,
       backupFrequency: 'Daily',
       status: 'Operational',
-      complianceFeatures: ['PCI-DSS', 'GDPR', 'SOX']
+      complianceFeatures: ['PCI-DSS', 'GDPR', 'SOX'],
+      enabled: true,
+      used: 1024,
+      provisioned: 1536,
+      erasureCoding: true,
+      publicBucketsAllowed: false,
+      customRetention: true
     },
     complianceTags: ['PCI-DSS', 'GDPR', 'SOX']
   }

@@ -45,6 +45,13 @@ export interface Zone {
     backupFrequency: string;
     status: string;
     complianceFeatures: string[];
+    // Additional properties needed by ZoneNestvault component
+    enabled?: boolean;
+    used?: number;
+    provisioned?: number;
+    erasureCoding?: boolean;
+    publicBucketsAllowed?: boolean;
+    customRetention?: boolean;
   }; // Required by ZoneNestvault
   complianceTags?: string[]; // Used in ComplianceSecurity
 }
@@ -90,4 +97,35 @@ export interface StorageTier {
   name: string;
   description: string;
   features: string[];
+}
+
+// Extended interface for Zone Summary needed by ZoneInsights component
+export interface ZoneSummary {
+  totalZones: number;
+  healthyZones: number;
+  warningZones: number;
+  degradedZones: number;
+  storageUsage: number;
+  securityScore: number;
+  complianceScore: number;
+  recentEvents: Array<{
+    id: string;
+    type: string;
+    message: string;
+    timestamp: string;
+  }>;
+  // Additional properties needed by ZoneInsights component
+  highTrustZones?: number;
+  zonesWithAlerts?: number;
+  storageStats?: {
+    totalUsed: number;
+    totalProvisioned: number;
+    mostUsedZone: string;
+    lowStorageAlerts: number;
+  };
+  aiTraffic?: Array<{
+    zoneName: string;
+    trafficPercentage: number;
+  }>;
+  mixtralSummary?: string;
 }

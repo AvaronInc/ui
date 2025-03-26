@@ -20,7 +20,7 @@ const ZoneInsights: React.FC = () => {
             </div>
             <div className="bg-secondary/50 p-2 rounded-md">
               <div className="text-sm font-medium">High Trust</div>
-              <div className="text-2xl font-bold">{mockZoneSummary.highTrustZones}</div>
+              <div className="text-2xl font-bold">{mockZoneSummary.highTrustZones || 0}</div>
             </div>
           </div>
           
@@ -30,7 +30,7 @@ const ZoneInsights: React.FC = () => {
                 <AlertTriangle className="h-4 w-4 mr-1 text-amber-500" />
                 <span>Zones with Alerts</span>
               </div>
-              <span>{mockZoneSummary.zonesWithAlerts}</span>
+              <span>{mockZoneSummary.zonesWithAlerts || 0}</span>
             </div>
             
             {mockZoneSummary.storageStats && (
@@ -63,7 +63,7 @@ const ZoneInsights: React.FC = () => {
           <CardTitle className="text-base font-medium">AI Traffic by Zone</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {mockZoneSummary.aiTraffic.map((item, index) => (
+          {mockZoneSummary.aiTraffic && mockZoneSummary.aiTraffic.map((item, index) => (
             <div key={index} className="space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span>{item.zoneName}</span>
@@ -83,7 +83,7 @@ const ZoneInsights: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">{mockZoneSummary.mixtralSummary}</p>
+          <p className="text-sm text-muted-foreground">{mockZoneSummary.mixtralSummary || "No analysis available"}</p>
           
           <p className="text-sm text-muted-foreground mt-3 border-t pt-3">
             <span className="font-medium text-foreground block mb-1">Storage Insights:</span>
