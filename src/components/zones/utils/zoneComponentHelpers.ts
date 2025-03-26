@@ -15,7 +15,11 @@ import {
 
 // Process and normalize users from API or mock data
 export function prepareZoneUsers(users: any[]): ZoneUser[] {
-  return processZoneUsers(users);
+  // Debug information
+  console.log('prepareZoneUsers input:', users);
+  const result = processZoneUsers(users);
+  console.log('prepareZoneUsers result:', result);
+  return result;
 }
 
 // Helper to get safe string keys for service types
@@ -32,15 +36,29 @@ export function getServiceKeys(services: any[]): string[] {
 }
 
 // Safe comparison for storage status
-export function matchesStorageStatus(status: string | StorageStatus, targetStatus: StorageStatus): boolean {
+export function matchesStorageStatus(status: string | StorageStatus, targetStatus: string | StorageStatus): boolean {
   const normalizedStatus = getStorageStatusFromString(status);
-  return normalizedStatus.id === targetStatus.id;
+  const normalizedTarget = getStorageStatusFromString(targetStatus);
+  return normalizedStatus.id === normalizedTarget.id;
 }
 
 // Safe comparison for storage tier
-export function matchesStorageTier(tier: string | StorageTier, targetTier: StorageTier): boolean {
+export function matchesStorageTier(tier: string | StorageTier, targetTier: string | StorageTier): boolean {
   const normalizedTier = getStorageTierFromString(tier);
-  return normalizedTier.id === targetTier.id;
+  const normalizedTarget = getStorageTierFromString(targetTier);
+  return normalizedTier.id === normalizedTarget.id;
+}
+
+// Type-safe rendering for storage status
+export function renderStorageStatus(status: string | StorageStatus): React.ReactNode {
+  const statusObj = getStorageStatusFromString(status);
+  return statusObj.name;
+}
+
+// Type-safe rendering for storage tier
+export function renderStorageTier(tier: string | StorageTier): React.ReactNode {
+  const tierObj = getStorageTierFromString(tier);
+  return tierObj.name;
 }
 
 // Safe string renderer for React nodes

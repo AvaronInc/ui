@@ -184,21 +184,40 @@ export function isZoneUser(value: any): value is ZoneUser {
 }
 
 export function normalizeUserStatus(status: string): 'active' | 'suspended' | 'pending' {
+  if (!status) return 'pending';
+  
   // Case-insensitive status normalization
-  const lowerStatus = status.toLowerCase();
-  if (lowerStatus === 'active' || lowerStatus === 'suspended' || lowerStatus === 'pending') {
-    return lowerStatus as 'active' | 'suspended' | 'pending';
-  }
+  const lowerStatus = String(status).toLowerCase();
+  
+  // Debug output
+  console.log(`Normalizing user status: '${status}' (${typeof status}) to lowercase: '${lowerStatus}'`);
+  
+  if (lowerStatus === 'active') return 'active';
+  if (lowerStatus === 'suspended') return 'suspended';
+  if (lowerStatus === 'pending') return 'pending';
+  
+  console.log(`WARNING: Unrecognized status value: '${status}', defaulting to 'pending'`);
   return 'pending';
 }
 
 export function processZoneUsers(users: any[]): ZoneUser[] {
-  return users.map(user => ({
-    ...user,
-    status: normalizeUserStatus(user.status || 'pending'),
-    certificateIssued: user.certificateIssued || null,
-    certificateExpiry: user.certificateExpiry || null
-  }));
+  console.log('Processing zone users, count:', users.length);
+  return users.map(user => {
+    // Ensure status is properly normalized
+    const originalStatus = user.status;
+    const normalizedStatus = normalizeUserStatus(originalStatus || 'pending');
+    
+    if (originalStatus !== normalizedStatus) {
+      console.log(`Normalized user status from '${originalStatus}' to '${normalizedStatus}'`);
+    }
+    
+    return {
+      ...user,
+      status: normalizedStatus,
+      certificateIssued: user.certificateIssued || null,
+      certificateExpiry: user.certificateExpiry || null
+    };
+  });
 }
 
 // A unified adapter function to ensure we have a properly formatted object
@@ -257,4 +276,50 @@ export function safeRenderText(value: unknown): string {
   }
   
   return String(value);
+}
+
+// For debugging ServiceType issues
+export function logServiceTypeDebug(serviceType: ServiceType | string): void {
+  console.log('ServiceType Debug:');
+  console.log('- Type:', typeof serviceType);
+  
+  if (typeof serviceType === 'string') {
+    console.log('- String value:', serviceType);
+    const converted = getServiceTypeFromString(serviceType);
+    console.log('- Converted:', converted);
+  } else if (typeof serviceType === 'object') {
+    console.log('- Object value:', JSON.stringify(serviceType));
+    console.log('- Is ServiceType:', isServiceType(serviceType));
+    console.log('- Key:', getServiceTypeKey(serviceType));
+  }
+}
+
+// For debugging StorageStatus issues
+export function logStorageStatusDebug(status: StorageStatus | string): void {
+  console.log('StorageStatus Debug:');
+  console.log('- Type:', typeof status);
+  
+  if (typeof status === 'string') {
+    console.log('- String value:', status);
+    const converted = getStorageStatusFromString(status);
+    console.log('- Converted:', converted);
+  } else if (typeof status === 'object') {
+    console.log('- Object value:', JSON.stringify(status));
+    console.log('- Is StorageStatus:', isStorageStatus(status));
+  }
+}
+
+// For debugging StorageTier issues
+export function logStorageTierDebug(tier: StorageTier | string): void {
+  console.log('StorageTier Debug:');
+  console.log('- Type:', typeof tier);
+  
+  if (typeof tier === 'string') {
+    console.log('- String value:', tier);
+    const converted = getStorageTierFromString(tier);
+    console.log('- Converted:', converted);
+  } else if (typeof tier === 'object') {
+    console.log('- Object value:', JSON.stringify(tier));
+    console.log('- Is StorageTier:', isStorageTier(tier));
+  }
 }
