@@ -9,6 +9,7 @@ import BucketManagement from '@/components/storage/bucket/BucketManagement';
 import FileBrowser from '@/components/storage/FileBrowser';
 import FileDetailPanel from '@/components/storage/FileDetailPanel';
 import FileToolbar from '@/components/storage/FileToolbar';
+import StorageRCATab from '@/components/storage/RCATab';
 import { FileItem, FileFilter } from '@/types/storage';
 
 const fetchFiles = async (): Promise<FileItem[]> => {
@@ -133,10 +134,11 @@ const Storage = () => {
           </div>
           
           <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 w-[400px]">
+            <TabsList className="grid grid-cols-4 w-[500px]">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="buckets">S3 Management</TabsTrigger>
               <TabsTrigger value="files">File Browser</TabsTrigger>
+              <TabsTrigger value="rca">RCA</TabsTrigger>
             </TabsList>
             
             <TabsContent value="overview" className="mt-6">
@@ -177,6 +179,10 @@ const Storage = () => {
                   </div>
                 )}
               </div>
+            </TabsContent>
+            
+            <TabsContent value="rca" className="mt-6">
+              <StorageRCATab />
             </TabsContent>
           </Tabs>
         </div>
