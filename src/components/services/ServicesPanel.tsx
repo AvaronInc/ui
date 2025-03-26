@@ -7,6 +7,7 @@ import MonitoringLogs from './tabs/MonitoringLogs';
 import SecurityCompliance from './tabs/SecurityCompliance';
 import AIOptimization from './tabs/AIOptimization';
 import Documentation from './tabs/Documentation';
+import RCATab from './tabs/RCATab';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const ServicesPanel = () => {
@@ -16,13 +17,14 @@ const ServicesPanel = () => {
     <div className="space-y-4">
       <Tabs defaultValue="overview" className="w-full">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-6 w-full">
+          <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-7 w-full">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="deployment">{isMobile ? 'Deploy' : 'Deployment'}</TabsTrigger>
             <TabsTrigger value="monitoring">{isMobile ? 'Monitor' : 'Monitoring'}</TabsTrigger>
             <TabsTrigger value="security">{isMobile ? 'Security' : 'Security'}</TabsTrigger>
             <TabsTrigger value="optimization">{isMobile ? 'AI' : 'AI Optimization'}</TabsTrigger>
             <TabsTrigger value="documentation">{isMobile ? 'Docs' : 'Documentation'}</TabsTrigger>
+            <TabsTrigger value="rca">{isMobile ? 'RCA' : 'RCA'}</TabsTrigger>
           </TabsList>
         </div>
 
@@ -48,6 +50,10 @@ const ServicesPanel = () => {
 
         <TabsContent value="documentation" className="p-0 border-0">
           <Documentation />
+        </TabsContent>
+
+        <TabsContent value="rca" className="p-0 border-0">
+          <RCATab />
         </TabsContent>
       </Tabs>
     </div>
