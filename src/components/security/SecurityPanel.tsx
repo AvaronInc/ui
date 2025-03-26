@@ -10,7 +10,7 @@ import SecurityLogs from './tabs/SecurityLogs';
 import CVEIntelligencePanel from './cve/CVEIntelligencePanel';
 import RootCauseAnalysis from './cve/tabs/RootCauseAnalysis';
 import IPThreatIntelligence from './tabs/IPThreatIntelligence';
-import { Shield, AlertTriangle, FileCheck, Zap, FileSearch, Database, LineChart, Wifi } from 'lucide-react';
+import { Shield, AlertTriangle, FileCheck, Zap, FileSearch, Database, Wifi, LineChart } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const SecurityPanel: React.FC = () => {
@@ -61,7 +61,7 @@ const SecurityPanel: React.FC = () => {
             </TabsTrigger>
             <TabsTrigger value="rca" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <LineChart className="h-4 w-4" />
-              <span>{isMobile ? "RCA" : "Root Cause Analysis"}</span>
+              <span>RCA</span>
             </TabsTrigger>
           </TabsList>
         </div>
