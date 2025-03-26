@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Ticket, ResolutionMethod } from '@/types/tickets';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
@@ -14,9 +14,11 @@ import {
   XCircle,
   Bot,
   User,
-  AlertTriangle
+  AlertTriangle,
+  FileSearch
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import RootCauseAnalysisDialog from './dialogs/RootCauseAnalysisDialog';
 
 interface TicketListProps {
   tickets: Ticket[];
@@ -33,6 +35,8 @@ export const TicketList = ({
   onEscalateTicket,
   onCloseTicket
 }: TicketListProps) => {
+  const [analysisTicket, setAnalysisTicket] = useState<Ticket | null>(null);
+  const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
   
   const formatTime = (dateString: string) => {
     try {
@@ -111,143 +115,172 @@ export const TicketList = ({
     }
   };
 
+  const handleRootCauseAnalysis = (ticket: Ticket, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAnalysisTicket(ticket);
+    setAnalysisDialogOpen(true);
+  };
+
   return (
-    <div className="overflow-hidden rounded-lg border bg-card">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Ticket ID</TableHead>
-              <TableHead>Summary</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Assigned To</TableHead>
-              <TableHead>Last Updated</TableHead>
-              <TableHead>Resolution</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tickets.length === 0 ? (
+    <>
+      <div className="overflow-hidden rounded-lg border bg-card">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={8} className="text-center p-4">
-                  No tickets found
-                </TableCell>
+                <TableHead>Ticket ID</TableHead>
+                <TableHead>Summary</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Priority</TableHead>
+                <TableHead>Assigned To</TableHead>
+                <TableHead>Last Updated</TableHead>
+                <TableHead>Resolution</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ) : (
-              tickets.map((ticket) => (
-                <TableRow 
-                  key={ticket.id} 
-                  className={cn(
-                    "cursor-pointer hover:bg-muted/50",
-                    selectedTicket?.id === ticket.id && "bg-muted"
-                  )}
-                  onClick={() => onTicketSelect(ticket)}
-                >
-                  <TableCell className="font-medium">{ticket.id}</TableCell>
-                  <TableCell>
-                    <HoverCard>
-                      <HoverCardTrigger asChild>
-                        <span className="underline underline-offset-4 decoration-dotted">
-                          {ticket.title}
-                        </span>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80">
-                        <div className="space-y-2">
-                          <h4 className="font-medium">{ticket.title}</h4>
-                          <p className="text-sm text-muted-foreground">{ticket.description}</p>
-                          {ticket.department && (
-                            <div className="text-xs">
-                              <span className="font-medium">Department:</span> {ticket.department}
-                            </div>
-                          )}
-                          {ticket.location && (
-                            <div className="text-xs">
-                              <span className="font-medium">Location:</span> {ticket.location}
-                            </div>
-                          )}
-                          <div className="text-xs">
-                            <span className="font-medium">Created:</span> {formatTime(ticket.createdAt)}
-                          </div>
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </TableCell>
-                  <TableCell>
-                    <div className={cn(
-                      "flex items-center gap-2 px-2 py-1 rounded-full w-fit",
-                      getStatusColor(ticket.status)
-                    )}>
-                      {getStatusIcon(ticket.status)}
-                      <span className="capitalize text-xs">{ticket.status.replace('-', ' ')}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className={cn(
-                      "font-medium capitalize",
-                      getPriorityColor(ticket.priority)
-                    )}>
-                      {ticket.priority}
-                    </span>
-                  </TableCell>
-                  <TableCell>{ticket.assignedTo || 'Unassigned'}</TableCell>
-                  <TableCell>{formatTime(ticket.updatedAt)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      {getResolutionMethodIcon(ticket.resolutionMethod)}
-                      <span className="text-xs capitalize">
-                        {ticket.resolutionMethod ? ticket.resolutionMethod.replace('-', ' ') : 'Pending'}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onTicketSelect(ticket);
-                        }}
-                      >
-                        <PanelRight className="h-4 w-4" />
-                        <span className="sr-only">Details</span>
-                      </Button>
-                      {onEscalateTicket && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onEscalateTicket(ticket.id);
-                          }}
-                        >
-                          <ArrowUpRight className="h-4 w-4" />
-                          <span className="sr-only">Escalate</span>
-                        </Button>
-                      )}
-                      {onCloseTicket && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onCloseTicket(ticket.id);
-                          }}
-                        >
-                          <XCircle className="h-4 w-4" />
-                          <span className="sr-only">Close</span>
-                        </Button>
-                      )}
-                    </div>
+            </TableHeader>
+            <TableBody>
+              {tickets.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center p-4">
+                    No tickets found
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                tickets.map((ticket) => (
+                  <TableRow 
+                    key={ticket.id} 
+                    className={cn(
+                      "cursor-pointer hover:bg-muted/50",
+                      selectedTicket?.id === ticket.id && "bg-muted"
+                    )}
+                    onClick={() => onTicketSelect(ticket)}
+                  >
+                    <TableCell className="font-medium">{ticket.id}</TableCell>
+                    <TableCell>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <span className="underline underline-offset-4 decoration-dotted">
+                            {ticket.title}
+                          </span>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80">
+                          <div className="space-y-2">
+                            <h4 className="font-medium">{ticket.title}</h4>
+                            <p className="text-sm text-muted-foreground">{ticket.description}</p>
+                            {ticket.department && (
+                              <div className="text-xs">
+                                <span className="font-medium">Department:</span> {ticket.department}
+                              </div>
+                            )}
+                            {ticket.location && (
+                              <div className="text-xs">
+                                <span className="font-medium">Location:</span> {ticket.location}
+                              </div>
+                            )}
+                            <div className="text-xs">
+                              <span className="font-medium">Created:</span> {formatTime(ticket.createdAt)}
+                            </div>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
+                    </TableCell>
+                    <TableCell>
+                      <div className={cn(
+                        "flex items-center gap-2 px-2 py-1 rounded-full w-fit",
+                        getStatusColor(ticket.status)
+                      )}>
+                        {getStatusIcon(ticket.status)}
+                        <span className="capitalize text-xs">{ticket.status.replace('-', ' ')}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={cn(
+                        "font-medium capitalize",
+                        getPriorityColor(ticket.priority)
+                      )}>
+                        {ticket.priority}
+                      </span>
+                    </TableCell>
+                    <TableCell>{ticket.assignedTo || 'Unassigned'}</TableCell>
+                    <TableCell>{formatTime(ticket.updatedAt)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {getResolutionMethodIcon(ticket.resolutionMethod)}
+                        <span className="text-xs capitalize">
+                          {ticket.resolutionMethod ? ticket.resolutionMethod.replace('-', ' ') : 'Pending'}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onTicketSelect(ticket);
+                          }}
+                          title="View details"
+                        >
+                          <PanelRight className="h-4 w-4" />
+                          <span className="sr-only">Details</span>
+                        </Button>
+                        
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={(e) => handleRootCauseAnalysis(ticket, e)}
+                          title="Root Cause Analysis"
+                        >
+                          <FileSearch className="h-4 w-4" />
+                          <span className="sr-only">Root Cause Analysis</span>
+                        </Button>
+                        
+                        {onEscalateTicket && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEscalateTicket(ticket.id);
+                            }}
+                            title="Escalate ticket"
+                          >
+                            <ArrowUpRight className="h-4 w-4" />
+                            <span className="sr-only">Escalate</span>
+                          </Button>
+                        )}
+                        
+                        {onCloseTicket && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onCloseTicket(ticket.id);
+                            }}
+                            title="Close ticket"
+                          >
+                            <XCircle className="h-4 w-4" />
+                            <span className="sr-only">Close</span>
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-    </div>
+      
+      <RootCauseAnalysisDialog 
+        ticket={analysisTicket}
+        open={analysisDialogOpen}
+        onOpenChange={setAnalysisDialogOpen}
+      />
+    </>
   );
 };
 
