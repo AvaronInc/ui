@@ -35,6 +35,7 @@ export interface Zone {
   vaultIdRequired?: boolean; // Required by ZoneHeader and ZonesOverview
   adminScopes?: string[]; // Required by ZoneAdmins and other components
   services?: any[]; // Required by ZoneServices and other components
+  complianceTags?: string[]; // Used in ComplianceSecurity
   storageConfig?: {
     tier: string;
     size: number;
@@ -53,7 +54,6 @@ export interface Zone {
     publicBucketsAllowed?: boolean;
     customRetention?: boolean;
   }; // Required by ZoneNestvault
-  complianceTags?: string[]; // Used in ComplianceSecurity
 }
 
 export interface ZoneUser {

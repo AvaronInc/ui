@@ -1,5 +1,6 @@
 
 import { ServiceType } from '../../types';
+import { getServiceTypeFromString, isServiceType } from './typeAdapters';
 
 export const mockServiceTypes: Record<string, ServiceType> = {
   'identity': {
@@ -34,7 +35,12 @@ export const mockServiceTypes: Record<string, ServiceType> = {
   }
 };
 
-export function getServiceTypeFromString(typeString: string): ServiceType {
+// Enhanced version with type checking
+export function getServiceTypeFromString(typeString: string | ServiceType): ServiceType {
+  if (isServiceType(typeString)) {
+    return typeString;
+  }
+  
   return mockServiceTypes[typeString] || {
     id: typeString,
     name: typeString.charAt(0).toUpperCase() + typeString.slice(1),

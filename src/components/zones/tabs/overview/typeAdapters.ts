@@ -1,9 +1,74 @@
 
-import { StorageStatus, StorageTier } from '../../types';
+import { StorageStatus, StorageTier, ServiceType } from '../../types';
 
 /**
  * Type adapter functions to convert string values to typed objects
  */
+
+// Define a type guard for ServiceType
+export function isServiceType(value: any): value is ServiceType {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'name' in value &&
+    'icon' in value
+  );
+}
+
+// This helper ensures that we always get a properly formatted ServiceType object
+export function getServiceTypeFromString(typeString: string): ServiceType {
+  // Convert string status to ServiceType object
+  const typeMap: Record<string, ServiceType> = {
+    'identity': {
+      id: 'identity',
+      name: 'Identity & Access',
+      icon: 'shield-check'
+    },
+    'network': {
+      id: 'network',
+      name: 'Network',
+      icon: 'network'
+    },
+    'database': {
+      id: 'database',
+      name: 'Database',
+      icon: 'database'
+    },
+    'storage': {
+      id: 'storage',
+      name: 'Storage',
+      icon: 'hard-drive'
+    },
+    'ai': {
+      id: 'ai',
+      name: 'AI & ML',
+      icon: 'brain'
+    },
+    'finance': {
+      id: 'finance',
+      name: 'Financial',
+      icon: 'currency-dollar'
+    }
+  };
+  
+  return typeMap[typeString] || {
+    id: typeString,
+    name: typeString.charAt(0).toUpperCase() + typeString.slice(1),
+    icon: 'circle'
+  };
+}
+
+// Type guard for StorageStatus
+export function isStorageStatus(value: any): value is StorageStatus {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'name' in value &&
+    'color' in value
+  );
+}
 
 export function getStorageStatusFromString(statusString: string): StorageStatus {
   // Convert string status to StorageStatus object
@@ -15,6 +80,19 @@ export function getStorageStatusFromString(statusString: string): StorageStatus 
   };
   
   return statusMap[statusString] || { id: 'unknown', name: statusString, color: 'gray' };
+}
+
+// Type guard for StorageTier
+export function isStorageTier(value: any): value is StorageTier {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'name' in value &&
+    'description' in value &&
+    'features' in value &&
+    Array.isArray(value.features)
+  );
 }
 
 export function getStorageTierFromString(tierString: string): StorageTier {
@@ -46,4 +124,12 @@ export function getStorageTierFromString(tierString: string): StorageTier {
     description: 'Custom storage tier',
     features: ['Custom Configuration']
   };
+}
+
+// A unified adapter function to ensure we have a properly formatted object
+export function ensureProperType<T>(value: string | T, converter: (value: string) => T): T {
+  if (typeof value === 'string') {
+    return converter(value);
+  }
+  return value;
 }
