@@ -1,14 +1,13 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Layout } from 'react-grid-layout';
 import { useAuth } from '@/context/auth';
 
 // Default dashboard layouts for different breakpoints
 export const defaultLayout: Layout[] = [
-  { i: 'security-overview-default', x: 0, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'network-status-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'system-performance-default', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'active-alerts-default', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'network-status-default', x: 0, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'security-overview-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'zone-insights-default', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'unverified-users-default', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
 ];
 
 type GridLayoutContextType = {

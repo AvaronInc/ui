@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -12,7 +11,6 @@ import { GridItem } from './GridItem';
 import { WidgetLibraryDrawer } from './WidgetLibraryDrawer';
 import { toast } from 'sonner';
 
-// Add width provider to make Responsive Grid Layout aware of container width
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 interface GridLayoutProps {
@@ -32,12 +30,10 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
   } = useGridLayout();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-  // Handle layout change
   const handleLayoutChange = (currentLayout: Layout[], allLayouts: { [key: string]: Layout[] }) => {
     saveLayout(allLayouts);
   };
 
-  // Toggle edit mode
   const toggleEditMode = () => {
     setEditMode(!editMode);
     if (editMode) {
@@ -45,29 +41,34 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
     }
   };
 
-  // Reset to default layout
   const handleResetLayout = () => {
     resetToDefaultLayout();
     toast.success("Layout reset to default");
   };
 
-  // Open widget library drawer
   const openWidgetLibrary = () => {
     setDrawerOpen(true);
   };
 
-  // Get the current layout items
   const currentLayoutItems = layouts.lg || [];
   
-  // Only render widgets that exist in the current layout
   const activeWidgetIds = currentLayoutItems.map(item => item.i);
 
-  // Ensure we're not exceeding the widget limit
   React.useEffect(() => {
     if (widgetCount > maxWidgets) {
       console.warn(`Widget count (${widgetCount}) exceeds maximum (${maxWidgets}). Some widgets may not be displayed.`);
     }
   }, [widgetCount, maxWidgets]);
+
+  const getWidgetType = (widgetId: string) => {
+    const parts = widgetId.split('-');
+    if (parts.length >= 2) {
+      if (parts[parts.length - 1] === 'default') {
+        return parts.slice(0, parts.length - 1).join('-');
+      }
+    }
+    return parts[0];
+  };
 
   return (
     <div className="space-y-4">
@@ -132,10 +133,13 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
         draggableHandle=".grid-item-drag-handle"
       >
         {activeWidgetIds.map((widgetId) => {
-          const widgetType = widgetId.split('-')[0];
+          const widgetType = getWidgetType(widgetId);
           const component = widgetComponents[widgetType];
           
-          if (!component) return null;
+          if (!component) {
+            console.warn(`No component found for widget type: ${widgetType}`);
+            return null;
+          }
           
           return (
             <div 
