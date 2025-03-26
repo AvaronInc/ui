@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Zone } from '../types';
 import { ZoneStatusBadge } from '../ZonesPanel';
-import { Clock, Server, ShieldAlert, Users, AlertTriangle, Activity, CheckCircle2, Ticket, Cpu, Memory, HardDrive } from 'lucide-react';
+import { Clock, Server, ShieldAlert, Users, AlertTriangle, Activity, CheckCircle2, Ticket, Cpu, MemoryStick, HardDrive } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import StatusBadge from '@/components/aim/system-health/StatusBadge';
@@ -131,7 +131,7 @@ const ZoneOverview: React.FC<ZoneOverviewProps> = ({ zone }) => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="flex items-center gap-1">
-                    <Memory className="h-4 w-4 text-purple-500" />
+                    <MemoryStick className="h-4 w-4 text-purple-500" />
                     <span>RAM</span>
                   </span>
                   <span className="font-medium">{zone.resourceUsage.ram}%</span>
