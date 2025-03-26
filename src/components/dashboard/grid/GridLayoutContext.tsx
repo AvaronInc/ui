@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Layout } from 'react-grid-layout';
 import { useAuth } from '@/context/auth';
@@ -9,6 +8,7 @@ export const defaultLayout: Layout[] = [
   { i: 'security-overview-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'zone-insights-default', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'unverified-users-default', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'daily-news-default', x: 0, y: 16, w: 6, h: 10, minW: 4, minH: 8 },
 ];
 
 type GridLayoutContextType = {
@@ -37,7 +37,6 @@ export type WidgetDefinition = {
 
 // Available widgets for the library
 export const availableWidgets: WidgetDefinition[] = [
-  // Original widgets
   {
     id: 'security-overview',
     title: 'Security & Compliance',
@@ -84,7 +83,6 @@ export const availableWidgets: WidgetDefinition[] = [
     category: 'Zones'
   },
 
-  // Identity & Access widgets
   {
     id: 'mfa-login-attempts',
     title: 'MFA Login Attempts',
@@ -113,7 +111,6 @@ export const availableWidgets: WidgetDefinition[] = [
     category: 'Identity'
   },
 
-  // Storage widgets
   {
     id: 'zone-storage-usage',
     title: 'Zone Storage Usage',
@@ -142,7 +139,6 @@ export const availableWidgets: WidgetDefinition[] = [
     category: 'Storage'
   },
 
-  // Network widgets
   {
     id: 'active-sites',
     title: 'Active Sites',
@@ -180,7 +176,6 @@ export const availableWidgets: WidgetDefinition[] = [
     category: 'Network'
   },
 
-  // Security widgets
   {
     id: 'threat-summary',
     title: 'Threat Summary',
@@ -218,7 +213,6 @@ export const availableWidgets: WidgetDefinition[] = [
     category: 'Security'
   },
 
-  // AI & Observability widgets
   {
     id: 'unresolved-ai-tickets',
     title: 'Unresolved AI Tickets',
@@ -256,7 +250,6 @@ export const availableWidgets: WidgetDefinition[] = [
     category: 'AI'
   },
 
-  // Compliance & Logging widgets
   {
     id: 'compliance-scorecard',
     title: 'Compliance Scorecard',
@@ -293,6 +286,16 @@ export const availableWidgets: WidgetDefinition[] = [
     defaultSize: { w: 4, h: 6 },
     category: 'Compliance'
   },
+
+  {
+    id: 'daily-news',
+    title: 'Daily AI News Feed',
+    description: 'Curated cybersecurity and IT news with AI-powered insights',
+    icon: 'newspaper',
+    type: 'daily-news',
+    defaultSize: { w: 6, h: 10 },
+    category: 'AI'
+  },
 ];
 
 export const GridLayoutContext = createContext<GridLayoutContextType>({
@@ -318,38 +321,31 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const userId = user?.id || 'anonymous';
   const maxWidgets = 12;
 
-  // Calculate current widget count based on actual layout
   const widgetCount = layouts.lg?.length || 0;
 
-  // Load saved layout from localStorage on mount
   useEffect(() => {
     try {
       const savedLayouts = localStorage.getItem(`dashboard-layout-${userId}`);
       if (savedLayouts) {
         const parsedLayouts = JSON.parse(savedLayouts);
         
-        // Ensure we don't exceed the maximum widgets
         if (parsedLayouts.lg && parsedLayouts.lg.length > maxWidgets) {
           parsedLayouts.lg = parsedLayouts.lg.slice(0, maxWidgets);
         }
         
         setLayouts(parsedLayouts);
       } else {
-        // If no saved layout, use the default
         console.log("No saved layout found, using default layout");
         setLayouts({ lg: defaultLayout });
       }
     } catch (error) {
       console.error('Error loading layouts:', error);
-      // Fall back to default layout
       setLayouts({ lg: defaultLayout });
     }
   }, [userId]);
 
-  // Save layout to localStorage when it changes
   const saveLayout = (newLayouts: { [key: string]: Layout[] }) => {
     try {
-      // Ensure we don't exceed the maximum widgets
       const sanitizedLayouts = { ...newLayouts };
       
       if (sanitizedLayouts.lg && sanitizedLayouts.lg.length > maxWidgets) {
@@ -363,14 +359,12 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   };
 
-  // Reset to default layout
   const resetToDefaultLayout = () => {
     const resetLayout = { lg: defaultLayout };
     localStorage.setItem(`dashboard-layout-${userId}`, JSON.stringify(resetLayout));
     setLayouts(resetLayout);
   };
 
-  // Remove a widget from the layout
   const removeWidget = (widgetId: string) => {
     console.log("Removing widget:", widgetId);
     const updatedLayouts = Object.keys(layouts).reduce((acc, breakpoint) => {
@@ -382,11 +376,9 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     saveLayout(updatedLayouts);
   };
 
-  // Add a widget to the layout
   const addWidget = (widgetId: string, widgetType: string) => {
     console.log("Adding widget:", { widgetId, widgetType });
     
-    // Check if we've reached the maximum number of widgets
     if (widgetCount >= maxWidgets) {
       console.warn(`Maximum widget limit (${maxWidgets}) reached. Remove widgets before adding more.`);
       return;
@@ -402,12 +394,9 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const updatedLayouts = { ...layouts };
     
     Object.keys(updatedLayouts).forEach(breakpoint => {
-      // Check if widget already exists
       const exists = updatedLayouts[breakpoint].some(item => item.i === widgetId);
       
       if (!exists) {
-        // Find a position for the new widget
-        // Calculate y position based on existing widgets
         const maxY = updatedLayouts[breakpoint].reduce(
           (max, item) => Math.max(max, item.y + item.h), 
           0
@@ -423,7 +412,6 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           minH: 4
         };
         
-        // Ensure we don't exceed the maximum widget count
         if (updatedLayouts[breakpoint].length < maxWidgets) {
           updatedLayouts[breakpoint] = [...updatedLayouts[breakpoint], newWidget];
         }

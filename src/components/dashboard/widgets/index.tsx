@@ -9,15 +9,17 @@ import TopBucketsByGrowth from './storage/TopBucketsByGrowth';
 import ThreatSummary from './security/ThreatSummary';
 import TopBlockedIPs from './security/TopBlockedIPs';
 import ActiveCVEs from './security/ActiveCVEs';
+import DailyNewsWidget from './news/DailyNewsWidget';
 
 export {
   MFALoginAttempts,
-  UnverifiedUsers,
+  UnverifiedUsers, 
   PendingIdentityApprovals,
   ZoneStorageUsage,
   CloudSyncStatus,
   TopBucketsByGrowth,
   ThreatSummary,
   TopBlockedIPs,
-  ActiveCVEs
+  ActiveCVEs,
+  DailyNewsWidget
 };

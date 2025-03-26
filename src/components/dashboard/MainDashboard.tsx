@@ -13,7 +13,7 @@ import { GridLayout } from './grid/GridLayout';
 import { GridLayoutProvider } from './grid/GridLayoutContext';
 import ZoneInsights from '../zones/sidebar/ZoneInsights';
 
-// Import the new widgets
+// Import the widgets
 import {
   MFALoginAttempts,
   UnverifiedUsers, 
@@ -23,7 +23,8 @@ import {
   TopBucketsByGrowth,
   ThreatSummary,
   TopBlockedIPs,
-  ActiveCVEs
+  ActiveCVEs,
+  DailyNewsWidget
 } from './widgets';
 
 const MainDashboard = () => {
@@ -62,6 +63,9 @@ const MainDashboard = () => {
     'threat-summary': <ThreatSummary />,
     'top-blocked-ips': <TopBlockedIPs />,
     'active-cves': <ActiveCVEs />,
+    
+    // News widget
+    'daily-news': <DailyNewsWidget />,
   };
 
   console.log("Available widget components:", Object.keys(widgetComponents));
