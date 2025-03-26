@@ -10,6 +10,7 @@ import ResourceUsageCharts from './ResourceUsageCharts';
 import NetworkTab from './tabs/NetworkTab';
 import LogsTab from './tabs/LogsTab';
 import DependenciesTab from './tabs/DependenciesTab';
+import RCATab from './tabs/RCATab';
 
 interface SystemServiceDetailProps {
   service: SystemService;
@@ -45,6 +46,10 @@ const SystemServiceDetail: React.FC<SystemServiceDetailProps> = ({ service, onRe
           
           <TabsContent value="dependencies">
             <DependenciesTab service={service} />
+          </TabsContent>
+          
+          <TabsContent value="rca">
+            <RCATab service={service} />
           </TabsContent>
         </Tabs>
       </CardContent>
