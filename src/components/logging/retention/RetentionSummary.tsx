@@ -3,106 +3,161 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Check, AlertTriangle, CloudOff } from 'lucide-react';
+import { Clock, HardDrive, CloudOff, AlertTriangle } from 'lucide-react';
 
-const RetentionSummary: React.FC = () => {
+const RetentionSummary = () => {
   return (
-    <Card className="sticky top-6">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg">Storage & Retention Summary</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Log Volume Summary */}
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium">Total Log Volume</h4>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Wazuh</span>
-              <span className="font-medium">345.2 GB</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Arkime</span>
-              <span className="font-medium">1.2 TB</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Syslog</span>
-              <span className="font-medium">89.7 GB</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Firewall</span>
-              <span className="font-medium">157.3 GB</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t pt-3">
-          <h4 className="text-sm font-medium mb-2">Retention Summary</h4>
-          <div className="space-y-1 text-sm">
-            <div className="flex justify-between">
-              <span>Wazuh</span>
-              <span className="font-medium">90 days</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Arkime</span>
-              <span className="font-medium">30 days</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Syslog</span>
-              <span className="font-medium">180 days</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Firewall</span>
-              <span className="font-medium">60 days</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t pt-3">
-          <h4 className="text-sm font-medium mb-3">Storage Usage</h4>
-          
-          <div className="space-y-3">
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Local Storage</span>
-                <span className="font-medium">78%</span>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-medium flex items-center">
+            <Clock className="h-4 w-4 mr-2 text-blue-500" />
+            Time-Based Retention
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">System Logs</p>
+                <p className="text-xs text-muted-foreground">90 days retention</p>
               </div>
-              <Progress value={78} className="h-2" />
-            </div>
-            
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Cloud Storage</span>
-                <span className="font-medium">23%</span>
-              </div>
-              <Progress value={23} className="h-2" />
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t pt-3">
-          <h4 className="text-sm font-medium mb-2">Sync Status</h4>
-          
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <CloudOff className="h-4 w-4 text-green-500" />
-              <span className="text-sm">Last sync: 23 minutes ago</span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-green-500" />
-              <span className="text-sm">Hash verification: Passed</span>
-            </div>
-            
-            <div>
-              <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20 flex items-center gap-1">
-                <AlertTriangle className="h-3 w-3" />
-                <span>Arkime rotation in 2 days</span>
+              <Badge variant="outline" className="text-xs">
+                85% used
               </Badge>
             </div>
+            <Progress value={85} className="h-2" />
+            
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">Security Events</p>
+                <p className="text-xs text-muted-foreground">180 days retention</p>
+              </div>
+              <Badge variant="outline" className="text-xs">
+                42% used
+              </Badge>
+            </div>
+            <Progress value={42} className="h-2" />
+            
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">Audit Trails</p>
+                <p className="text-xs text-muted-foreground">365 days retention</p>
+              </div>
+              <Badge variant="outline" className="text-xs">
+                28% used
+              </Badge>
+            </div>
+            <Progress value={28} className="h-2" />
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-medium flex items-center">
+            <HardDrive className="h-4 w-4 mr-2 text-purple-500" />
+            Size-Based Retention
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">Network Traffic</p>
+                <p className="text-xs text-muted-foreground">500 GB capacity</p>
+              </div>
+              <Badge variant="outline" className="text-xs">
+                73% used
+              </Badge>
+            </div>
+            <Progress value={73} className="h-2" />
+            
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">Packet Captures</p>
+                <p className="text-xs text-muted-foreground">2 TB capacity</p>
+              </div>
+              <Badge variant="outline" className="text-xs">
+                64% used
+              </Badge>
+            </div>
+            <Progress value={64} className="h-2" />
+            
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">Application Logs</p>
+                <p className="text-xs text-muted-foreground">350 GB capacity</p>
+              </div>
+              <Badge className="text-xs bg-amber-500 hover:bg-amber-600">
+                91% used
+              </Badge>
+            </div>
+            <Progress value={91} className="h-2" />
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-medium flex items-center">
+            <CloudOff className="h-4 w-4 mr-2 text-green-500" />
+            Offsite Archiving
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">Cold Storage</p>
+                <p className="text-xs text-muted-foreground">Last sync: 2 hours ago</p>
+              </div>
+              <Badge variant="outline" className="text-xs">
+                Synced
+              </Badge>
+            </div>
+            <Progress value={100} className="h-2" />
+            
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium">Legal Hold</p>
+                <p className="text-xs text-muted-foreground">5 cases active</p>
+              </div>
+              <Badge variant="outline" className="text-xs">
+                Protected
+              </Badge>
+            </div>
+            <Progress value={100} className="h-2" />
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-medium flex items-center">
+            <AlertTriangle className="h-4 w-4 mr-2 text-red-500" />
+            Warnings & Alerts
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="p-3 rounded-md border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/50">
+              <p className="text-sm font-medium text-amber-800 dark:text-amber-300">Application Logs approaching capacity</p>
+              <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                Consider increasing storage allocation or review retention policy
+              </p>
+            </div>
+            
+            <div className="p-3 rounded-md border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/50">
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-300">7 days remaining until compliance audit</p>
+              <p className="text-xs text-blue-700 dark:text-blue-400 mt-1">
+                Verify all retention policies are in compliance with regulations
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

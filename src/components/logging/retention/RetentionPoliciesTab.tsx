@@ -132,6 +132,26 @@ const RetentionPoliciesTab: React.FC = () => {
     toast.success(`Policy for ${policy.logType} applied to current tenant`);
   };
 
+  // Safe close functions that ensure state is properly reset
+  const handleCloseNewPolicy = () => {
+    setIsNewPolicyOpen(false);
+  };
+
+  const handleCloseEditPolicy = () => {
+    setIsEditPolicyOpen(false);
+    setSelectedPolicy(null);
+  };
+
+  const handleSaveNewPolicy = () => {
+    toast.success('New policy created successfully');
+    handleCloseNewPolicy();
+  };
+
+  const handleUpdatePolicy = () => {
+    toast.success('Policy updated successfully');
+    handleCloseEditPolicy();
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -208,10 +228,7 @@ const RetentionPoliciesTab: React.FC = () => {
       </Card>
 
       {/* New Policy Dialog */}
-      <Dialog open={isNewPolicyOpen} onOpenChange={(open) => {
-        setIsNewPolicyOpen(open);
-        if (!open) setSelectedPolicy(null);
-      }}>
+      <Dialog open={isNewPolicyOpen} onOpenChange={handleCloseNewPolicy}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Create New Retention Policy</DialogTitle>
@@ -338,13 +355,10 @@ const RetentionPoliciesTab: React.FC = () => {
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsNewPolicyOpen(false)}>
+            <Button variant="outline" onClick={handleCloseNewPolicy}>
               Cancel
             </Button>
-            <Button onClick={() => {
-              toast.success('New policy created successfully');
-              setIsNewPolicyOpen(false);
-            }}>
+            <Button onClick={handleSaveNewPolicy}>
               Create Policy
             </Button>
           </DialogFooter>
@@ -352,10 +366,7 @@ const RetentionPoliciesTab: React.FC = () => {
       </Dialog>
       
       {/* Edit Policy Dialog */}
-      <Dialog open={isEditPolicyOpen} onOpenChange={(open) => {
-        setIsEditPolicyOpen(open);
-        if (!open) setSelectedPolicy(null);
-      }}>
+      <Dialog open={isEditPolicyOpen} onOpenChange={handleCloseEditPolicy}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Edit Retention Policy</DialogTitle>
@@ -450,13 +461,10 @@ const RetentionPoliciesTab: React.FC = () => {
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditPolicyOpen(false)}>
+            <Button variant="outline" onClick={handleCloseEditPolicy}>
               Cancel
             </Button>
-            <Button onClick={() => {
-              toast.success('Policy updated successfully');
-              setIsEditPolicyOpen(false);
-            }}>
+            <Button onClick={handleUpdatePolicy}>
               Update Policy
             </Button>
           </DialogFooter>
