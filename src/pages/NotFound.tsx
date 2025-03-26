@@ -19,15 +19,15 @@ const NotFound = () => {
     <PageTransition>
       <div className="min-h-screen flex flex-col bg-background">
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="w-full max-w-md text-center space-y-6 glass-card p-8 rounded-xl">
+          <div className="w-full max-w-md text-center space-y-6 bg-card/80 backdrop-blur-sm border border-border shadow-lg p-8 rounded-xl">
             <div className="space-y-2">
-              <h1 className="text-5xl font-bold">404</h1>
-              <p className="text-xl text-muted-foreground">Page not found</p>
+              <h1 className="text-6xl font-bold text-primary">404</h1>
+              <p className="text-xl text-foreground">Page not found</p>
             </div>
             <p className="text-muted-foreground">
               The page you're looking for doesn't exist or has been moved.
             </p>
-            <Button asChild>
+            <Button asChild className="mt-4">
               <Link to="/">Return to Dashboard</Link>
             </Button>
           </div>
