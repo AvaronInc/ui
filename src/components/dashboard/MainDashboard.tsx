@@ -24,7 +24,8 @@ import {
   ThreatSummary,
   TopBlockedIPs,
   ActiveCVEs,
-  DailyNewsWidget
+  DailyNewsWidget,
+  WeatherBySiteWidget
 } from './widgets';
 
 const MainDashboard = () => {
@@ -66,6 +67,9 @@ const MainDashboard = () => {
     
     // News widget
     'daily-news': <DailyNewsWidget />,
+    
+    // Weather widget
+    'weather-by-site': <WeatherBySiteWidget />,
   };
 
   console.log("Available widget components:", Object.keys(widgetComponents));

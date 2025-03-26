@@ -296,6 +296,16 @@ export const availableWidgets: WidgetDefinition[] = [
     defaultSize: { w: 6, h: 10 },
     category: 'AI'
   },
+
+  {
+    id: 'weather-by-site',
+    title: 'Weather by Site',
+    description: 'Weather conditions for all organization locations',
+    icon: 'cloud-rain',
+    type: 'weather-by-site',
+    defaultSize: { w: 4, h: 8 },
+    category: 'Operations'
+  },
 ];
 
 export const GridLayoutContext = createContext<GridLayoutContextType>({

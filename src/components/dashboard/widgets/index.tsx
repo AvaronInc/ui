@@ -10,6 +10,7 @@ import ThreatSummary from './security/ThreatSummary';
 import TopBlockedIPs from './security/TopBlockedIPs';
 import ActiveCVEs from './security/ActiveCVEs';
 import DailyNewsWidget from './news/DailyNewsWidget';
+import WeatherBySiteWidget from './weather/WeatherBySiteWidget';
 
 export {
   MFALoginAttempts,
@@ -21,5 +22,6 @@ export {
   ThreatSummary,
   TopBlockedIPs,
   ActiveCVEs,
-  DailyNewsWidget
+  DailyNewsWidget,
+  WeatherBySiteWidget
 };
