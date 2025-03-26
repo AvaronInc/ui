@@ -16,6 +16,7 @@ import Projects from "./pages/Projects";
 import Identity from "./pages/Identity";
 import Storage from "./pages/Storage";
 import Security from "./pages/Security";
+import Intelligence from "./pages/Intelligence";
 import WorkforceEMS from "./pages/WorkforceEMS";
 import Topology from "./pages/Topology";
 import Nest from "./pages/Nest";
@@ -85,6 +86,7 @@ const App = () => (
                 <Route path="/quantum-encryption" element={<ProtectedRoute><QuantumEncryption /></ProtectedRoute>} />
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
                 <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
+                <Route path="/intelligence" element={<ProtectedRoute><Intelligence /></ProtectedRoute>} />
                 <Route path="/workforce" element={<ProtectedRoute><WorkforceEMS /></ProtectedRoute>} />
                 <Route path="/messaging" element={<ProtectedRoute><Messaging /></ProtectedRoute>} />
                 <Route path="/teams-chat" element={<ProtectedRoute><TeamsChat /></ProtectedRoute>} />
