@@ -96,7 +96,7 @@ const DeviceDetailPanel = ({ device, open, onClose }: DeviceDetailPanelProps) =>
             </TabsContent>
             
             <TabsContent value="connections" className="space-y-4 mt-4">
-              <DeviceConnections connections={device.connections} />
+              <DeviceConnections device={device} />
             </TabsContent>
             
             <TabsContent value="stats" className="space-y-4 mt-4">
