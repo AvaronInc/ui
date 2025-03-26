@@ -14,7 +14,7 @@ const AuthCard = () => {
       <CardHeader className="text-center">
         <div className="mx-auto mb-4">
           <img 
-            src="/lovable-uploads/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png" 
+            src="/lovable-uploads/ede20021-c7ab-4b80-ae9a-9356f305c24c.png" 
             alt="Logo" 
             className="h-20 mx-auto"
           />
