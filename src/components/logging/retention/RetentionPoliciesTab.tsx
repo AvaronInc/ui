@@ -261,16 +261,18 @@ const RetentionPoliciesTab: React.FC = () => {
               <Label htmlFor="rotation" className="text-right">
                 Rotation Method
               </Label>
-              <Select defaultValue="time" className="col-span-3">
-                <SelectTrigger>
-                  <SelectValue placeholder="Select rotation type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="time">Time-based</SelectItem>
-                  <SelectItem value="size">Size-based</SelectItem>
-                  <SelectItem value="hybrid">Hybrid</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="col-span-3">
+                <Select defaultValue="time">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select rotation type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="time">Time-based</SelectItem>
+                    <SelectItem value="size">Size-based</SelectItem>
+                    <SelectItem value="hybrid">Hybrid</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             
             <div className="grid grid-cols-4 items-center gap-4">
@@ -296,35 +298,39 @@ const RetentionPoliciesTab: React.FC = () => {
               <Label htmlFor="replication" className="text-right">
                 Min Replication
               </Label>
-              <Select defaultValue="2" className="col-span-3">
-                <SelectTrigger>
-                  <SelectValue placeholder="Select replication count" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 copy</SelectItem>
-                  <SelectItem value="2">2 copies</SelectItem>
-                  <SelectItem value="3">3 copies</SelectItem>
-                  <SelectItem value="4">4 copies</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="col-span-3">
+                <Select defaultValue="2">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select replication count" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 copy</SelectItem>
+                    <SelectItem value="2">2 copies</SelectItem>
+                    <SelectItem value="3">3 copies</SelectItem>
+                    <SelectItem value="4">4 copies</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="compliance" className="text-right">
                 Compliance Tags
               </Label>
-              <Select defaultValue="pci" className="col-span-3">
-                <SelectTrigger>
-                  <SelectValue placeholder="Select compliance tags" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pci">PCI DSS</SelectItem>
-                  <SelectItem value="hipaa">HIPAA</SelectItem>
-                  <SelectItem value="gdpr">GDPR</SelectItem>
-                  <SelectItem value="sox">SOX</SelectItem>
-                  <SelectItem value="fedramp">FedRAMP</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="col-span-3">
+                <Select defaultValue="pci">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select compliance tags" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pci">PCI DSS</SelectItem>
+                    <SelectItem value="hipaa">HIPAA</SelectItem>
+                    <SelectItem value="gdpr">GDPR</SelectItem>
+                    <SelectItem value="sox">SOX</SelectItem>
+                    <SelectItem value="fedramp">FedRAMP</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
           

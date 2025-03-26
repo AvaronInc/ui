@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Check, AlertTriangle, CloudSync } from 'lucide-react';
+import { Check, AlertTriangle, CloudOff } from 'lucide-react';
 
 const RetentionSummary: React.FC = () => {
   return (
@@ -84,7 +84,7 @@ const RetentionSummary: React.FC = () => {
           
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <CloudSync className="h-4 w-4 text-green-500" />
+              <CloudOff className="h-4 w-4 text-green-500" />
               <span className="text-sm">Last sync: 23 minutes ago</span>
             </div>
             
