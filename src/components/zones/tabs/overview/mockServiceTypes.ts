@@ -34,4 +34,4 @@ export const mockServiceTypes: Record<string, ServiceType> = {
   }
 };
 
-// Removed the duplicate getServiceTypeFromString function to avoid conflict with typeAdapters.ts
+// Note: Using the centralized adapter functions from utils/typeAdapters.ts instead
