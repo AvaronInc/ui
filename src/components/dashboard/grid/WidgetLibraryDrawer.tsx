@@ -26,6 +26,7 @@ interface WidgetLibraryDrawerProps {
 export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, onClose }) => {
   const { availableWidgets, addWidget, widgetCount, maxWidgets } = useGridLayout();
   const [activeCategory, setActiveCategory] = useState("all");
+  const hasReachedLimit = widgetCount >= maxWidgets;
 
   const categories = [
     { id: "all", name: "All Widgets", icon: <LayoutGrid className="h-4 w-4" /> },
@@ -69,7 +70,7 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
   };
 
   const handleAddWidget = (widget: any) => {
-    if (widgetCount >= maxWidgets) {
+    if (hasReachedLimit) {
       toast.error(`Maximum of ${maxWidgets} widgets allowed. Remove some widgets first.`);
       return;
     }
@@ -91,6 +92,11 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
           <DrawerTitle>Widget Library</DrawerTitle>
           <DrawerDescription>
             Select widgets to add to your dashboard ({widgetCount}/{maxWidgets} widgets)
+            {hasReachedLimit && (
+              <div className="mt-2 text-amber-500 font-medium">
+                You've reached the maximum number of widgets. Remove some widgets first.
+              </div>
+            )}
           </DrawerDescription>
         </DrawerHeader>
         
@@ -117,9 +123,9 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
               <div
                 key={widget.id}
                 className={`border rounded-lg p-4 transition-colors cursor-pointer ${
-                  widgetCount >= maxWidgets ? 'opacity-50 hover:bg-accent/20' : 'hover:bg-accent/50'
+                  hasReachedLimit ? 'opacity-50 hover:bg-accent/20' : 'hover:bg-accent/50'
                 }`}
-                onClick={() => handleAddWidget(widget)}
+                onClick={() => !hasReachedLimit && handleAddWidget(widget)}
               >
                 <div className="flex items-start gap-3">
                   <div className="p-2 rounded-md bg-primary/10 text-primary">
@@ -133,13 +139,13 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
                     variant="ghost" 
                     size="icon" 
                     className={`h-8 w-8 rounded-full ${
-                      widgetCount >= maxWidgets ? 'opacity-50' : ''
+                      hasReachedLimit ? 'opacity-50' : ''
                     }`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddWidget(widget);
                     }}
-                    disabled={widgetCount >= maxWidgets}
+                    disabled={hasReachedLimit}
                   >
                     <PlusCircle className="h-5 w-5" />
                   </Button>

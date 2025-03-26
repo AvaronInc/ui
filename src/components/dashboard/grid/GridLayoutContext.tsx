@@ -5,10 +5,10 @@ import { useAuth } from '@/context/auth';
 
 // Default dashboard layouts for different breakpoints
 export const defaultLayout: Layout[] = [
-  { i: 'security-overview', x: 0, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'network-status', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'system-performance', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'active-alerts', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'security-overview-default', x: 0, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'network-status-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'system-performance-default', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'active-alerts-default', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
 ];
 
 type GridLayoutContextType = {
@@ -318,7 +318,7 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const userId = user?.id || 'anonymous';
   const maxWidgets = 6;
 
-  // Calculate current widget count
+  // Calculate current widget count based on actual layout
   const widgetCount = layouts.lg?.length || 0;
 
   // Load saved layout from localStorage on mount
@@ -326,7 +326,14 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       const savedLayouts = localStorage.getItem(`dashboard-layout-${userId}`);
       if (savedLayouts) {
-        setLayouts(JSON.parse(savedLayouts));
+        const parsedLayouts = JSON.parse(savedLayouts);
+        
+        // Ensure we don't exceed the maximum widgets
+        if (parsedLayouts.lg && parsedLayouts.lg.length > maxWidgets) {
+          parsedLayouts.lg = parsedLayouts.lg.slice(0, maxWidgets);
+        }
+        
+        setLayouts(parsedLayouts);
       }
     } catch (error) {
       console.error('Error loading layouts:', error);
@@ -338,8 +345,15 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Save layout to localStorage when it changes
   const saveLayout = (newLayouts: { [key: string]: Layout[] }) => {
     try {
-      localStorage.setItem(`dashboard-layout-${userId}`, JSON.stringify(newLayouts));
-      setLayouts(newLayouts);
+      // Ensure we don't exceed the maximum widgets
+      const sanitizedLayouts = { ...newLayouts };
+      
+      if (sanitizedLayouts.lg && sanitizedLayouts.lg.length > maxWidgets) {
+        sanitizedLayouts.lg = sanitizedLayouts.lg.slice(0, maxWidgets);
+      }
+      
+      localStorage.setItem(`dashboard-layout-${userId}`, JSON.stringify(sanitizedLayouts));
+      setLayouts(sanitizedLayouts);
     } catch (error) {
       console.error('Error saving layouts:', error);
     }
@@ -398,7 +412,10 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           minH: 4
         };
         
-        updatedLayouts[breakpoint] = [...updatedLayouts[breakpoint], newWidget];
+        // Ensure we don't exceed the maximum widget count
+        if (updatedLayouts[breakpoint].length < maxWidgets) {
+          updatedLayouts[breakpoint] = [...updatedLayouts[breakpoint], newWidget];
+        }
       }
     });
     

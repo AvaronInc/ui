@@ -27,6 +27,8 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
     resetToDefaultLayout,
     editMode,
     setEditMode,
+    widgetCount,
+    maxWidgets,
   } = useGridLayout();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
@@ -60,6 +62,13 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
   // Only render widgets that exist in the current layout
   const activeWidgetIds = currentLayoutItems.map(item => item.i);
 
+  // Ensure we're not exceeding the widget limit
+  React.useEffect(() => {
+    if (widgetCount > maxWidgets) {
+      console.warn(`Widget count (${widgetCount}) exceeds maximum (${maxWidgets}). Some widgets may not be displayed.`);
+    }
+  }, [widgetCount, maxWidgets]);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4 bg-background/80 backdrop-blur-sm p-3 border rounded-md shadow-sm">
@@ -78,9 +87,10 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
                 variant="outline" 
                 size="sm"
                 onClick={openWidgetLibrary}
+                disabled={widgetCount >= maxWidgets}
               >
                 <PlusSquare className="h-4 w-4 mr-2" />
-                Add Widget
+                Add Widget {widgetCount}/{maxWidgets}
               </Button>
               
               <Button 
