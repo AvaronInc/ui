@@ -1,20 +1,20 @@
 
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Box, Dock, LineChart, Shield, Zap, Inbox } from 'lucide-react';
+import { Box, Dock, LineChart, Shield, Zap, Inbox, FileSearch } from 'lucide-react';
 import ContainersOverview from './ContainersOverview';
 import DeploymentConfiguration from './tabs/DeploymentConfiguration';
 import MonitoringLogs from './tabs/MonitoringLogs';
 import SecurityCompliance from './tabs/SecurityCompliance';
 import AutoHealingOptimization from './tabs/AutoHealingOptimization';
 import RegistryImageManagement from './tabs/RegistryImageManagement';
+import RCATab from './tabs/RCATab';
 import PageTitle from '@/components/common/PageTitle';
 
 const ContainersPanel = () => {
   const [activeTab, setActiveTab] = useState("overview");
 
   const handleTabChange = (value: string) => {
-    // Set the active tab without affecting the sidebar state
     setActiveTab(value);
   };
 
@@ -32,13 +32,14 @@ const ContainersPanel = () => {
         onValueChange={handleTabChange} 
         className="space-y-4"
       >
-        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto">
+        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2 overflow-x-auto">
           <TabsTrigger value="overview" className="px-2 sm:px-4">Overview</TabsTrigger>
           <TabsTrigger value="deployment" className="px-2 sm:px-4">Deployment</TabsTrigger>
           <TabsTrigger value="monitoring" className="px-2 sm:px-4">Monitoring</TabsTrigger>
           <TabsTrigger value="security" className="px-2 sm:px-4">Security</TabsTrigger>
           <TabsTrigger value="optimization" className="px-2 sm:px-4">Auto-Healing</TabsTrigger>
           <TabsTrigger value="registry" className="px-2 sm:px-4">Registry</TabsTrigger>
+          <TabsTrigger value="rca" className="px-2 sm:px-4">RCA</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -63,6 +64,10 @@ const ContainersPanel = () => {
 
         <TabsContent value="registry" className="space-y-4">
           <RegistryImageManagement />
+        </TabsContent>
+
+        <TabsContent value="rca" className="space-y-4">
+          <RCATab />
         </TabsContent>
       </Tabs>
     </div>
