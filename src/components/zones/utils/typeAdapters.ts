@@ -183,40 +183,54 @@ export function isZoneUser(value: any): value is ZoneUser {
   );
 }
 
-export function normalizeUserStatus(status: string): 'active' | 'suspended' | 'pending' {
+export function normalizeUserStatus(status: any): 'active' | 'suspended' | 'pending' {
   if (!status) return 'pending';
   
-  // Case-insensitive status normalization
-  const lowerStatus = String(status).toLowerCase();
+  // Debug output for original input
+  console.log(`normalizeUserStatus input: '${status}' (type: ${typeof status})`);
   
-  // Debug output
-  console.log(`Normalizing user status: '${status}' (${typeof status}) to lowercase: '${lowerStatus}'`);
+  // Convert to string if not already
+  const statusStr = String(status).toLowerCase().trim();
   
-  if (lowerStatus === 'active') return 'active';
-  if (lowerStatus === 'suspended') return 'suspended';
-  if (lowerStatus === 'pending') return 'pending';
+  // Debug output for string conversion
+  console.log(`Converted to string: '${statusStr}'`);
   
+  // Map to allowed values
+  if (statusStr === 'active') return 'active';
+  if (statusStr === 'suspended') return 'suspended';
+  
+  // Everything else defaults to pending for safety
   console.log(`WARNING: Unrecognized status value: '${status}', defaulting to 'pending'`);
   return 'pending';
 }
 
 export function processZoneUsers(users: any[]): ZoneUser[] {
   console.log('Processing zone users, count:', users.length);
+  
   return users.map(user => {
-    // Ensure status is properly normalized
+    // Ensure status is properly normalized to one of the allowed values
     const originalStatus = user.status;
-    const normalizedStatus = normalizeUserStatus(originalStatus || 'pending');
+    const normalizedStatus = normalizeUserStatus(originalStatus);
     
     if (originalStatus !== normalizedStatus) {
       console.log(`Normalized user status from '${originalStatus}' to '${normalizedStatus}'`);
     }
     
-    return {
-      ...user,
+    // Create a properly typed ZoneUser object
+    const normalizedUser: ZoneUser = {
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+      lastLogin: user.lastLogin,
+      mfaStatus: user.mfaStatus,
+      biometricEnrolled: user.biometricEnrolled,
       status: normalizedStatus,
       certificateIssued: user.certificateIssued || null,
       certificateExpiry: user.certificateExpiry || null
     };
+    
+    return normalizedUser;
   });
 }
 
@@ -234,48 +248,6 @@ export function getServiceTypeKey(serviceType: ServiceType | string): string {
     return serviceType;
   }
   return serviceType.id;
-}
-
-// Safe comparison for storage status
-export function matchesStorageStatus(status: string | StorageStatus, targetStatus: StorageStatus): boolean {
-  const normalizedStatus = getStorageStatusFromString(status);
-  return normalizedStatus.id === targetStatus.id;
-}
-
-// Safe comparison for storage tier
-export function matchesStorageTier(tier: string | StorageTier, targetTier: StorageTier): boolean {
-  const normalizedTier = getStorageTierFromString(tier);
-  return normalizedTier.id === targetTier.id;
-}
-
-// Safe string renderer for React nodes
-export function safeRenderText(value: unknown): string {
-  if (value === null || value === undefined) {
-    return '';
-  }
-  
-  if (typeof value === 'string') {
-    return value;
-  }
-  
-  if (typeof value === 'number' || typeof value === 'boolean') {
-    return String(value);
-  }
-  
-  if (typeof value === 'object') {
-    // Handle specific known objects
-    if (value && 'name' in value && typeof value.name === 'string') {
-      return value.name;
-    }
-    
-    try {
-      return JSON.stringify(value);
-    } catch (e) {
-      return '[Object]';
-    }
-  }
-  
-  return String(value);
 }
 
 // For debugging ServiceType issues

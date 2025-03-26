@@ -8,16 +8,19 @@ import { normalizeUserStatus, processZoneUsers } from './typeAdapters';
 
 // Helper function specifically for the ZoneVaultID component
 export const normalizeZoneVaultIDUsers = (users: any[]): ZoneUser[] => {
+  console.log("Input to normalizeZoneVaultIDUsers:", users);
+  
   return users.map(user => {
     // Ensure status is properly normalized to the expected type
+    // This ensures we get one of the three valid statuses: 'active', 'suspended', or 'pending'
     const status = normalizeUserStatus(user.status || 'pending');
     
     // Handle certificate fields - ensure they're either strings or null
     const certificateIssued = user.certificateIssued || null;
     const certificateExpiry = user.certificateExpiry || null;
     
-    // Ensure all required properties conform to ZoneUser type
-    return {
+    // Create a properly typed user object
+    const normalizedUser: ZoneUser = {
       id: user.id,
       fullName: user.fullName,
       email: user.email,
@@ -29,6 +32,9 @@ export const normalizeZoneVaultIDUsers = (users: any[]): ZoneUser[] => {
       certificateIssued: certificateIssued,
       certificateExpiry: certificateExpiry
     };
+    
+    console.log("Normalized user:", normalizedUser);
+    return normalizedUser;
   });
 };
 

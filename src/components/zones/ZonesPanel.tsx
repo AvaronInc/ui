@@ -7,7 +7,7 @@ import ZoneInsights from './sidebar/ZoneInsights';
 import ZoneNestvault from './tabs/ZoneNestvault';
 import ZoneOverview from './tabs/ZoneOverview';
 import ZoneServices from './tabs/ZoneServices';
-import ZoneVaultID from './tabs/ZoneVaultID';
+import ZoneVaultIDWrapper from './tabs/ZoneVaultIDWrapper';
 import { Zone } from './types';
 import { mockZones } from './mockData';
 
@@ -136,7 +136,7 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
         </TabsContent>
         
         <TabsContent value="vaultid" className="space-y-4">
-          <ZoneVaultID zone={zone} />
+          <ZoneVaultIDWrapper zone={zone} />
         </TabsContent>
         
         <TabsContent value="ai" className="space-y-4">
