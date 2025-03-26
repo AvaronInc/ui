@@ -170,18 +170,18 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone: initialZone }) => {
   // Get status badge based on service status
   const getStatusBadge = (status: ServiceStatus, enabled: boolean) => {
     if (!enabled) {
-      return <Badge variant="outline" className="bg-gray-100 text-gray-800">Disabled</Badge>;
+      return <Badge variant="outline" className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">Disabled</Badge>;
     }
 
     switch (status) {
       case 'running':
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Running</Badge>;
+        return <Badge variant="outline" className="bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800">Running</Badge>;
       case 'degraded':
-        return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Degraded</Badge>;
+        return <Badge variant="outline" className="bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800">Degraded</Badge>;
       case 'restart_required':
-        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Restart Required</Badge>;
+        return <Badge variant="outline" className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800">Restart Required</Badge>;
       case 'stopped':
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800">Stopped</Badge>;
+        return <Badge variant="outline" className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">Stopped</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }
@@ -287,15 +287,15 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone: initialZone }) => {
         <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredServices.length === 0 ? (
-              <div className="col-span-2 text-center p-4 bg-slate-50 rounded-md">
+              <div className="col-span-2 text-center p-4 bg-slate-50 dark:bg-slate-900 rounded-md">
                 <p className="text-muted-foreground">No services match the current filter</p>
               </div>
             ) : (
               filteredServices.map(service => (
-                <Card key={service.id} className="overflow-hidden">
+                <Card key={service.id} className="overflow-hidden dark:bg-slate-900 dark:border-slate-800">
                   <CardContent className="p-0">
-                    <div className="flex items-start p-4 border-b">
-                      <div className="flex-shrink-0 p-2 mr-3 bg-slate-100 rounded-md">
+                    <div className="flex items-start p-4 border-b dark:border-slate-800">
+                      <div className="flex-shrink-0 p-2 mr-3 bg-slate-100 dark:bg-slate-800 rounded-md">
                         {getServiceIcon(service.type)}
                       </div>
                       <div className="flex-grow">
@@ -311,7 +311,7 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone: initialZone }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="p-4 bg-slate-50">
+                    <div className="p-4 bg-slate-50 dark:bg-slate-800/50">
                       <div className="flex justify-between items-center mb-2">
                         <div className="flex items-center space-x-2">
                           <span className="text-sm font-medium">Health:</span>
