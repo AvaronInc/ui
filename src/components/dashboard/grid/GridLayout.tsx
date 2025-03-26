@@ -57,45 +57,49 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4 bg-background/80 backdrop-blur-sm p-3 border rounded-md shadow-sm">
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="edit-mode"
-            checked={editMode}
-            onCheckedChange={toggleEditMode}
-          />
-          <Label htmlFor="edit-mode" className="cursor-pointer">
-            {editMode ? "Exit Edit Mode" : "Edit Layout"}
-          </Label>
+        <div className="flex-1">
+          {editMode && (
+            <div className="p-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-md text-amber-800 dark:text-amber-300 text-sm">
+              <p>Layout Edit Mode: Drag widgets by the handle, resize by the corners, and use "Add Widget" to add new components.</p>
+            </div>
+          )}
         </div>
         
-        {editMode && (
-          <div className="flex flex-wrap gap-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={openWidgetLibrary}
-            >
-              <PlusSquare className="h-4 w-4 mr-2" />
-              Add Widget
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleResetLayout}
-            >
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset Layout
-            </Button>
+        <div className="flex items-center space-x-4">
+          {editMode && (
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={openWidgetLibrary}
+              >
+                <PlusSquare className="h-4 w-4 mr-2" />
+                Add Widget
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleResetLayout}
+              >
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset Layout
+              </Button>
+            </div>
+          )}
+          
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="edit-mode"
+              checked={editMode}
+              onCheckedChange={toggleEditMode}
+            />
+            <Label htmlFor="edit-mode" className="cursor-pointer whitespace-nowrap">
+              {editMode ? "Exit Edit Mode" : "Edit Layout"}
+            </Label>
           </div>
-        )}
-      </div>
-
-      {editMode && (
-        <div className="p-2 mb-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-md text-amber-800 dark:text-amber-300 text-sm">
-          <p>Layout Edit Mode: Drag widgets by the handle, resize by the corners, and use "Add Widget" to add new components.</p>
         </div>
-      )}
+      </div>
 
       <ResponsiveGridLayout
         className="layout"
