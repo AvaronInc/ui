@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Layout } from 'react-grid-layout';
 import { useAuth } from '@/context/auth';
@@ -367,16 +368,20 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   // Remove a widget from the layout
   const removeWidget = (widgetId: string) => {
+    console.log("Removing widget:", widgetId);
     const updatedLayouts = Object.keys(layouts).reduce((acc, breakpoint) => {
       acc[breakpoint] = layouts[breakpoint].filter((item) => item.i !== widgetId);
       return acc;
     }, {} as { [key: string]: Layout[] });
     
+    console.log("Updated layouts after removal:", updatedLayouts);
     saveLayout(updatedLayouts);
   };
 
   // Add a widget to the layout
   const addWidget = (widgetId: string, widgetType: string) => {
+    console.log("Adding widget:", { widgetId, widgetType });
+    
     // Check if we've reached the maximum number of widgets
     if (widgetCount >= maxWidgets) {
       console.warn(`Maximum widget limit (${maxWidgets}) reached. Remove widgets before adding more.`);
@@ -385,7 +390,10 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     
     const widget = availableWidgets.find(w => w.type === widgetType);
     
-    if (!widget) return;
+    if (!widget) {
+      console.error(`Widget type "${widgetType}" not found in available widgets.`);
+      return;
+    }
     
     const updatedLayouts = { ...layouts };
     
@@ -418,6 +426,7 @@ export const GridLayoutProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       }
     });
     
+    console.log("Updated layouts after addition:", updatedLayouts);
     saveLayout(updatedLayouts);
   };
 

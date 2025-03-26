@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -63,12 +64,23 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
   const getWidgetType = (widgetId: string) => {
     const parts = widgetId.split('-');
     if (parts.length >= 2) {
+      // Handle default widgets that have "-default" suffix
       if (parts[parts.length - 1] === 'default') {
         return parts.slice(0, parts.length - 1).join('-');
       }
     }
     return parts[0];
   };
+
+  // Debug the layouts and widget rendering
+  React.useEffect(() => {
+    console.log("Current layout items:", currentLayoutItems);
+    console.log("Active widget IDs:", activeWidgetIds);
+    activeWidgetIds.forEach(id => {
+      const type = getWidgetType(id);
+      console.log(`Widget ID: ${id}, Type: ${type}, Has component: ${!!widgetComponents[type]}`);
+    });
+  }, [currentLayoutItems, activeWidgetIds, widgetComponents]);
 
   return (
     <div className="space-y-4">
@@ -137,14 +149,14 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
           const component = widgetComponents[widgetType];
           
           if (!component) {
-            console.warn(`No component found for widget type: ${widgetType}`);
+            console.warn(`No component found for widget type: ${widgetType}`, { widgetId, widgetType, availableComponents: Object.keys(widgetComponents) });
             return null;
           }
           
           return (
             <div 
               key={widgetId} 
-              data-grid={layouts.lg.find(item => item.i === widgetId)}
+              data-grid={currentLayoutItems.find(item => item.i === widgetId)}
               className="overflow-hidden"
             >
               <GridItem 

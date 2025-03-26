@@ -1,15 +1,23 @@
 
-// Identity widgets
-export { default as MFALoginAttempts } from './identity/MFALoginAttempts';
-export { default as UnverifiedUsers } from './identity/UnverifiedUsers';
-export { default as PendingIdentityApprovals } from './identity/PendingIdentityApprovals';
+// Re-export all widgets
+import MFALoginAttempts from './identity/MFALoginAttempts';
+import UnverifiedUsers from './identity/UnverifiedUsers';
+import PendingIdentityApprovals from './identity/PendingIdentityApprovals';
+import ZoneStorageUsage from './storage/ZoneStorageUsage';
+import CloudSyncStatus from './storage/CloudSyncStatus';
+import TopBucketsByGrowth from './storage/TopBucketsByGrowth';
+import ThreatSummary from './security/ThreatSummary';
+import TopBlockedIPs from './security/TopBlockedIPs';
+import ActiveCVEs from './security/ActiveCVEs';
 
-// Storage widgets
-export { default as ZoneStorageUsage } from './storage/ZoneStorageUsage';
-export { default as CloudSyncStatus } from './storage/CloudSyncStatus';
-export { default as TopBucketsByGrowth } from './storage/TopBucketsByGrowth';
-
-// Security widgets
-export { default as ThreatSummary } from './security/ThreatSummary';
-export { default as TopBlockedIPs } from './security/TopBlockedIPs';
-export { default as ActiveCVEs } from './security/ActiveCVEs';
+export {
+  MFALoginAttempts,
+  UnverifiedUsers,
+  PendingIdentityApprovals,
+  ZoneStorageUsage,
+  CloudSyncStatus,
+  TopBucketsByGrowth,
+  ThreatSummary,
+  TopBlockedIPs,
+  ActiveCVEs
+};

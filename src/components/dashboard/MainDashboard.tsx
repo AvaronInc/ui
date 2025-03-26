@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Network, Server, Bell, Activity, BarChart } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Shield, Network, BarChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StatusCardGrid from './StatusCardGrid';
 import SecurityOverviewSection from './sections/SecurityOverviewSection';
@@ -63,6 +63,8 @@ const MainDashboard = () => {
     'top-blocked-ips': <TopBlockedIPs />,
     'active-cves': <ActiveCVEs />,
   };
+
+  console.log("Available widget components:", Object.keys(widgetComponents));
 
   return (
     <GridLayoutProvider>

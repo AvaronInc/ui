@@ -76,6 +76,7 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
     }
     
     const uniqueId = `${widget.type}-${Date.now()}`;
+    console.log("Adding widget from library:", uniqueId, widget.type);
     addWidget(uniqueId, widget.type);
     toast.success(`Added ${widget.title} widget`);
     onClose();
@@ -143,7 +144,7 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
                     }`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleAddWidget(widget);
+                      !hasReachedLimit && handleAddWidget(widget);
                     }}
                     disabled={hasReachedLimit}
                   >

@@ -18,6 +18,7 @@ export const GridItem: React.FC<GridItemProps> = ({ id, children, editMode }) =>
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    console.log("Removing widget from GridItem:", id);
     removeWidget(id);
     toast.info("Widget removed");
   };
