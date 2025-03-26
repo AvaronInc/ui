@@ -4,9 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NetworkDevice, NetworkFlow } from '@/types/sdms';
 import { ReactFlow, Controls, Background, Node, Edge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { AlertCircle, Activity, Network as NetworkIcon } from 'lucide-react';
+import { AlertCircle, Activity, Network as NetworkIcon, Grid2X2, List } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { mockZones } from '@/components/zones/mockData';
+import { Zone } from '@/components/zones/types';
+import { ZoneStatusBadge } from '@/components/zones/ZonesPanel';
 
-// Mock data for network devices
 const mockDevices: NetworkDevice[] = [
   { id: 'fw-01', name: 'Main Firewall', type: 'firewall', ip: '10.0.0.1', zone: 'dmz', status: 'online', lastSeen: new Date().toISOString() },
   { id: 'sw-01', name: 'Core Switch', type: 'switch', ip: '10.0.0.2', zone: 'internal', status: 'online', lastSeen: new Date().toISOString() },
@@ -16,7 +19,6 @@ const mockDevices: NetworkDevice[] = [
   { id: 'srv-02', name: 'Database Server', type: 'server', ip: '10.0.1.11', zone: 'private', status: 'warning', lastSeen: new Date().toISOString() }
 ];
 
-// Mock data for network flows
 const mockFlows: NetworkFlow[] = [
   { id: 'flow-1', source: 'fw-01', target: 'sw-01', protocol: 'TCP', port: 443, bandwidth: '10 Mbps', latency: 2 },
   { id: 'flow-2', source: 'sw-01', target: 'rt-01', protocol: 'TCP', port: 80, bandwidth: '5 Mbps', latency: 1 },
@@ -28,11 +30,10 @@ const mockFlows: NetworkFlow[] = [
 const NetworkTopology = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
 
   useEffect(() => {
-    // Convert mock devices to ReactFlow nodes
     const flowNodes = mockDevices.map((device, index) => {
-      // Create a layout with devices in a circle
       const angle = (index / mockDevices.length) * 2 * Math.PI;
       const radius = 200;
       const x = 300 + radius * Math.cos(angle);
@@ -41,13 +42,13 @@ const NetworkTopology = () => {
       let color;
       switch (device.status) {
         case 'online':
-          color = '#10b981'; // green
+          color = '#10b981';
           break;
         case 'warning':
-          color = '#f59e0b'; // yellow
+          color = '#f59e0b';
           break;
         case 'offline':
-          color = '#ef4444'; // red
+          color = '#ef4444';
           break;
       }
       
@@ -67,7 +68,6 @@ const NetworkTopology = () => {
       };
     });
     
-    // Convert mock flows to ReactFlow edges
     const flowEdges = mockFlows.map(flow => ({
       id: flow.id,
       source: flow.source,
@@ -80,6 +80,34 @@ const NetworkTopology = () => {
     setNodes(flowNodes);
     setEdges(flowEdges);
   }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', { 
+      month: 'short', 
+      day: '2-digit',
+      year: 'numeric'
+    }).format(date);
+  };
+
+  const getServiceIcon = (service: string) => {
+    switch(service) {
+      case 'sdwan':
+        return <div className="w-4 h-4 rounded-full bg-blue-500" title="SD-WAN"></div>;
+      case 'identity':
+        return <div className="w-4 h-4 rounded-full bg-purple-500" title="Identity"></div>;
+      case 'vault':
+        return <div className="w-4 h-4 rounded-full bg-green-500" title="Vault"></div>;
+      case 'ai':
+        return <div className="w-4 h-4 rounded-full bg-amber-500" title="AI"></div>;
+      case 'rmm':
+        return <div className="w-4 h-4 rounded-full bg-cyan-500" title="RMM"></div>;
+      case 'mixtral':
+        return <div className="w-4 h-4 rounded-full bg-pink-500" title="Mixtral"></div>;
+      default:
+        return <div className="w-4 h-4 rounded-full bg-gray-500" title={service}></div>;
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -149,69 +177,139 @@ const NetworkTopology = () => {
         <TabsContent value="zones" className="h-full">
           <Card className="h-full">
             <CardHeader>
-              <CardTitle>Security Zones Visualization</CardTitle>
+              <div className="flex justify-between items-center">
+                <CardTitle>Security Zones Visualization</CardTitle>
+                <div className="flex space-x-2">
+                  <Button
+                    variant={viewMode === 'table' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('table')}
+                  >
+                    <List className="h-4 w-4 mr-1" />
+                    Table
+                  </Button>
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                  >
+                    <Grid2X2 className="h-4 w-4 mr-1" />
+                    Grid
+                  </Button>
+                </div>
+              </div>
               <CardDescription>
-                Visual map of security zones and their relationships
+                Management and visualization of security zones across your environment
               </CardDescription>
             </CardHeader>
-            <CardContent className="h-[calc(100%-80px)]">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-full">
-                <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-                  <CardHeader>
-                    <CardTitle className="text-md">DMZ</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">2 Devices</p>
-                    <ul className="mt-2 space-y-1 text-sm">
-                      <li>Main Firewall</li>
-                      <li>Web Proxy</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
-                  <CardHeader>
-                    <CardTitle className="text-md">Internal</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">12 Devices</p>
-                    <ul className="mt-2 space-y-1 text-sm">
-                      <li>Core Switch</li>
-                      <li>Primary Router</li>
-                      <li>App Server 1</li>
-                      <li>+9 More</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-purple-50 dark:bg-purple-950 border-purple-200 dark:border-purple-800">
-                  <CardHeader>
-                    <CardTitle className="text-md">Private</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">5 Devices</p>
-                    <ul className="mt-2 space-y-1 text-sm">
-                      <li>Database Server</li>
-                      <li>Auth Server</li>
-                      <li>+3 More</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
-                  <CardHeader>
-                    <CardTitle className="text-md">Public</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">3 Devices</p>
-                    <ul className="mt-2 space-y-1 text-sm">
-                      <li>VPN Gateway</li>
-                      <li>Load Balancer</li>
-                      <li>CDN Edge</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
+            <CardContent className="h-[calc(100%-80px)] overflow-auto">
+              {viewMode === 'table' ? (
+                <div className="rounded-md border">
+                  <table className="w-full caption-bottom text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Zone Name</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Services</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Admin Scope</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Isolation Level</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Created</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mockZones.map((zone) => (
+                        <tr key={zone.id} className="border-b transition-colors hover:bg-muted/50">
+                          <td className="p-4 align-middle font-medium">{zone.name}</td>
+                          <td className="p-4 align-middle"><ZoneStatusBadge status={zone.status} /></td>
+                          <td className="p-4 align-middle">
+                            <div className="flex space-x-1">
+                              {zone.services.map((service) => (
+                                <div key={service} className="tooltip" data-tip={service}>
+                                  {getServiceIcon(service)}
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="p-4 align-middle">
+                            <div className="flex flex-wrap gap-1">
+                              {zone.adminScopes.map((scope, i) => (
+                                <span 
+                                  key={i} 
+                                  className="px-1.5 py-0.5 bg-secondary text-secondary-foreground rounded text-xs"
+                                >
+                                  {scope}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="p-4 align-middle">
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              zone.isolationLevel === 'airgapped' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
+                              zone.isolationLevel === 'high' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                              'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                            }`}>
+                              {zone.isolationLevel.charAt(0).toUpperCase() + zone.isolationLevel.slice(1)}
+                            </span>
+                          </td>
+                          <td className="p-4 align-middle">{formatDate(zone.created)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {mockZones.map((zone) => (
+                    <div 
+                      key={zone.id}
+                      className="p-4 border rounded-lg bg-card shadow-sm hover:shadow-md transition-all cursor-pointer hover:translate-y-[-2px]"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="font-semibold text-lg">{zone.name}</h3>
+                        <ZoneStatusBadge status={zone.status} />
+                      </div>
+                      
+                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{zone.description}</p>
+                      
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap gap-1.5">
+                          {zone.services.map((service) => (
+                            <div 
+                              key={service} 
+                              className="flex items-center px-2 py-1 bg-secondary/50 rounded-full text-xs"
+                            >
+                              {getServiceIcon(service)}
+                              <span className="ml-1 capitalize">{service}</span>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="flex justify-between text-xs mt-2">
+                          <span>Isolation: <span className="font-medium capitalize">{zone.isolationLevel}</span></span>
+                          <span>Created: {formatDate(zone.created)}</span>
+                        </div>
+                        
+                        <div className="text-xs text-muted-foreground">
+                          <div className="flex justify-between mb-1">
+                            <span>Resource Usage</span>
+                            <span>{zone.resourceUsage.cpu}% CPU</span>
+                          </div>
+                          <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full ${
+                                zone.resourceUsage.cpu > 80 ? 'bg-red-500' : 
+                                zone.resourceUsage.cpu > 60 ? 'bg-amber-500' : 
+                                'bg-green-500'
+                              }`}
+                              style={{ width: `${zone.resourceUsage.cpu}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -221,3 +319,4 @@ const NetworkTopology = () => {
 };
 
 export default NetworkTopology;
+
