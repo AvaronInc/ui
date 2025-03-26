@@ -207,7 +207,7 @@ const AIChat: React.FC<AIChatProps> = ({
               }
             }}
             disabled={isProcessing || (voiceMode && isListening)}
-            autoFocus={!voiceMode}
+            // Removed autoFocus={!voiceMode} to prevent auto-scrolling on page load
           />
           <Button 
             size="icon" 
