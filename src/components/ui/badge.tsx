@@ -26,11 +26,16 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  className?: string;
+}
 
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div className={cn(badgeVariants({ variant }), 
+      variant === "default" && className?.includes("bg-amber-500") ? "bg-amber-500 hover:bg-amber-600 text-white border-transparent" : "",
+      className
+    )} {...props} />
   )
 }
 

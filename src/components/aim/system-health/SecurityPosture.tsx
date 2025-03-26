@@ -43,7 +43,7 @@ const SecurityPosture: React.FC<SecurityPostureProps> = ({ data, isLoading = fal
             <Badge variant="destructive" className="text-[0.65rem] px-1 py-0">
               {data.alerts.critical}
             </Badge>
-            <Badge variant="warning" className="text-[0.65rem] px-1 py-0 bg-amber-500">
+            <Badge variant="default" className="text-[0.65rem] px-1 py-0 bg-amber-500">
               {data.alerts.warning}
             </Badge>
             <Badge variant="secondary" className="text-[0.65rem] px-1 py-0">
