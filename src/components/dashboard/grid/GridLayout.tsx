@@ -106,12 +106,12 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
         layouts={layouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 12, md: 12, sm: 12, xs: 2, xxs: 2 }}
-        rowHeight={60}
+        rowHeight={80}
         onLayoutChange={handleLayoutChange}
         isDraggable={editMode}
         isResizable={editMode}
         useCSSTransforms={true}
-        containerPadding={[8, 8]}
+        containerPadding={[10, 10]}
         margin={[16, 16]}
         draggableHandle=".grid-item-drag-handle"
       >

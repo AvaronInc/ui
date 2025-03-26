@@ -47,7 +47,7 @@ export const GridItem: React.FC<GridItemProps> = ({ id, children, editMode }) =>
         </div>
       )}
       
-      <div className={`p-2 ${editMode ? 'pt-8' : ''} h-full overflow-auto`}>
+      <div className={`p-4 ${editMode ? 'pt-8' : ''} h-full overflow-auto`}>
         {children}
       </div>
     </Card>

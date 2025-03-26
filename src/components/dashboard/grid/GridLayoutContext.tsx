@@ -30,10 +30,12 @@ export type WidgetDefinition = {
   icon: string;
   type: string;
   defaultSize: { w: number; h: number };
+  category: string;
 };
 
 // Available widgets for the library
 export const availableWidgets: WidgetDefinition[] = [
+  // Original widgets
   {
     id: 'security-overview',
     title: 'Security & Compliance',
@@ -41,6 +43,7 @@ export const availableWidgets: WidgetDefinition[] = [
     icon: 'shield',
     type: 'security-overview',
     defaultSize: { w: 6, h: 8 },
+    category: 'Security'
   },
   {
     id: 'network-status',
@@ -49,6 +52,7 @@ export const availableWidgets: WidgetDefinition[] = [
     icon: 'network',
     type: 'network-status',
     defaultSize: { w: 6, h: 8 },
+    category: 'Network'
   },
   {
     id: 'system-performance',
@@ -57,6 +61,7 @@ export const availableWidgets: WidgetDefinition[] = [
     icon: 'server',
     type: 'system-performance',
     defaultSize: { w: 6, h: 8 },
+    category: 'System'
   },
   {
     id: 'active-alerts',
@@ -65,6 +70,7 @@ export const availableWidgets: WidgetDefinition[] = [
     icon: 'bell',
     type: 'active-alerts',
     defaultSize: { w: 6, h: 8 },
+    category: 'Alerts'
   },
   {
     id: 'zone-insights',
@@ -73,6 +79,217 @@ export const availableWidgets: WidgetDefinition[] = [
     icon: 'layout-grid',
     type: 'zone-insights',
     defaultSize: { w: 6, h: 8 },
+    category: 'Zones'
+  },
+
+  // Identity & Access widgets
+  {
+    id: 'mfa-login-attempts',
+    title: 'MFA Login Attempts',
+    description: 'Success vs Failures authentication attempts in the last 24 hours',
+    icon: 'key',
+    type: 'mfa-login-attempts',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Identity'
+  },
+  {
+    id: 'unverified-users',
+    title: 'Unverified Users',
+    description: 'Users without biometric MFA or with expired certificates',
+    icon: 'user',
+    type: 'unverified-users',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Identity'
+  },
+  {
+    id: 'pending-identity-approvals',
+    title: 'Pending Identity Approvals',
+    description: 'Tickets awaiting approval triggered by HR onboarding',
+    icon: 'user-check',
+    type: 'pending-identity-approvals',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Identity'
+  },
+
+  // Storage widgets
+  {
+    id: 'zone-storage-usage',
+    title: 'Zone Storage Usage',
+    description: 'Storage usage by zone showing used vs allocated space',
+    icon: 'database',
+    type: 'zone-storage-usage',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Storage'
+  },
+  {
+    id: 'cloud-sync-status',
+    title: 'Cloud Sync Status',
+    description: 'Wasabi sync age, delta lag, and sync failures',
+    icon: 'cloud',
+    type: 'cloud-sync-status',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Storage'
+  },
+  {
+    id: 'top-buckets-by-growth',
+    title: 'Top Buckets by Growth',
+    description: 'Buckets growing fastest in the last 7 days',
+    icon: 'trending-up',
+    type: 'top-buckets-by-growth',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Storage'
+  },
+
+  // Network widgets
+  {
+    id: 'active-sites',
+    title: 'Active Sites',
+    description: 'Map of connected locations with health status indicators',
+    icon: 'globe',
+    type: 'active-sites',
+    defaultSize: { w: 6, h: 6 },
+    category: 'Network'
+  },
+  {
+    id: 'top-talkers',
+    title: 'Top Talkers',
+    description: 'Devices generating the most bandwidth by IP and hostname',
+    icon: 'activity',
+    type: 'top-talkers',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Network'
+  },
+  {
+    id: 'link-failover-events',
+    title: 'Link Failover Events',
+    description: 'Timeline of SD-WAN path switches in the last 72 hours',
+    icon: 'git-branch',
+    type: 'link-failover-events',
+    defaultSize: { w: 6, h: 6 },
+    category: 'Network'
+  },
+  {
+    id: 'latency-map',
+    title: 'Latency Map',
+    description: 'Average latency per site with color-coded indicators',
+    icon: 'timer',
+    type: 'latency-map',
+    defaultSize: { w: 6, h: 6 },
+    category: 'Network'
+  },
+
+  // Security widgets
+  {
+    id: 'threat-summary',
+    title: 'Threat Summary',
+    description: 'Count of security events by severity level this week',
+    icon: 'alert-triangle',
+    type: 'threat-summary',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Security'
+  },
+  {
+    id: 'top-blocked-ips',
+    title: 'Top Blocked IPs',
+    description: 'List with abuse scores, threat types, and last seen time',
+    icon: 'shield-off',
+    type: 'top-blocked-ips',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Security'
+  },
+  {
+    id: 'active-cves',
+    title: 'Active CVEs Detected',
+    description: 'Top CVEs matched against running services',
+    icon: 'alert-circle',
+    type: 'active-cves',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Security'
+  },
+  {
+    id: 'policy-violations',
+    title: 'Policy Violations',
+    description: 'Triggered microsegmentation or inter-zone policy breaches',
+    icon: 'shield-alert',
+    type: 'policy-violations',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Security'
+  },
+
+  // AI & Observability widgets
+  {
+    id: 'unresolved-ai-tickets',
+    title: 'Unresolved AI Tickets',
+    description: 'Currently open tickets sorted by severity',
+    icon: 'ticket',
+    type: 'unresolved-ai-tickets',
+    defaultSize: { w: 6, h: 6 },
+    category: 'AI'
+  },
+  {
+    id: 'anomaly-detections',
+    title: 'Anomaly Detections',
+    description: 'Timeline of detected anomalies by type',
+    icon: 'scan',
+    type: 'anomaly-detections',
+    defaultSize: { w: 6, h: 6 },
+    category: 'AI'
+  },
+  {
+    id: 'ai-system-summary',
+    title: 'AI System Summary',
+    description: 'Mixtral-generated summary of activity this week',
+    icon: 'cpu',
+    type: 'ai-system-summary',
+    defaultSize: { w: 6, h: 4 },
+    category: 'AI'
+  },
+  {
+    id: 'top-ai-topics',
+    title: 'Top AI Topics',
+    description: 'Tags or topic clusters generated from observed activity',
+    icon: 'hash',
+    type: 'top-ai-topics',
+    defaultSize: { w: 4, h: 6 },
+    category: 'AI'
+  },
+
+  // Compliance & Logging widgets
+  {
+    id: 'compliance-scorecard',
+    title: 'Compliance Scorecard',
+    description: 'Compliance status for HIPAA, PCI, SOC2 frameworks',
+    icon: 'check-circle',
+    type: 'compliance-scorecard',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Compliance'
+  },
+  {
+    id: 'log-retention-status',
+    title: 'Log Retention Status',
+    description: 'Percentage of logs meeting retention rules per Zone',
+    icon: 'archive',
+    type: 'log-retention-status',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Compliance'
+  },
+  {
+    id: 'export-activity',
+    title: 'Export Activity',
+    description: 'Recent log/data exports with VaultID authorization',
+    icon: 'download',
+    type: 'export-activity',
+    defaultSize: { w: 6, h: 6 },
+    category: 'Compliance'
+  },
+  {
+    id: 'pending-compliance-expirations',
+    title: 'Pending Compliance Expirations',
+    description: 'Certifications or audit cycles nearing renewal',
+    icon: 'calendar',
+    type: 'pending-compliance-expirations',
+    defaultSize: { w: 4, h: 6 },
+    category: 'Compliance'
   },
 ];
 

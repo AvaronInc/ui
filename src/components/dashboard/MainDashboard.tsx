@@ -13,6 +13,19 @@ import { GridLayout } from './grid/GridLayout';
 import { GridLayoutProvider } from './grid/GridLayoutContext';
 import ZoneInsights from '../zones/sidebar/ZoneInsights';
 
+// Import the new widgets
+import {
+  MFALoginAttempts,
+  UnverifiedUsers, 
+  PendingIdentityApprovals,
+  ZoneStorageUsage,
+  CloudSyncStatus,
+  TopBucketsByGrowth,
+  ThreatSummary,
+  TopBlockedIPs,
+  ActiveCVEs
+} from './widgets';
+
 const MainDashboard = () => {
   const handleInvestigateSecurity = () => {
     toast.info("Launching security investigation tool...");
@@ -28,11 +41,27 @@ const MainDashboard = () => {
 
   // Define all widgets that will be available in the grid layout
   const widgetComponents = {
+    // Original widgets
     'security-overview': <SecurityOverviewSection />,
     'network-status': <NetworkStatusSection />,
     'system-performance': <SystemPerformanceSection />,
     'active-alerts': <ActiveAlertsSection />,
     'zone-insights': <ZoneInsights />,
+    
+    // Identity & Access widgets
+    'mfa-login-attempts': <MFALoginAttempts />,
+    'unverified-users': <UnverifiedUsers />,
+    'pending-identity-approvals': <PendingIdentityApprovals />,
+    
+    // Storage widgets
+    'zone-storage-usage': <ZoneStorageUsage />,
+    'cloud-sync-status': <CloudSyncStatus />,
+    'top-buckets-by-growth': <TopBucketsByGrowth />,
+    
+    // Security widgets
+    'threat-summary': <ThreatSummary />,
+    'top-blocked-ips': <TopBlockedIPs />,
+    'active-cves': <ActiveCVEs />,
   };
 
   return (
