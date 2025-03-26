@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 interface GridLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   widgetComponents: Record<string, React.ReactNode>;
 }
 
@@ -125,6 +125,7 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
             </GridItem>
           </div>
         ))}
+        {children}
       </ResponsiveGridLayout>
 
       <WidgetLibraryDrawer
