@@ -12,13 +12,14 @@ const AuthCard = () => {
   return (
     <Card className="w-full max-w-md shadow-lg">
       <CardHeader className="text-center">
-        <div className="mx-auto mb-4">
+        <div className="mx-auto mb-2">
           <img 
             src="/lovable-uploads/ede20021-c7ab-4b80-ae9a-9356f305c24c.png" 
             alt="Logo" 
             className="h-20 mx-auto"
           />
         </div>
+        <h3 className="text-xl font-medium text-primary mb-4">Avaron Infrastructure Manager</h3>
         <CardTitle className="text-2xl font-bold">Welcome</CardTitle>
         <CardDescription>
           Login or create an account to continue
