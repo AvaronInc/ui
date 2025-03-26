@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AlertCircle, Search, Filter } from 'lucide-react';
 
 type AffectedSystem = {
   id: string;
@@ -28,9 +29,9 @@ const mockAffectedSystems: AffectedSystem[] = [
   },
   {
     id: '2',
-    systemName: 'Auth Service',
+    systemName: 'API Gateway',
     cveId: 'CVE-2023-38408',
-    cvssScore: 8.5,
+    cvssScore: 8.2,
     severity: 'High',
     patchAvailable: true,
     status: 'Patched'
@@ -39,28 +40,28 @@ const mockAffectedSystems: AffectedSystem[] = [
     id: '3',
     systemName: 'Database Server',
     cveId: 'CVE-2023-29200',
-    cvssScore: 7.2,
-    severity: 'High',
-    patchAvailable: true,
-    status: 'Pending'
-  },
-  {
-    id: '4',
-    systemName: 'Load Balancer',
-    cveId: 'CVE-2023-24567',
-    cvssScore: 5.5,
+    cvssScore: 6.5,
     severity: 'Medium',
     patchAvailable: false,
     status: 'Pending'
   },
   {
-    id: '5',
-    systemName: 'API Gateway',
-    cveId: 'CVE-2023-12841',
-    cvssScore: 4.2,
-    severity: 'Medium',
+    id: '4',
+    systemName: 'Load Balancer',
+    cveId: 'CVE-2022-87654',
+    cvssScore: 8.7,
+    severity: 'High',
     patchAvailable: true,
     status: 'Ignored'
+  },
+  {
+    id: '5',
+    systemName: 'Auth Service',
+    cveId: 'CVE-2023-12345',
+    cvssScore: 4.3,
+    severity: 'Low',
+    patchAvailable: true,
+    status: 'Patched'
   }
 ];
 
@@ -95,24 +96,25 @@ const getStatusColor = (status: string) => {
 const AffectedSystems = () => {
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <div className="flex-1">
-          <Input placeholder="Search systems, CVEs, status..." />
+      <div className="flex flex-col sm:flex-row gap-4 justify-between mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Search systems or CVEs..." className="pl-8" />
         </div>
         <div className="flex gap-2">
           <Select defaultValue="all">
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-[130px]">
               <SelectValue placeholder="Site" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Sites</SelectItem>
-              <SelectItem value="datacenter1">Datacenter 1</SelectItem>
-              <SelectItem value="datacenter2">Datacenter 2</SelectItem>
+              <SelectItem value="datacenter1">Data Center 1</SelectItem>
+              <SelectItem value="datacenter2">Data Center 2</SelectItem>
               <SelectItem value="cloud">Cloud</SelectItem>
             </SelectContent>
           </Select>
           <Select defaultValue="all">
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-[130px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -123,23 +125,23 @@ const AffectedSystems = () => {
             </SelectContent>
           </Select>
           <Select defaultValue="all">
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-[130px]">
               <SelectValue placeholder="CVSS Range" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="9-10">9.0 - 10.0</SelectItem>
-              <SelectItem value="7-8.9">7.0 - 8.9</SelectItem>
-              <SelectItem value="4-6.9">4.0 - 6.9</SelectItem>
-              <SelectItem value="0-3.9">0 - 3.9</SelectItem>
+              <SelectItem value="all">All Scores</SelectItem>
+              <SelectItem value="critical">9.0-10.0</SelectItem>
+              <SelectItem value="high">7.0-8.9</SelectItem>
+              <SelectItem value="medium">4.0-6.9</SelectItem>
+              <SelectItem value="low">0.1-3.9</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Affected Systems by CVE</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Affected Systems</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -157,14 +159,30 @@ const AffectedSystems = () => {
               {mockAffectedSystems.map((system) => (
                 <TableRow key={system.id}>
                   <TableCell className="font-medium">{system.systemName}</TableCell>
-                  <TableCell>{system.cveId}</TableCell>
+                  <TableCell>
+                    <a href={`https://nvd.nist.gov/vuln/detail/${system.cveId}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                      {system.cveId}
+                    </a>
+                  </TableCell>
                   <TableCell>{system.cvssScore}</TableCell>
                   <TableCell>
                     <Badge className={getSeverityColor(system.severity)}>
                       {system.severity}
                     </Badge>
                   </TableCell>
-                  <TableCell>{system.patchAvailable ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>
+                    {system.patchAvailable ? (
+                      <span className="flex items-center gap-1 text-green-500">
+                        <AlertCircle className="h-4 w-4" />
+                        Yes
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-red-500">
+                        <AlertCircle className="h-4 w-4" />
+                        No
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(system.status)}>
                       {system.status}

@@ -23,22 +23,16 @@ const CVEOverview = () => {
         <CardHeader>
           <CardTitle>New CVEs (Last 30 Days)</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="h-[300px] w-full">
-            <ChartContainer 
-              config={{
-                daily: { color: '#3b82f6' }
-              }}
-            >
-              <BarChart data={mockDailyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" name="CVEs" fill="var(--color-daily)" />
-              </BarChart>
-            </ChartContainer>
-          </div>
+        <CardContent className="h-[350px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={mockDailyData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="count" name="CVEs" fill="#3b82f6" />
+            </BarChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
 
@@ -60,15 +54,8 @@ const CVEOverview = () => {
           <CardTitle>Severity Distribution</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[200px]">
-            <ChartContainer 
-              config={
-                mockSeverityData.reduce((acc, { name, color }) => ({
-                  ...acc,
-                  [name.toLowerCase()]: { color }
-                }), {})
-              }
-            >
+          <div className="h-[200px] flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={mockSeverityData}
@@ -80,12 +67,13 @@ const CVEOverview = () => {
                   outerRadius={80}
                   paddingAngle={5}
                 >
-                  {mockSeverityData.map((entry, index) => (
+                  {mockSeverityData.map((entry) => (
                     <Cell key={entry.name} fill={entry.color} />
                   ))}
                 </Pie>
+                <Tooltip />
               </PieChart>
-            </ChartContainer>
+            </ResponsiveContainer>
           </div>
           <div className="grid grid-cols-3 gap-2 text-center mt-4">
             {mockSeverityData.map((item) => (

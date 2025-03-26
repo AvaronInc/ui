@@ -2,65 +2,54 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Shield, AlertTriangle, Check, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Zap, Shield, AlertTriangle, ThumbsUp, ThumbsDown, Cpu, Clock } from 'lucide-react';
 
 type PatchRecommendation = {
   id: string;
   cveId: string;
-  description: string;
-  systems: string[];
-  patchUrl: string;
+  systemsCount: number;
   severity: 'Critical' | 'High' | 'Medium' | 'Low';
-  aiRiskJustification: string;
-  requiresAuth: boolean;
-  estimatedDowntime: string;
+  riskRating: number;
+  aiJustification: string;
+  estimatedTime: string;
+  requiresReboot: boolean;
+  systemsAffected: string[];
 };
 
 const mockPatchRecommendations: PatchRecommendation[] = [
   {
     id: '1',
     cveId: 'CVE-2023-45178',
-    description: 'OpenSSL Remote Code Execution',
-    systems: ['Web Server 01', 'Web Server 02', 'API Gateway'],
-    patchUrl: 'https://security.openssl.org/patches/CVE-2023-45178',
+    systemsCount: 12,
     severity: 'Critical',
-    aiRiskJustification: 'This vulnerability allows attackers to execute arbitrary code remotely through a specially crafted TLS handshake. Your affected systems are directly exposed to the internet, increasing risk of successful exploitation.',
-    requiresAuth: true,
-    estimatedDowntime: '10-15 minutes per system'
+    riskRating: 9.8,
+    aiJustification: 'This OpenSSL vulnerability enables remote code execution. With 12 servers exposed, the risk level is extreme. Immediate patching is recommended as there are active exploits in the wild targeting this vulnerability.',
+    estimatedTime: '25 minutes',
+    requiresReboot: true,
+    systemsAffected: ['Web Server 01', 'Web Server 02', 'API Gateway', 'Load Balancer']
   },
   {
     id: '2',
     cveId: 'CVE-2023-38408',
-    description: 'Authentication Bypass in Identity Provider',
-    systems: ['Auth Service', 'SSO Provider'],
-    patchUrl: 'https://auth-system.example.com/security/CVE-2023-38408',
+    systemsCount: 3,
     severity: 'High',
-    aiRiskJustification: 'This vulnerability allows bypassing MFA in specific scenarios. Your authentication services handle access to multiple critical systems, making this a high-risk vulnerability that should be addressed promptly.',
-    requiresAuth: true,
-    estimatedDowntime: '30 minutes for auth systems'
+    riskRating: 8.2,
+    aiJustification: 'Authentication bypass vulnerability affecting identity services. Although only 3 systems are affected, these are critical authentication servers. Prioritize this patch as it could lead to unauthorized account access.',
+    estimatedTime: '15 minutes',
+    requiresReboot: false,
+    systemsAffected: ['Auth Service 01', 'SSO Provider', 'Identity Management']
   },
   {
     id: '3',
     cveId: 'CVE-2023-29200',
-    description: 'PostgreSQL Privilege Escalation',
-    systems: ['Database Server', 'Data Warehouse'],
-    patchUrl: 'https://www.postgresql.org/support/security/CVE-2023-29200/',
-    severity: 'High',
-    aiRiskJustification: 'This vulnerability allows local users to escalate privileges. Your database servers contain sensitive customer data, making this an important patch to apply during the next maintenance window.',
-    requiresAuth: false,
-    estimatedDowntime: '5-10 minutes per database'
-  },
-  {
-    id: '4',
-    cveId: 'CVE-2023-24567',
-    description: 'Cross-Site Scripting in Admin Dashboard',
-    systems: ['Customer Portal', 'Admin Dashboard'],
-    patchUrl: 'https://dashboard.example.com/security/patches/CVE-2023-24567',
+    systemsCount: 5,
     severity: 'Medium',
-    aiRiskJustification: 'This XSS vulnerability affects the admin interface. Since your admin dashboard is not publicly accessible and requires VPN access, this is rated as medium priority.',
-    requiresAuth: false,
-    estimatedDowntime: 'No downtime required'
+    riskRating: 6.5,
+    aiJustification: 'PostgreSQL privilege escalation vulnerability. Risk is mitigated by limited access to database servers and network segmentation. Schedule this during the next maintenance window.',
+    estimatedTime: '20 minutes',
+    requiresReboot: true,
+    systemsAffected: ['Database Server 01', 'Database Server 02', 'Data Warehouse']
   }
 ];
 
@@ -86,45 +75,47 @@ const PatchRecommendations = () => {
         <div>
           <h2 className="text-lg font-medium flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
-            AI-Prioritized Patch Recommendations
+            AI-Generated Patch Recommendations
           </h2>
           <p className="text-sm text-muted-foreground">
-            Patches are automatically prioritized based on risk level, system exposure, and potential impact
+            Prioritized patching list based on risk assessment and system impact
           </p>
         </div>
       </div>
 
       {mockPatchRecommendations.map((patch) => (
-        <Card key={patch.id} className="overflow-hidden">
-          <CardHeader>
+        <Card key={patch.id} className={`overflow-hidden border-l-4 ${
+          patch.severity === 'Critical' ? 'border-l-red-500' :
+          patch.severity === 'High' ? 'border-l-orange-500' :
+          patch.severity === 'Medium' ? 'border-l-yellow-500' : 'border-l-blue-500'
+        }`}>
+          <CardHeader className="pb-2">
             <div className="flex items-start justify-between">
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <CardTitle>
-                    {patch.cveId}: {patch.description}
-                  </CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <a href={`https://nvd.nist.gov/vuln/detail/${patch.cveId}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                    {patch.cveId}
+                  </a>
                   <Badge className={getSeverityColor(patch.severity)}>
                     {patch.severity}
                   </Badge>
-                </div>
-                <CardDescription>Affected: {patch.systems.join(', ')}</CardDescription>
+                </CardTitle>
+                <CardDescription className="mt-1">
+                  <span className="flex items-center gap-1">
+                    <Cpu className="h-4 w-4" />
+                    Affects {patch.systemsCount} systems in your environment
+                  </span>
+                </CardDescription>
               </div>
+              
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="flex items-center gap-1"
-                >
-                  <X className="h-4 w-4" />
-                  Reject
-                </Button>
-                <Button 
-                  variant="default" 
-                  size="sm"
-                  className="flex items-center gap-1"
-                >
-                  <Check className="h-4 w-4" />
+                <Button variant="outline" size="sm" className="flex items-center gap-1 bg-green-500/10 text-green-500 hover:bg-green-500/20 hover:text-green-500">
+                  <ThumbsUp className="h-4 w-4" />
                   Approve
+                </Button>
+                <Button variant="outline" size="sm" className="flex items-center gap-1 bg-destructive/10 text-destructive hover:bg-destructive/20 hover:text-destructive">
+                  <ThumbsDown className="h-4 w-4" />
+                  Reject
                 </Button>
               </div>
             </div>
@@ -134,33 +125,47 @@ const PatchRecommendations = () => {
               <div>
                 <div className="text-sm text-muted-foreground mb-1">AI Risk Justification</div>
                 <div className="bg-slate-800 rounded-md p-3 text-sm">
-                  {patch.aiRiskJustification}
+                  {patch.aiJustification}
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">Patch URL</div>
-                  <div className="font-medium text-blue-400 hover:underline">
-                    <a href={patch.patchUrl} target="_blank" rel="noopener noreferrer">
-                      {patch.patchUrl.split('/').slice(-1)[0]}
-                    </a>
+                  <div className="text-sm text-muted-foreground mb-1">Risk Rating</div>
+                  <div className="font-medium flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    {patch.riskRating}/10
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">Estimated Downtime</div>
-                  <div className="font-medium">{patch.estimatedDowntime}</div>
+                  <div className="text-sm text-muted-foreground mb-1">Estimated Time</div>
+                  <div className="font-medium flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-blue-500" />
+                    {patch.estimatedTime}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Requires Reboot</div>
+                  <div className="font-medium">
+                    {patch.requiresReboot ? (
+                      <span className="text-red-500">Yes</span>
+                    ) : (
+                      <span className="text-green-500">No</span>
+                    )}
+                  </div>
                 </div>
               </div>
               
-              {patch.requiresAuth && (
-                <div className="flex items-center gap-2 mt-4">
-                  <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                  <span className="text-sm text-yellow-500">
-                    VaultID authentication required for this critical patch
-                  </span>
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">Affected Systems</div>
+                <div className="flex flex-wrap gap-2">
+                  {patch.systemsAffected.map((system, index) => (
+                    <Badge key={index} variant="outline" className="bg-slate-800">
+                      {system}
+                    </Badge>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { AlertTriangle, AlertCircle, ToggleLeft } from 'lucide-react';
+import { AlertTriangle, AlertCircle } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 
