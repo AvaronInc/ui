@@ -54,6 +54,12 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
     setDrawerOpen(true);
   };
 
+  // Get the current layout items
+  const currentLayoutItems = layouts.lg || [];
+  
+  // Only render widgets that exist in the current layout
+  const activeWidgetIds = currentLayoutItems.map(item => item.i);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4 bg-background/80 backdrop-blur-sm p-3 border rounded-md shadow-sm">
@@ -115,20 +121,27 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
         margin={[16, 16]}
         draggableHandle=".grid-item-drag-handle"
       >
-        {Object.entries(widgetComponents).map(([widgetId, component]) => (
-          <div 
-            key={widgetId} 
-            data-grid={layouts.lg.find(item => item.i === widgetId)}
-            className="overflow-hidden"
-          >
-            <GridItem 
-              id={widgetId}
-              editMode={editMode}
+        {activeWidgetIds.map((widgetId) => {
+          const widgetType = widgetId.split('-')[0];
+          const component = widgetComponents[widgetType];
+          
+          if (!component) return null;
+          
+          return (
+            <div 
+              key={widgetId} 
+              data-grid={layouts.lg.find(item => item.i === widgetId)}
+              className="overflow-hidden"
             >
-              {component}
-            </GridItem>
-          </div>
-        ))}
+              <GridItem 
+                id={widgetId}
+                editMode={editMode}
+              >
+                {component}
+              </GridItem>
+            </div>
+          );
+        })}
         {children}
       </ResponsiveGridLayout>
 
