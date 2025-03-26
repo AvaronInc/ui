@@ -7,7 +7,8 @@ import ThreatDetection from './tabs/ThreatDetection';
 import ComplianceZeroTrust from './tabs/ComplianceZeroTrust';
 import SecurityAutomation from './tabs/SecurityAutomation';
 import SecurityLogs from './tabs/SecurityLogs';
-import { Shield, AlertTriangle, FileCheck, Zap, FileSearch } from 'lucide-react';
+import CVEIntelligencePanel from './cve/CVEIntelligencePanel';
+import { Shield, AlertTriangle, FileCheck, Zap, FileSearch, Database } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const SecurityPanel: React.FC = () => {
@@ -48,6 +49,10 @@ const SecurityPanel: React.FC = () => {
               <FileSearch className="h-4 w-4" />
               <span>{isMobile ? "Logs" : "Logs & Forensics"}</span>
             </TabsTrigger>
+            <TabsTrigger value="cve" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <Database className="h-4 w-4" />
+              <span>{isMobile ? "CVE" : "CVE Intelligence"}</span>
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -69,6 +74,10 @@ const SecurityPanel: React.FC = () => {
 
         <TabsContent value="logs" className="space-y-4">
           <SecurityLogs />
+        </TabsContent>
+
+        <TabsContent value="cve" className="space-y-4">
+          <CVEIntelligencePanel />
         </TabsContent>
       </Tabs>
     </div>
