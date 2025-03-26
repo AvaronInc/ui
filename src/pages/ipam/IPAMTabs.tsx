@@ -6,6 +6,7 @@ import IPAMOverview from '@/components/ipam/IPAMOverview';
 import IPAddressAllocation from '@/components/ipam/IPAddressAllocation';
 import SubnetManagement from '@/components/ipam/SubnetManagement';
 import ConflictDetection from '@/components/ipam/ConflictDetection';
+import RCATab from './tabs/RCATab';
 import { toast } from 'sonner';
 
 interface IPAMTabsProps {
@@ -27,7 +28,7 @@ const IPAMTabs: React.FC<IPAMTabsProps> = ({
 }) => {
   return (
     <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid grid-cols-4 mb-8">
+      <TabsList className="grid grid-cols-5 mb-8">
         <TabsTrigger value="overview">
           Overview Dashboard
         </TabsTrigger>
@@ -39,6 +40,9 @@ const IPAMTabs: React.FC<IPAMTabsProps> = ({
         </TabsTrigger>
         <TabsTrigger value="conflicts">
           Conflict Detection
+        </TabsTrigger>
+        <TabsTrigger value="rca">
+          Root Cause Analysis
         </TabsTrigger>
       </TabsList>
       
@@ -65,6 +69,10 @@ const IPAMTabs: React.FC<IPAMTabsProps> = ({
             toast.success(`Conflict resolution for ${ip.address} initiated`);
           }}
         />
+      </TabsContent>
+      
+      <TabsContent value="rca" className="mt-0">
+        <RCATab />
       </TabsContent>
     </Tabs>
   );
