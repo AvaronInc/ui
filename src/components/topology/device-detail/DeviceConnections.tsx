@@ -1,12 +1,15 @@
 
 import React from 'react';
 import { Wifi } from 'lucide-react';
+import { NetworkDevice } from '@/types/topology';
 
 interface DeviceConnectionsProps {
-  connections: string[];
+  device: NetworkDevice;
 }
 
-const DeviceConnections = ({ connections }: DeviceConnectionsProps) => {
+const DeviceConnections = ({ device }: DeviceConnectionsProps) => {
+  const connections = device.connections || [];
+
   return (
     <div className="space-y-3">
       <h4 className="text-sm font-medium">Active Connections</h4>
