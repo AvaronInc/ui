@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ServicesOverview from './tabs/ServicesOverview';
 import ServiceDeployment from './tabs/ServiceDeployment';
@@ -10,12 +10,28 @@ import Documentation from './tabs/Documentation';
 import RCATab from './tabs/RCATab';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-const ServicesPanel = () => {
+interface ServicesPanelProps {
+  initialTab?: string | null;
+  initialServiceId?: string | null;
+}
+
+const ServicesPanel: React.FC<ServicesPanelProps> = ({ 
+  initialTab = null, 
+  initialServiceId = null 
+}) => {
   const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState<string>("overview");
   
+  useEffect(() => {
+    // Set initial tab if provided
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
+
   return (
     <div className="space-y-4">
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto pb-2">
           <TabsList className="inline-flex min-w-full sm:grid sm:grid-cols-3 md:grid-cols-7 w-full">
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -37,7 +53,7 @@ const ServicesPanel = () => {
         </TabsContent>
 
         <TabsContent value="monitoring" className="p-0 border-0">
-          <MonitoringLogs />
+          <MonitoringLogs initialServiceId={initialServiceId} />
         </TabsContent>
 
         <TabsContent value="security" className="p-0 border-0">

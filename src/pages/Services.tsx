@@ -6,10 +6,14 @@ import PageTransition from '@/components/transitions/PageTransition';
 import PageTitle from '@/components/common/PageTitle';
 import ServicesPanel from '@/components/services/ServicesPanel';
 import { useDemoNotifications } from '@/components/notifications/demoNotifications';
+import { useSearchParams } from 'react-router-dom';
 
 const Services = () => {
   // Load demo notifications
   useDemoNotifications();
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab');
+  const serviceId = searchParams.get('service');
   
   useEffect(() => {
     document.title = 'Services - Network Pulse Management';
@@ -23,7 +27,7 @@ const Services = () => {
             title="Service Management" 
             subtitle="Manage service deployments, monitoring, and documentation" 
           />
-          <ServicesPanel />
+          <ServicesPanel initialTab={initialTab} initialServiceId={serviceId} />
           <Toaster />
         </div>
       </DashboardLayout>

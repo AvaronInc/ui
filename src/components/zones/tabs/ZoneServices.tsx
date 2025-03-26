@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from 'react-router-dom';
 
 interface ZoneServicesProps {
   zone: {
@@ -118,6 +119,7 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone: initialZone }) => {
   const [activeView, setActiveView] = useState<'all' | 'running' | 'issues'>('all');
   const [services, setServices] = useState<ZoneService[]>(mockZoneServices);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -250,6 +252,11 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone: initialZone }) => {
     });
   };
 
+  // Handle card click to navigate to service monitoring
+  const handleCardClick = (service: ZoneService) => {
+    navigate(`/services?tab=monitoring&service=${service.id}`);
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -292,7 +299,11 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone: initialZone }) => {
               </div>
             ) : (
               filteredServices.map(service => (
-                <Card key={service.id} className="overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+                <Card 
+                  key={service.id} 
+                  className="overflow-hidden dark:bg-slate-900 dark:border-slate-800 cursor-pointer hover:shadow-md transition-all duration-200"
+                  onClick={() => handleCardClick(service)}
+                >
                   <CardContent className="p-0">
                     <div className="flex items-start p-4 border-b dark:border-slate-800">
                       <div className="flex-shrink-0 p-2 mr-3 bg-slate-100 dark:bg-slate-800 rounded-md">
@@ -332,20 +343,34 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone: initialZone }) => {
                           <span className="text-sm font-medium">Enabled:</span>
                           <Switch 
                             checked={service.enabled} 
-                            onCheckedChange={() => handleServiceToggle(service.id, service.enabled)}
+                            onCheckedChange={(checked) => {
+                              // Stop event propagation to prevent navigation when toggling
+                              event.stopPropagation();
+                              handleServiceToggle(service.id, service.enabled);
+                            }}
                           />
                         </div>
                         <div className="space-x-2">
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => handleServiceRestart(service.id)}
+                            onClick={(event) => {
+                              // Stop event propagation to prevent navigation when clicking restart
+                              event.stopPropagation();
+                              handleServiceRestart(service.id);
+                            }}
                             disabled={!service.enabled}
                           >
                             <RefreshCw className="mr-1 h-4 w-4" />
                             Restart
                           </Button>
-                          <Button size="sm">
+                          <Button 
+                            size="sm"
+                            onClick={(event) => {
+                              // Stop event propagation to prevent navigation when clicking update
+                              event.stopPropagation();
+                            }}
+                          >
                             Update
                           </Button>
                         </div>

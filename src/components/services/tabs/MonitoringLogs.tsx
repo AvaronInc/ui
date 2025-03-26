@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { activeServices } from '@/data/servicesData';
@@ -11,10 +11,25 @@ import ServiceMetricsChart from '../components/ServiceMetricsChart';
 import LogViewer from '../components/LogViewer';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-const MonitoringLogs = () => {
+interface MonitoringLogsProps {
+  initialServiceId?: string | null;
+}
+
+const MonitoringLogs: React.FC<MonitoringLogsProps> = ({ initialServiceId = null }) => {
   const [selectedService, setSelectedService] = useState<string>(activeServices[0]?.id || '');
   const [timeRange, setTimeRange] = useState('24h');
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    // Set the selected service if an initialServiceId is provided
+    if (initialServiceId) {
+      // Check if the initialServiceId exists in our services
+      const serviceExists = activeServices.some(service => service.id === initialServiceId);
+      if (serviceExists) {
+        setSelectedService(initialServiceId);
+      }
+    }
+  }, [initialServiceId]);
 
   const handleServiceChange = (value: string) => {
     setSelectedService(value);
