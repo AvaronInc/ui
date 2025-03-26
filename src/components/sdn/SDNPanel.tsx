@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Network, HeartPulse, Globe, LockKeyhole, Layout } from 'lucide-react';
+import { Network, HeartPulse, Globe, LockKeyhole, Layout, AlertTriangle } from 'lucide-react';
 import SDNOverview from './tabs/SDNOverview';
 import VirtualNetworksTab from './tabs/VirtualNetworksTab';
 import FailoverHighAvailabilityTab from './tabs/FailoverHighAvailabilityTab';
 import SecurityComplianceTab from './tabs/SecurityComplianceTab';
 import VirtualSwitchManagementTab from './tabs/VirtualSwitchManagementTab';
+import RCATab from './tabs/RCATab';
 
 const SDNPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -47,6 +48,10 @@ const SDNPanel: React.FC = () => {
               <LockKeyhole className="h-4 w-4" />
               <span>{isMobile ? "Security" : "Security & Compliance"}</span>
             </TabsTrigger>
+            <TabsTrigger value="rca" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <AlertTriangle className="h-4 w-4" />
+              <span>{isMobile ? "RCA" : "Root Cause Analysis"}</span>
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -68,6 +73,10 @@ const SDNPanel: React.FC = () => {
         
         <TabsContent value="security" className="space-y-4">
           <SecurityComplianceTab />
+        </TabsContent>
+
+        <TabsContent value="rca" className="space-y-4">
+          <RCATab />
         </TabsContent>
       </Tabs>
     </div>
