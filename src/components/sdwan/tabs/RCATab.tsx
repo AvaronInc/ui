@@ -97,6 +97,9 @@ const RCATab: React.FC = () => {
       description: issue.description,
       assignedTo: "System",
       category: "SD-WAN",
+      // Add the missing required properties from the Ticket type
+      createdBy: "System",
+      updatedAt: issue.timestamp // Use the same timestamp for updatedAt as for createdAt
     };
   };
   
