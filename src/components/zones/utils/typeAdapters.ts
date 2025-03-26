@@ -83,12 +83,20 @@ export function getStorageStatusFromString(statusString: string | StorageStatus)
   // Convert string status to StorageStatus object
   const statusMap: Record<string, StorageStatus> = {
     'Operational': { id: 'operational', name: 'Operational', color: 'green' },
+    'operational': { id: 'operational', name: 'Operational', color: 'green' },
     'Warning': { id: 'warning', name: 'Warning', color: 'orange' },
+    'warning': { id: 'warning', name: 'Warning', color: 'orange' },
     'Critical': { id: 'critical', name: 'Critical', color: 'red' },
-    'Maintenance': { id: 'maintenance', name: 'Maintenance', color: 'blue' }
+    'critical': { id: 'critical', name: 'Critical', color: 'red' },
+    'Maintenance': { id: 'maintenance', name: 'Maintenance', color: 'blue' },
+    'maintenance': { id: 'maintenance', name: 'Maintenance', color: 'blue' }
   };
   
-  return statusMap[statusString as string] || { id: 'unknown', name: statusString as string, color: 'gray' };
+  // Case insensitive lookup in case status strings vary in casing
+  const normalizedString = typeof statusString === 'string' ? statusString.toLowerCase() : '';
+  return statusMap[statusString as string] || 
+         statusMap[normalizedString] || 
+         { id: 'unknown', name: statusString as string, color: 'gray' };
 }
 
 // STORAGE TIER ADAPTERS
@@ -118,7 +126,19 @@ export function getStorageTierFromString(tierString: string | StorageTier): Stor
       description: 'Basic storage tier with essential features',
       features: ['Daily Backups', 'Standard Encryption']
     },
+    'standard': { 
+      id: 'standard', 
+      name: 'Standard', 
+      description: 'Basic storage tier with essential features',
+      features: ['Daily Backups', 'Standard Encryption']
+    },
     'Business': { 
+      id: 'business', 
+      name: 'Business', 
+      description: 'Enhanced storage tier for business workloads',
+      features: ['Hourly Backups', 'Advanced Encryption', 'Replication']
+    },
+    'business': { 
       id: 'business', 
       name: 'Business', 
       description: 'Enhanced storage tier for business workloads',
@@ -129,15 +149,25 @@ export function getStorageTierFromString(tierString: string | StorageTier): Stor
       name: 'Enterprise', 
       description: 'High-performance storage tier with advanced features',
       features: ['Continuous Backups', 'Military-grade Encryption', 'Global Replication', 'Custom Retention']
+    },
+    'enterprise': { 
+      id: 'enterprise', 
+      name: 'Enterprise', 
+      description: 'High-performance storage tier with advanced features',
+      features: ['Continuous Backups', 'Military-grade Encryption', 'Global Replication', 'Custom Retention']
     }
   };
   
-  return tierMap[tierString as string] || { 
-    id: 'custom', 
-    name: tierString as string, 
-    description: 'Custom storage tier',
-    features: ['Custom Configuration']
-  };
+  // Case insensitive lookup in case tier strings vary in casing
+  const normalizedString = typeof tierString === 'string' ? tierString.toLowerCase() : '';
+  return tierMap[tierString as string] || 
+         tierMap[normalizedString] || 
+         { 
+           id: 'custom', 
+           name: tierString as string, 
+           description: 'Custom storage tier',
+           features: ['Custom Configuration']
+         };
 }
 
 // ZONE USER ADAPTERS
@@ -154,6 +184,7 @@ export function isZoneUser(value: any): value is ZoneUser {
 }
 
 export function normalizeUserStatus(status: string): 'active' | 'suspended' | 'pending' {
+  // Case-insensitive status normalization
   const lowerStatus = status.toLowerCase();
   if (lowerStatus === 'active' || lowerStatus === 'suspended' || lowerStatus === 'pending') {
     return lowerStatus as 'active' | 'suspended' | 'pending';
@@ -184,4 +215,46 @@ export function getServiceTypeKey(serviceType: ServiceType | string): string {
     return serviceType;
   }
   return serviceType.id;
+}
+
+// Safe comparison for storage status
+export function matchesStorageStatus(status: string | StorageStatus, targetStatus: StorageStatus): boolean {
+  const normalizedStatus = getStorageStatusFromString(status);
+  return normalizedStatus.id === targetStatus.id;
+}
+
+// Safe comparison for storage tier
+export function matchesStorageTier(tier: string | StorageTier, targetTier: StorageTier): boolean {
+  const normalizedTier = getStorageTierFromString(tier);
+  return normalizedTier.id === targetTier.id;
+}
+
+// Safe string renderer for React nodes
+export function safeRenderText(value: unknown): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
+  if (typeof value === 'string') {
+    return value;
+  }
+  
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  
+  if (typeof value === 'object') {
+    // Handle specific known objects
+    if (value && 'name' in value && typeof value.name === 'string') {
+      return value.name;
+    }
+    
+    try {
+      return JSON.stringify(value);
+    } catch (e) {
+      return '[Object]';
+    }
+  }
+  
+  return String(value);
 }
