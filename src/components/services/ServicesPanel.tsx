@@ -9,6 +9,7 @@ import AIOptimization from './tabs/AIOptimization';
 import Documentation from './tabs/Documentation';
 import RCATab from './tabs/RCATab';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ServicesPanelProps {
   initialTab?: string | null;
@@ -21,6 +22,8 @@ const ServicesPanel: React.FC<ServicesPanelProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<string>("overview");
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(initialServiceId);
+  const { toast } = useToast();
   
   useEffect(() => {
     // Set initial tab if provided
@@ -28,6 +31,22 @@ const ServicesPanel: React.FC<ServicesPanelProps> = ({
       setActiveTab(initialTab);
     }
   }, [initialTab]);
+
+  useEffect(() => {
+    // Set selected service if provided
+    if (initialServiceId) {
+      setSelectedServiceId(initialServiceId);
+      // If we have a service ID but not on monitoring tab, switch to monitoring
+      if (activeTab !== "monitoring") {
+        setActiveTab("monitoring");
+        toast({
+          title: "Service Selected",
+          description: "Switched to monitoring tab to view service details",
+          duration: 3000,
+        });
+      }
+    }
+  }, [initialServiceId, activeTab, toast]);
 
   return (
     <div className="space-y-4">
@@ -53,7 +72,7 @@ const ServicesPanel: React.FC<ServicesPanelProps> = ({
         </TabsContent>
 
         <TabsContent value="monitoring" className="p-0 border-0">
-          <MonitoringLogs initialServiceId={initialServiceId} />
+          <MonitoringLogs initialServiceId={selectedServiceId} />
         </TabsContent>
 
         <TabsContent value="security" className="p-0 border-0">

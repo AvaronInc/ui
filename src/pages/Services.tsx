@@ -6,12 +6,13 @@ import PageTransition from '@/components/transitions/PageTransition';
 import PageTitle from '@/components/common/PageTitle';
 import ServicesPanel from '@/components/services/ServicesPanel';
 import { useDemoNotifications } from '@/components/notifications/demoNotifications';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 const Services = () => {
   // Load demo notifications
   useDemoNotifications();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialTab = searchParams.get('tab');
   const serviceId = searchParams.get('service');
   

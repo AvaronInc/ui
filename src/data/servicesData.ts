@@ -4,8 +4,8 @@ import { Service, ServiceAlert, ServiceTypeConfig } from '@/types/services';
 export const activeServices: Service[] = [
   {
     id: 'dns-001',
-    name: 'Primary DNS Server',
-    description: 'Main DNS server for the corporate network',
+    name: 'NEST DNS Server',
+    description: 'Primary DNS server for network name resolution and service discovery',
     type: 'dns',
     status: 'healthy',
     resources: {
@@ -23,8 +23,8 @@ export const activeServices: Service[] = [
   },
   {
     id: 'web-001',
-    name: 'Corporate Website',
-    description: 'Main corporate website server',
+    name: 'Avaron NEST Portal',
+    description: 'Main web portal for Avaron NEST management and configuration',
     type: 'web',
     status: 'warning',
     resources: {
@@ -48,8 +48,8 @@ export const activeServices: Service[] = [
   },
   {
     id: 'api-001',
-    name: 'Customer API Gateway',
-    description: 'Main API gateway for customer services',
+    name: 'SD-WAN API Gateway',
+    description: 'Central API gateway for SD-WAN services and configuration management',
     type: 'api',
     status: 'healthy',
     resources: {
@@ -67,8 +67,8 @@ export const activeServices: Service[] = [
   },
   {
     id: 'lb-001',
-    name: 'Web Traffic Balancer',
-    description: 'Load balancer for web traffic',
+    name: 'Zone Traffic Balancer',
+    description: 'Load balancer for traffic distribution across zone services',
     type: 'load_balancer',
     status: 'healthy',
     resources: {
@@ -86,8 +86,8 @@ export const activeServices: Service[] = [
   },
   {
     id: 'db-001',
-    name: 'Product Database',
-    description: 'Main product catalog database',
+    name: 'Avaron Vault Storage',
+    description: 'Secure storage vault for sensitive data and credentials',
     type: 'database',
     status: 'critical',
     resources: {
@@ -97,15 +97,15 @@ export const activeServices: Service[] = [
       storage: 78
     },
     uptime: '8d 14h 32m',
-    version: 'PostgreSQL 15.3',
+    version: 'MinIO 2023.5.6',
     lastUpdated: '2023-10-18T09:25:42Z',
-    endpoints: ['db.internal:5432'],
+    endpoints: ['vault.internal:9000'],
     instances: 1,
     securityStatus: 'vulnerable',
     lastIncident: {
       time: '2023-10-26T03:12:45Z',
       type: 'Disk Space Alert',
-      description: 'Database storage approaching 85% capacity',
+      description: 'Storage vault approaching 85% capacity',
       resolved: false
     }
   }
