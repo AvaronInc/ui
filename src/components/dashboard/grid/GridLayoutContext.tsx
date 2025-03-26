@@ -4,11 +4,12 @@ import { useAuth } from '@/context/auth';
 
 // Default dashboard layouts for different breakpoints
 export const defaultLayout: Layout[] = [
-  { i: 'network-status-default', x: 0, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'security-overview-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'security-overview-default', x: 0, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
+  { i: 'network-status-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'zone-insights-default', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'unverified-users-default', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'daily-news-default', x: 0, y: 16, w: 6, h: 10, minW: 4, minH: 8 },
+  { i: 'weather-by-site-default', x: 6, y: 16, w: 6, h: 8, minW: 3, minH: 6 },
 ];
 
 type GridLayoutContextType = {
