@@ -90,19 +90,20 @@ export const WidgetLibraryDrawer: React.FC<WidgetLibraryDrawerProps> = ({ open, 
         </DrawerHeader>
         
         <div className="px-4">
-          <TabsList className="grid grid-cols-3 md:grid-cols-9 mb-4">
-            {categories.map(category => (
-              <TabsTrigger 
-                key={category.id} 
-                value={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className="flex items-center gap-1 text-xs px-2 py-1"
-              >
-                {category.icon}
-                <span className="hidden md:inline">{category.name}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+            <TabsList className="grid grid-cols-3 md:grid-cols-9 mb-4">
+              {categories.map(category => (
+                <TabsTrigger 
+                  key={category.id} 
+                  value={category.id}
+                  className="flex items-center gap-1 text-xs px-2 py-1"
+                >
+                  {category.icon}
+                  <span className="hidden md:inline">{category.name}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         </div>
         
         <ScrollArea className="px-4 h-[50vh]">
