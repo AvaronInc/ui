@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { FileSearch, AlertTriangle, Check, Cpu } from 'lucide-react';
+import { FileSearch } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Ticket } from '@/types/tickets';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
+import { AnalysisIntro } from './rca/AnalysisIntro';
+import { AnalysisProgress } from './rca/AnalysisProgress';
+import { AnalysisResult } from './rca/AnalysisResult';
+import { mockAnalysisData } from './rca/types';
 
 interface RootCauseAnalysisDialogProps {
   ticket: Ticket | null;
@@ -75,38 +75,6 @@ export const RootCauseAnalysisDialog: React.FC<RootCauseAnalysisDialogProps> = (
     return "Finalizing analysis report...";
   };
 
-  // Mock data for the report
-  const rootCauses = [
-    { 
-      id: 1,
-      cause: "Network Latency Spike",
-      probability: "92%",
-      description: "A sudden increase in network latency caused by routing issues in the core switch infrastructure.",
-      evidence: "Analyzed traffic patterns show a 300% increase in packet loss starting at 14:32 GMT on the affected systems.",
-    },
-    { 
-      id: 2,
-      cause: "Outdated Firmware",
-      probability: "78%",
-      description: "The affected system is running firmware version 3.2.1, which has known bugs when handling high volumes of concurrent connections.",
-      evidence: "System logs show connection timeouts occurring at predictable intervals, matching bug reports for this firmware version.",
-    },
-    { 
-      id: 3,
-      cause: "Memory Allocation Error",
-      probability: "65%",
-      description: "A memory leak in the application caused gradual resource depletion until system failure.",
-      evidence: "Memory usage graphs show a linear increase over time without corresponding user activity increases.",
-    }
-  ];
-
-  const recommendedActions = [
-    "Update switch firmware to latest stable release (v4.2.3)",
-    "Implement QoS prioritization for critical application traffic",
-    "Add 30% capacity buffer to network monitoring thresholds",
-    "Schedule weekly restart of affected services until permanent fix is deployed"
-  ];
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
@@ -128,100 +96,18 @@ export const RootCauseAnalysisDialog: React.FC<RootCauseAnalysisDialogProps> = (
         </DialogHeader>
 
         {!analysisStarted ? (
-          <div className="space-y-4 py-4">
-            <div className="flex items-start space-x-4">
-              <Cpu className="h-8 w-8 text-primary mt-1" />
-              <div>
-                <h4 className="font-medium">AI-Powered Root Cause Analysis</h4>
-                <p className="text-sm text-muted-foreground mt-1">
-                  This process will analyze system logs, network traffic, and infrastructure metrics 
-                  to identify the most likely cause of the reported issue.
-                </p>
-              </div>
-            </div>
-            
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Automated process</AlertTitle>
-              <AlertDescription>
-                The analysis may take several minutes to complete. You can close this dialog and return 
-                to the ticket while the process runs in the background.
-              </AlertDescription>
-            </Alert>
-          </div>
+          <AnalysisIntro />
         ) : !analysisComplete ? (
-          <div className="space-y-6 py-4">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>{getAnalysisStage()}</span>
-                <span>{progress}%</span>
-              </div>
-              <Progress value={progress} />
-            </div>
-            
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium">Analysis steps:</h4>
-              <ul className="text-sm space-y-1">
-                <li className={`flex items-center ${progress >= 25 ? "text-foreground" : "text-muted-foreground"}`}>
-                  {progress >= 25 ? <Check className="h-4 w-4 mr-2 text-green-500" /> : <span className="h-4 w-4 mr-2" />}
-                  Collect system diagnostics
-                </li>
-                <li className={`flex items-center ${progress >= 50 ? "text-foreground" : "text-muted-foreground"}`}>
-                  {progress >= 50 ? <Check className="h-4 w-4 mr-2 text-green-500" /> : <span className="h-4 w-4 mr-2" />}
-                  Analyze infrastructure components
-                </li>
-                <li className={`flex items-center ${progress >= 75 ? "text-foreground" : "text-muted-foreground"}`}>
-                  {progress >= 75 ? <Check className="h-4 w-4 mr-2 text-green-500" /> : <span className="h-4 w-4 mr-2" />}
-                  Correlate event patterns
-                </li>
-                <li className={`flex items-center ${progress >= 95 ? "text-foreground" : "text-muted-foreground"}`}>
-                  {progress >= 95 ? <Check className="h-4 w-4 mr-2 text-green-500" /> : <span className="h-4 w-4 mr-2" />}
-                  Generate insights and recommendations
-                </li>
-              </ul>
-            </div>
-          </div>
+          <AnalysisProgress 
+            progress={progress} 
+            getAnalysisStage={getAnalysisStage} 
+          />
         ) : (
-          <ScrollArea className="max-h-[60vh] pr-4">
-            <div className="space-y-6 py-4">
-              <div>
-                <h3 className="text-lg font-medium">Analysis Summary</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Based on the collected data, we've identified the following potential root causes for the issue reported in ticket #{ticket?.id}.
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <h4 className="text-md font-medium">Potential Root Causes</h4>
-                {rootCauses.map((cause) => (
-                  <div key={cause.id} className="border rounded-md p-4 space-y-2">
-                    <div className="flex justify-between items-center">
-                      <h5 className="font-medium">{cause.cause}</h5>
-                      <Badge variant="outline" className="bg-primary/10">Probability: {cause.probability}</Badge>
-                    </div>
-                    <p className="text-sm">{cause.description}</p>
-                    <div className="text-sm text-muted-foreground">
-                      <strong>Evidence:</strong> {cause.evidence}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="space-y-4">
-                <h4 className="text-md font-medium">Recommended Actions</h4>
-                <ul className="space-y-2">
-                  {recommendedActions.map((action, index) => (
-                    <li key={index} className="text-sm flex items-start">
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border bg-background text-xs font-medium mr-2 shrink-0">
-                        {index + 1}
-                      </span>
-                      {action}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </ScrollArea>
+          <AnalysisResult 
+            ticket={ticket}
+            rootCauses={mockAnalysisData.rootCauses}
+            recommendedActions={mockAnalysisData.recommendedActions}
+          />
         )}
 
         <DialogFooter>

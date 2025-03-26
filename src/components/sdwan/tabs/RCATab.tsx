@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, FileSearch } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { RootCauseAnalysisDialog } from "@/components/tickets/dialogs/RootCauseAnalysisDialog";
+import { TicketStatus, TicketPriority } from '@/types/tickets';
 
 // Mock data for SD-WAN related issues
 const sdwanIssues = [
@@ -90,16 +91,16 @@ const RCATab: React.FC = () => {
     return {
       id: issue.id,
       title: issue.title,
-      status: "investigating",
-      priority: issue.severity === 'critical' ? 'high' : 
-                issue.severity === 'high' ? 'medium' : 'low',
+      status: "in-progress" as TicketStatus,
+      priority: issue.severity === 'critical' ? 'critical' as TicketPriority : 
+                issue.severity === 'high' ? 'high' as TicketPriority : 
+                issue.severity === 'medium' ? 'medium' as TicketPriority : 'low' as TicketPriority,
       createdAt: issue.timestamp,
       description: issue.description,
       assignedTo: "System",
       category: "SD-WAN",
-      // Add the missing required properties from the Ticket type
       createdBy: "System",
-      updatedAt: issue.timestamp // Use the same timestamp for updatedAt as for createdAt
+      updatedAt: issue.timestamp
     };
   };
   
