@@ -8,7 +8,7 @@ import { NotificationButton } from './header/NotificationButton';
 import { UserProfileMenu } from './header/UserProfileMenu';
 import { CompanyName } from './header/CompanyName';
 import { CLIButton } from './header/CLIButton';
-import { DocumentationButton } from './header/DocumentationButton';
+import DocumentationButton from './header/DocumentationButton';
 import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 
 const DashboardHeader = () => {
