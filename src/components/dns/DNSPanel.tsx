@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Activity, BarChart2, Globe, Shield, Cog, Server } from 'lucide-react';
+import { Activity, BarChart2, Globe, Shield, Cog, Server, AlertTriangle } from 'lucide-react';
 import DNSOverview from './tabs/DNSOverview';
 import DNSZones from './tabs/DNSZones';
 import DNSSecurity from './tabs/DNSSecurity';
 import DNSPerformance from './tabs/DNSPerformance';
+import RCATab from './tabs/RCATab';
 
 const DNSPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -46,6 +47,10 @@ const DNSPanel: React.FC = () => {
               <Cog className="h-4 w-4" />
               <span>{isMobile ? "Settings" : "DNS Settings"}</span>
             </TabsTrigger>
+            <TabsTrigger value="rca" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <AlertTriangle className="h-4 w-4" />
+              <span>{isMobile ? "RCA" : "Root Cause Analysis"}</span>
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -70,10 +75,13 @@ const DNSPanel: React.FC = () => {
             DNS Settings configuration will be implemented in a future prompt.
           </div>
         </TabsContent>
+        
+        <TabsContent value="rca" className="space-y-4">
+          <RCATab />
+        </TabsContent>
       </Tabs>
     </div>
   );
 };
 
 export default DNSPanel;
-
