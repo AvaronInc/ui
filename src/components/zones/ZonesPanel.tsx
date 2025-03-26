@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ZonesOverview from './tabs/ZonesOverview';
 import ZoneSettings from './tabs/ZoneSettings';
 import ZoneInsights from './sidebar/ZoneInsights';
 import ZoneNestvault from './tabs/ZoneNestvault';
+import ZoneOverview from './tabs/ZoneOverview';
 import { Zone } from './types';
 import { mockZones } from './mockData';
 
@@ -116,7 +116,7 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
-          <p>Zone-specific dashboard and overview would appear here.</p>
+          <ZoneOverview zone={zone} />
         </TabsContent>
         
         <TabsContent value="services" className="space-y-4">
