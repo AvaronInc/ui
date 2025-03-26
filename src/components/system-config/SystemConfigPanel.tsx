@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BackupRestoreSection from './sections/BackupRestoreSection';
 import NetworkSettingsSection from './sections/NetworkSettingsSection';
+import RCASection from './sections/RCASection';
 import { toast } from 'sonner';
 
 export const SystemConfigPanel: React.FC = () => {
@@ -23,6 +24,7 @@ export const SystemConfigPanel: React.FC = () => {
         <TabsList className="mb-4">
           <TabsTrigger value="backup-restore">Backup & Restore</TabsTrigger>
           <TabsTrigger value="network">Network Settings</TabsTrigger>
+          <TabsTrigger value="rca">RCA</TabsTrigger>
           <TabsTrigger value="identity" disabled>Identity & RBAC</TabsTrigger>
           <TabsTrigger value="security" disabled>Firewall & Security</TabsTrigger>
           <TabsTrigger value="integration" disabled>Integrations</TabsTrigger>
@@ -34,6 +36,10 @@ export const SystemConfigPanel: React.FC = () => {
         
         <TabsContent value="network" className="mt-0">
           <NetworkSettingsSection />
+        </TabsContent>
+        
+        <TabsContent value="rca" className="mt-0">
+          <RCASection />
         </TabsContent>
         
         <TabsContent value="identity" className="mt-0">
@@ -57,3 +63,4 @@ export const SystemConfigPanel: React.FC = () => {
     </div>
   );
 };
+
