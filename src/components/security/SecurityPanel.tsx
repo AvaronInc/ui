@@ -9,7 +9,8 @@ import SecurityAutomation from './tabs/SecurityAutomation';
 import SecurityLogs from './tabs/SecurityLogs';
 import CVEIntelligencePanel from './cve/CVEIntelligencePanel';
 import RootCauseAnalysis from './cve/tabs/RootCauseAnalysis';
-import { Shield, AlertTriangle, FileCheck, Zap, FileSearch, Database, LineChart } from 'lucide-react';
+import IPThreatIntelligence from './tabs/IPThreatIntelligence';
+import { Shield, AlertTriangle, FileCheck, Zap, FileSearch, Database, LineChart, Wifi } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const SecurityPanel: React.FC = () => {
@@ -54,6 +55,10 @@ const SecurityPanel: React.FC = () => {
               <Database className="h-4 w-4" />
               <span>{isMobile ? "CVE" : "CVE Intelligence"}</span>
             </TabsTrigger>
+            <TabsTrigger value="ip-threat" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
+              <Wifi className="h-4 w-4" />
+              <span>{isMobile ? "IP Intel" : "IP Threat Intelligence"}</span>
+            </TabsTrigger>
             <TabsTrigger value="rca" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2">
               <LineChart className="h-4 w-4" />
               <span>{isMobile ? "RCA" : "Root Cause Analysis"}</span>
@@ -83,6 +88,10 @@ const SecurityPanel: React.FC = () => {
 
         <TabsContent value="cve" className="space-y-4">
           <CVEIntelligencePanel />
+        </TabsContent>
+
+        <TabsContent value="ip-threat" className="space-y-4">
+          <IPThreatIntelligence />
         </TabsContent>
 
         <TabsContent value="rca" className="space-y-4">
