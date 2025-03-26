@@ -49,6 +49,7 @@ import Messaging from "./pages/Messaging";
 import TeamsChat from "./pages/TeamsChat";
 import SystemConfiguration from "./pages/SystemConfiguration";
 import Zones from "./pages/Zones";
+import PartnerPortal from "./pages/PartnerPortal";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -109,6 +110,7 @@ const App = () => (
                 <Route path="/honeypot" element={<ProtectedRoute><Honeypot /></ProtectedRoute>} />
                 <Route path="/security-testing" element={<ProtectedRoute><SecurityTesting /></ProtectedRoute>} />
                 <Route path="/logging-audit" element={<ProtectedRoute><LoggingAudit /></ProtectedRoute>} />
+                <Route path="/partner-portal" element={<ProtectedRoute adminOnly><PartnerPortal /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnimatePresence>
