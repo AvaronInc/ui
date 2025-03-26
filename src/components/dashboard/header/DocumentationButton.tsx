@@ -18,15 +18,16 @@ const DocumentationButton = () => {
           <Book className="h-[1.2rem] w-[1.2rem]" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-5xl h-[80vh]">
+      <DialogContent className="max-w-5xl h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>AIM System Documentation</DialogTitle>
         </DialogHeader>
-        <div className="mt-2 flex-1 h-full">
+        <div className="mt-2 flex-1 overflow-hidden">
           <iframe 
             src="https://ldhcbonevdxtoycfoeds.supabase.co/storage/v1/object/public/docs//AIM%20System%20Documentation.pdf" 
             className="w-full h-full border-0"
             title="System Documentation"
+            style={{ display: 'block' }}
             allowFullScreen
           />
         </div>
