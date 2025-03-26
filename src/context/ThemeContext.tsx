@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import LightModeWarningDialog from '@/components/theme/LightModeWarningDialog';
 
 interface ThemeContextType {
   isDarkMode: boolean;
