@@ -1,66 +1,52 @@
 
-export type ZoneStatus = 'healthy' | 'warning' | 'degraded';
-
-export type ServiceType = 
-  | 'sdwan' 
-  | 'identity' 
-  | 'vault' 
-  | 'ai' 
-  | 'rmm' 
-  | 'mixtral'
-  | 'nestvault';
-
-export type IsolationLevel = 
-  | 'normal'
-  | 'high'
-  | 'airgapped';
-
-export type StorageTier = 'hot' | 'cold' | 'archived';
-
-export type StorageStatus = 'normal' | 'near-limit' | 'warning' | 'unavailable';
-
 export interface Zone {
   id: string;
   name: string;
   description: string;
-  status: ZoneStatus;
-  services: ServiceType[];
-  adminScopes: string[];
+  status: 'healthy' | 'warning' | 'degraded' | 'maintenance';
+  createdAt: string;
+  updatedAt: string;
+  serviceCount: number;
   resourceUsage: {
     cpu: number;
-    ram: number;
+    memory: number;
     storage: number;
+    network: number;
   };
-  vaultIdRequired: boolean;
-  created: string;
-  modified: string;
-  isolationLevel: IsolationLevel;
-  complianceTags: string[];
-  storageConfig?: {
-    enabled: boolean;
-    provisioned: number; // in TB
-    used: number; // in TB
-    tier: StorageTier;
-    status: StorageStatus;
-    erasureCoding: boolean;
-    publicBucketsAllowed: boolean;
-    customRetention: boolean;
+  complianceStatus: {
+    pci: boolean;
+    hipaa: boolean;
+    gdpr: boolean;
+    sox: boolean;
+  };
+  securityLevel: 'standard' | 'enhanced' | 'maximum';
+  vaultIDSettings?: {
+    requireVaultID: boolean;
+    enforceBiometricMFA: boolean;
+    revalidationPeriod: number; // in days
+    lastConfigUpdate: string;
   };
 }
 
-export interface ZoneSummary {
-  totalZones: number;
-  highTrustZones: number;
-  zonesWithAlerts: number;
-  aiTraffic: {
-    zoneName: string;
-    trafficPercentage: number;
-  }[];
-  mixtralSummary: string;
-  storageStats?: {
-    totalProvisioned: number; // in TB
-    totalUsed: number; // in TB
-    mostUsedZone: string;
-    lowStorageAlerts: number;
-  };
+export interface ZoneUser {
+  id: string;
+  fullName: string;
+  email: string;
+  role: 'Owner' | 'Admin' | 'Engineer' | 'User' | 'Auditor';
+  lastLogin: string;
+  mfaStatus: 'enabled' | 'disabled' | 'enforced';
+  biometricEnrolled: boolean;
+  certificateIssued: string | null;
+  certificateExpiry: string | null;
+  status: 'active' | 'suspended' | 'pending';
+}
+
+export interface ZoneAuditEvent {
+  id: string;
+  timestamp: string;
+  userId: string;
+  userEmail: string;
+  action: string;
+  details: string;
+  ipAddress: string;
 }

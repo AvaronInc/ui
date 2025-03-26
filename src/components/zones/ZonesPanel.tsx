@@ -7,6 +7,7 @@ import ZoneInsights from './sidebar/ZoneInsights';
 import ZoneNestvault from './tabs/ZoneNestvault';
 import ZoneOverview from './tabs/ZoneOverview';
 import ZoneServices from './tabs/ZoneServices';
+import ZoneVaultID from './tabs/ZoneVaultID';
 import { Zone } from './types';
 import { mockZones } from './mockData';
 
@@ -107,11 +108,12 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
         onValueChange={setActiveTab}
         className="space-y-4"
       >
-        <TabsList className="grid grid-cols-3 md:grid-cols-7 gap-2">
+        <TabsList className="grid grid-cols-3 md:grid-cols-8 gap-2">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="logs">Logs</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="vaultid">VaultID</TabsTrigger>
           <TabsTrigger value="ai">AI Profile</TabsTrigger>
           <TabsTrigger value="nestvault">NestVault</TabsTrigger>
           <TabsTrigger value="policies">Policies</TabsTrigger>
@@ -131,6 +133,10 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
         
         <TabsContent value="users" className="space-y-4">
           <p>Zone users and assets would appear here.</p>
+        </TabsContent>
+        
+        <TabsContent value="vaultid" className="space-y-4">
+          <ZoneVaultID zone={zone} />
         </TabsContent>
         
         <TabsContent value="ai" className="space-y-4">
