@@ -33,5 +33,3 @@ export const mockServiceTypes: Record<string, ServiceType> = {
     icon: 'currency-dollar'
   }
 };
-
-// Note: Using the centralized adapter functions from utils/typeAdapters.ts instead

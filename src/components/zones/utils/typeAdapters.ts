@@ -154,8 +154,9 @@ export function isZoneUser(value: any): value is ZoneUser {
 }
 
 export function normalizeUserStatus(status: string): 'active' | 'suspended' | 'pending' {
-  if (status === 'active' || status === 'suspended' || status === 'pending') {
-    return status;
+  const lowerStatus = status.toLowerCase();
+  if (lowerStatus === 'active' || lowerStatus === 'suspended' || lowerStatus === 'pending') {
+    return lowerStatus as 'active' | 'suspended' | 'pending';
   }
   return 'pending';
 }
@@ -163,7 +164,7 @@ export function normalizeUserStatus(status: string): 'active' | 'suspended' | 'p
 export function processZoneUsers(users: any[]): ZoneUser[] {
   return users.map(user => ({
     ...user,
-    status: normalizeUserStatus(user.status),
+    status: normalizeUserStatus(user.status || 'pending'),
     certificateIssued: user.certificateIssued || null,
     certificateExpiry: user.certificateExpiry || null
   }));
@@ -172,4 +173,15 @@ export function processZoneUsers(users: any[]): ZoneUser[] {
 // A unified adapter function to ensure we have a properly formatted object
 export function ensureProperType<T>(value: string | T, converter: (value: string | T) => T): T {
   return converter(value);
+}
+
+// String key safe version of service type
+export type ServiceTypeKey = 'identity' | 'network' | 'database' | 'storage' | 'ai' | 'finance' | string;
+
+// Helper to get a safe string key from ServiceType
+export function getServiceTypeKey(serviceType: ServiceType | string): string {
+  if (typeof serviceType === 'string') {
+    return serviceType;
+  }
+  return serviceType.id;
 }
