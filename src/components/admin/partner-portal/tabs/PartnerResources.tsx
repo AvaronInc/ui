@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { mockPartnerResources } from '../mockData';
-import { Search, Download, FileText, FilePdf, Video, File, Calendar } from 'lucide-react';
+import { Search, Download, FileText, FileType, Video, File, Calendar } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
 const PartnerResources: React.FC = () => {
@@ -78,7 +78,7 @@ const ResourceGrid: React.FC<{ resources: typeof mockPartnerResources }> = ({ re
       case 'Collateral':
         return <FileText className="h-6 w-6 text-blue-500" />;
       case 'Product Sheet':
-        return <FilePdf className="h-6 w-6 text-red-500" />;
+        return <FileType className="h-6 w-6 text-red-500" />;
       case 'Video':
         return <Video className="h-6 w-6 text-purple-500" />;
       case 'Case Study':
