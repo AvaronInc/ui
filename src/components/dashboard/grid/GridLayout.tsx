@@ -56,7 +56,7 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-4 items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 bg-background/80 backdrop-blur-sm p-3 border rounded-md shadow-sm">
         <div className="flex items-center space-x-2">
           <Switch
             id="edit-mode"
@@ -102,12 +102,12 @@ export const GridLayout: React.FC<GridLayoutProps> = ({ children, widgetComponen
         layouts={layouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 12, md: 12, sm: 12, xs: 2, xxs: 2 }}
-        rowHeight={30}
+        rowHeight={60}
         onLayoutChange={handleLayoutChange}
         isDraggable={editMode}
         isResizable={editMode}
         useCSSTransforms={true}
-        containerPadding={[0, 0]}
+        containerPadding={[8, 8]}
         margin={[16, 16]}
         draggableHandle=".grid-item-drag-handle"
       >

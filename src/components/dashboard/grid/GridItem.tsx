@@ -24,10 +24,10 @@ export const GridItem: React.FC<GridItemProps> = ({ id, children, editMode }) =>
 
   return (
     <Card 
-      className={`h-full transition-shadow ${editMode ? 'shadow-md ring-1 ring-primary/10' : ''}`}
+      className={`h-full overflow-auto transition-shadow ${editMode ? 'shadow-md ring-1 ring-primary/10' : ''}`}
     >
       {editMode && (
-        <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-1 z-10 bg-secondary/80 backdrop-blur-sm">
+        <div className="sticky top-0 left-0 right-0 flex items-center justify-between p-1 z-10 bg-secondary/80 backdrop-blur-sm">
           <div 
             className="grid-item-drag-handle p-1 cursor-move rounded hover:bg-background/50 flex items-center"
             title="Drag to move"
@@ -47,7 +47,7 @@ export const GridItem: React.FC<GridItemProps> = ({ id, children, editMode }) =>
         </div>
       )}
       
-      <div className={editMode ? 'pt-8' : ''}>
+      <div className={`p-2 ${editMode ? 'pt-8' : ''} h-full overflow-auto`}>
         {children}
       </div>
     </Card>
