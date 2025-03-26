@@ -105,7 +105,7 @@ const MOCK_NEWS = [
     category: 'hipaa',
     date: '2023-10-08',
     insights: 'This settlement highlights the importance of regular access reviews and the need for comprehensive audit logging of all PHI access events.'
-  },
+  }
 ];
 
 interface NewsArticle {
