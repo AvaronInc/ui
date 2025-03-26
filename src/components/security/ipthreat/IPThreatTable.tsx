@@ -125,8 +125,11 @@ const IPThreatTable: React.FC<IPThreatTableProps> = ({
           </div>
           <div className="flex gap-2">
             <Select onValueChange={(value) => {
-              const severity = value as SecuritySeverity;
-              onSeverityFilterChange(severity === 'all' ? [] : [severity]);
+              if (value === 'all') {
+                onSeverityFilterChange([]);
+              } else {
+                onSeverityFilterChange([value as SecuritySeverity]);
+              }
             }}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Severity" />
