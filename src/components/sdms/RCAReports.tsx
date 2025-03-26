@@ -7,6 +7,8 @@ import { FileSearch, Download, FileText } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import RCAReportDetailDialog from './RCAReportDetailDialog';
+import { useToast } from '@/components/ui/use-toast';
 
 // Mock data for RCA reports from various services
 const rcaReports = [
@@ -95,12 +97,24 @@ const rcaReports = [
 const RCAReports: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [serviceFilter, setServiceFilter] = useState('all');
+  const [selectedReport, setSelectedReport] = useState<typeof rcaReports[0] | null>(null);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const { toast } = useToast();
   
   const handleDownload = (reportId: string) => {
     // In a real app, this would trigger a download of the report file
     console.log(`Downloading report: ${reportId}`);
-    // Show download confirmation in a real app
-    alert(`Report ${reportId} download started`);
+    // Show download confirmation using toast
+    toast({
+      title: "Download started",
+      description: `Report ${reportId} is being downloaded`,
+      duration: 3000,
+    });
+  };
+  
+  const handleViewReport = (report: typeof rcaReports[0]) => {
+    setSelectedReport(report);
+    setReportDialogOpen(true);
   };
   
   const getSeverityColor = (severity: string) => {
@@ -194,7 +208,11 @@ const RCAReports: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredReports.map((report) => (
-                    <TableRow key={report.id}>
+                    <TableRow 
+                      key={report.id} 
+                      className="cursor-pointer" 
+                      onClick={() => handleViewReport(report)}
+                    >
                       <TableCell className="font-medium">
                         {report.id}
                         <div className="text-xs text-muted-foreground">
@@ -210,12 +228,15 @@ const RCAReports: React.FC = () => {
                       </TableCell>
                       <TableCell>{formatDate(report.timestamp)}</TableCell>
                       <TableCell>{report.analyst}</TableCell>
-                      <TableCell>
+                      <TableCell onClick={(e) => e.stopPropagation()}>
                         <Button 
                           variant="outline" 
                           size="sm"
                           className="flex items-center gap-1"
-                          onClick={() => handleDownload(report.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(report.id);
+                          }}
                         >
                           <Download className="h-4 w-4" />
                           <span className="hidden sm:inline">{report.fileSize}</span>
@@ -237,6 +258,14 @@ const RCAReports: React.FC = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Report Detail Dialog */}
+      <RCAReportDetailDialog
+        report={selectedReport}
+        open={reportDialogOpen}
+        onOpenChange={setReportDialogOpen}
+        onDownload={handleDownload}
+      />
     </div>
   );
 };
