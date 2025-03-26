@@ -79,7 +79,7 @@ const MOCK_NEWS = [
   {
     id: '6',
     title: 'Microsoft Releases Patches for 56 Security Issues',
-    summary: 'Microsoft's latest Patch Tuesday addresses 56 security vulnerabilities, including four zero-day flaws being actively exploited.',
+    summary: "Microsoft's latest Patch Tuesday addresses 56 security vulnerabilities, including four zero-day flaws being actively exploited.",
     source: 'Microsoft Security',
     sourceUrl: '#',
     category: 'cybersecurity',
