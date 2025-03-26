@@ -2,14 +2,15 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 import CVEOverview from './tabs/CVEOverview';
 import AffectedSystems from './tabs/AffectedSystems';
 import ZeroDayWatchlist from './tabs/ZeroDayWatchlist';
 import PatchRecommendations from './tabs/PatchRecommendations';
 import SearchAnalyze from './tabs/SearchAnalyze';
 import CVESettingsDialog from './dialogs/CVESettingsDialog';
-import { Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 const CVEIntelligencePanel = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);

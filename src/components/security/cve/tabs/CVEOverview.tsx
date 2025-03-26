@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bar, Pie } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { ChartContainer } from '@/components/ui/chart';
 import { Shield, AlertTriangle, AlertCircle } from 'lucide-react';
 
@@ -30,13 +30,13 @@ const CVEOverview = () => {
                 daily: { color: '#3b82f6' }
               }}
             >
-              <Bar data={mockDailyData} name="daily">
+              <BarChart data={mockDailyData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="count" name="CVEs" fill="var(--color-daily)" />
-              </Bar>
+              </BarChart>
             </ChartContainer>
           </div>
         </CardContent>
@@ -69,20 +69,22 @@ const CVEOverview = () => {
                 }), {})
               }
             >
-              <Pie
-                data={mockSeverityData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
-              >
-                {mockSeverityData.map((entry, index) => (
-                  <Cell key={entry.name} fill={entry.color} />
-                ))}
-              </Pie>
+              <PieChart>
+                <Pie
+                  data={mockSeverityData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                >
+                  {mockSeverityData.map((entry, index) => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
+                </Pie>
+              </PieChart>
             </ChartContainer>
           </div>
           <div className="grid grid-cols-3 gap-2 text-center mt-4">
