@@ -10,6 +10,7 @@ import { AIThreatPanel } from '@/components/firewall/components/ai';
 import { IPSThreatPanel } from '@/components/firewall/components/ips';
 import { ZeroTrustPanel } from '@/components/firewall/components/zerotrust';
 import { LoggingCompliance } from '@/components/settings/firewall/logging';
+import { FirewallRCAPanel } from '@/components/firewall/components/rca';
 
 const FirewallManagement = () => {
   const { toast } = useToast();
@@ -27,7 +28,7 @@ const FirewallManagement = () => {
       {/* Removed the redundant heading and description here */}
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+        <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="rules">Rules & Policies</TabsTrigger>
           <TabsTrigger value="inspection">Inspection</TabsTrigger>
@@ -35,6 +36,7 @@ const FirewallManagement = () => {
           <TabsTrigger value="ips">IPS/IDS</TabsTrigger>
           <TabsTrigger value="zerotrust">Zero Trust</TabsTrigger>
           <TabsTrigger value="logging">Logging</TabsTrigger>
+          <TabsTrigger value="rca">RCA</TabsTrigger>
         </TabsList>
         
         <TabsContent value="dashboard" className="space-y-6">
@@ -63,6 +65,10 @@ const FirewallManagement = () => {
         
         <TabsContent value="logging" className="space-y-6">
           <LoggingCompliance />
+        </TabsContent>
+        
+        <TabsContent value="rca" className="space-y-6">
+          <FirewallRCAPanel />
         </TabsContent>
       </Tabs>
     </div>
