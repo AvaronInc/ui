@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Card, 
@@ -18,7 +17,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { HardDrive, Timer, Shield, Network } from 'lucide-react';
+import { HardDrive, Timer, Shield, Network, Database } from 'lucide-react';
 
 const ZoneSettings: React.FC = () => {
   return (
@@ -227,36 +226,34 @@ const ZoneSettings: React.FC = () => {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-medium flex items-center">
-            <HardDrive className="h-4 w-4 mr-2 text-purple-500" />
-            Resource Allocation Defaults
+            <Database className="h-4 w-4 mr-2 text-indigo-500" />
+            NestVault Storage Configuration
           </CardTitle>
           <CardDescription>
-            Configure default resource allocation for new zones
+            Configure storage segregation and policies for this zone
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="default-cpu">Default CPU Allocation</Label>
-                <div className="flex items-center">
-                  <Input id="default-cpu" type="number" defaultValue="4" className="mr-2" />
-                  <span className="text-sm text-muted-foreground">vCPUs</span>
-                </div>
+                <Label htmlFor="storage-type">Storage Type</Label>
+                <Select defaultValue="segmented">
+                  <SelectTrigger id="storage-type">
+                    <SelectValue placeholder="Select storage type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="segmented">Segmented (Zone Isolated)</SelectItem>
+                    <SelectItem value="shared">Shared (Cross-Zone)</SelectItem>
+                    <SelectItem value="hybrid">Hybrid (Role-Based Access)</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="default-memory">Default Memory Allocation</Label>
+                <Label htmlFor="storage-quota">Storage Quota</Label>
                 <div className="flex items-center">
-                  <Input id="default-memory" type="number" defaultValue="8" className="mr-2" />
-                  <span className="text-sm text-muted-foreground">GB</span>
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="default-storage">Default Storage Allocation</Label>
-                <div className="flex items-center">
-                  <Input id="default-storage" type="number" defaultValue="100" className="mr-2" />
+                  <Input id="storage-quota" type="number" defaultValue="500" className="mr-2" />
                   <span className="text-sm text-muted-foreground">GB</span>
                 </div>
               </div>
@@ -264,10 +261,34 @@ const ZoneSettings: React.FC = () => {
             
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-center space-x-2">
-                <Label htmlFor="enable-auto-scaling">Enable Auto-Scaling</Label>
-                <p className="text-sm text-muted-foreground">Automatically scale resources based on usage</p>
+                <Label htmlFor="storage-encryption">Enable End-to-End Encryption</Label>
+                <p className="text-sm text-muted-foreground">Enforce encryption for all zone storage</p>
               </div>
-              <Switch id="enable-auto-scaling" defaultChecked />
+              <Switch id="storage-encryption" defaultChecked />
+            </div>
+            
+            <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="storage-versioning">Enable File Versioning</Label>
+                <p className="text-sm text-muted-foreground">Keep version history of files</p>
+              </div>
+              <Switch id="storage-versioning" defaultChecked />
+            </div>
+            
+            <div className="space-y-2 pt-2">
+              <Label htmlFor="retention-period">Data Retention Period</Label>
+              <Select defaultValue="365">
+                <SelectTrigger id="retention-period">
+                  <SelectValue placeholder="Select retention period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">30 days</SelectItem>
+                  <SelectItem value="90">90 days</SelectItem>
+                  <SelectItem value="180">180 days</SelectItem>
+                  <SelectItem value="365">1 year</SelectItem>
+                  <SelectItem value="forever">Indefinite</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>

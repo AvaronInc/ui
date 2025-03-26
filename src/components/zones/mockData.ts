@@ -7,7 +7,7 @@ export const mockZones: Zone[] = [
     name: 'HR Zone',
     description: 'Human Resources dedicated zone with enhanced privacy controls',
     status: 'warning',
-    services: ['identity', 'vault', 'ai', 'mixtral'],
+    services: ['identity', 'vault', 'ai', 'mixtral', 'nestvault'],
     adminScopes: ['HR Admin', 'Global Admin'],
     resourceUsage: {
       cpu: 45,
@@ -25,7 +25,7 @@ export const mockZones: Zone[] = [
     name: 'Finance Zone',
     description: 'Financial systems and operations zone with strict access controls',
     status: 'healthy',
-    services: ['identity', 'vault', 'ai', 'sdwan'],
+    services: ['identity', 'vault', 'ai', 'sdwan', 'nestvault'],
     adminScopes: ['Finance Admin', 'Global Admin'],
     resourceUsage: {
       cpu: 35,

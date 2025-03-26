@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -28,7 +27,8 @@ import {
   Server, 
   Fingerprint, 
   Table as TableIcon, 
-  Grid2X2 
+  Grid2X2,
+  Database 
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
@@ -51,14 +51,14 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
-  // Service icon mapping
   const serviceIcons: Record<ServiceType, React.ReactNode> = {
     sdwan: <Network className="h-4 w-4 text-blue-500" />,
     identity: <Fingerprint className="h-4 w-4 text-purple-500" />,
     vault: <Shield className="h-4 w-4 text-green-500" />,
     ai: <Brain className="h-4 w-4 text-amber-500" />,
     rmm: <Server className="h-4 w-4 text-cyan-500" />,
-    mixtral: <Brain className="h-4 w-4 text-pink-500" />
+    mixtral: <Brain className="h-4 w-4 text-pink-500" />,
+    nestvault: <Database className="h-4 w-4 text-indigo-500" />
   };
 
   const formatDate = (dateString: string) => {
@@ -130,7 +130,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                         <Checkbox id={service} />
                         <Label htmlFor={service} className="flex items-center cursor-pointer">
                           {icon}
-                          <span className="ml-2 capitalize">{service}</span>
+                          <span className="ml-2 capitalize">{service === 'nestvault' ? 'Storage (NestVault)' : service}</span>
                         </Label>
                       </div>
                     ))}
@@ -329,7 +329,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                       className="flex items-center px-2 py-1 bg-secondary/50 rounded-full text-xs"
                     >
                       {serviceIcons[service]}
-                      <span className="ml-1 capitalize">{service}</span>
+                      <span className="ml-1 capitalize">{service === 'nestvault' ? 'Storage (NestVault)' : service}</span>
                     </div>
                   ))}
                 </div>
