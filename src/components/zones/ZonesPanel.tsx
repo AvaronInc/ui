@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ZonesOverview from './tabs/ZonesOverview';
@@ -5,6 +6,7 @@ import ZoneSettings from './tabs/ZoneSettings';
 import ZoneInsights from './sidebar/ZoneInsights';
 import ZoneNestvault from './tabs/ZoneNestvault';
 import ZoneOverview from './tabs/ZoneOverview';
+import ZoneServices from './tabs/ZoneServices';
 import { Zone } from './types';
 import { mockZones } from './mockData';
 
@@ -120,7 +122,7 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
         </TabsContent>
         
         <TabsContent value="services" className="space-y-4">
-          <p>Services control panel would appear here.</p>
+          <ZoneServices zone={zone} />
         </TabsContent>
         
         <TabsContent value="logs" className="space-y-4">
