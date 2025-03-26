@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Zone } from '../../types';
 import { ZoneStatusBadge } from '../../ZonesPanel';
+import { Badge } from '@/components/ui/badge';
 
 // Format date function
 const formatDate = (dateString: string) => {
