@@ -208,7 +208,10 @@ const RetentionPoliciesTab: React.FC = () => {
       </Card>
 
       {/* New Policy Dialog */}
-      <Dialog open={isNewPolicyOpen} onOpenChange={setIsNewPolicyOpen}>
+      <Dialog open={isNewPolicyOpen} onOpenChange={(open) => {
+        setIsNewPolicyOpen(open);
+        if (!open) setSelectedPolicy(null);
+      }}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Create New Retention Policy</DialogTitle>
@@ -348,17 +351,103 @@ const RetentionPoliciesTab: React.FC = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Edit Policy Dialog (similar to New Policy) */}
-      <Dialog open={isEditPolicyOpen} onOpenChange={setIsEditPolicyOpen}>
+      {/* Edit Policy Dialog */}
+      <Dialog open={isEditPolicyOpen} onOpenChange={(open) => {
+        setIsEditPolicyOpen(open);
+        if (!open) setSelectedPolicy(null);
+      }}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Edit Retention Policy</DialogTitle>
             <DialogDescription>
-              Update retention policy settings
+              Update retention policy settings for {selectedPolicy?.logType}
             </DialogDescription>
           </DialogHeader>
           
-          {/* Same fields as New Policy Dialog but with selectedPolicy values */}
+          <div className="grid gap-4 py-4">
+            {selectedPolicy && (
+              <>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="edit-logType" className="text-right">
+                    Log Type
+                  </Label>
+                  <Input 
+                    id="edit-logType" 
+                    defaultValue={selectedPolicy.logType}
+                    className="col-span-3"
+                    disabled
+                  />
+                </div>
+                
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="edit-duration" className="text-right">
+                    Retention
+                  </Label>
+                  <div className="col-span-3 flex gap-2">
+                    <Input 
+                      id="edit-duration" 
+                      type="number" 
+                      defaultValue={selectedPolicy.duration.split(' ')[0]} 
+                      className="w-20"
+                    />
+                    <Select defaultValue="days">
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="days">Days</SelectItem>
+                        <SelectItem value="weeks">Weeks</SelectItem>
+                        <SelectItem value="months">Months</SelectItem>
+                        <SelectItem value="years">Years</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="edit-rotation" className="text-right">
+                    Rotation Method
+                  </Label>
+                  <div className="col-span-3">
+                    <Select defaultValue={selectedPolicy.rotationType.toLowerCase().replace('-', '')}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select rotation type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="timebased">Time-based</SelectItem>
+                        <SelectItem value="sizebased">Size-based</SelectItem>
+                        <SelectItem value="hybrid">Hybrid</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="edit-sizeCap" className="text-right">
+                    Size Cap
+                  </Label>
+                  <div className="col-span-3 flex gap-2">
+                    <Input 
+                      id="edit-sizeCap" 
+                      type="number" 
+                      defaultValue={selectedPolicy.sizeCap.split(' ')[0]} 
+                      className="w-20" 
+                    />
+                    <Select defaultValue="gb">
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mb">MB</SelectItem>
+                        <SelectItem value="gb">GB</SelectItem>
+                        <SelectItem value="tb">TB</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditPolicyOpen(false)}>
