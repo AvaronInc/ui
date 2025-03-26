@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ZonesOverview from './tabs/ZonesOverview';
 import ZoneSettings from './tabs/ZoneSettings';
 import ZoneInsights from './sidebar/ZoneInsights';
+import ZoneNestvault from './tabs/ZoneNestvault';
 import { Zone } from './types';
 import { mockZones } from './mockData';
 
@@ -104,12 +105,13 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
         onValueChange={setActiveTab}
         className="space-y-4"
       >
-        <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-2">
+        <TabsList className="grid grid-cols-3 md:grid-cols-7 gap-2">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="logs">Logs</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="ai">AI Profile</TabsTrigger>
+          <TabsTrigger value="nestvault">NestVault</TabsTrigger>
           <TabsTrigger value="policies">Policies</TabsTrigger>
         </TabsList>
 
@@ -131,6 +133,10 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
         
         <TabsContent value="ai" className="space-y-4">
           <p>AI behavior profiles would appear here.</p>
+        </TabsContent>
+        
+        <TabsContent value="nestvault" className="space-y-4">
+          <ZoneNestvault zone={zone} />
         </TabsContent>
         
         <TabsContent value="policies" className="space-y-4">

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -28,7 +29,8 @@ import {
   Fingerprint, 
   Table as TableIcon, 
   Grid2X2,
-  Database 
+  Database,
+  HardDrive
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
@@ -40,7 +42,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { Zone, ServiceType } from '../types';
+import { Zone, ServiceType, StorageStatus, StorageTier } from '../types';
 
 interface ZonesOverviewProps {
   zones: Zone[];
@@ -68,6 +70,29 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
       day: '2-digit',
       year: 'numeric'
     }).format(date);
+  };
+
+  const getStorageStatusColor = (status: StorageStatus) => {
+    switch (status) {
+      case 'normal': return 'bg-green-500';
+      case 'near-limit': return 'bg-yellow-500';
+      case 'warning': return 'bg-orange-500';
+      case 'unavailable': return 'bg-gray-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getStorageTierLabel = (tier: StorageTier) => {
+    switch (tier) {
+      case 'hot': return 'Hot';
+      case 'cold': return 'Cold';
+      case 'archived': return 'Archived';
+      default: return 'N/A';
+    }
+  };
+
+  const formatStorage = (tb: number) => {
+    return tb < 1 ? `${(tb * 1000).toFixed(0)} GB` : `${tb.toFixed(1)} TB`;
   };
 
   return (
@@ -98,7 +123,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
               + Create Zone
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="max-w-4xl">
             <DialogHeader>
               <DialogTitle>Create New Zone</DialogTitle>
               <DialogDescription>
@@ -106,7 +131,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
               </DialogDescription>
             </DialogHeader>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Zone Name</Label>
@@ -130,7 +155,9 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                         <Checkbox id={service} />
                         <Label htmlFor={service} className="flex items-center cursor-pointer">
                           {icon}
-                          <span className="ml-2 capitalize">{service === 'nestvault' ? 'Storage (NestVault)' : service}</span>
+                          <span className="ml-2 capitalize">
+                            {service === 'nestvault' ? 'Storage (NestVault)' : service}
+                          </span>
                         </Label>
                       </div>
                     ))}
@@ -207,6 +234,85 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                   </Select>
                 </div>
               </div>
+
+              <div className="space-y-4 col-span-2 border-t pt-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <Label htmlFor="enable-storage" className="text-md font-semibold flex items-center">
+                      <Database className="h-4 w-4 mr-2 text-indigo-500" />
+                      NestVault Storage Configuration
+                    </Label>
+                    <p className="text-sm text-muted-foreground">Enable dedicated storage isolation for this zone</p>
+                  </div>
+                  <Switch id="enable-storage" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-2">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="provisioned-space">Provisioned Space</Label>
+                      <div className="flex items-center space-x-2">
+                        <Input id="provisioned-space" type="number" defaultValue="10" className="flex-grow" />
+                        <span className="text-sm text-muted-foreground w-8">TB</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="storage-tier">Storage Tier Default</Label>
+                      <Select defaultValue="hot">
+                        <SelectTrigger id="storage-tier" className="w-full">
+                          <SelectValue placeholder="Select storage tier" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="hot">Hot (immediate access)</SelectItem>
+                          <SelectItem value="cold">Cold (delayed access)</SelectItem>
+                          <SelectItem value="archived">Archived (scheduled retrieval)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="erasure-coding">Erasure Coding (4+2)</Label>
+                      <Switch id="erasure-coding" defaultChecked />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="retention-policy">Retention Policy</Label>
+                      <Select defaultValue="inherit">
+                        <SelectTrigger id="retention-policy" className="w-full">
+                          <SelectValue placeholder="Select retention policy" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="inherit">Inherit from tenant</SelectItem>
+                          <SelectItem value="custom">Customize for this zone</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="allowed-accessors">Allowed Accessors</Label>
+                      <Select>
+                        <SelectTrigger id="allowed-accessors" className="w-full">
+                          <SelectValue placeholder="Select users/groups with access" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="zone-admins">Zone Administrators</SelectItem>
+                          <SelectItem value="data-scientists">Data Scientists</SelectItem>
+                          <SelectItem value="developers">Developers</SelectItem>
+                          <SelectItem value="analysts">Analysts</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="public-buckets">Public Buckets Allowed</Label>
+                      <Switch id="public-buckets" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <DialogFooter>
@@ -231,6 +337,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                 <TableHead>Services</TableHead>
                 <TableHead>Admin Scope</TableHead>
                 <TableHead>Resource Usage</TableHead>
+                <TableHead>Storage</TableHead>
                 <TableHead>VaultID</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -282,6 +389,23 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                     </div>
                   </TableCell>
                   <TableCell>
+                    {zone.storageConfig?.enabled ? (
+                      <div className="flex flex-col">
+                        <div className="flex items-center space-x-1">
+                          <div className={`h-2 w-2 rounded-full ${getStorageStatusColor(zone.storageConfig.status)}`} />
+                          <span className="text-xs">
+                            {formatStorage(zone.storageConfig.used)} / {formatStorage(zone.storageConfig.provisioned)}
+                          </span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {getStorageTierLabel(zone.storageConfig.tier)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Not enabled</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     {zone.vaultIdRequired ? 
                       <span className="text-green-500">Yes</span> : 
                       <span className="text-muted-foreground">No</span>
@@ -329,7 +453,9 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                       className="flex items-center px-2 py-1 bg-secondary/50 rounded-full text-xs"
                     >
                       {serviceIcons[service]}
-                      <span className="ml-1 capitalize">{service === 'nestvault' ? 'Storage (NestVault)' : service}</span>
+                      <span className="ml-1 capitalize">
+                        {service === 'nestvault' ? 'Storage' : service}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -350,6 +476,32 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                     />
                   </div>
                 </div>
+                
+                {zone.storageConfig?.enabled && (
+                  <div className="text-xs space-y-1 pt-1">
+                    <div className="flex justify-between">
+                      <span className="flex items-center">
+                        <Database className="h-3 w-3 mr-1 text-indigo-500" />
+                        Storage
+                      </span>
+                      <span>
+                        {formatStorage(zone.storageConfig.used)} / {formatStorage(zone.storageConfig.provisioned)}
+                      </span>
+                    </div>
+                    <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full ${getStorageStatusColor(zone.storageConfig.status)}`}
+                        style={{ width: `${(zone.storageConfig.used / zone.storageConfig.provisioned) * 100}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between">
+                      <span>{getStorageTierLabel(zone.storageConfig.tier)} Tier</span>
+                      <span>
+                        {zone.storageConfig.erasureCoding ? 'Erasure: On' : 'Erasure: Off'}
+                      </span>
+                    </div>
+                  </div>
+                )}
                 
                 <div className="flex justify-between text-xs">
                   <span>Created: {formatDate(zone.created)}</span>

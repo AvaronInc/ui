@@ -1,99 +1,98 @@
 
 import React from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { Shield, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { mockZoneSummary } from '../mockData';
+import { Database, Shield, AlertTriangle, Brain } from 'lucide-react';
 
 const ZoneInsights: React.FC = () => {
-  const { totalZones, highTrustZones, zonesWithAlerts, aiTraffic, mixtralSummary } = mockZoneSummary;
-
   return (
     <div className="space-y-4">
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base font-medium">Real-Time Zone Insights</CardTitle>
-          <CardDescription>
-            Summary and alerts across all zones
-          </CardDescription>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-medium">Zone Status</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-card-secondary p-3 rounded-lg border">
-              <div className="text-3xl font-bold text-center">{totalZones}</div>
-              <div className="text-xs text-center text-muted-foreground">Total Zones</div>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-secondary/50 p-2 rounded-md">
+              <div className="text-sm font-medium">Total Zones</div>
+              <div className="text-2xl font-bold">{mockZoneSummary.totalZones}</div>
             </div>
-            <div className="bg-card-secondary p-3 rounded-lg border">
-              <div className="text-3xl font-bold text-center flex items-center justify-center">
-                {highTrustZones} <Shield className="h-4 w-4 ml-1 text-green-500" />
-              </div>
-              <div className="text-xs text-center text-muted-foreground">High-Trust Zones</div>
+            <div className="bg-secondary/50 p-2 rounded-md">
+              <div className="text-sm font-medium">High Trust</div>
+              <div className="text-2xl font-bold">{mockZoneSummary.highTrustZones}</div>
             </div>
           </div>
           
-          {zonesWithAlerts > 0 && (
-            <div className="bg-red-500/10 border border-red-200 dark:border-red-900 rounded-md p-3">
-              <div className="flex items-center text-red-600 dark:text-red-400">
-                <AlertCircle className="h-4 w-4 mr-2" />
-                <span className="font-medium">{zonesWithAlerts} Zones with Alerts</span>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center">
+                <AlertTriangle className="h-4 w-4 mr-1 text-amber-500" />
+                <span>Zones with Alerts</span>
               </div>
+              <span>{mockZoneSummary.zonesWithAlerts}</span>
             </div>
-          )}
-          
-          <div>
-            <h4 className="text-sm font-medium mb-2">Services Active by Zone Type</h4>
-            <div className="space-y-1.5">
-              <div className="flex items-center">
-                <span className="text-xs w-32 truncate">Development</span>
-                <div className="flex-grow h-2 bg-secondary rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500" style={{ width: '78%' }} />
-                </div>
-                <span className="text-xs ml-2">78%</span>
-              </div>
-              <div className="flex items-center">
-                <span className="text-xs w-32 truncate">Production</span>
-                <div className="flex-grow h-2 bg-secondary rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500" style={{ width: '92%' }} />
-                </div>
-                <span className="text-xs ml-2">92%</span>
-              </div>
-              <div className="flex items-center">
-                <span className="text-xs w-32 truncate">Testing</span>
-                <div className="flex-grow h-2 bg-secondary rounded-full overflow-hidden">
-                  <div className="h-full bg-amber-500" style={{ width: '45%' }} />
-                </div>
-                <span className="text-xs ml-2">45%</span>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className="text-sm font-medium mb-2">Zones with Most AI Traffic</h4>
-            <div className="space-y-1.5">
-              {aiTraffic.map((zone, index) => (
-                <div key={index} className="flex items-center">
-                  <span className="text-xs w-32 truncate">{zone.zoneName}</span>
-                  <div className="flex-grow h-2 bg-secondary rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-purple-500" 
-                      style={{ width: `${zone.trafficPercentage}%` }} 
-                    />
+            
+            {mockZoneSummary.storageStats && (
+              <>
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center">
+                    <Database className="h-4 w-4 mr-1 text-indigo-500" />
+                    <span>Storage Used</span>
                   </div>
-                  <span className="text-xs ml-2">{zone.trafficPercentage}%</span>
+                  <span>
+                    {mockZoneSummary.storageStats.totalUsed.toFixed(1)} / {mockZoneSummary.storageStats.totalProvisioned} TB
+                  </span>
                 </div>
-              ))}
+                <Progress 
+                  value={(mockZoneSummary.storageStats.totalUsed / mockZoneSummary.storageStats.totalProvisioned) * 100} 
+                  className="h-1.5"
+                />
+                <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                  <div>Most used: {mockZoneSummary.storageStats.mostUsedZone}</div>
+                  <div>Low space alerts: {mockZoneSummary.storageStats.lowStorageAlerts}</div>
+                </div>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-medium">AI Traffic by Zone</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {mockZoneSummary.aiTraffic.map((item, index) => (
+            <div key={index} className="space-y-1">
+              <div className="flex items-center justify-between text-sm">
+                <span>{item.zoneName}</span>
+                <span>{item.trafficPercentage}%</span>
+              </div>
+              <Progress value={item.trafficPercentage} className="h-1.5" />
             </div>
-          </div>
+          ))}
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-medium flex items-center">
+            <Brain className="h-4 w-4 mr-2 text-pink-500" />
+            Mixtral Analysis
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">{mockZoneSummary.mixtralSummary}</p>
           
-          <div className="bg-amber-500/10 border border-amber-200 dark:border-amber-900 rounded-md p-3">
-            <div className="text-sm font-medium mb-1 text-amber-700 dark:text-amber-400">Mixtral Summary</div>
-            <p className="text-xs text-amber-600 dark:text-amber-300">{mixtralSummary}</p>
-          </div>
+          <p className="text-sm text-muted-foreground mt-3 border-t pt-3">
+            <span className="font-medium text-foreground block mb-1">Storage Insights:</span>
+            "Marketing Zone's NestVault usage has increased 40% in 2 weeks. Recommend reviewing access logs."
+          </p>
+          
+          <p className="text-sm text-muted-foreground mt-3">
+            "Bucket archive-HR-2022 may qualify for cold storage archival based on last access date."
+          </p>
         </CardContent>
       </Card>
     </div>

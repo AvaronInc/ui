@@ -15,6 +15,10 @@ export type IsolationLevel =
   | 'high'
   | 'airgapped';
 
+export type StorageTier = 'hot' | 'cold' | 'archived';
+
+export type StorageStatus = 'normal' | 'near-limit' | 'warning' | 'unavailable';
+
 export interface Zone {
   id: string;
   name: string;
@@ -32,6 +36,16 @@ export interface Zone {
   modified: string;
   isolationLevel: IsolationLevel;
   complianceTags: string[];
+  storageConfig?: {
+    enabled: boolean;
+    provisioned: number; // in TB
+    used: number; // in TB
+    tier: StorageTier;
+    status: StorageStatus;
+    erasureCoding: boolean;
+    publicBucketsAllowed: boolean;
+    customRetention: boolean;
+  };
 }
 
 export interface ZoneSummary {
@@ -43,4 +57,10 @@ export interface ZoneSummary {
     trafficPercentage: number;
   }[];
   mixtralSummary: string;
+  storageStats?: {
+    totalProvisioned: number; // in TB
+    totalUsed: number; // in TB
+    mostUsedZone: string;
+    lowStorageAlerts: number;
+  };
 }
