@@ -35,49 +35,6 @@ const RunTestScenario: React.FC<RunTestScenarioProps> = ({
     }
   }, []);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (isRunning) {
-      setProgress(0);
-      setStatus('Initializing virtual environment...');
-      
-      interval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return 100;
-          }
-          
-          // Update status message based on progress
-          if (prev < 20) {
-            setStatus('Creating virtualized environment...');
-          } else if (prev < 40) {
-            setStatus('Replicating network topology and endpoints...');
-          } else if (prev < 60) {
-            setStatus('Applying configuration changes...');
-          } else if (prev < 80) {
-            setStatus('Simulating traffic and analyzing impact...');
-          } else if (prev < 95) {
-            setStatus('Running AI analysis on results...');
-          } else {
-            setStatus('Finalizing report and recommendations...');
-          }
-          
-          return prev + Math.floor(Math.random() * 5) + 1;
-        });
-      }, 200);
-    } else if (progress > 0 && progress < 100) {
-      // If simulation was running but stopped externally
-      setProgress(100);
-      setStatus('Test completed');
-    }
-    
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isRunning, progress]);
-
   const handleStartSimulation = () => {
     if (!savedConfig) {
       toast({
@@ -88,6 +45,8 @@ const RunTestScenario: React.FC<RunTestScenarioProps> = ({
       return;
     }
     
+    setProgress(0);
+    setStatus('Initializing virtual environment...');
     onRunSimulation(savedConfig);
   };
 
