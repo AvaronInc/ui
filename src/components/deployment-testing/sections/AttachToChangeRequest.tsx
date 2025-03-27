@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CheckCircle, ClipboardList, LinkIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useChangeManagement } from '@/hooks/use-change-management';
 
 interface AttachToChangeRequestProps {
   results: any | null;
@@ -21,6 +22,15 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
+  
+  // Get pending changes from change management
+  const { 
+    getPendingChanges, 
+    changeRequests,
+    loading: changeManagementLoading 
+  } = useChangeManagement();
+  
+  const pendingChanges = getPendingChanges();
 
   if (!results) {
     return (
@@ -39,7 +49,7 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
     if (changeType === 'existing' && !changeId) {
       toast({
         title: "Missing Information",
-        description: "Please enter a Change Request ID",
+        description: "Please select a Change Request",
         variant: "destructive"
       });
       return;
@@ -111,13 +121,33 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
                 
                 {changeType === 'existing' && (
                   <div className="space-y-2">
-                    <Label htmlFor="change-id">Change Request ID</Label>
-                    <Input 
-                      id="change-id" 
-                      placeholder="e.g., CHG-12345" 
+                    <Label htmlFor="change-id">Change Request</Label>
+                    <Select 
                       value={changeId} 
-                      onChange={(e) => setChangeId(e.target.value)}
-                    />
+                      onValueChange={setChangeId}
+                      disabled={changeManagementLoading || pendingChanges.length === 0}
+                    >
+                      <SelectTrigger id="change-id" className="w-full">
+                        <SelectValue placeholder={
+                          changeManagementLoading 
+                          ? "Loading change requests..." 
+                          : pendingChanges.length === 0 
+                          ? "No pending change requests available" 
+                          : "Select a change request"
+                        } />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {pendingChanges.length === 0 ? (
+                          <SelectItem value="none" disabled>No pending change requests available</SelectItem>
+                        ) : (
+                          pendingChanges.map((change) => (
+                            <SelectItem key={change.id} value={change.id}>
+                              {change.id} - {change.title} ({change.status})
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectContent>
+                    </Select>
                   </div>
                 )}
                 
