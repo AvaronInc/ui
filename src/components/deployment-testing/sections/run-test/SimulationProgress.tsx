@@ -28,21 +28,25 @@ const SimulationProgress: React.FC<SimulationProgressProps> = ({ progress, statu
           title="Environment" 
           icon={<Server className="h-5 w-5" />} 
           complete={progress >= 30}
+          active={progress < 30 && progress > 0}
         />
         <SimulationStepCard 
           title="Configuration" 
           icon={<Database className="h-5 w-5" />} 
           complete={progress >= 60}
+          active={progress >= 30 && progress < 60}
         />
         <SimulationStepCard 
           title="Analysis" 
           icon={<AlertCircle className="h-5 w-5" />} 
           complete={progress >= 90}
+          active={progress >= 60 && progress < 90}
         />
         <SimulationStepCard 
           title="Complete" 
           icon={<CheckCircle className="h-5 w-5" />} 
           complete={progress >= 100}
+          active={progress >= 90 && progress < 100}
         />
       </div>
     </div>
@@ -53,17 +57,37 @@ interface SimulationStepCardProps {
   title: string;
   icon: React.ReactNode;
   complete: boolean;
+  active: boolean;
 }
 
-export const SimulationStepCard: React.FC<SimulationStepCardProps> = ({ title, icon, complete }) => {
+export const SimulationStepCard: React.FC<SimulationStepCardProps> = ({ 
+  title, 
+  icon, 
+  complete,
+  active 
+}) => {
+  let bgColor = "bg-muted/30";
+  let textColor = "text-muted-foreground";
+  let borderColor = "";
+  
+  if (complete) {
+    bgColor = "bg-primary/10";
+    textColor = "text-primary";
+    borderColor = "border-primary/30";
+  } else if (active) {
+    bgColor = "bg-yellow-100 dark:bg-yellow-900/30";
+    textColor = "text-yellow-800 dark:text-yellow-400";
+    borderColor = "border-yellow-300 dark:border-yellow-800";
+  }
+  
   return (
-    <div className={`border rounded-md p-3 flex flex-col items-center justify-center text-center transition-colors duration-200 ${
-      complete ? 'bg-primary/10 border-primary/30' : 'bg-muted/30'
-    }`}>
-      <div className={`mb-1 ${complete ? 'text-primary' : 'text-muted-foreground'}`}>
+    <div className={`border rounded-md p-3 flex flex-col items-center justify-center text-center transition-all duration-300 ${bgColor} ${borderColor}`}>
+      <div className={`mb-1 ${complete ? "text-primary" : active ? textColor : "text-muted-foreground"}`}>
         {icon}
       </div>
-      <p className={`text-sm font-medium ${complete ? '' : 'text-muted-foreground'}`}>{title}</p>
+      <p className={`text-sm font-medium ${complete ? "" : active ? textColor : "text-muted-foreground"}`}>
+        {title}
+      </p>
     </div>
   );
 };

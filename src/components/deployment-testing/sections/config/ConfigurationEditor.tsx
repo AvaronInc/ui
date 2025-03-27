@@ -26,6 +26,10 @@ const ConfigurationEditor: React.FC<ConfigurationEditorProps> = ({
           folding: true,
           lineNumbers: 'on',
           automaticLayout: true,
+          scrollBeyondLastLine: false,
+          renderLineHighlight: 'all',
+          renderWhitespace: 'selection',
+          tabSize: 2,
         }}
       />
     </div>

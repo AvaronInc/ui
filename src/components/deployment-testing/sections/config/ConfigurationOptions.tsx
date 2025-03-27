@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { mockZones } from '@/components/zones/mockData';
 
 export const configurationTypes = [
   { value: 'network', label: 'Network Configuration' },
@@ -25,14 +26,24 @@ export const trafficProfiles = [
   { value: 'random', label: 'Randomized traffic and latency simulation' },
 ];
 
-export const zoneOptions = [
-  { value: 'global', label: 'Global (All Zones)' },
-  { value: 'zone-1', label: 'Zone 1 - HQ' },
-  { value: 'zone-2', label: 'Zone 2 - Data Center' },
-  { value: 'zone-3', label: 'Zone 3 - Remote Office' },
-  { value: 'zone-4', label: 'Zone 4 - Cloud Services' },
-  { value: 'zone-5', label: 'Zone 5 - Development' },
-];
+// Generate zone options dynamically from the mockZones data
+const generateZoneOptions = () => {
+  const options = [
+    { value: 'global', label: 'Global (All Zones)' },
+  ];
+  
+  // Add each zone from the mockZones data
+  mockZones.forEach(zone => {
+    options.push({
+      value: `zone-${zone.id}`,
+      label: `Zone ${zone.id} - ${zone.name}`
+    });
+  });
+  
+  return options;
+};
+
+export const zoneOptions = generateZoneOptions();
 
 interface ConfigurationOptionsProps {
   configType: string;
