@@ -27,6 +27,15 @@ const trafficProfiles = [
   { value: 'random', label: 'Randomized traffic and latency simulation' },
 ];
 
+const zoneOptions = [
+  { value: 'global', label: 'Global (All Zones)' },
+  { value: 'zone-1', label: 'Zone 1 - HQ' },
+  { value: 'zone-2', label: 'Zone 2 - Data Center' },
+  { value: 'zone-3', label: 'Zone 3 - Remote Office' },
+  { value: 'zone-4', label: 'Zone 4 - Cloud Services' },
+  { value: 'zone-5', label: 'Zone 5 - Development' },
+];
+
 const getDefaultConfigCode = (type: string) => {
   switch (type) {
     case 'network':
@@ -51,7 +60,8 @@ const getDefaultConfigCode = (type: string) => {
 const SimulationConfiguration = () => {
   const [configType, setConfigType] = useState('network');
   const [editorContent, setEditorContent] = useState(getDefaultConfigCode('network'));
-  const [replicateZone, setReplicateZone] = useState(true);
+  const [replicateZone, setReplicateZone] = useState(false);
+  const [selectedZone, setSelectedZone] = useState('global');
   const [trafficProfile, setTrafficProfile] = useState('normal');
   const { toast } = useToast();
 
@@ -71,6 +81,7 @@ const SimulationConfiguration = () => {
     localStorage.setItem('deployment-test-config', JSON.stringify({
       configType,
       configContent: editorContent,
+      selectedZone,
       replicateZone,
       trafficProfile,
       timestamp: new Date().toISOString()
@@ -101,6 +112,25 @@ const SimulationConfiguration = () => {
                 {configurationTypes.map((type) => (
                   <SelectItem key={type.value} value={type.value}>
                     {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="target-zone">Target Zone</Label>
+            <Select 
+              value={selectedZone} 
+              onValueChange={setSelectedZone}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select target zone" />
+              </SelectTrigger>
+              <SelectContent>
+                {zoneOptions.map((zone) => (
+                  <SelectItem key={zone.value} value={zone.value}>
+                    {zone.label}
                   </SelectItem>
                 ))}
               </SelectContent>
