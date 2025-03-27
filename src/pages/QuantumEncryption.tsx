@@ -3,7 +3,7 @@ import React from 'react';
 import { PageTransition } from '@/components/transitions/PageTransition';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import PageTitle from '@/components/common/PageTitle';
-import QuantumEncryptionPanel from '@/components/quantum-encryption/QuantumEncryptionPanel';
+import QuantumEncryptionWrapper from '@/components/quantum-encryption/QuantumEncryptionWrapper';
 import { Fingerprint } from 'lucide-react';
 
 const QuantumEncryption = () => {
@@ -16,7 +16,7 @@ const QuantumEncryption = () => {
             description="Configure system-wide post-quantum cryptography settings to protect against future quantum computing threats"
             icon={<Fingerprint className="h-6 w-6" />}
           />
-          <QuantumEncryptionPanel />
+          <QuantumEncryptionWrapper />
         </div>
       </DashboardLayout>
     </PageTransition>

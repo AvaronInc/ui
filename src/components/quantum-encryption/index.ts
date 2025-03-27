@@ -1,2 +1,2 @@
 
-export { default } from './QuantumEncryptionPanel';
+export { default } from './QuantumEncryptionWrapper';
