@@ -1,126 +1,95 @@
 
-import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SimulationConfiguration from './sections/SimulationConfiguration';
 import RunTestScenario from './sections/RunTestScenario';
 import AIImpactReport from './sections/AIImpactReport';
 import AttachToChangeRequest from './sections/AttachToChangeRequest';
 import SimulationHistory from './sections/SimulationHistory';
-import { Card } from "@/components/ui/card";
 
-const DeploymentTestingPanel = () => {
-  const [activeTestId, setActiveTestId] = React.useState<string | null>(null);
-  const [testResults, setTestResults] = React.useState<any | null>(null);
-  const [isRunning, setIsRunning] = React.useState(false);
+const DeploymentTestingPanel: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('configuration');
+  const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+  const [simulationResults, setSimulationResults] = useState<any>(null);
   
-  // Handle starting a new test simulation
   const handleRunSimulation = (configData: any) => {
-    setIsRunning(true);
+    setIsSimulationRunning(true);
     
-    // Simulate API call to run the test
+    // In a real app, this would be an API call
+    // For now, we use a timeout to simulate the process
     setTimeout(() => {
-      const mockResults = {
-        id: `test-${Date.now()}`,
-        timestamp: new Date().toISOString(),
-        configType: configData.configType,
-        configData: configData.configContent,
-        zoneData: configData.replicateZone ? "Zone 3 - HQ" : null,
-        trafficProfile: configData.trafficProfile,
-        riskScore: Math.floor(Math.random() * 30) + 70, // 70-99
-        confidence: Math.floor(Math.random() * 15) + 85, // 85-99
-        impactedServices: ["DNS", "DHCP", "VoIP Gateway"],
-        criticalIssues: configData.configType === "Firewall Rules" ? ["Rule conflict detected with existing rule ID: FR-892"] : [],
-        warnings: ["Service dependency warning: Auth service restart required"],
-        affectedEndpoints: Math.floor(Math.random() * 50) + 10,
-        estimatedDowntime: Math.floor(Math.random() * 5),
-        recommendations: [
-          "Consider deploying during non-peak hours",
-          "Add exception for internal monitoring services",
-          "Update documentation to reflect new flow paths"
-        ]
-      };
+      setIsSimulationRunning(false);
+      setSimulationResults({
+        riskScore: 92,
+        configDiff: {
+          added: 7,
+          removed: 2,
+          modified: 4
+        },
+        affectedServices: [
+          { name: "Authentication Service", impact: "none" },
+          { name: "Web Proxy", impact: "minor" },
+          { name: "DNS", impact: "none" }
+        ],
+        criticalIssues: 0,
+        warnings: 2,
+        timestamp: new Date().toISOString()
+      });
       
-      setTestResults(mockResults);
-      setActiveTestId(mockResults.id);
-      setIsRunning(false);
-    }, 3000);
+      // Auto-switch to the results tab
+      setActiveTab('results');
+    }, 15000); // Simulate a 15 second test
   };
   
   return (
-    <Card className="border rounded-lg shadow-sm overflow-hidden">
-      <div className="p-0">
-        <Tabs defaultValue="configuration" className="w-full">
-          <TabsList className="w-full justify-start rounded-none border-b bg-muted/50 p-0">
-            <TabsTrigger 
-              value="configuration" 
-              className="rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none"
-            >
-              Simulation Configuration
-            </TabsTrigger>
-            <TabsTrigger 
-              value="run-test" 
-              className="rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none"
-            >
-              Run Test Scenario
-            </TabsTrigger>
-            <TabsTrigger 
-              value="impact-report" 
-              className="rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none"
-              disabled={!testResults}
-            >
-              AI-Generated Impact Report
-            </TabsTrigger>
-            <TabsTrigger 
-              value="change-request" 
-              className="rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none"
-              disabled={!testResults}
-            >
-              Attach to Change Request
-            </TabsTrigger>
-            <TabsTrigger 
-              value="history" 
-              className="rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none"
-            >
-              Simulation History
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="configuration" className="mt-0 p-4">
-            <SimulationConfiguration />
-          </TabsContent>
-          
-          <TabsContent value="run-test" className="mt-0 p-4">
-            <RunTestScenario 
-              onRunSimulation={handleRunSimulation} 
-              isRunning={isRunning}
-            />
-          </TabsContent>
-          
-          <TabsContent value="impact-report" className="mt-0 p-4">
-            <AIImpactReport 
-              testResults={testResults} 
-              testId={activeTestId}
-            />
-          </TabsContent>
-          
-          <TabsContent value="change-request" className="mt-0 p-4">
-            <AttachToChangeRequest 
-              testResults={testResults} 
-              testId={activeTestId}
-            />
-          </TabsContent>
-          
-          <TabsContent value="history" className="mt-0 p-4">
-            <SimulationHistory 
-              onSelectTest={(testId, results) => {
-                setActiveTestId(testId);
-                setTestResults(results);
-              }} 
-            />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </Card>
+    <Tabs 
+      value={activeTab} 
+      onValueChange={setActiveTab}
+      className="space-y-4"
+    >
+      <TabsList className="grid grid-cols-2 md:grid-cols-5 gap-1">
+        <TabsTrigger value="configuration">Configuration</TabsTrigger>
+        <TabsTrigger value="run" disabled={isSimulationRunning}>
+          Run Test
+        </TabsTrigger>
+        <TabsTrigger 
+          value="results" 
+          disabled={!simulationResults && !isSimulationRunning}
+        >
+          Results
+        </TabsTrigger>
+        <TabsTrigger 
+          value="attach" 
+          disabled={!simulationResults}
+        >
+          Change Request
+        </TabsTrigger>
+        <TabsTrigger value="history">History</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="configuration">
+        <SimulationConfiguration />
+      </TabsContent>
+
+      <TabsContent value="run">
+        <RunTestScenario 
+          onRunSimulation={handleRunSimulation} 
+          isRunning={isSimulationRunning}
+        />
+      </TabsContent>
+
+      <TabsContent value="results">
+        <AIImpactReport results={simulationResults} />
+      </TabsContent>
+
+      <TabsContent value="attach">
+        <AttachToChangeRequest results={simulationResults} />
+      </TabsContent>
+
+      <TabsContent value="history">
+        <SimulationHistory />
+      </TabsContent>
+    </Tabs>
   );
 };
 

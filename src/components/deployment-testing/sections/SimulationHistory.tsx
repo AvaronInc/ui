@@ -1,126 +1,90 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { History, Search, Eye, AlertTriangle, CheckCircle, FileText, Download, Trash2 } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
+import { Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
-interface SimulationHistoryProps {
-  onSelectTest: (testId: string, results: any) => void;
-}
+const SimulationHistory: React.FC = () => {
+  // Mock data for simulation history
+  const historyItems = [
+    {
+      id: 'sim-1234',
+      name: 'Firewall Rule Update - DMZ',
+      type: 'firewall',
+      date: '2023-10-25T14:30:00Z',
+      result: 'success',
+      risk: 'low',
+      score: 96,
+      approver: 'Sarah Johnson'
+    },
+    {
+      id: 'sim-1233',
+      name: 'DNS Configuration Update',
+      type: 'dns',
+      date: '2023-10-23T10:15:00Z',
+      result: 'warning',
+      risk: 'medium',
+      score: 82,
+      approver: 'Michael Zhang'
+    },
+    {
+      id: 'sim-1230',
+      name: 'VLAN Restructuring',
+      type: 'network',
+      date: '2023-10-20T16:45:00Z',
+      result: 'failure',
+      risk: 'high',
+      score: 45,
+      approver: null
+    },
+    {
+      id: 'sim-1225',
+      name: 'SD-WAN Policy Update',
+      type: 'sdwan',
+      date: '2023-10-15T09:00:00Z',
+      result: 'success',
+      risk: 'low',
+      score: 98,
+      approver: 'David Patel'
+    },
+    {
+      id: 'sim-1220',
+      name: 'VPN Access Policy Change',
+      type: 'identity',
+      date: '2023-10-10T11:30:00Z',
+      result: 'warning',
+      risk: 'medium',
+      score: 76,
+      approver: 'Emma Wilson'
+    }
+  ];
 
-// Mock data for simulation history
-const mockHistoryData = [
-  {
-    id: 'test-1686823450',
-    timestamp: '2023-06-15T08:30:50Z',
-    configType: 'Firewall Rules',
-    riskScore: 96,
-    user: 'John Smith',
-    status: 'Approved',
-    criticalIssues: []
-  },
-  {
-    id: 'test-1686910390',
-    timestamp: '2023-06-16T12:13:10Z',
-    configType: 'Network Configuration',
-    riskScore: 82,
-    user: 'Maria Garcia',
-    status: 'Pending',
-    criticalIssues: []
-  },
-  {
-    id: 'test-1687219500',
-    timestamp: '2023-06-20T09:45:00Z',
-    configType: 'DNS/IPAM Updates',
-    riskScore: 65,
-    user: 'Ahmed Ali',
-    status: 'Failed',
-    criticalIssues: ['DNS resolution failure detected']
-  },
-  {
-    id: 'test-1687651450',
-    timestamp: '2023-06-25T14:10:50Z',
-    configType: 'Routing/SD-WAN Policies',
-    riskScore: 91,
-    user: 'Samantha Lee',
-    status: 'Approved',
-    criticalIssues: []
-  },
-  {
-    id: 'test-1687823450',
-    timestamp: '2023-06-27T10:30:50Z',
-    configType: 'Software Update',
-    riskScore: 78,
-    user: 'John Smith',
-    status: 'In Review',
-    criticalIssues: []
-  }
-];
-
-const SimulationHistory: React.FC<SimulationHistoryProps> = ({ onSelectTest }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [historyData, setHistoryData] = useState<any[]>([]);
-  const { toast } = useToast();
-  
-  useEffect(() => {
-    // In a real app, this would be an API call
-    // For demo, we'll combine mock data with any locally stored tests
-    setHistoryData(mockHistoryData);
-  }, []);
-  
-  const filteredHistory = historyData.filter(item => 
-    item.configType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  const handleDelete = (id: string) => {
-    setHistoryData(prev => prev.filter(item => item.id !== id));
-    toast({
-      title: "Test Deleted",
-      description: `Test record ${id} has been removed`
-    });
-  };
-  
-  const handleExport = (id: string) => {
-    toast({
-      title: "Report Exported",
-      description: `Test report ${id} has been exported as PDF`
-    });
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'success':
+        return <Badge className="bg-green-500">Success</Badge>;
+      case 'warning':
+        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500">Warning</Badge>;
+      case 'failure':
+        return <Badge variant="destructive">Failed</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
   };
 
-  const viewTest = (test: any) => {
-    // Generate mock test results based on history data
-    const mockResults = {
-      id: test.id,
-      timestamp: test.timestamp,
-      configType: test.configType,
-      configData: '{ "name": "Sample Config", "version": "1.0" }',
-      riskScore: test.riskScore,
-      confidence: Math.floor(Math.random() * 10) + 90, // 90-99
-      impactedServices: ["DNS", "DHCP", "VoIP Gateway"],
-      criticalIssues: test.criticalIssues,
-      warnings: ["Service dependency warning: Auth service restart required"],
-      affectedEndpoints: Math.floor(Math.random() * 50) + 10,
-      estimatedDowntime: Math.floor(Math.random() * 5),
-      recommendations: [
-        "Consider deploying during non-peak hours",
-        "Add exception for internal monitoring services",
-        "Update documentation to reflect new flow paths"
-      ]
-    };
-    
-    onSelectTest(test.id, mockResults);
-    
-    toast({
-      title: "Test Loaded",
-      description: `Viewing test results for ${test.id}`
-    });
+  const getRiskBadge = (risk: string) => {
+    switch (risk) {
+      case 'low':
+        return <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500">Low Risk</Badge>;
+      case 'medium':
+        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500">Medium Risk</Badge>;
+      case 'high':
+        return <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-500">High Risk</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
   };
 
   return (
@@ -128,125 +92,83 @@ const SimulationHistory: React.FC<SimulationHistoryProps> = ({ onSelectTest }) =
       <div className="space-y-1">
         <h2 className="text-2xl font-semibold tracking-tight">Simulation History</h2>
         <p className="text-sm text-muted-foreground">
-          View past deployment tests, their results, and approval status.
+          View and manage past deployment test simulations.
         </p>
       </div>
       
-      <div className="flex items-center space-x-2">
-        <div className="relative flex-1">
+      <div className="flex items-center justify-between">
+        <div className="relative w-full max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search by type, ID, or user..."
+            placeholder="Search simulations..."
             className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button variant="outline">
-          <History className="h-4 w-4 mr-2" />
-          Recent
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button variant="outline" size="sm">Export All</Button>
+          <Button variant="outline" size="sm">Delete Selected</Button>
+        </div>
       </div>
       
-      {filteredHistory.length === 0 ? (
-        <Alert>
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            No simulation history found. Run a deployment test to see results here.
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Past Deployment Tests</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Configuration Type</TableHead>
-                  <TableHead>Risk Score</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredHistory.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      <div className="font-medium">{new Date(item.timestamp).toLocaleDateString()}</div>
-                      <div className="text-xs text-muted-foreground">{item.user}</div>
-                    </TableCell>
-                    <TableCell>
-                      {item.configType}
-                      {item.criticalIssues.length > 0 && (
-                        <div className="mt-1">
-                          <Badge variant="destructive" className="text-[10px] h-4 py-0">
-                            {item.criticalIssues.length} Critical Issues
-                          </Badge>
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Recent Simulations</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <div className="relative w-full overflow-auto">
+              <table className="w-full caption-bottom text-sm">
+                <thead>
+                  <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                    <th className="h-12 px-4 text-left align-middle font-medium">Name</th>
+                    <th className="h-12 px-4 text-left align-middle font-medium">Type</th>
+                    <th className="h-12 px-4 text-left align-middle font-medium">Date</th>
+                    <th className="h-12 px-4 text-left align-middle font-medium">Result</th>
+                    <th className="h-12 px-4 text-left align-middle font-medium">Risk</th>
+                    <th className="h-12 px-4 text-left align-middle font-medium">Score</th>
+                    <th className="h-12 px-4 text-left align-middle font-medium">Approver</th>
+                    <th className="h-12 px-4 text-left align-middle font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historyItems.map((item) => (
+                    <tr 
+                      key={item.id} 
+                      className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                    >
+                      <td className="p-4 align-middle">{item.name}</td>
+                      <td className="p-4 align-middle capitalize">{item.type}</td>
+                      <td className="p-4 align-middle">
+                        {new Date(item.date).toLocaleDateString()}
+                      </td>
+                      <td className="p-4 align-middle">{getStatusBadge(item.result)}</td>
+                      <td className="p-4 align-middle">{getRiskBadge(item.risk)}</td>
+                      <td className="p-4 align-middle">
+                        <span className={`font-medium ${
+                          item.score >= 90 ? 'text-green-500' :
+                          item.score >= 70 ? 'text-yellow-500' : 'text-red-500'
+                        }`}>
+                          {item.score}%
+                        </span>
+                      </td>
+                      <td className="p-4 align-middle">
+                        {item.approver || 'Not approved'}
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm">View</Button>
+                          <Button variant="outline" size="sm">Rerun</Button>
                         </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        {item.riskScore >= 90 ? (
-                          <CheckCircle className="h-3 w-3 text-green-500" />
-                        ) : item.riskScore >= 75 ? (
-                          <AlertTriangle className="h-3 w-3 text-amber-500" />
-                        ) : (
-                          <AlertTriangle className="h-3 w-3 text-red-500" />
-                        )}
-                        <span>{item.riskScore}%</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={
-                          item.status === 'Approved' ? 'default' : 
-                          item.status === 'Failed' ? 'destructive' : 
-                          'secondary'
-                        }
-                      >
-                        {item.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end space-x-1">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => viewTest(item)}
-                          title="View Test Results"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          onClick={() => handleExport(item.id)}
-                          title="Export Report"
-                        >
-                          <FileText className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          onClick={() => handleDelete(item.id)}
-                          title="Delete Record"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

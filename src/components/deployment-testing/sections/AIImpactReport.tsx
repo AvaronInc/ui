@@ -1,284 +1,219 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, CheckCircle, AlertTriangle, Info, FileText, Download, Share2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useToast } from '@/components/ui/use-toast';
+import { Progress } from '@/components/ui/progress';
+import { Check, AlertTriangle, AlertCircle, FileText, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface AIImpactReportProps {
-  testResults: any; // In a real app, this would have a proper type
-  testId: string | null;
+  results: any | null;
 }
 
-const AIImpactReport: React.FC<AIImpactReportProps> = ({ testResults, testId }) => {
-  const [activeView, setActiveView] = useState('summary');
-  const { toast } = useToast();
-
-  if (!testResults || !testId) {
+const AIImpactReport: React.FC<AIImpactReportProps> = ({ results }) => {
+  if (!results) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-medium mb-2">No Test Results Available</h3>
-        <p className="text-sm text-muted-foreground mb-6">Run a deployment test simulation first to view AI-generated impact analysis.</p>
-        <Button variant="outline">Go to Run Test Scenario</Button>
+      <div className="py-10 text-center">
+        <h2 className="text-2xl font-semibold mb-2">No Test Results Available</h2>
+        <p className="text-muted-foreground">
+          Run a deployment test to see AI-generated impact analysis here.
+        </p>
       </div>
     );
   }
 
-  const exportReport = () => {
-    toast({
-      title: "Report Exported",
-      description: "The report has been exported as a PDF file"
-    });
+  const { riskScore, configDiff, affectedServices, criticalIssues, warnings } = results;
+  
+  const getRiskColor = (score: number) => {
+    if (score >= 90) return "text-green-500";
+    if (score >= 70) return "text-yellow-500";
+    return "text-red-500";
   };
-
-  const shareReport = () => {
-    toast({
-      title: "Report Shared",
-      description: "Share link has been copied to clipboard"
-    });
-  };
-
-  const getRiskLevel = (score: number) => {
-    if (score >= 90) return { label: 'Low Risk', color: 'bg-green-500' };
-    if (score >= 75) return { label: 'Moderate Risk', color: 'bg-amber-500' };
-    return { label: 'High Risk', color: 'bg-red-500' };
-  };
-
-  const riskInfo = getRiskLevel(testResults.riskScore);
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">AI-Generated Impact Report</h2>
-          <p className="text-sm text-muted-foreground">
-            Comprehensive analysis of potential impacts from the simulated deployment.
-          </p>
-        </div>
-        
-        <div className="flex space-x-2">
-          <Button variant="outline" size="sm" onClick={exportReport}>
-            <FileText className="h-4 w-4 mr-2" />
-            Export as PDF
-          </Button>
-          <Button variant="outline" size="sm" onClick={shareReport}>
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
-        </div>
+      <div className="space-y-1">
+        <h2 className="text-2xl font-semibold tracking-tight">AI-Generated Impact Report</h2>
+        <p className="text-sm text-muted-foreground">
+          AI analysis of potential impacts based on simulated deployment of your configuration changes.
+        </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="col-span-1">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Risk Score</CardTitle>
+            <CardTitle className="text-lg flex justify-between items-center">
+              <span>Risk Assessment</span>
+              <Badge 
+                variant={criticalIssues > 0 ? "destructive" : warnings > 0 ? "outline" : "default"}
+                className={criticalIssues > 0 ? "bg-red-500" : warnings > 0 ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500" : "bg-green-500"}
+              >
+                {criticalIssues > 0 ? "High Risk" : warnings > 0 ? "Medium Risk" : "Low Risk"}
+              </Badge>
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">{testResults.riskScore}%</div>
-              <Badge className={`${riskInfo.color} text-white`}>{riskInfo.label}</Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Based on {testResults.configType} impact simulation
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Confidence Level</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">{testResults.confidence}%</div>
-              <Badge variant="outline">AI Prediction</Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Based on {testResults.replicateZone ? "actual zone data" : "simulated environment"}
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Impact Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">{testResults.affectedEndpoints}</div>
-              <Badge variant="secondary">Endpoints Affected</Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Est. downtime: {testResults.estimatedDowntime} {testResults.estimatedDowntime === 1 ? 'minute' : 'minutes'}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <Tabs value={activeView} onValueChange={setActiveView} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="technical">Technical Details</TabsTrigger>
-          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="summary" className="mt-4 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Deployment Impact Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <h4 className="font-medium">Key Findings</h4>
-                <ul className="space-y-1 text-sm">
-                  <li className="flex items-start">
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-                    <span>Configuration successfully applied in simulation environment</span>
-                  </li>
-                  <li className="flex items-start">
-                    <AlertTriangle className="h-4 w-4 text-amber-500 mr-2 mt-0.5" />
-                    <span>Service dependency warning detected: Auth service restart required</span>
-                  </li>
-                  {testResults.criticalIssues.length > 0 && (
-                    <li className="flex items-start">
-                      <AlertCircle className="h-4 w-4 text-red-500 mr-2 mt-0.5" />
-                      <span>{testResults.criticalIssues[0]}</span>
-                    </li>
-                  )}
-                </ul>
-              </div>
-              
-              <div className="space-y-2">
-                <h4 className="font-medium">Impacted Services</h4>
-                <div className="flex flex-wrap gap-2">
-                  {testResults.impactedServices.map((service: string) => (
-                    <Badge key={service} variant="outline">{service}</Badge>
-                  ))}
+            <div className="space-y-6">
+              <div className="space-y-2 text-center">
+                <div className={`text-5xl font-bold ${getRiskColor(riskScore)}`}>
+                  {riskScore}%
                 </div>
+                <p className="text-sm text-muted-foreground">Confidence in Successful Deployment</p>
               </div>
               
-              <Alert>
-                <Info className="h-4 w-4" />
-                <AlertDescription>
-                  This deployment may require a brief service interruption during the maintenance window.
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="technical" className="mt-4 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Technical Impact Analysis</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <h4 className="font-medium">Configuration Diff</h4>
-                <pre className="bg-muted p-4 rounded-md text-xs overflow-x-auto">
-                  <code>
-                    {`+ {
-  "${testResults.configType.toLowerCase()}": {
-    ${testResults.configData.slice(10, 100)}...
-  }
-}`}
-                  </code>
-                </pre>
+                <div className="flex justify-between text-sm">
+                  <span>Risk Level</span>
+                  <span>{criticalIssues > 0 ? "High" : warnings > 0 ? "Medium" : "Low"}</span>
+                </div>
+                <Progress 
+                  value={riskScore} 
+                  className="h-2"
+                  indicatorClassName={riskScore >= 90 ? "bg-green-500" : riskScore >= 70 ? "bg-yellow-500" : "bg-red-500"}
+                />
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-medium mb-2">Performance Impact</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Network Latency</span>
-                      <Badge variant="outline" className="text-green-500">+0.3ms</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Throughput</span>
-                      <Badge variant="outline" className="text-amber-500">-2%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Connection Rate</span>
-                      <Badge variant="outline" className="text-green-500">No Change</Badge>
-                    </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm">
+                  <div className="flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-2 text-red-500" />
+                    <span>Critical Issues</span>
                   </div>
+                  <span className="font-medium">{criticalIssues}</span>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium mb-2">Security Impact</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Surface Area</span>
-                      <Badge variant="outline" className="text-green-500">No Change</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Access Controls</span>
-                      <Badge variant="outline" className="text-green-500">Improved</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Logging Coverage</span>
-                      <Badge variant="outline" className="text-amber-500">Gap Detected</Badge>
-                    </div>
+                <div className="flex justify-between items-center text-sm">
+                  <div className="flex items-center">
+                    <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
+                    <span>Warnings</span>
                   </div>
+                  <span className="font-medium">{warnings}</span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="recommendations" className="mt-4 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Deployment Recommendations</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <h4 className="font-medium">AI Recommendations</h4>
-                <ul className="space-y-3">
-                  {testResults.recommendations.map((rec: string, index: number) => (
-                    <li key={index} className="flex items-start">
-                      <div className="bg-primary/10 p-1 rounded-full mr-2 mt-0.5">
-                        <Info className="h-4 w-4 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm">{rec}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="space-y-2">
-                <h4 className="font-medium">Suggested Schedule</h4>
-                <div className="bg-muted p-4 rounded-md">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Recommended Deployment Window</span>
-                    <Badge>Off-Peak Hours</Badge>
+                
+                <div className="flex justify-between items-center text-sm">
+                  <div className="flex items-center">
+                    <Check className="h-4 w-4 mr-2 text-green-500" />
+                    <span>Passed Checks</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Based on traffic analysis, the optimal deployment time is between 11:00 PM and 2:00 AM.
-                  </p>
+                  <span className="font-medium">32</span>
                 </div>
               </div>
               
-              <div className="flex justify-between items-center pt-2">
-                <Button variant="outline" size="sm">
+              <div className="pt-2 space-y-2">
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <FileText className="h-4 w-4 mr-2" />
+                  View Full Report
+                </Button>
+                <Button variant="outline" className="w-full justify-start" size="sm">
                   <Download className="h-4 w-4 mr-2" />
-                  Download Full Report
-                </Button>
-                <Button size="sm">
-                  Attach to Change Request
+                  Export as PDF
                 </Button>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="col-span-1 lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Configuration Changes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="border rounded-md p-4 text-center">
+                  <div className="text-xl font-bold text-green-500">+{configDiff.added}</div>
+                  <p className="text-xs text-muted-foreground">Added</p>
+                </div>
+                <div className="border rounded-md p-4 text-center">
+                  <div className="text-xl font-bold text-red-500">-{configDiff.removed}</div>
+                  <p className="text-xs text-muted-foreground">Removed</p>
+                </div>
+                <div className="border rounded-md p-4 text-center">
+                  <div className="text-xl font-bold text-blue-500">{configDiff.modified}</div>
+                  <p className="text-xs text-muted-foreground">Modified</p>
+                </div>
+              </div>
+              
+              <div className="border rounded-md p-4">
+                <h4 className="text-sm font-medium mb-3">Affected Services</h4>
+                <div className="space-y-3">
+                  {affectedServices.map((service: any, index: number) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="text-sm">{service.name}</span>
+                      <Badge
+                        variant="outline"
+                        className={
+                          service.impact === "none" 
+                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500" 
+                            : service.impact === "minor" 
+                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500"
+                            : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-500"
+                        }
+                      >
+                        {service.impact === "none" ? "No Impact" : service.impact === "minor" ? "Minor Impact" : "Major Impact"}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium">AI Recommendations</h4>
+                <div className="border rounded-md p-4 space-y-2">
+                  <div className="flex items-start">
+                    <Check className="h-4 w-4 text-green-500 mt-0.5 mr-2" />
+                    <span className="text-sm">Configuration can be applied without service disruption</span>
+                  </div>
+                  {warnings > 0 && (
+                    <div className="flex items-start">
+                      <AlertTriangle className="h-4 w-4 text-yellow-500 mt-0.5 mr-2" />
+                      <span className="text-sm">Consider increasing timeout values for better compatibility with existing services</span>
+                    </div>
+                  )}
+                  {warnings > 1 && (
+                    <div className="flex items-start">
+                      <AlertTriangle className="h-4 w-4 text-yellow-500 mt-0.5 mr-2" />
+                      <span className="text-sm">Update documentation to reflect new IP range allocations</span>
+                    </div>
+                  )}
+                  {criticalIssues > 0 && (
+                    <div className="flex items-start">
+                      <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 mr-2" />
+                      <span className="text-sm">CRITICAL: Potential IP address conflicts detected in subnet 10.0.4.0/24</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Timeline Impact Analysis</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Estimated Deployment Time</span>
+              <span className="text-sm">15-20 minutes</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Potential Service Interruption</span>
+              <span className="text-sm">{criticalIssues > 0 ? "5-10 minutes" : "None expected"}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Recommended Maintenance Window</span>
+              <span className="text-sm">{criticalIssues > 0 ? "Off-hours required" : warnings > 0 ? "Business hours with caution" : "Anytime"}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Rollback Time (if needed)</span>
+              <span className="text-sm">5 minutes</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
