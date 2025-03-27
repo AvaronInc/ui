@@ -24,7 +24,7 @@ const DocumentationButton = () => {
         </DialogHeader>
         <div className="mt-2 flex-1 overflow-hidden">
           <iframe 
-            src="https://ldhcbonevdxtoycfoeds.supabase.co/storage/v1/object/public/docs//AIM%20System%20Doc%20-%20Alpha.pdf" 
+            src="https://ldhcbonevdxtoycfoeds.supabase.co/storage/v1/object/public/docs//AIM%20System%20Doc%20-%20Alpha%20(1).pdf" 
             className="w-full h-full border-0"
             title="System Documentation"
             style={{ display: 'block' }}
