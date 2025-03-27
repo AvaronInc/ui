@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, Server, Brain, Fingerprint, CircleEllipsis, Settings, Layers } from 'lucide-react';
+import { LayoutDashboard, Server, Brain, Fingerprint, CircleEllipsis, Settings, Layers, Wrench } from 'lucide-react';
 import { NavItem } from './types';
 
 // Core System Management
@@ -28,6 +28,11 @@ export const coreSystemItems: NavItem[] = [
     title: 'Quantum Encryption',
     icon: Fingerprint,
     href: '/quantum-encryption'
+  },
+  {
+    title: 'Deployment Testing',
+    icon: Wrench,
+    href: '/deployment-testing'
   },
   {
     title: 'System Services',

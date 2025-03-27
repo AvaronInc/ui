@@ -51,6 +51,7 @@ import TeamsChat from "./pages/TeamsChat";
 import SystemConfiguration from "./pages/SystemConfiguration";
 import Zones from "./pages/Zones";
 import PartnerPortal from "./pages/PartnerPortal";
+import DeploymentTesting from "./pages/DeploymentTesting";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,6 +85,7 @@ const App = () => (
                 <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />
                 <Route path="/zones" element={<ProtectedRoute adminOnly><Zones /></ProtectedRoute>} />
                 <Route path="/quantum-encryption" element={<ProtectedRoute><QuantumEncryption /></ProtectedRoute>} />
+                <Route path="/deployment-testing" element={<ProtectedRoute><DeploymentTesting /></ProtectedRoute>} />
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
                 <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
                 <Route path="/intelligence" element={<ProtectedRoute><Intelligence /></ProtectedRoute>} />
