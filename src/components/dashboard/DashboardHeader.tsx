@@ -9,6 +9,7 @@ import { UserProfileMenu } from './header/UserProfileMenu';
 import { CompanyName } from './header/CompanyName';
 import { CLIButton } from './header/CLIButton';
 import DocumentationButton from './header/DocumentationButton';
+import HelpButton from './header/HelpButton';
 import NotificationsPanel from '@/components/notifications/NotificationsPanel';
 
 const DashboardHeader = () => {
@@ -54,6 +55,7 @@ const DashboardHeader = () => {
       <div className="flex items-center space-x-2">
         <CLIButton />
         <DocumentationButton />
+        <HelpButton />
         <AIMButton />
         <ThemeToggle />
         <NotificationButton onClick={() => setNotificationsPanelOpen(true)} />
