@@ -1,69 +1,95 @@
-# Welcome to your Lovable project
+Avaron
+Decentralized. Intelligent. Infrastructure that defends itself.
 
-## Project info
+**What is Avaron?**
+Avaron is a fully integrated, open-source platform that combines cybersecurity, network automation, identity management, and storage into a single decentralized system. It replaces the fragmented tools of modern IT with a unified, AI-driven infrastructure that can detect, respond, adapt, and heal in real time.
 
-**URL**: https://lovable.dev/projects/f692daa4-8512-4c51-aa24-fdcdc02a613b
+Built for Enterprises, MSPs, and security-first organizations who are tired of managing chaos.
 
-## How can I edit this code?
+**Core Capabilities**
+AI-Powered SD-WAN
+Backed by VPP with WireGuard, microsegmentation, and dynamic policy routing.
 
-There are several ways of editing your application.
+**VaultID Identity System**
+Quantum-resistant, biometric MFA for users and devices with decentralized quorum-based verification.
 
-**Use Lovable**
+**NestVault Immutable Storage**
+MinIO-powered with 4+2 erasure coding, delta-synced to Wasabi hot cloud.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f692daa4-8512-4c51-aa24-fdcdc02a613b) and start prompting.
+**Reactive AI Monitoring**
+Built-in log, traffic, and endpoint analysis using Mixtral + Weaviate, Wazuh, and Arkime.
 
-Changes made via Lovable will be committed automatically to this repo.
+**Self-Healing Cluster Design**
+Requires three nodes; if one fails, the other two instantly take over.
 
-**Use your preferred IDE**
+**Pre-Deployment Testing Sandbox**
+AI-simulated change testing environment with impact scoring and audit trails.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Multi-Tenant Architecture**
+Isolated service containers, scoped dashboards, role-based access — ideal for MSPs or complex orgs.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+**Technical Foundation**
+Alpine Linux containers
 
-Follow these steps:
+Docker Swarm/Kubernetes orchestration
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+TypeScript frontend (built in Lovable.dev)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Go-based backend tools and CLI
 
-# Step 3: Install the necessary dependencies.
-npm i
+All APIs and UI components are open source (AGPLv3)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Device deployment protected by defensive patents
 
-**Edit a file directly in GitHub**
+**Contributor Rewards Program**
+We’ve set aside 5% of total company equity for open-source contributors.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Every accepted contribution is tracked and rewarded
 
-**Use GitHub Codespaces**
+All contributors receive cash payouts upon successful funding
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+U.S. citizens and permanent residents may opt to convert payouts into equity
 
-## What technologies are used for this project?
+All contributors will receive first offer of full-time employment for the roles they helped build
 
-This project is built with .
+This isn’t a side project. It’s the ground floor of a real company — and we’re building it with you.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+More Info: Contributor Equity FAQ
 
-## How can I deploy this project?
+🚀 Get Started
+Fork the repo
 
-Simply open [Lovable](https://lovable.dev/projects/f692daa4-8512-4c51-aa24-fdcdc02a613b) and click on Share -> Publish.
+Pick a task from open issues or feature roadmap
 
-## I want to use a custom domain - is that possible?
+Submit your PR
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Track your contributions in the public dashboard
+
+Earn rewards and help define the future of Avaron
+
+📜 License
+This project is licensed under the GNU Affero General Public License v3 (AGPLv3).
+
+This includes a network-use clause: if you modify and run Avaron over a network (such as SaaS), you must make your source code available to users interacting with it.
+
+See: LICENSE
+
+🔒 Legal Protections
+The hardware deployment model and identity infrastructure are protected by defensive patents.
+
+Avaron remains open source and forkable, but commercial redistribution through physical devices must comply with licensing and patent terms.
+
+We protect the open ecosystem — but we also protect the integrity of what we’re building.
+
+🔗 Useful Links
+Website
+
+Contributor Program
+
+GitHub Issues
+
+Join the Community
+
+Build the future of infrastructure. Own a part of it.
+Welcome to Avaron.
+
