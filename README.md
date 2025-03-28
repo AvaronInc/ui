@@ -10,7 +10,7 @@ Built for Enterprises, MSPs, and security-first organizations who are tired of m
 AI-Powered SD-WAN
 Backed by VPP with WireGuard, microsegmentation, and dynamic policy routing.
 
-**VaultID Identity System**
+**AvaronID Identity System**
 Quantum-resistant, biometric MFA for users and devices with decentralized quorum-based verification.
 
 **NestVault Immutable Storage**
