@@ -4,7 +4,7 @@ This project is licensed under the GNU Affero General Public License v3.0 (AGPLv
 
 The following components are patent-protected by CyberHest Holdings, LLC, the parent company of Avaron, Inc:
 
-- The Avaron identity authentication system (VaultID)
+- The Avaron identity authentication system (AvaronID)
 - The Avaron One end-user interface deployed to mobile or tablet devices
 - The software architecture and security orchestration as deployed on dedicated hardware systems (the CyberNest line of devices)
 
