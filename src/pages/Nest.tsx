@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getNestLocations } from '@/data/nestData';
@@ -13,6 +12,7 @@ import { NestProvider } from '@/components/nest/NestContext';
 import { Button } from '@/components/ui/button';
 import { Play, RefreshCw, Calendar, FileText } from 'lucide-react';
 import { toast } from 'sonner';
+import CyberNestInfoButton from '@/components/nest/CyberNestInfoButton';
 
 const Nest = () => {
   const [selectedNestId, setSelectedNestId] = React.useState<string | null>(null);
@@ -32,23 +32,19 @@ const Nest = () => {
 
   const filteredLocations = React.useMemo(() => {
     return nestLocations.filter(location => {
-      // Filter by search term
       if (filters.search && !location.name.toLowerCase().includes(filters.search.toLowerCase()) && 
           !location.region.toLowerCase().includes(filters.search.toLowerCase())) {
         return false;
       }
       
-      // Filter by status
       if (filters.status.length > 0 && !filters.status.includes(location.status)) {
         return false;
       }
       
-      // Filter by hardware type
       if (filters.hardwareType.length > 0 && !filters.hardwareType.includes(location.hardwareModel)) {
         return false;
       }
       
-      // Filter by region
       if (filters.region.length > 0 && !filters.region.includes(location.region)) {
         return false;
       }
@@ -90,7 +86,8 @@ const Nest = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2 mt-4 md:mt-0">
+              <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
+                <CyberNestInfoButton />
                 <Button 
                   variant="outline" 
                   size="sm" 
