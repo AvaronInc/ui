@@ -221,12 +221,12 @@ export const mockSystemServices: SystemService[] = [
     name: 'Wazuh Manager',
     type: 'container',
     description: 'Security monitoring and threat detection service',
-    status: 'error',
-    cpuUsage: 95, // High CPU usage
-    memoryUsage: 92, // High memory usage
-    lastRestart: new Date(Date.now() - 0.1 * 24 * 60 * 60 * 1000).toISOString(), // 2.4 hours ago
-    health: 'critical',
-    uptime: '0d 2h 24m',
+    status: 'running',
+    cpuUsage: 45, // Updated from high value
+    memoryUsage: 58, // Updated from high value
+    lastRestart: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), // 4 days ago - Changed from 0.1 days
+    health: 'ok', // Changed from 'critical' to 'ok'
+    uptime: '4d 2h 24m', // Updated to match new restart date
     assignedResources: {
       cpuCores: 4,
       ram: 8192, // MB
@@ -381,5 +381,64 @@ export const mockSystemServices: SystemService[] = [
     },
     dependencies: [],
     logEntries: generateLogEntries(20)
+  },
+  // New OpenBox Database service
+  {
+    id: 'system-6',
+    uuid: 'm1n2o3p4-5q6r-7s8t-9u0v-1w2x3y4z5a6b',
+    name: 'OpenBox Database',
+    type: 'system',
+    description: 'High-performance distributed database for secure data storage',
+    status: 'running',
+    cpuUsage: 42,
+    memoryUsage: 55,
+    lastRestart: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(), // 6 days ago
+    health: 'ok',
+    uptime: '6d 4h 12m',
+    assignedResources: {
+      cpuCores: 4,
+      ram: 8192, // MB
+      networkInterfaces: ['eth0']
+    },
+    diskIO: {
+      read: 18756, // KB/s
+      write: 15432 // KB/s
+    },
+    networkIO: {
+      received: 5678, // KB/s
+      transmitted: 4321 // KB/s
+    },
+    dependencies: [],
+    logEntries: generateLogEntries(22)
+  },
+  // New OpenBox DB Sync service
+  {
+    id: 'system-7',
+    uuid: 'n1o2p3q4-5r6s-7t8u-9v0w-1x2y3z4a5b6c',
+    name: 'OpenBox DB Sync',
+    type: 'system',
+    description: 'Synchronization service for OpenBox Database clustering',
+    status: 'running',
+    cpuUsage: 35,
+    memoryUsage: 48,
+    lastRestart: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(), // 6 days ago
+    health: 'ok',
+    uptime: '6d 3h 47m',
+    assignedResources: {
+      cpuCores: 2,
+      ram: 4096, // MB
+      networkInterfaces: ['eth0']
+    },
+    diskIO: {
+      read: 9876, // KB/s
+      write: 5432 // KB/s
+    },
+    networkIO: {
+      received: 3456, // KB/s
+      transmitted: 2345 // KB/s
+    },
+    dependencies: ['openbox-database'],
+    logEntries: generateLogEntries(18)
   }
 ];
+
