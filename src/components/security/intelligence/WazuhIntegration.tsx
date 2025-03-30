@@ -21,8 +21,12 @@ const WazuhIntegration = () => {
       alert.rule.toLowerCase().includes(searchTerm.toLowerCase()) ||
       alert.description.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesAPT = !selectedAPT || alert.aptGroup === selectedAPT;
-    const matchesTactic = !selectedTactic || alert.mitreTactics.includes(selectedTactic);
+    // Fixed the filtering logic to handle null aptGroup values
+    const matchesAPT = !selectedAPT || 
+      (alert.aptGroup !== null && alert.aptGroup === selectedAPT);
+    
+    const matchesTactic = !selectedTactic || 
+      alert.mitreTactics.includes(selectedTactic);
     
     return matchesSearch && matchesAPT && matchesTactic;
   });
