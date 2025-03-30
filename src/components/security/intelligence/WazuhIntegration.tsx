@@ -98,12 +98,12 @@ const WazuhIntegration = () => {
               <div className="space-y-4">
                 <div>
                   <div className="text-sm font-medium mb-2">Filter by APT Group</div>
-                  <Select value={selectedAPT || ''} onValueChange={(value) => setSelectedAPT(value || null)}>
+                  <Select value={selectedAPT || 'all'} onValueChange={(value) => setSelectedAPT(value === 'all' ? null : value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select APT Group" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All APT Groups</SelectItem>
+                      <SelectItem value="all">All APT Groups</SelectItem>
                       {aptGroups.map(group => (
                         <SelectItem key={group.id} value={group.id}>{group.name}</SelectItem>
                       ))}
@@ -113,12 +113,12 @@ const WazuhIntegration = () => {
                 
                 <div>
                   <div className="text-sm font-medium mb-2">Filter by MITRE Tactic</div>
-                  <Select value={selectedTactic || ''} onValueChange={(value) => setSelectedTactic(value || null)}>
+                  <Select value={selectedTactic || 'all'} onValueChange={(value) => setSelectedTactic(value === 'all' ? null : value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select MITRE Tactic" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Tactics</SelectItem>
+                      <SelectItem value="all">All Tactics</SelectItem>
                       {mitreTactics.map(tactic => (
                         <SelectItem key={tactic.id} value={tactic.id}>{tactic.name}</SelectItem>
                       ))}

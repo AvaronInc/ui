@@ -102,14 +102,11 @@ const FirewallLogsTable: React.FC<FirewallLogsTableProps> = ({ onExportLogs }) =
                       event.severity === 'low' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
                       'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300'
                     }>
-                      {event.severity}
+                      {event.severity.charAt(0).toUpperCase() + event.severity.slice(1)}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm">
-                      <Search className="h-4 w-4 mr-1" />
-                      Details
-                    </Button>
+                    <Button variant="ghost" size="sm">Details</Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -117,17 +114,6 @@ const FirewallLogsTable: React.FC<FirewallLogsTableProps> = ({ onExportLogs }) =
           </Table>
         </CardContent>
       </Card>
-      
-      <div className="flex justify-between pt-2">
-        <div className="text-sm text-muted-foreground">
-          Showing 5 of 1,245 log entries
-        </div>
-        
-        <div className="flex gap-1">
-          <Button variant="outline" size="sm" disabled>Previous</Button>
-          <Button variant="outline" size="sm">Next</Button>
-        </div>
-      </div>
     </div>
   );
 };
