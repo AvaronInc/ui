@@ -7,3 +7,4 @@ export * from './UserProfileMenu';
 export * from './CLIButton';
 export { default as DocumentationButton } from './DocumentationButton';
 export { default as HelpButton } from './HelpButton';
+export { default as CommunityButton } from './CommunityButton';
