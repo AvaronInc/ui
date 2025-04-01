@@ -32,7 +32,7 @@ const Sidebar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("flex flex-col h-full", className)}
+      className={cn("flex flex-col h-full overflow-hidden", className)}
       {...props}
     >
       {children}

@@ -25,11 +25,11 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
             <div className="fixed inset-0 z-[-1] bg-opacity-10 pointer-events-none" 
                 aria-hidden="true" />
           )}
-          <Sidebar className="border-r bg-sidebar">
+          <Sidebar className="border-r bg-sidebar sticky top-0 h-screen">
             <SidebarNav />
           </Sidebar>
           <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
-            <div className="flex items-center h-16 px-6 border-b bg-background/80 backdrop-blur-sm">
+            <div className="flex items-center h-16 px-6 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
               <DashboardHeader />
             </div>
             <main className={cn("flex-1 overflow-auto", className)}>

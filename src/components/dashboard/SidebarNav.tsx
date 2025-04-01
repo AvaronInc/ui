@@ -10,9 +10,9 @@ const SidebarNav: React.FC = () => {
   const systemName = localStorage.getItem('systemName') || 'Network Pulse Management';
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <SidebarHeader systemName={systemName} />
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 overflow-auto">
         <SidebarNavItems />
       </ScrollArea>
       <SidebarFooter />
