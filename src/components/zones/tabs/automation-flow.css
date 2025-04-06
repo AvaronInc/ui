@@ -1,0 +1,95 @@
+
+/* Styling for ReactFlow Components optimized for dark mode */
+.react-flow__edge-path {
+  stroke-width: 1.5;
+}
+
+.flow-dark {
+  --xy-handle-color: #5d87e0;
+  --xy-node-bg: #27272C;
+  --xy-node-color: #E2E8F0;
+}
+
+.react-flow.flow-dark .react-flow__node {
+  background-color: #27272C;
+  color: #E2E8F0;
+}
+
+.react-flow.flow-dark .react-flow__handle {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: var(--xy-handle-color);
+  border: none;
+}
+
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #3B82F6;
+  border: none;
+}
+
+/* Style for the mini map in dark mode */
+.react-flow.flow-dark .react-flow__minimap {
+  background-color: #1F1F23;
+}
+
+.react-flow.flow-dark .react-flow__controls {
+  background-color: #27272C;
+}
+
+.react-flow.flow-dark .react-flow__controls button {
+  background-color: #27272C;
+  color: #E2E8F0;
+  border-bottom: 1px solid #3F3F46;
+}
+
+.react-flow.flow-dark .react-flow__controls button:hover {
+  background-color: #3F3F46;
+}
+
+/* Node selection styles */
+.react-flow.flow-dark .react-flow__node-trigger.selected,
+.react-flow.flow-dark .react-flow__node-action.selected,
+.react-flow.flow-dark .react-flow__node-outcome.selected {
+  box-shadow: 0 0 0 2px rgba(93, 135, 224, 0.75);
+}
+
+.react-flow__node-trigger.selected,
+.react-flow__node-action.selected,
+.react-flow__node-outcome.selected {
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.75);
+}
+
+/* Connection dots */
+.react-flow__handle-connecting {
+  background: #ff6b6b;
+}
+
+.react-flow__handle-valid {
+  background: #10B981;
+}
+
+/* Improves handle visibility */
+.react-flow__handle {
+  opacity: 0.75;
+}
+
+.react-flow__handle:hover {
+  opacity: 1;
+}
+
+/* Selection box */
+.react-flow.flow-dark .react-flow__nodesselection-rect,
+.react-flow.flow-dark .react-flow__selection {
+  background: rgba(93, 135, 224, 0.15);
+  border: 1px solid rgba(93, 135, 224, 0.8);
+}
+
+.react-flow__nodesselection-rect,
+.react-flow__selection {
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.8);
+}
