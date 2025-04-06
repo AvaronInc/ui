@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import DashboardHeader from './DashboardHeader';
 import { SidebarProvider } from '@/components/ui/sidebar/sidebar-base';
@@ -17,6 +17,28 @@ interface DashboardLayoutProps {
 export const DashboardLayout = ({ children, className }: DashboardLayoutProps) => {
   const { backgroundImage } = useTheme();
   
+  // Add effect to set viewport meta tag for mobile optimization
+  useEffect(() => {
+    // Update viewport meta tag to ensure proper mobile scaling
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (viewportMeta) {
+      viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+    }
+
+    // Prevent overscroll/bounce effect on iOS
+    document.body.style.overscrollBehavior = 'none';
+
+    return () => {
+      // Reset when component unmounts
+      document.body.style.overscrollBehavior = '';
+    };
+  }, []);
+  
   return (
     <SidebarProvider>
       <KeyboardAccessibility>
@@ -29,10 +51,10 @@ export const DashboardLayout = ({ children, className }: DashboardLayoutProps) =
             <SidebarNav />
           </Sidebar>
           <div className="flex-1 flex flex-col h-screen overflow-hidden">
-            <header className="sticky top-0 z-30 w-full flex items-center h-16 px-6 border-b bg-background/95 backdrop-blur-md shadow-sm">
+            <header className="sticky top-0 z-30 w-full flex items-center h-14 sm:h-16 px-3 sm:px-6 border-b bg-background/95 backdrop-blur-md shadow-sm">
               <DashboardHeader />
             </header>
-            <main className={cn("flex-1 overflow-auto", className)}>
+            <main className={cn("flex-1 overflow-auto -mx-0 px-3 sm:px-6 py-4 sm:py-6", className)}>
               {children}
             </main>
             <CopyrightFooter />
