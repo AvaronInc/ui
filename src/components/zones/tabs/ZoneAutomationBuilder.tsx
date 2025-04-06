@@ -1,487 +1,556 @@
 
-import React, { useState, useCallback, useMemo, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { 
-  PlusCircle, 
-  Trash2, 
-  Save, 
-  PlusSquare, 
-  Copy, 
-  Layers, 
-  AlertCircle, 
-  Clock, 
-  Play, 
-  Mail 
-} from 'lucide-react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { MarkerType } from '@xyflow/react';
 import {
   ReactFlow,
-  MiniMap,
-  Controls,
   Background,
+  Controls,
+  MiniMap,
+  Panel,
   useNodesState,
   useEdgesState,
   addEdge,
-  MarkerType,
-  Node,
-  Edge,
   Connection,
-  NodeTypes,
-  OnNodesChange,
-  OnEdgesChange,
-  OnConnect,
-  ConnectionLineType
+  Edge,
+  Node,
+  NodeChange,
+  ConnectionLineType,
+  NodeTypes as XYFlowNodeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Card } from '@/components/ui/card';
-import { AutomationFlow } from '@/types/automation-flow';
+import { Plus, Save, List, Trash2, ZoomIn, ZoomOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { 
+  TriggerNode,
+  ActionNode, 
+  OutcomeNode, 
+  AutomationNode, 
+  AutomationEdge,
+  AutomationFlow
+} from '@/types/automation-flow';
+import { Zone } from '@/components/zones/types';
+import { useToast } from '@/components/ui/use-toast';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockAutomationFlows } from '@/components/regions/tabs/mockAutomationFlows';
-import { useTheme } from '@/context/ThemeContext';
+import { 
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
-type NodeData = {
-  label: string;
-  description: string;
-  subType?: string;
-};
-
-type NodeTypes = 'trigger' | 'action' | 'outcome';
-type TriggerType = 'schedule' | 'event' | 'condition' | 'manual';
-type ActionType = 'script' | 'api' | 'notification' | 'email';
-type OutcomeType = 'success' | 'failure' | 'conditional';
-
-// Define node components
-const TriggerNode: React.FC<{
-  data: { label: string; description: string; subType: TriggerType }
-}> = ({ data }) => {
-  return (
-    <div className="p-3 rounded-lg border min-w-[180px] bg-card border-primary/20">
-      <div className="flex items-center gap-2">
-        {data.subType === 'schedule' && <Clock size={16} className="text-primary" />}
-        {data.subType === 'event' && <AlertCircle size={16} className="text-orange-500" />}
-        {data.subType === 'condition' && <Layers size={16} className="text-blue-500" />}
-        {data.subType === 'manual' && <Play size={16} className="text-green-500" />}
-        <div className="font-medium">{data.label}</div>
-      </div>
-      <div className="text-muted-foreground text-xs mt-1">{data.description}</div>
+// Custom node components
+const TriggerNodeComponent = ({ data }: { data: any }) => (
+  <div className="p-4 rounded-lg border bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-600 min-w-[180px]">
+    <div className="font-semibold mb-1 text-purple-800 dark:text-purple-300">
+      {data.label}
     </div>
-  );
-};
-
-const ActionNode: React.FC<{
-  data: { label: string; description: string; subType: ActionType }
-}> = ({ data }) => {
-  return (
-    <div className="p-3 rounded-lg border min-w-[180px] bg-card border-blue-500/20">
-      <div className="flex items-center gap-2">
-        {data.subType === 'script' && <Layers size={16} className="text-blue-500" />}
-        {data.subType === 'api' && <PlusSquare size={16} className="text-purple-500" />}
-        {data.subType === 'notification' && <AlertCircle size={16} className="text-amber-500" />}
-        {data.subType === 'email' && <Mail size={16} className="text-cyan-500" />}
-        <div className="font-medium">{data.label}</div>
-      </div>
-      <div className="text-muted-foreground text-xs mt-1">{data.description}</div>
+    <div className="text-xs text-gray-600 dark:text-gray-300">
+      {data.description}
     </div>
-  );
-};
+  </div>
+);
 
-const OutcomeNode: React.FC<{
-  data: { label: string; description: string; subType: OutcomeType }
-}> = ({ data }) => {
-  return (
-    <div className="p-3 rounded-lg border min-w-[180px] bg-card border-green-500/20">
-      <div className="flex items-center gap-2">
-        {data.subType === 'success' && <Play size={16} className="text-green-500" />}
-        {data.subType === 'failure' && <AlertCircle size={16} className="text-red-500" />}
-        {data.subType === 'conditional' && <Layers size={16} className="text-amber-500" />}
-        <div className="font-medium">{data.label}</div>
-      </div>
-      <div className="text-muted-foreground text-xs mt-1">{data.description}</div>
+const ActionNodeComponent = ({ data }: { data: any }) => (
+  <div className="p-4 rounded-lg border bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-600 min-w-[180px]">
+    <div className="font-semibold mb-1 text-blue-800 dark:text-blue-300">
+      {data.label}
     </div>
-  );
-};
+    <div className="text-xs text-gray-600 dark:text-gray-300">
+      {data.description}
+    </div>
+  </div>
+);
+
+const OutcomeNodeComponent = ({ data }: { data: any }) => (
+  <div className="p-4 rounded-lg border bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-600 min-w-[180px]">
+    <div className="font-semibold mb-1 text-green-800 dark:text-green-300">
+      {data.label}
+    </div>
+    <div className="text-xs text-gray-600 dark:text-gray-300">
+      {data.description}
+    </div>
+  </div>
+);
 
 const nodeTypes = {
-  trigger: TriggerNode,
-  action: ActionNode,
-  outcome: OutcomeNode,
+  trigger: TriggerNodeComponent,
+  action: ActionNodeComponent,
+  outcome: OutcomeNodeComponent
 };
 
-const ZoneAutomationBuilder: React.FC<{ zone: any }> = ({ zone }) => {
-  const { isDarkMode } = useTheme();
-  const [currentFlow, setCurrentFlow] = useState<AutomationFlow | null>(null);
-  const [flows, setFlows] = useState<AutomationFlow[]>(mockAutomationFlows);
-  const [isCreating, setIsCreating] = useState(false);
-  const [newFlowName, setNewFlowName] = useState('');
-  
-  // Initial nodes and edges setup
-  const initialNodes: Node[] = []; 
-  const initialEdges: Edge[] = [];
-  
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  
-  // Function to load a flow
+// Type for available node types to add to the flow
+interface NodeTypeOption {
+  type: 'trigger' | 'action' | 'outcome';
+  subType: string;
+  label: string;
+  description: string;
+}
+
+const triggerNodeOptions: NodeTypeOption[] = [
+  {
+    type: 'trigger',
+    subType: 'schedule',
+    label: 'Schedule',
+    description: 'Trigger on a time-based schedule'
+  },
+  {
+    type: 'trigger',
+    subType: 'event',
+    label: 'Event',
+    description: 'Trigger on a specific event'
+  },
+  {
+    type: 'trigger',
+    subType: 'condition',
+    label: 'Condition',
+    description: 'Trigger when a condition is met'
+  },
+  {
+    type: 'trigger',
+    subType: 'manual',
+    label: 'Manual',
+    description: 'Manually triggered flow'
+  }
+];
+
+const actionNodeOptions: NodeTypeOption[] = [
+  {
+    type: 'action',
+    subType: 'script',
+    label: 'Execute Script',
+    description: 'Run a script or command'
+  },
+  {
+    type: 'action',
+    subType: 'api',
+    label: 'API Call',
+    description: 'Call an external API'
+  },
+  {
+    type: 'action',
+    subType: 'notification',
+    label: 'Send Notification',
+    description: 'Send alert or notification'
+  },
+  {
+    type: 'action',
+    subType: 'email',
+    label: 'Send Email',
+    description: 'Send an email notification'
+  }
+];
+
+const outcomeNodeOptions: NodeTypeOption[] = [
+  {
+    type: 'outcome',
+    subType: 'success',
+    label: 'Success',
+    description: 'Successful completion'
+  },
+  {
+    type: 'outcome',
+    subType: 'failure',
+    label: 'Failure',
+    description: 'Failed completion'
+  },
+  {
+    type: 'outcome',
+    subType: 'conditional',
+    label: 'Conditional',
+    description: 'Conditional branch'
+  }
+];
+
+interface ZoneAutomationBuilderProps {
+  zone: Zone;
+}
+
+const ZoneAutomationBuilder: React.FC<ZoneAutomationBuilderProps> = ({ zone }) => {
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const [selectedFlow, setSelectedFlow] = useState<AutomationFlow | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState<AutomationNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<AutomationEdge>([]);
+  const [showAddNode, setShowAddNode] = useState(false);
+  const [nodePanel, setNodePanel] = useState<'trigger' | 'action' | 'outcome'>('trigger');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Check if dark mode is enabled in the document
+    return document.documentElement.classList.contains('dark');
+  });
+  const { toast } = useToast();
+
+  // Monitor for theme changes
+  useEffect(() => {
+    const observer = new MutationObserver(mutations => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          const isDark = document.documentElement.classList.contains('dark');
+          setIsDarkMode(isDark);
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Get a filtered list of automation flows for this specific zone
+  const zoneAutomationFlows = mockAutomationFlows.filter(
+    flow => flow.name.toLowerCase().includes(zone.name.toLowerCase())
+  );
+
+  // If no zone-specific flows, use the mock flows
+  const flows = zoneAutomationFlows.length > 0 ? zoneAutomationFlows : mockAutomationFlows;
+
+  // Load a flow when selected
   const loadFlow = useCallback((flow: AutomationFlow) => {
-    setCurrentFlow(flow);
+    setSelectedFlow(flow);
+    const typedNodes: AutomationNode[] = flow.nodes.map(node => {
+      // Ensure each node conforms to the expected types
+      if (node.type === 'trigger') {
+        return node as TriggerNode;
+      } else if (node.type === 'action') {
+        return node as ActionNode;
+      } else {
+        return node as OutcomeNode;
+      }
+    });
     
-    // Convert AutomationNodes to ReactFlow nodes
-    const rfNodes: Node[] = flow.nodes.map((node) => ({
-      id: node.id,
-      type: node.type as NodeTypes,
-      position: node.position,
-      data: { 
-        label: node.data.label, 
-        description: node.data.description,
-        subType: node.subType
-      },
-    }));
+    setNodes(typedNodes);
     
-    // Convert AutomationEdges to ReactFlow edges
-    const rfEdges: Edge[] = flow.edges.map((edge) => ({
-      id: edge.id,
-      source: edge.source,
-      target: edge.target,
+    // Ensure edges have all required properties with defaults
+    const typedEdges: Edge[] = flow.edges.map(edge => ({
+      ...edge,
       animated: edge.animated || false,
       style: edge.style || { stroke: '#2563eb' },
-      markerEnd: edge.markerEnd || {
-        type: MarkerType.ArrowClosed
-      },
+      markerEnd: edge.markerEnd || { type: MarkerType.ArrowClosed },
       sourceHandle: edge.sourceHandle || null,
       targetHandle: edge.targetHandle || null
     }));
     
-    setNodes(rfNodes);
-    setEdges(rfEdges);
+    setEdges(typedEdges);
   }, [setNodes, setEdges]);
-  
-  // Create a new flow
-  const createNewFlow = () => {
-    if (newFlowName.trim()) {
-      const newFlow: AutomationFlow = {
-        id: `flow-${Date.now()}`,
-        name: newFlowName,
-        description: `Automation flow for ${zone.name}`,
-        nodes: [],
-        edges: [],
-        createdBy: 'Current User',
-        lastModified: new Date().toISOString(),
-        status: 'draft',
-        version: 1,
-        createdAt: new Date().toISOString()
-      };
-      
-      setFlows([...flows, newFlow]);
-      loadFlow(newFlow);
-      setIsCreating(false);
-      setNewFlowName('');
+
+  // Add a new node to the flow
+  const addNode = useCallback((nodeOption: NodeTypeOption) => {
+    const newNode: AutomationNode = {
+      id: `${nodeOption.type}-${Date.now()}`,
+      type: nodeOption.type,
+      subType: nodeOption.subType,
+      position: { x: 100, y: 100 + (nodes.length * 100) },
+      data: { label: nodeOption.label, description: nodeOption.description }
+    } as AutomationNode;
+    
+    if (nodeOption.type === 'trigger') {
+      setNodes(nds => [...nds, newNode as TriggerNode]);
+    } else if (nodeOption.type === 'action') {
+      setNodes(nds => [...nds, newNode as ActionNode]);
+    } else if (nodeOption.type === 'outcome') {
+      setNodes(nds => [...nds, newNode as OutcomeNode]);
     }
-  };
-  
-  // Duplicate a flow
-  const duplicateFlow = (flow: AutomationFlow) => {
-    const duplicatedFlow: AutomationFlow = {
-      ...flow,
-      id: `flow-${Date.now()}`,
-      name: `${flow.name} (Copy)`,
-      lastModified: new Date().toISOString(),
-      version: flow.version + 1
-    };
     
-    setFlows([...flows, duplicatedFlow]);
-    loadFlow(duplicatedFlow);
-  };
-  
-  // Delete a flow
-  const deleteFlow = (flowId: string) => {
-    const updatedFlows = flows.filter(f => f.id !== flowId);
-    setFlows(updatedFlows);
-    
-    if (currentFlow && currentFlow.id === flowId) {
-      setCurrentFlow(null);
-      setNodes([]);
-      setEdges([]);
-    }
-  };
-  
-  // Save flow changes
-  const saveFlow = () => {
-    if (!currentFlow) return;
-    
-    const updatedFlow: AutomationFlow = {
-      ...currentFlow,
-      nodes: nodes.map(node => ({
-        id: node.id,
-        type: node.type as 'trigger' | 'action' | 'outcome',
-        position: node.position,
-        data: node.data,
-        subType: node.data.subType as any
-      })),
-      edges: edges.map(edge => ({
-        id: edge.id,
-        source: edge.source,
-        target: edge.target,
-        animated: edge.animated,
-        style: edge.style,
-        markerEnd: edge.markerEnd,
-        sourceHandle: edge.sourceHandle || undefined,
-        targetHandle: edge.targetHandle || undefined
-      })),
-      lastModified: new Date().toISOString()
-    };
-    
-    const updatedFlows = flows.map(f => 
-      f.id === currentFlow.id ? updatedFlow : f
-    );
-    
-    setFlows(updatedFlows);
-    setCurrentFlow(updatedFlow);
-  };
-  
-  // Add new node
-  const addNode = (type: NodeTypes, subType: TriggerType | ActionType | OutcomeType) => {
-    const newNode: Node = {
-      id: `${type}-${Date.now()}`,
-      type,
-      position: {
-        x: Math.random() * 300 + 50,
-        y: Math.random() * 200 + 50
-      },
-      data: {
-        subType,
-        label: `${type.charAt(0).toUpperCase() + type.slice(1)} ${subType}`,
-        description: `A ${subType} ${type.toLowerCase()}`
-      }
-    };
-    
-    setNodes(nds => [...nds, newNode]);
-  };
-  
-  const onConnect: OnConnect = useCallback(
-    (params) => setEdges((eds) => addEdge({
+    setShowAddNode(false);
+  }, [nodes, setNodes]);
+
+  // Handle connections between nodes
+  const onConnect = useCallback((params: Connection) => {
+    const newEdge: Edge = {
       ...params,
-      type: 'smoothstep',
+      id: `e-${params.source}-${params.target}`,
       animated: true,
-      style: { stroke: isDarkMode ? '#5d87e0' : '#2563eb' },
+      style: { stroke: '#2563eb' },
       markerEnd: {
         type: MarkerType.ArrowClosed
       }
-    }, eds)),
-    [setEdges, isDarkMode]
-  );
-  
-  const removeNode = useCallback((nodeId: string) => {
-    setNodes(nds => nds.filter(node => node.id !== nodeId));
-    setEdges(eds => eds.filter(
-      edge => edge.source !== nodeId && edge.target !== nodeId
-    ));
-  }, [setNodes, setEdges]);
-  
-  // Handle node menu items for our context menu
-  const onNodesDelete = useCallback((nodesToDelete: Node[]) => {
-    nodesToDelete.forEach(node => removeNode(node.id));
-  }, [removeNode]);
-  
-  // Filter flows specific to this zone
-  const zoneFlows = useMemo(() => {
-    // In a real application, you would filter flows based on zone ID
-    // For now, we'll just return all mock flows
-    return flows;
-  }, [flows]);
-  
+    };
+    setEdges(eds => addEdge(newEdge, eds));
+  }, [setEdges]);
+
+  // Save the current flow
+  const saveFlow = useCallback(() => {
+    if (!selectedFlow) return;
+    
+    // Here you would implement the actual save functionality
+    toast({
+      title: "Flow Saved",
+      description: `${selectedFlow.name} has been saved successfully.`
+    });
+  }, [selectedFlow, toast]);
+
+  // Create a new flow
+  const createNewFlow = useCallback(() => {
+    const newFlow: AutomationFlow = {
+      id: `flow-${Date.now()}`,
+      name: `New Flow for ${zone.name}`,
+      description: 'Add a description for this flow',
+      nodes: [],
+      edges: [],
+      createdBy: 'Current User',
+      lastModified: new Date().toISOString(),
+      status: 'draft',
+      version: 1,
+      createdAt: new Date().toISOString()
+    };
+    
+    setSelectedFlow(newFlow);
+    setNodes([]);
+    setEdges([]);
+    
+    toast({
+      title: "New Flow Created",
+      description: "Start by adding nodes to your flow"
+    });
+  }, [setNodes, setEdges, toast, zone.name]);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      {/* Left sidebar - flows list */}
-      <div className="md:col-span-1 space-y-4">
-        <Card className="p-4">
-          <h3 className="font-semibold mb-2">Automation Flows</h3>
-          <div className="flex items-center gap-2 mb-3">
-            {isCreating ? (
-              <>
-                <input
-                  type="text"
-                  value={newFlowName}
-                  onChange={(e) => setNewFlowName(e.target.value)}
-                  placeholder="Flow name..."
-                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                />
-                <Button size="sm" onClick={createNewFlow}>Add</Button>
-                <Button size="sm" variant="ghost" onClick={() => setIsCreating(false)}>Cancel</Button>
-              </>
-            ) : (
-              <Button 
-                size="sm" 
-                onClick={() => setIsCreating(true)}
-                className="w-full"
-              >
-                <PlusCircle className="h-4 w-4 mr-2" />
-                New Flow
+    <div className="h-[70vh] border rounded-lg overflow-hidden flex flex-col">
+      {/* Top toolbar */}
+      <div className="bg-slate-100 dark:bg-slate-800 p-3 border-b flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium">
+            {selectedFlow ? selectedFlow.name : "Zone Automation Builder"}
+          </h3>
+        </div>
+        <div className="flex gap-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm">
+                <List className="h-4 w-4 mr-2" />
+                Flows
               </Button>
-            )}
-          </div>
-          
-          <div className="space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
-            {zoneFlows.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No automation flows yet.</p>
-            ) : (
-              zoneFlows.map(flow => (
-                <div 
-                  key={flow.id} 
-                  className={`p-2 rounded border cursor-pointer ${
-                    currentFlow?.id === flow.id 
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border hover:bg-accent'
-                  } transition-colors`}
-                  onClick={() => loadFlow(flow)}
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Automation Flows</SheetTitle>
+                <SheetDescription>
+                  Select an existing flow or create a new one.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-4 space-y-4">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={createNewFlow}
                 >
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-sm">{flow.name}</span>
-                    <div className="flex gap-1">
-                      <Button 
-                        size="icon" 
-                        variant="ghost" 
-                        className="h-6 w-6" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          duplicateFlow(flow);
-                        }}
-                      >
-                        <Copy className="h-3 w-3" />
-                      </Button>
-                      <Button 
-                        size="icon" 
-                        variant="ghost" 
-                        className="h-6 w-6 hover:text-destructive" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteFlow(flow.id);
-                        }}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create New Flow
+                </Button>
+                <Separator />
+                <div className="space-y-2 max-h-[500px] overflow-y-auto">
+                  {flows.map(flow => (
+                    <div
+                      key={flow.id}
+                      className={`p-3 rounded-md cursor-pointer border ${
+                        selectedFlow?.id === flow.id
+                          ? 'bg-primary/10 border-primary'
+                          : 'hover:bg-muted'
+                      }`}
+                      onClick={() => loadFlow(flow)}
+                    >
+                      <h4 className="font-medium">{flow.name}</h4>
+                      <p className="text-xs text-muted-foreground">
+                        {flow.description}
+                      </p>
+                      <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground">
+                        <span>v{flow.version}</span>
+                        <span>{flow.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAddNode(true)}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Node
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={saveFlow}
+            disabled={!selectedFlow}
+          >
+            <Save className="h-4 w-4 mr-2" />
+            Save
+          </Button>
+        </div>
+      </div>
+
+      {/* Add Node Panel */}
+      {showAddNode && (
+        <div className="absolute right-8 top-48 z-10 w-72 bg-white dark:bg-gray-800 border rounded-lg shadow-lg">
+          <div className="p-3 border-b">
+            <div className="flex justify-between items-center">
+              <h4 className="font-medium">Add Node</h4>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAddNode(false)}
+              >
+                &times;
+              </Button>
+            </div>
+            <div className="flex mt-2">
+              <Button
+                variant={nodePanel === 'trigger' ? 'default' : 'outline'}
+                size="sm"
+                className="flex-1"
+                onClick={() => setNodePanel('trigger')}
+              >
+                Triggers
+              </Button>
+              <Button
+                variant={nodePanel === 'action' ? 'default' : 'outline'}
+                size="sm"
+                className="flex-1"
+                onClick={() => setNodePanel('action')}
+              >
+                Actions
+              </Button>
+              <Button
+                variant={nodePanel === 'outcome' ? 'default' : 'outline'}
+                size="sm"
+                className="flex-1"
+                onClick={() => setNodePanel('outcome')}
+              >
+                Outcomes
+              </Button>
+            </div>
+          </div>
+          <div className="p-3 max-h-96 overflow-y-auto">
+            {nodePanel === 'trigger' && (
+              <div className="space-y-2">
+                {triggerNodeOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className="p-2 border rounded cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                    onClick={() => addNode(option)}
+                  >
+                    <div className="font-medium text-sm">{option.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {option.description}
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">{flow.status} • v{flow.version}</p>
-                </div>
-              ))
+                ))}
+              </div>
+            )}
+            {nodePanel === 'action' && (
+              <div className="space-y-2">
+                {actionNodeOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className="p-2 border rounded cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                    onClick={() => addNode(option)}
+                  >
+                    <div className="font-medium text-sm">{option.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {option.description}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {nodePanel === 'outcome' && (
+              <div className="space-y-2">
+                {outcomeNodeOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className="p-2 border rounded cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                    onClick={() => addNode(option)}
+                  >
+                    <div className="font-medium text-sm">{option.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {option.description}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
-        </Card>
-        
-        {/* Node palette */}
-        {currentFlow && (
-          <Card className="p-4">
-            <h3 className="font-semibold mb-2">Node Palette</h3>
-            <div className="grid grid-cols-1 gap-2">
-              <div>
-                <h4 className="text-xs font-medium mb-1 text-muted-foreground">TRIGGERS</h4>
-                <div className="flex flex-wrap gap-1">
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('trigger', 'schedule')}>
-                    <Clock className="h-3 w-3 mr-1" />
-                    Schedule
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('trigger', 'event')}>
-                    <AlertCircle className="h-3 w-3 mr-1" />
-                    Event
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('trigger', 'condition')}>
-                    <Layers className="h-3 w-3 mr-1" />
-                    Condition
-                  </Button>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="text-xs font-medium mb-1 text-muted-foreground">ACTIONS</h4>
-                <div className="flex flex-wrap gap-1">
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('action', 'script')}>
-                    <Layers className="h-3 w-3 mr-1" />
-                    Script
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('action', 'api')}>
-                    <PlusSquare className="h-3 w-3 mr-1" />
-                    API
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('action', 'notification')}>
-                    <AlertCircle className="h-3 w-3 mr-1" />
-                    Notify
-                  </Button>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="text-xs font-medium mb-1 text-muted-foreground">OUTCOMES</h4>
-                <div className="flex flex-wrap gap-1">
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('outcome', 'success')}>
-                    <Play className="h-3 w-3 mr-1" />
-                    Success
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => addNode('outcome', 'failure')}>
-                    <AlertCircle className="h-3 w-3 mr-1" />
-                    Failure
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card>
-        )}
-      </div>
-      
-      {/* Main flow area */}
-      <div className="md:col-span-3 h-[calc(100vh-300px)] min-h-[500px] rounded-md border">
-        {currentFlow ? (
-          <div className="relative h-full">
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              nodeTypes={nodeTypes}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              onNodesDelete={onNodesDelete}
-              fitView
-              className={isDarkMode ? "flow-dark" : ""}
-              connectionLineType={ConnectionLineType.SmoothStep}
-            >
-              <Background 
-                color={isDarkMode ? "#555" : "#aaa"} 
-                gap={16} 
-                size={1} 
-              />
-              <Controls />
-              <MiniMap 
-                nodeColor={n => {
-                  if (n.type === 'trigger') return isDarkMode ? '#7E869A' : '#2563eb';
-                  if (n.type === 'action') return isDarkMode ? '#6B7280' : '#3B82F6';
-                  return isDarkMode ? '#57746C' : '#10B981';
-                }}
-                maskColor={isDarkMode ? 'rgba(25, 25, 28, 0.6)' : 'rgba(240, 240, 250, 0.6)'}
-                style={{
-                  backgroundColor: isDarkMode ? '#1F1F23' : '#FAFAFA'
-                }}
-              />
-            </ReactFlow>
-            
-            {/* Flow controls */}
-            <div className="absolute bottom-4 right-4 flex gap-2">
-              <Button
-                onClick={saveFlow}
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <Save size={16} />
-                Save Flow
+        </div>
+      )}
+
+      {/* Flow canvas */}
+      <div className="flex-grow" ref={reactFlowWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          connectionLineType={ConnectionLineType.SmoothStep}
+          className={isDarkMode ? 'flow-dark' : ''}
+          fitView
+        >
+          <Controls />
+          <MiniMap 
+            zoomable 
+            pannable
+            className="bg-white dark:bg-gray-800"
+          />
+          <Background 
+            color={isDarkMode ? "#444" : "#aaa"} 
+            gap={16} 
+            size={1} 
+          />
+          <Panel position="bottom-right" className="bg-white dark:bg-gray-800 p-2 rounded-md shadow">
+            <div className="flex gap-2">
+              <Button variant="outline" size="icon">
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="icon">
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="icon">
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
-          </div>
-        ) : (
-          <div className="h-full flex items-center justify-center flex-col gap-2">
-            <p className="text-muted-foreground">Select a flow to begin, or create a new flow</p>
-            <Button onClick={() => setIsCreating(true)}>
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Create New Flow
-            </Button>
-          </div>
-        )}
+          </Panel>
+        </ReactFlow>
       </div>
+
+      {/* Empty state */}
+      {(!selectedFlow || (nodes.length === 0 && edges.length === 0)) && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 z-10 pointer-events-none">
+          <Card className="w-96 pointer-events-auto">
+            <CardHeader>
+              <CardTitle>Get Started with Flow Automation</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Create a new flow or select an existing one to start building your automation.
+              </p>
+              <div className="flex justify-center space-x-4">
+                <Button onClick={createNewFlow}>
+                  <Plus className="mr-2 h-4 w-4" /> Create New Flow
+                </Button>
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline">
+                      <List className="mr-2 h-4 w-4" /> Select Flow
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent>
+                    {/* This is already defined above */}
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
