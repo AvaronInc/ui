@@ -1,11 +1,5 @@
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Plus, Save, Play } from 'lucide-react';
-import { toast } from 'sonner';
+import React, { useState, useCallback, useRef } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -14,19 +8,30 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
-  MarkerType,
-  Edge,
-  OnConnect,
-  NodeChange,
-  EdgeChange,
   Connection,
-  XYPosition,
+  Edge,
   Node,
+  Panel,
+  MarkerType,
   Position,
-  Handle,
+  NodeTypes
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { AutomationNode, AutomationEdge, AutomationFlow, TriggerType, ActionType, OutcomeType } from '@/types/regions';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PlusCircle, Save, Play, Trash2, Edit, Share2, FileText } from 'lucide-react';
+import { Handle } from '@xyflow/react';
+
+// Node types for our automation flow
+type TriggerType = 'webhook' | 'scheduled' | 'event' | 'api';
+type ActionType = 'provision' | 'connect' | 'configure' | 'alert' | 'script';
+type OutcomeType = 'success' | 'failure' | 'conditional';
 
 // Node components
 const TriggerNode = ({ data }: { data: any }) => (
@@ -54,148 +59,148 @@ const OutcomeNode = ({ data }: { data: any }) => (
   </div>
 );
 
-// Define node types
-const nodeTypes = {
+// Define types for our automation flow
+type AutomationNodeBase = {
+  id: string;
+  position: { x: number; y: number };
+  data: { label: string; description: string };
+};
+
+type TriggerNode = AutomationNodeBase & { 
+  type: 'trigger';
+  subType: TriggerType;
+};
+
+type ActionNode = AutomationNodeBase & { 
+  type: 'action';
+  subType: ActionType;
+};
+
+type OutcomeNode = AutomationNodeBase & { 
+  type: 'outcome';
+  subType: OutcomeType;
+};
+
+type AutomationNode = TriggerNode | ActionNode | OutcomeNode;
+
+type AutomationEdge = Edge & {
+  label: string;
+};
+
+type AutomationFlow = {
+  id: string;
+  name: string;
+  description: string;
+  nodes: AutomationNode[];
+  edges: AutomationEdge[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Map node types to their components
+const nodeTypes: NodeTypes = {
   trigger: TriggerNode,
   action: ActionNode,
   outcome: OutcomeNode,
 };
 
-// Sample flow data
-const initialFlow: AutomationFlow = {
-  id: 'default-flow',
-  name: 'Default Flow',
-  description: 'A default automation flow',
-  nodes: [
-    {
-      id: 'trigger-1',
-      type: 'trigger',
-      subType: 'connectivity_issue',
-      position: { x: 250, y: 50 },
-      data: { label: 'Connectivity Issue', description: 'Triggered when SD-WAN connection is degraded' }
-    },
-    {
-      id: 'action-1',
-      type: 'action',
-      subType: 'restart_service',
-      position: { x: 250, y: 150 },
-      data: { label: 'Restart Service', description: 'Attempts to restart the connection service' }
-    },
-    {
-      id: 'outcome-1',
-      type: 'outcome',
-      subType: 'email',
-      position: { x: 250, y: 250 },
-      data: { label: 'Send Email', description: 'Sends notification email to admin' }
-    }
-  ],
-  edges: [
-    {
-      id: 'edge-trigger-action',
-      source: 'trigger-1',
-      target: 'action-1',
-      animated: true
-    },
-    {
-      id: 'edge-action-outcome',
-      source: 'action-1',
-      target: 'outcome-1',
-      animated: true
-    }
-  ],
-  enabled: true,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString()
-};
-
-// Transform flow for ReactFlow (making sure it's safe from undefined)
-const transformFlow = (flow: AutomationFlow) => {
-  // Safe conversion of nodes
+// Convert between our domain model and ReactFlow's model
+const transformFlow = (flow: AutomationFlow | null) => {
+  if (!flow) {
+    return { nodes: [], edges: [] };
+  }
+  
   const nodes = flow.nodes.map(node => ({
     id: node.id,
     type: node.type,
     position: node.position,
     data: {
-      ...node.data,
-      label: node.data?.label || node.subType || 'Unknown',
-      description: node.data?.description || ''
+      label: node.data.label,
+      description: node.data.description,
     },
   }));
-
-  // Safe conversion of edges
+  
   const edges = flow.edges.map(edge => ({
-    id: edge.id || `edge-${edge.source}-${edge.target}`,
+    id: edge.id,
     source: edge.source,
     target: edge.target,
+    label: edge.label,
     animated: edge.animated || false,
-    // Only add these properties if they exist
-    ...(edge.label && { label: edge.label }),
-    markerEnd: { type: MarkerType.ArrowClosed },
-    style: { stroke: '#888' }
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+    },
   }));
-
+  
   return { nodes, edges };
 };
 
-// Flow Editor Component
-const FlowEditor = ({ flow, onSave }: { flow: AutomationFlow, onSave: (flow: AutomationFlow) => void }) => {
+// Flow Editor component
+const FlowEditor = ({ flow, onSave }: { flow: AutomationFlow | null, onSave: (flow: AutomationFlow) => void }) => {
   const { nodes: initialNodes, edges: initialEdges } = transformFlow(flow);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [zoom, setZoom] = useState(0.5); // Default zoom at 50%
   
   const onConnect = useCallback((params: Connection) => {
     setEdges(eds => addEdge({
       ...params,
       animated: true,
-      style: { stroke: '#888' },
+      label: 'flow',
       markerEnd: {
         type: MarkerType.ArrowClosed,
       },
     }, eds));
   }, [setEdges]);
-
+  
   const handleSave = () => {
+    if (!flow) return;
+    
+    // Here we create a new flow object with the updated nodes and edges
     const updatedFlow: AutomationFlow = {
       ...flow,
-      nodes: nodes.map(n => {
-        const originalNode = flow.nodes.find(on => on.id === n.id);
-        return {
-          id: n.id,
-          type: n.type as 'trigger' | 'action' | 'outcome',
-          subType: originalNode?.subType || ('unknown' as TriggerType | ActionType | OutcomeType), // Cast to correct union type
-          position: n.position,
-          data: n.data
-        };
-      }),
+      nodes: nodes.map(n => ({
+        id: n.id,
+        type: n.type as 'trigger' | 'action' | 'outcome',
+        subType: (n.type === 'trigger' ? 'event' : 
+                 n.type === 'action' ? 'script' : 
+                 'success') as TriggerType | ActionType | OutcomeType,
+        position: n.position,
+        data: {
+          label: n.data.label,
+          description: n.data.description
+        }
+      })) as AutomationNode[],
       edges: edges.map(e => ({
         id: e.id,
         source: e.source,
         target: e.target,
+        label: e.label || 'flow',
         animated: e.animated || false,
-        label: typeof e.label === 'string' ? e.label : undefined
       })),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     
     onSave(updatedFlow);
-    toast.success("Flow saved successfully");
   };
 
+  // Create a reference to the flow instance
+  const flowRef = useRef<any>(null);
+
   return (
-    <div className="w-full h-[600px] border rounded-md">
+    <div className="h-[500px] border rounded-md">
       <ReactFlow
+        ref={flowRef}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
-        defaultZoom={0.5}
-        minZoom={0.2}
-        maxZoom={2}
         fitView
         className="automation-flow-editor"
+        // Use defaultViewport instead of defaultZoom
+        defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
+        minZoom={0.2}
+        maxZoom={2}
       >
         <MiniMap 
           nodeClassName={(node) => `minimap-node minimap-node-${node.type}`}
@@ -205,85 +210,230 @@ const FlowEditor = ({ flow, onSave }: { flow: AutomationFlow, onSave: (flow: Aut
         <Background />
       </ReactFlow>
       
-      <div className="p-2 border-t flex justify-end">
-        <Button onClick={handleSave} className="flex items-center gap-1">
-          <Save className="h-4 w-4" /> Save Flow
+      <div className="absolute bottom-4 right-4">
+        <Button onClick={handleSave} className="flex items-center gap-2">
+          <Save className="w-4 h-4" /> Save Flow
         </Button>
       </div>
     </div>
   );
 };
 
-// Trigger Options
-const triggerOptions: { value: TriggerType; label: string }[] = [
-  { value: 'log_entry', label: 'Log Entry' },
-  { value: 'connectivity_issue', label: 'Connectivity Issue' },
-  { value: 'packet_loss', label: 'Packet Loss' },
-  { value: 'storage_issue', label: 'Storage Issue' },
-  { value: 'cpu_threshold', label: 'CPU Threshold' },
-  { value: 'memory_threshold', label: 'Memory Threshold' },
-  { value: 'service_down', label: 'Service Down' },
-  { value: 'scheduled', label: 'Scheduled' }
+// Mock data for automation flows
+const mockFlows: AutomationFlow[] = [
+  {
+    id: '1',
+    name: 'New Region Provisioning',
+    description: 'Automatically provisions resources when a new region is created',
+    nodes: [
+      {
+        id: 'node-1',
+        type: 'trigger',
+        subType: 'event',
+        position: { x: 250, y: 100 },
+        data: {
+          label: 'Region Created',
+          description: 'Triggered when a new region is created'
+        }
+      },
+      {
+        id: 'node-2',
+        type: 'action',
+        subType: 'provision',
+        position: { x: 250, y: 200 },
+        data: {
+          label: 'Provision SDWAN',
+          description: 'Provisions SD-WAN connectivity'
+        }
+      },
+      {
+        id: 'node-3',
+        type: 'action',
+        subType: 'configure',
+        position: { x: 250, y: 300 },
+        data: {
+          label: 'Configure Network',
+          description: 'Sets up base network configuration'
+        }
+      },
+      {
+        id: 'node-4',
+        type: 'outcome',
+        subType: 'success',
+        position: { x: 250, y: 400 },
+        data: {
+          label: 'Completion',
+          description: 'Region provisioning completed'
+        }
+      },
+    ],
+    edges: [
+      {
+        id: 'edge-1-2',
+        source: 'node-1',
+        target: 'node-2',
+        label: 'trigger',
+        animated: true,
+      },
+      {
+        id: 'edge-2-3',
+        source: 'node-2',
+        target: 'node-3',
+        label: 'next',
+        animated: true,
+      },
+      {
+        id: 'edge-3-4',
+        source: 'node-3',
+        target: 'node-4',
+        label: 'complete',
+        animated: true,
+      },
+    ],
+    createdAt: '2023-09-15T10:30:00Z',
+    updatedAt: '2023-09-15T12:45:00Z',
+  },
+  {
+    id: '2',
+    name: 'Network Policy Enforcement',
+    description: 'Enforces network policies across regions',
+    nodes: [
+      {
+        id: 'node-1',
+        type: 'trigger',
+        subType: 'scheduled',
+        position: { x: 250, y: 100 },
+        data: {
+          label: 'Policy Schedule',
+          description: 'Runs every 6 hours'
+        }
+      },
+      {
+        id: 'node-2',
+        type: 'action',
+        subType: 'script',
+        position: { x: 250, y: 200 },
+        data: {
+          label: 'Audit Compliance',
+          description: 'Check compliance with network policies'
+        }
+      },
+      {
+        id: 'node-3',
+        type: 'outcome',
+        subType: 'conditional',
+        position: { x: 250, y: 300 },
+        data: {
+          label: 'Evaluation',
+          description: 'Policy enforcement result'
+        }
+      },
+    ],
+    edges: [
+      {
+        id: 'edge-1-2',
+        source: 'node-1',
+        target: 'node-2',
+        label: 'run',
+        animated: true,
+      },
+      {
+        id: 'edge-2-3',
+        source: 'node-2',
+        target: 'node-3',
+        label: 'complete',
+        animated: true,
+      },
+    ],
+    createdAt: '2023-10-05T08:20:00Z',
+    updatedAt: '2023-10-06T15:30:00Z',
+  },
 ];
 
-// Action Options
-const actionOptions: { value: ActionType; label: string }[] = [
-  { value: 'alert', label: 'Alert' },
-  { value: 'restart_service', label: 'Restart Service' },
-  { value: 'run_script', label: 'Run Script' },
-  { value: 'scale_resources', label: 'Scale Resources' },
-  { value: 'switch_region', label: 'Switch Region' },
-  { value: 'enable_failover', label: 'Enable Failover' },
-  { value: 'update_policy', label: 'Update Policy' }
-];
-
-// Outcome Options
-const outcomeOptions: { value: OutcomeType; label: string }[] = [
-  { value: 'email', label: 'Send Email' },
-  { value: 'sms', label: 'Send SMS' },
-  { value: 'push_notification', label: 'Push Notification' },
-  { value: 'webhook', label: 'Webhook' },
-  { value: 'ticket', label: 'Create Ticket' },
-  { value: 'log_event', label: 'Log Event' }
-];
-
-// Main Component
 const AutomationBuilder = () => {
-  const [flows, setFlows] = useState<AutomationFlow[]>([initialFlow]);
-  const [selectedFlowId, setSelectedFlowId] = useState<string>(initialFlow.id);
-
-  const selectedFlow = flows.find(f => f.id === selectedFlowId) || flows[0];
-
-  const handleSaveFlow = (updatedFlow: AutomationFlow) => {
-    setFlows(currentFlows => 
-      currentFlows.map(flow => 
-        flow.id === updatedFlow.id ? updatedFlow : flow
-      )
-    );
+  const [flows, setFlows] = useState<AutomationFlow[]>(mockFlows);
+  const [selectedFlow, setSelectedFlow] = useState<AutomationFlow | null>(null);
+  const [isNewFlowDialogOpen, setIsNewFlowDialogOpen] = useState(false);
+  const [newFlowData, setNewFlowData] = useState({
+    name: '',
+    description: '',
+  });
+  
+  const handleFlowSelect = (flow: AutomationFlow) => {
+    setSelectedFlow(flow);
   };
-
-  const addNode = (type: 'trigger' | 'action' | 'outcome', subType: TriggerType | ActionType | OutcomeType) => {
-    const newNodeId = `${type}-${Date.now()}`;
-    const option = 
-      type === 'trigger' 
-        ? triggerOptions.find(o => o.value === subType) 
-        : type === 'action'
-          ? actionOptions.find(o => o.value === subType)
-          : outcomeOptions.find(o => o.value === subType);
+  
+  const handleSaveFlow = (updatedFlow: AutomationFlow) => {
+    const updatedFlows = flows.map(f => 
+      f.id === updatedFlow.id ? updatedFlow : f
+    );
+    setFlows(updatedFlows);
+    setSelectedFlow(updatedFlow);
+  };
+  
+  const handleCreateFlow = () => {
+    const newFlow: AutomationFlow = {
+      id: `flow-${Date.now()}`,
+      name: newFlowData.name,
+      description: newFlowData.description,
+      nodes: [
+        {
+          id: `node-${Date.now()}-1`,
+          type: 'trigger',
+          subType: 'event',
+          position: { x: 250, y: 100 },
+          data: {
+            label: 'Start',
+            description: 'Flow trigger point'
+          }
+        },
+      ],
+      edges: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
     
-    const label = option?.label || 'New Node';
+    setFlows([...flows, newFlow]);
+    setSelectedFlow(newFlow);
+    setIsNewFlowDialogOpen(false);
+    setNewFlowData({ name: '', description: '' });
+  };
+  
+  const addNode = (type: 'trigger' | 'action' | 'outcome') => {
+    if (!selectedFlow) return;
     
-    // Calculate position based on existing nodes
-    const existingNodes = selectedFlow.nodes.filter(n => n.type === type);
-    const baseY = type === 'trigger' ? 50 : type === 'action' ? 150 : 250;
-    const xOffset = existingNodes.length * 250 + 50;
+    // Define sensible defaults for different node types
+    let subType: TriggerType | ActionType | OutcomeType;
+    let label = '';
+    let description = '';
+    
+    switch (type) {
+      case 'trigger':
+        subType = 'event' as TriggerType;
+        label = 'New Trigger';
+        description = 'Flow starting point';
+        break;
+      case 'action':
+        subType = 'script' as ActionType;
+        label = 'New Action';
+        description = 'Performs an operation';
+        break;
+      case 'outcome':
+        subType = 'success' as OutcomeType;
+        label = 'New Outcome';
+        description = 'Flow result';
+        break;
+    }
     
     const newNode: AutomationNode = {
-      id: newNodeId,
+      id: `node-${Date.now()}`,
       type,
       subType,
-      position: { x: xOffset, y: baseY },
-      data: { label, description: `${label} description` }
+      position: { x: 250, y: 200 }, // We'll position it somewhere reasonable
+      data: {
+        label,
+        description
+      }
     };
     
     const updatedFlow = {
@@ -292,106 +442,117 @@ const AutomationBuilder = () => {
       updatedAt: new Date().toISOString()
     };
     
-    setFlows(currentFlows =>
-      currentFlows.map(flow => 
-        flow.id === selectedFlow.id ? updatedFlow : flow
-      )
-    );
-    
-    toast.success(`Added new ${type}: ${label}`);
-  };
-
-  // Run automation simulation
-  const runAutomation = () => {
-    toast.info("Running automation flow simulation...");
-    setTimeout(() => {
-      toast.success("Automation flow completed successfully");
-    }, 1500);
+    handleSaveFlow(updatedFlow);
   };
 
   return (
     <div className="space-y-6">
-      {/* Controls */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-wrap gap-4 items-end">
-            <div>
-              <Label htmlFor="add-trigger">Add Trigger</Label>
-              <div className="flex items-center gap-2 mt-1">
-                <Select onValueChange={(value) => addNode('trigger', value as TriggerType)}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select trigger" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {triggerOptions.map(option => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon">
-                  <Plus className="h-4 w-4" />
-                </Button>
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">Automation Builder</h2>
+          <p className="text-sm text-muted-foreground">
+            Create and manage automated workflows for regions
+          </p>
+        </div>
+        
+        <Button onClick={() => setIsNewFlowDialogOpen(true)} className="flex items-center gap-2">
+          <PlusCircle className="w-4 h-4" /> New Flow
+        </Button>
+      </div>
+      
+      {/* Automation Flows List */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {flows.map((flow) => (
+          <Card 
+            key={flow.id} 
+            className={`cursor-pointer hover:shadow transition-shadow ${selectedFlow?.id === flow.id ? 'border-primary' : ''}`}
+            onClick={() => handleFlowSelect(flow)}
+          >
+            <CardHeader className="pb-2">
+              <CardTitle>{flow.name}</CardTitle>
+              <CardDescription>{flow.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-between items-center text-sm">
+                <div>
+                  <span className="text-muted-foreground">Nodes:</span> {flow.nodes.length}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Updated:</span> {new Date(flow.updatedAt).toLocaleDateString()}
+                </div>
               </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      {/* Selected Flow Tools */}
+      {selectedFlow && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-xl font-semibold">{selectedFlow.name}</h3>
+              <p className="text-sm text-muted-foreground">{selectedFlow.description}</p>
             </div>
             
-            <div>
-              <Label htmlFor="add-action">Add Action</Label>
-              <div className="flex items-center gap-2 mt-1">
-                <Select onValueChange={(value) => addNode('action', value as ActionType)}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select action" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {actionOptions.map(option => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="add-outcome">Add Outcome</Label>
-              <div className="flex items-center gap-2 mt-1">
-                <Select onValueChange={(value) => addNode('outcome', value as OutcomeType)}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select outcome" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {outcomeOptions.map(option => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            
-            <div className="ml-auto">
-              <Button onClick={runAutomation} variant="default" className="flex items-center gap-1">
-                <Play className="h-4 w-4" /> Run Automation
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => addNode('trigger')}>
+                Add Trigger
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => addNode('action')}>
+                Add Action
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => addNode('outcome')}>
+                Add Outcome
+              </Button>
+              <Button variant="outline" size="sm">
+                <Play className="w-4 h-4 mr-1" /> Test
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          
+          {/* Flow Editor */}
+          <FlowEditor flow={selectedFlow} onSave={handleSaveFlow} />
+        </div>
+      )}
       
-      {/* Flow Editor */}
-      <FlowEditor flow={selectedFlow} onSave={handleSaveFlow} />
-
+      {/* New Flow Dialog */}
+      <Dialog open={isNewFlowDialogOpen} onOpenChange={setIsNewFlowDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Automation Flow</DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                value={newFlowData.name}
+                onChange={(e) => setNewFlowData({...newFlowData, name: e.target.value})}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={newFlowData.description}
+                onChange={(e) => setNewFlowData({...newFlowData, description: e.target.value})}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsNewFlowDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleCreateFlow}>Create</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
       {/* Add CSS for the flow editor */}
-      <style jsx global>{`
+      <style>
+        {`
         .automation-flow-editor .react-flow__node {
           width: auto;
           transform-origin: center center;
@@ -429,7 +590,8 @@ const AutomationBuilder = () => {
         .minimap-node-outcome {
           fill: #f97316 !important;
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
