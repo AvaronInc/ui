@@ -1,4 +1,5 @@
 
+import { MarkerType } from '@xyflow/react';
 import { AutomationFlow } from '@/types/automation-flow';
 
 export const mockAutomationFlows: AutomationFlow[] = [
@@ -37,7 +38,7 @@ export const mockAutomationFlows: AutomationFlow[] = [
         animated: true,
         style: { stroke: '#2563eb' },
         markerEnd: {
-          type: 'arrowclosed'
+          type: MarkerType.ArrowClosed
         }
       },
       {
@@ -47,7 +48,7 @@ export const mockAutomationFlows: AutomationFlow[] = [
         animated: true,
         style: { stroke: '#2563eb' },
         markerEnd: {
-          type: 'arrowclosed'
+          type: MarkerType.ArrowClosed
         }
       }
     ],

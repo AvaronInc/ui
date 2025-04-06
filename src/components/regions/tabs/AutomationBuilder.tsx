@@ -29,15 +29,15 @@ import { Label } from '@/components/ui/label';
 import { PlusCircle, Save, ZoomIn, ZoomOut } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { 
-  TriggerType, 
-  ActionType, 
-  OutcomeType, 
-  AutomationFlow, 
-  AutomationNode,
-  TriggerNode,
-  ActionNode,
-  OutcomeNode,
-  NodeType
+  type TriggerType, 
+  type ActionType, 
+  type OutcomeType, 
+  type AutomationFlow, 
+  type AutomationNode,
+  type TriggerNode,
+  type ActionNode,
+  type OutcomeNode,
+  type NodeType
 } from '@/types/automation-flow';
 
 type NodeData = {
@@ -211,7 +211,7 @@ const AutomationBuilder: React.FC = () => {
           subType: selectedSubType as TriggerType,
           position: { x, y },
           data: { label: nodeName, description: nodeDescription }
-        } as TriggerNode;
+        };
         break;
       case 'action':
         newNode = {
@@ -220,7 +220,7 @@ const AutomationBuilder: React.FC = () => {
           subType: selectedSubType as ActionType,
           position: { x, y },
           data: { label: nodeName, description: nodeDescription }
-        } as ActionNode;
+        };
         break;
       case 'outcome':
         newNode = {
@@ -229,7 +229,7 @@ const AutomationBuilder: React.FC = () => {
           subType: selectedSubType as OutcomeType,
           position: { x, y },
           data: { label: nodeName, description: nodeDescription }
-        } as OutcomeNode;
+        };
         break;
       default:
         return;
