@@ -30,7 +30,7 @@ import { AutomationNode, AutomationEdge, AutomationFlow, TriggerType, ActionType
 
 // Node components
 const TriggerNode = ({ data }: { data: any }) => (
-  <div className="px-4 py-2 rounded-md bg-blue-500 text-white w-[200px]">
+  <div className="px-4 py-2 rounded-md bg-blue-500 text-white w-[150px]">
     <div className="font-bold">{data.label}</div>
     <div className="text-xs opacity-80">{data.description || 'Trigger'}</div>
     <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-blue-700" />
@@ -38,7 +38,7 @@ const TriggerNode = ({ data }: { data: any }) => (
 );
 
 const ActionNode = ({ data }: { data: any }) => (
-  <div className="px-4 py-2 rounded-md bg-green-500 text-white w-[200px]">
+  <div className="px-4 py-2 rounded-md bg-green-500 text-white w-[150px]">
     <div className="font-bold">{data.label}</div>
     <div className="text-xs opacity-80">{data.description || 'Action'}</div>
     <Handle type="target" position={Position.Top} className="w-3 h-3 bg-green-700" />
@@ -47,7 +47,7 @@ const ActionNode = ({ data }: { data: any }) => (
 );
 
 const OutcomeNode = ({ data }: { data: any }) => (
-  <div className="px-4 py-2 rounded-md bg-orange-500 text-white w-[200px]">
+  <div className="px-4 py-2 rounded-md bg-orange-500 text-white w-[150px]">
     <div className="font-bold">{data.label}</div>
     <div className="text-xs opacity-80">{data.description || 'Outcome'}</div>
     <Handle type="target" position={Position.Top} className="w-3 h-3 bg-orange-700" />
@@ -142,6 +142,7 @@ const FlowEditor = ({ flow, onSave }: { flow: AutomationFlow, onSave: (flow: Aut
   const { nodes: initialNodes, edges: initialEdges } = transformFlow(flow);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [zoom, setZoom] = useState(0.5); // Default zoom at 50%
   
   const onConnect = useCallback((params: Connection) => {
     setEdges(eds => addEdge({
@@ -190,10 +191,17 @@ const FlowEditor = ({ flow, onSave }: { flow: AutomationFlow, onSave: (flow: Aut
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        defaultZoom={0.5}
+        minZoom={0.2}
+        maxZoom={2}
         fitView
+        className="automation-flow-editor"
       >
-        <MiniMap />
-        <Controls />
+        <MiniMap 
+          nodeClassName={(node) => `minimap-node minimap-node-${node.type}`}
+          className="bg-background border border-border rounded-sm shadow-md"
+        />
+        <Controls className="flow-controls bg-background border border-border rounded-sm shadow-md" />
         <Background />
       </ReactFlow>
       
@@ -381,6 +389,47 @@ const AutomationBuilder = () => {
       
       {/* Flow Editor */}
       <FlowEditor flow={selectedFlow} onSave={handleSaveFlow} />
+
+      {/* Add CSS for the flow editor */}
+      <style jsx global>{`
+        .automation-flow-editor .react-flow__node {
+          width: auto;
+          transform-origin: center center;
+          transition: none;
+        }
+        
+        .automation-flow-editor .react-flow__controls {
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .automation-flow-editor .react-flow__controls button {
+          background-color: #1A1F2C;
+          color: #fff;
+          border-color: #8E9196;
+        }
+        
+        .automation-flow-editor .react-flow__controls button:hover {
+          background-color: #222;
+        }
+        
+        .automation-flow-editor .react-flow__minimap {
+          background-color: #1A1F2C;
+          border: 1px solid #8E9196;
+        }
+        
+        /* Mini map node styles */
+        .minimap-node-trigger {
+          fill: #3b82f6 !important;
+        }
+        
+        .minimap-node-action {
+          fill: #10b981 !important;
+        }
+        
+        .minimap-node-outcome {
+          fill: #f97316 !important;
+        }
+      `}</style>
     </div>
   );
 };
