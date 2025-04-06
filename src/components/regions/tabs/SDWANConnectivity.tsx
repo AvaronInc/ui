@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
@@ -12,9 +11,10 @@ import { Label } from '@/components/ui/label';
 import { mockRegions, mockConnections } from '../data/mockData';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { RegionConnection } from '@/types/regions';
 
 const SDWANConnectivity = () => {
-  const [connections, setConnections] = useState(mockConnections);
+  const [connections, setConnections] = useState<RegionConnection[]>(mockConnections);
   const [isAddConnectionOpen, setIsAddConnectionOpen] = useState(false);
 
   // Get region name by ID
@@ -35,6 +35,26 @@ const SDWANConnectivity = () => {
       default:
         return '';
     }
+  };
+
+  // Function to refresh connections and fix issues
+  const handleRefreshConnections = () => {
+    // In a real app, this would trigger some API calls
+    // For demo, we'll pretend to fix the degraded connections
+    const updatedConnections = connections.map(conn => {
+      if (conn.status === 'degraded') {
+        // Ensure we're maintaining the correct status type
+        const newStatus: "active" | "degraded" | "down" = Math.random() > 0.3 ? 'active' : 'degraded';
+        return { 
+          ...conn, 
+          status: newStatus,
+          packetLoss: Math.random() * 0.5,
+          latency: conn.latency * 0.7
+        };
+      }
+      return conn;
+    });
+    setConnections(updatedConnections);
   };
 
   // Add new connection dialog
@@ -134,24 +154,6 @@ const SDWANConnectivity = () => {
     );
   };
 
-  // Function to refresh connections and fix issues
-  const handleRefreshConnections = () => {
-    // In a real app, this would trigger some API calls
-    // For demo, we'll pretend to fix the degraded connections
-    const updatedConnections = connections.map(conn => {
-      if (conn.status === 'degraded') {
-        return { 
-          ...conn, 
-          status: Math.random() > 0.3 ? 'active' : 'degraded',
-          packetLoss: Math.random() * 0.5,
-          latency: conn.latency * 0.7
-        };
-      }
-      return conn;
-    });
-    setConnections(updatedConnections);
-  };
-
   return (
     <div className="space-y-6">
       <AddConnectionDialog />
@@ -192,7 +194,7 @@ const SDWANConnectivity = () => {
 
       {/* Connection issues alert */}
       {connections.some(c => c.status !== 'active') && (
-        <Alert variant="warning">
+        <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Connection Issues Detected</AlertTitle>
           <AlertDescription>

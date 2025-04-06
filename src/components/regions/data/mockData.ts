@@ -1,20 +1,20 @@
 
 import { Region, Zone, RegionConnection, NetworkPolicy, AutomationFlow } from '@/types/regions';
 
-// Mock Regions
+// Mock regions data
 export const mockRegions: Region[] = [
   {
-    id: '1',
+    id: 'reg-01',
     name: 'North America East',
     location: {
       lat: 40.7128,
       lng: -74.0060,
-      address: 'New York, NY',
+      address: 'New York, NY, USA',
       country: 'USA'
     },
     status: 'active',
-    zones: ['1', '2', '3'],
-    provisionDate: '2024-01-10T00:00:00Z',
+    zones: ['zone-01', 'zone-02', 'zone-03'],
+    provisionDate: '2023-10-15',
     specs: {
       cores: 64,
       memory: 256,
@@ -24,22 +24,22 @@ export const mockRegions: Region[] = [
     metrics: {
       cpuUtilization: 42,
       memoryUtilization: 38,
-      networkUtilization: 45,
-      availability: 99.98
+      networkUtilization: 55,
+      availability: 99.99
     }
   },
   {
-    id: '2',
-    name: 'North America West',
+    id: 'reg-02',
+    name: 'Europe West',
     location: {
-      lat: 37.7749,
-      lng: -122.4194,
-      address: 'San Francisco, CA',
-      country: 'USA'
+      lat: 51.5074,
+      lng: -0.1278,
+      address: 'London, UK',
+      country: 'United Kingdom'
     },
     status: 'active',
-    zones: ['4', '5'],
-    provisionDate: '2024-01-15T00:00:00Z',
+    zones: ['zone-04', 'zone-05'],
+    provisionDate: '2023-11-22',
     specs: {
       cores: 48,
       memory: 192,
@@ -49,37 +49,12 @@ export const mockRegions: Region[] = [
     metrics: {
       cpuUtilization: 35,
       memoryUtilization: 42,
-      networkUtilization: 38,
-      availability: 99.95
+      networkUtilization: 48,
+      availability: 99.97
     }
   },
   {
-    id: '3',
-    name: 'Europe Central',
-    location: {
-      lat: 52.5200,
-      lng: 13.4050,
-      address: 'Berlin, Germany',
-      country: 'Germany'
-    },
-    status: 'degraded',
-    zones: ['6', '7'],
-    provisionDate: '2024-02-01T00:00:00Z',
-    specs: {
-      cores: 32,
-      memory: 128,
-      storage: 2000,
-      bandwidth: 5000
-    },
-    metrics: {
-      cpuUtilization: 68,
-      memoryUtilization: 75,
-      networkUtilization: 82,
-      availability: 98.75
-    }
-  },
-  {
-    id: '4',
+    id: 'reg-03',
     name: 'Asia Pacific',
     location: {
       lat: 35.6762,
@@ -87,318 +62,378 @@ export const mockRegions: Region[] = [
       address: 'Tokyo, Japan',
       country: 'Japan'
     },
-    status: 'active',
-    zones: ['8', '9'],
-    provisionDate: '2024-02-20T00:00:00Z',
+    status: 'degraded',
+    zones: ['zone-06', 'zone-07'],
+    provisionDate: '2024-01-05',
     specs: {
-      cores: 56,
-      memory: 224,
-      storage: 3500,
-      bandwidth: 9000
+      cores: 32,
+      memory: 128,
+      storage: 2000,
+      bandwidth: 5000
     },
     metrics: {
-      cpuUtilization: 45,
-      memoryUtilization: 48,
-      networkUtilization: 42,
-      availability: 99.92
+      cpuUtilization: 78,
+      memoryUtilization: 85,
+      networkUtilization: 72,
+      availability: 98.45
     }
   }
 ];
 
-// Mock Zones
+// Mock zones data
 export const mockZones: Zone[] = [
   {
-    id: '1',
-    name: 'NYC-A',
-    regionId: '1',
+    id: 'zone-01',
+    name: 'NAE Zone 1',
+    regionId: 'reg-01',
     status: 'active',
-    purpose: 'Application Hosting',
-    provisionDate: '2024-01-12T00:00:00Z',
+    purpose: 'General Computing',
+    provisionDate: '2023-10-20',
     specs: {
       cores: 24,
       memory: 96,
       storage: 1500
     },
     metrics: {
-      cpuUtilization: 48,
-      memoryUtilization: 42,
-      diskUtilization: 35,
+      cpuUtilization: 45,
+      memoryUtilization: 40,
+      diskUtilization: 38,
       activeServices: 12
     }
   },
   {
-    id: '2',
-    name: 'NYC-B',
-    regionId: '1',
+    id: 'zone-02',
+    name: 'NAE Zone 2',
+    regionId: 'reg-01',
     status: 'active',
-    purpose: 'Database Services',
-    provisionDate: '2024-01-14T00:00:00Z',
+    purpose: 'Database',
+    provisionDate: '2023-10-25',
     specs: {
-      cores: 32,
+      cores: 20,
       memory: 128,
       storage: 2000
     },
     metrics: {
-      cpuUtilization: 55,
-      memoryUtilization: 60,
-      diskUtilization: 48,
+      cpuUtilization: 38,
+      memoryUtilization: 45,
+      diskUtilization: 65,
       activeServices: 8
     }
   },
   {
-    id: '3',
-    name: 'NYC-C',
-    regionId: '1',
+    id: 'zone-03',
+    name: 'NAE Zone 3',
+    regionId: 'reg-01',
     status: 'maintenance',
-    purpose: 'Storage & Backup',
-    provisionDate: '2024-01-16T00:00:00Z',
+    purpose: 'AI/ML Workloads',
+    provisionDate: '2023-11-01',
     specs: {
-      cores: 16,
-      memory: 64,
-      storage: 5000
+      cores: 20,
+      memory: 32,
+      storage: 500
     },
     metrics: {
-      cpuUtilization: 15,
-      memoryUtilization: 22,
-      diskUtilization: 65,
-      activeServices: 4
+      cpuUtilization: 0,
+      memoryUtilization: 0,
+      diskUtilization: 22,
+      activeServices: 0
     }
   },
   {
-    id: '4',
-    name: 'SF-A',
-    regionId: '2',
+    id: 'zone-04',
+    name: 'EUW Zone 1',
+    regionId: 'reg-02',
     status: 'active',
-    purpose: 'Web Services',
-    provisionDate: '2024-01-18T00:00:00Z',
+    purpose: 'General Computing',
+    provisionDate: '2023-11-24',
     specs: {
       cores: 24,
       memory: 96,
-      storage: 1200
+      storage: 1500
     },
     metrics: {
-      cpuUtilization: 38,
-      memoryUtilization: 45,
-      diskUtilization: 30,
-      activeServices: 14
+      cpuUtilization: 35,
+      memoryUtilization: 42,
+      diskUtilization: 28,
+      activeServices: 15
     }
   },
   {
-    id: '5',
-    name: 'SF-B',
-    regionId: '2',
-    status: 'degraded',
-    purpose: 'Media Processing',
-    provisionDate: '2024-01-20T00:00:00Z',
+    id: 'zone-05',
+    name: 'EUW Zone 2',
+    regionId: 'reg-02',
+    status: 'active',
+    purpose: 'Content Delivery',
+    provisionDate: '2023-11-26',
     specs: {
-      cores: 28,
-      memory: 112,
-      storage: 1800
+      cores: 24,
+      memory: 96,
+      storage: 1500
     },
     metrics: {
-      cpuUtilization: 78,
-      memoryUtilization: 82,
-      diskUtilization: 65,
+      cpuUtilization: 52,
+      memoryUtilization: 48,
+      diskUtilization: 75,
+      activeServices: 18
+    }
+  },
+  {
+    id: 'zone-06',
+    name: 'APAC Zone 1',
+    regionId: 'reg-03',
+    status: 'degraded',
+    purpose: 'General Computing',
+    provisionDate: '2024-01-08',
+    specs: {
+      cores: 16,
+      memory: 64,
+      storage: 1000
+    },
+    metrics: {
+      cpuUtilization: 82,
+      memoryUtilization: 88,
+      diskUtilization: 72,
       activeServices: 10
+    }
+  },
+  {
+    id: 'zone-07',
+    name: 'APAC Zone 2',
+    regionId: 'reg-03',
+    status: 'active',
+    purpose: 'Backup & Storage',
+    provisionDate: '2024-01-10',
+    specs: {
+      cores: 16,
+      memory: 64,
+      storage: 1000
+    },
+    metrics: {
+      cpuUtilization: 25,
+      memoryUtilization: 30,
+      diskUtilization: 85,
+      activeServices: 5
     }
   }
 ];
 
-// Mock Region Connections
+// Mock connections data
 export const mockConnections: RegionConnection[] = [
   {
-    id: 'conn-1',
-    sourceRegionId: '1',
-    targetRegionId: '2',
+    id: 'conn-01',
+    sourceRegionId: 'reg-01',
+    targetRegionId: 'reg-02',
     type: 'fiber',
     status: 'active',
     bandwidth: 5000,
-    latency: 42,
-    packetLoss: 0.05,
+    latency: 85,
+    packetLoss: 0.02,
     encryptionEnabled: true,
-    lastUpdated: '2024-03-15T12:30:00Z'
+    lastUpdated: '2024-03-25T08:15:30Z'
   },
   {
-    id: 'conn-2',
-    sourceRegionId: '1',
-    targetRegionId: '3',
+    id: 'conn-02',
+    sourceRegionId: 'reg-01',
+    targetRegionId: 'reg-03',
     type: 'fiber',
     status: 'degraded',
     bandwidth: 3000,
-    latency: 85,
-    packetLoss: 1.2,
+    latency: 145,
+    packetLoss: 1.25,
     encryptionEnabled: true,
-    lastUpdated: '2024-03-15T10:45:00Z'
+    lastUpdated: '2024-03-25T08:15:30Z'
   },
   {
-    id: 'conn-3',
-    sourceRegionId: '1',
-    targetRegionId: '4',
-    type: 'fiber',
-    status: 'active',
-    bandwidth: 2500,
-    latency: 120,
-    packetLoss: 0.08,
-    encryptionEnabled: true,
-    lastUpdated: '2024-03-15T11:20:00Z'
-  },
-  {
-    id: 'conn-4',
-    sourceRegionId: '2',
-    targetRegionId: '3',
-    type: 'fiber',
-    status: 'active',
-    bandwidth: 4000,
-    latency: 95,
-    packetLoss: 0.1,
-    encryptionEnabled: true,
-    lastUpdated: '2024-03-15T09:15:00Z'
-  },
-  {
-    id: 'conn-5',
-    sourceRegionId: '2',
-    targetRegionId: '4',
+    id: 'conn-03',
+    sourceRegionId: 'reg-02',
+    targetRegionId: 'reg-03',
     type: 'satellite',
     status: 'active',
-    bandwidth: 1500,
-    latency: 180,
-    packetLoss: 0.9,
-    encryptionEnabled: true,
-    lastUpdated: '2024-03-15T14:10:00Z'
-  },
-  {
-    id: 'conn-6',
-    sourceRegionId: '3',
-    targetRegionId: '4',
-    type: 'fiber',
-    status: 'down',
-    bandwidth: 0,
-    latency: 500,
-    packetLoss: 100,
+    bandwidth: 1000,
+    latency: 220,
+    packetLoss: 0.08,
     encryptionEnabled: false,
-    lastUpdated: '2024-03-15T08:45:00Z'
+    lastUpdated: '2024-03-25T08:15:30Z'
   }
 ];
 
-// Mock Network Policies
+// Mock network policies
 export const mockPolicies: NetworkPolicy[] = [
   {
-    id: 'pol-1',
-    name: 'Database Replication',
-    description: 'Allow database replication between NA East and NA West',
-    sourceRegionId: '1',
-    targetRegionId: '2',
+    id: 'policy-01',
+    name: 'Secure Database Access',
+    description: 'Allow secure database access between regions',
+    sourceRegionId: 'reg-01',
+    targetRegionId: 'reg-02',
     direction: 'bidirectional',
-    priority: 10,
+    priority: 1,
     rules: [
-      {
-        protocol: 'tcp',
-        destinationPort: '5432',
-        action: 'allow'
-      },
-      {
-        protocol: 'tcp',
-        destinationPort: '1433',
-        action: 'allow'
-      }
+      { protocol: 'tcp', destinationPort: '3306', action: 'allow' },
+      { protocol: 'tcp', destinationPort: '5432', action: 'allow' },
+      { protocol: 'tcp', destinationPort: '27017', action: 'allow' }
     ],
     enabled: true,
-    createdAt: '2024-03-01T00:00:00Z',
-    updatedAt: '2024-03-05T00:00:00Z'
+    createdAt: '2024-02-15T10:30:00Z',
+    updatedAt: '2024-03-01T14:45:22Z'
   },
   {
-    id: 'pol-2',
-    name: 'Web Traffic',
-    description: 'Allow HTTP/HTTPS traffic between all regions',
-    sourceRegionId: '1',
-    targetRegionId: '3',
+    id: 'policy-02',
+    name: 'Web Services',
+    description: 'Allow web traffic between regions',
+    sourceRegionId: 'reg-01',
+    targetRegionId: 'reg-03',
     direction: 'east-west',
-    priority: 20,
+    priority: 2,
     rules: [
-      {
-        protocol: 'tcp',
-        destinationPort: '80',
-        action: 'allow'
-      },
-      {
-        protocol: 'tcp',
-        destinationPort: '443',
-        action: 'allow'
-      }
+      { protocol: 'tcp', destinationPort: '80', action: 'allow' },
+      { protocol: 'tcp', destinationPort: '443', action: 'allow' }
     ],
     enabled: true,
-    createdAt: '2024-03-02T00:00:00Z',
-    updatedAt: '2024-03-02T00:00:00Z'
+    createdAt: '2024-02-18T09:15:00Z',
+    updatedAt: '2024-02-18T09:15:00Z'
   },
   {
-    id: 'pol-3',
-    name: 'Backup Traffic',
-    description: 'Allow backup data transfer between NA East and Asia Pacific',
-    sourceRegionId: '1',
-    targetRegionId: '4',
-    direction: 'east-west',
-    priority: 15,
+    id: 'policy-03',
+    name: 'Monitoring & Metrics',
+    description: 'Allow monitoring traffic',
+    sourceRegionId: 'reg-02',
+    targetRegionId: 'reg-03',
+    direction: 'bidirectional',
+    priority: 3,
     rules: [
-      {
-        protocol: 'tcp',
-        destinationPort: '8080',
-        action: 'allow'
-      }
+      { protocol: 'tcp', destinationPort: '9090-9100', action: 'allow' },
+      { protocol: 'udp', destinationPort: '9125', action: 'allow' }
+    ],
+    enabled: true,
+    createdAt: '2024-02-20T11:45:00Z',
+    updatedAt: '2024-03-10T16:22:45Z'
+  },
+  {
+    id: 'policy-04',
+    name: 'Block Suspicious Traffic',
+    description: 'Block potentially malicious traffic',
+    sourceRegionId: 'reg-03',
+    targetRegionId: 'reg-01',
+    direction: 'east-west',
+    priority: 1,
+    rules: [
+      { protocol: 'any', action: 'deny' }
     ],
     enabled: false,
-    createdAt: '2024-03-10T00:00:00Z',
-    updatedAt: '2024-03-12T00:00:00Z'
+    createdAt: '2024-03-05T13:20:00Z',
+    updatedAt: '2024-03-15T09:10:18Z'
   }
 ];
 
-// Mock Automation Flows
+// Mock automation flows data
 export const mockAutomationFlows: AutomationFlow[] = [
   {
-    id: 'flow-1',
-    name: 'Service Recovery',
-    description: 'Automatically recover services when they go down',
+    id: 'flow-01',
+    name: 'Network Degradation Response',
+    description: 'Automatically respond to network degradation events',
     nodes: [
       {
         id: 'trigger-1',
         type: 'trigger',
-        subType: 'service_down',
-        position: { x: 100, y: 200 },
+        subType: 'connectivity_issue',
+        position: { x: 100, y: 150 },
         data: {
-          service: 'web-server',
-          threshold: 60, // seconds
-          consecutive: 3 // failures
+          threshold: '5 minutes',
+          severity: 'high'
         }
       },
       {
         id: 'action-1',
         type: 'action',
         subType: 'restart_service',
-        position: { x: 300, y: 200 },
+        position: { x: 350, y: 100 },
         data: {
-          service: 'web-server',
-          timeout: 30 // seconds
+          service: 'sd-wan-controller',
+          timeout: '30s'
+        }
+      },
+      {
+        id: 'action-2',
+        type: 'action',
+        subType: 'switch_region',
+        position: { x: 350, y: 200 },
+        data: {
+          targetRegion: 'backup',
+          gracePeriod: '5m'
         }
       },
       {
         id: 'outcome-1',
         type: 'outcome',
         subType: 'email',
-        position: { x: 500, y: 150 },
+        position: { x: 600, y: 150 },
         data: {
-          recipient: 'admin@example.com',
-          subject: 'Service Recovery Attempted',
-          template: 'service_recovery'
+          recipients: 'operations@example.com',
+          subject: 'Network Degradation Incident'
+        }
+      }
+    ],
+    edges: [
+      {
+        id: 'edge-1',
+        source: 'trigger-1',
+        target: 'action-1',
+        animated: true
+      },
+      {
+        id: 'edge-2',
+        source: 'trigger-1',
+        target: 'action-2',
+        animated: true
+      },
+      {
+        id: 'edge-3',
+        source: 'action-1',
+        target: 'outcome-1'
+      },
+      {
+        id: 'edge-4',
+        source: 'action-2',
+        target: 'outcome-1'
+      }
+    ],
+    enabled: true,
+    createdAt: '2024-02-10T09:00:00Z',
+    updatedAt: '2024-03-15T14:30:00Z'
+  },
+  {
+    id: 'flow-02',
+    name: 'CPU Threshold Alert',
+    description: 'Send alerts when CPU usage exceeds threshold',
+    nodes: [
+      {
+        id: 'trigger-1',
+        type: 'trigger',
+        subType: 'cpu_threshold',
+        position: { x: 100, y: 150 },
+        data: {
+          threshold: '85%',
+          duration: '5m'
         }
       },
       {
-        id: 'outcome-2',
-        type: 'outcome',
-        subType: 'ticket',
-        position: { x: 500, y: 250 },
+        id: 'action-1',
+        type: 'action',
+        subType: 'scale_resources',
+        position: { x: 350, y: 150 },
         data: {
-          priority: 'high',
-          assignee: 'operations',
-          title: 'Service Recovery Report'
+          scaleFactor: '2x',
+          resource: 'cpu'
+        }
+      },
+      {
+        id: 'outcome-1',
+        type: 'outcome',
+        subType: 'push_notification',
+        position: { x: 600, y: 150 },
+        data: {
+          channel: 'operations',
+          priority: 'high'
         }
       }
     ],
@@ -412,43 +447,56 @@ export const mockAutomationFlows: AutomationFlow[] = [
       {
         id: 'edge-2',
         source: 'action-1',
-        target: 'outcome-1',
-        animated: true
-      },
-      {
-        id: 'edge-3',
-        source: 'action-1',
-        target: 'outcome-2',
-        animated: true
+        target: 'outcome-1'
       }
     ],
-    enabled: true,
-    createdAt: '2024-03-01T00:00:00Z',
-    updatedAt: '2024-03-05T00:00:00Z'
+    enabled: false,
+    createdAt: '2024-02-15T11:20:00Z',
+    updatedAt: '2024-02-16T09:45:00Z'
   },
   {
-    id: 'flow-2',
-    name: 'Packet Loss Alert',
-    description: 'Notify when packet loss exceeds threshold',
+    id: 'flow-03',
+    name: 'Storage Unavailable Response',
+    description: 'Handle storage unavailability events',
     nodes: [
       {
         id: 'trigger-1',
         type: 'trigger',
-        subType: 'packet_loss',
-        position: { x: 100, y: 200 },
+        subType: 'storage_issue',
+        position: { x: 100, y: 150 },
         data: {
-          threshold: 2.5, // percentage
-          duration: 300 // seconds
+          storageType: 'primary',
+          threshold: '10m'
+        }
+      },
+      {
+        id: 'action-1',
+        type: 'action',
+        subType: 'enable_failover',
+        position: { x: 350, y: 150 },
+        data: {
+          target: 'backup-storage',
+          mode: 'read-write'
         }
       },
       {
         id: 'outcome-1',
         type: 'outcome',
         subType: 'sms',
-        position: { x: 300, y: 200 },
+        position: { x: 600, y: 100 },
         data: {
-          recipient: '+1234567890',
-          message: 'High packet loss detected!'
+          recipients: '+1234567890',
+          message: 'Storage system failover activated'
+        }
+      },
+      {
+        id: 'outcome-2',
+        type: 'outcome',
+        subType: 'ticket',
+        position: { x: 600, y: 200 },
+        data: {
+          priority: 'urgent',
+          assignee: 'storage-team'
         }
       }
     ],
@@ -456,12 +504,22 @@ export const mockAutomationFlows: AutomationFlow[] = [
       {
         id: 'edge-1',
         source: 'trigger-1',
-        target: 'outcome-1',
+        target: 'action-1',
         animated: true
+      },
+      {
+        id: 'edge-2',
+        source: 'action-1',
+        target: 'outcome-1'
+      },
+      {
+        id: 'edge-3',
+        source: 'action-1',
+        target: 'outcome-2'
       }
     ],
     enabled: true,
-    createdAt: '2024-03-08T00:00:00Z',
-    updatedAt: '2024-03-08T00:00:00Z'
+    createdAt: '2024-03-01T15:30:00Z',
+    updatedAt: '2024-03-01T15:30:00Z'
   }
 ];

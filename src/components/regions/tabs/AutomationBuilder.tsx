@@ -6,7 +6,8 @@ import { Plus, Save, Play, Pause } from 'lucide-react';
 import { mockAutomationFlows } from '../data/mockData';
 import { AutomationFlow, AutomationNode, AutomationEdge } from '@/types/regions';
 
-import ReactFlow, {
+import {
+  ReactFlow,
   Controls,
   Background,
   MiniMap,
