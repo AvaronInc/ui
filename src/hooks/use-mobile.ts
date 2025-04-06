@@ -23,14 +23,23 @@ export const useIsMobile = (breakpoint: number = 768): boolean => {
     // Check on mount
     checkMobile();
 
-    // Add resize listener
-    window.addEventListener('resize', checkMobile);
+    // Add resize listener with debounce for better performance
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(checkMobile, 100);
+    };
+    
+    window.addEventListener('resize', handleResize);
 
     // Remove listener on cleanup
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
     };
   }, [breakpoint]);
 
   return isMobile;
 };
+
+export default useIsMobile;
