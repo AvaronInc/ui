@@ -22,6 +22,8 @@ import {
   Connection,
   XYPosition,
   Node,
+  Position,
+  Handle,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { AutomationNode, AutomationEdge, AutomationFlow, TriggerType, ActionType, OutcomeType } from '@/types/regions';
@@ -31,7 +33,7 @@ const TriggerNode = ({ data }: { data: any }) => (
   <div className="px-4 py-2 rounded-md bg-blue-500 text-white w-[200px]">
     <div className="font-bold">{data.label}</div>
     <div className="text-xs opacity-80">{data.description || 'Trigger'}</div>
-    <Handle type="source" position="bottom" className="w-3 h-3 bg-blue-700" />
+    <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-blue-700" />
   </div>
 );
 
@@ -39,8 +41,8 @@ const ActionNode = ({ data }: { data: any }) => (
   <div className="px-4 py-2 rounded-md bg-green-500 text-white w-[200px]">
     <div className="font-bold">{data.label}</div>
     <div className="text-xs opacity-80">{data.description || 'Action'}</div>
-    <Handle type="target" position="top" className="w-3 h-3 bg-green-700" />
-    <Handle type="source" position="bottom" className="w-3 h-3 bg-green-700" />
+    <Handle type="target" position={Position.Top} className="w-3 h-3 bg-green-700" />
+    <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-700" />
   </div>
 );
 
@@ -48,12 +50,9 @@ const OutcomeNode = ({ data }: { data: any }) => (
   <div className="px-4 py-2 rounded-md bg-orange-500 text-white w-[200px]">
     <div className="font-bold">{data.label}</div>
     <div className="text-xs opacity-80">{data.description || 'Outcome'}</div>
-    <Handle type="target" position="top" className="w-3 h-3 bg-orange-700" />
+    <Handle type="target" position={Position.Top} className="w-3 h-3 bg-orange-700" />
   </div>
 );
-
-// Import Handle component at the top
-import { Handle } from '@xyflow/react';
 
 // Define node types
 const nodeTypes = {
@@ -156,14 +155,14 @@ const FlowEditor = ({ flow, onSave }: { flow: AutomationFlow, onSave: (flow: Aut
   }, [setEdges]);
 
   const handleSave = () => {
-    const updatedFlow = {
+    const updatedFlow: AutomationFlow = {
       ...flow,
       nodes: nodes.map(n => {
         const originalNode = flow.nodes.find(on => on.id === n.id);
         return {
           id: n.id,
           type: n.type as 'trigger' | 'action' | 'outcome',
-          subType: originalNode?.subType || 'unknown',
+          subType: originalNode?.subType || ('unknown' as TriggerType | ActionType | OutcomeType), // Cast to correct union type
           position: n.position,
           data: n.data
         };
@@ -274,7 +273,7 @@ const AutomationBuilder = () => {
     const newNode: AutomationNode = {
       id: newNodeId,
       type,
-      subType: subType as any,
+      subType,
       position: { x: xOffset, y: baseY },
       data: { label, description: `${label} description` }
     };
