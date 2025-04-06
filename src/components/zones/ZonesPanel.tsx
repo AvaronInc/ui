@@ -7,6 +7,7 @@ import ZoneInsights from './sidebar/ZoneInsights';
 import ZoneNestvault from './tabs/ZoneNestvault';
 import ZoneOverview from './tabs/ZoneOverview';
 import ZoneServices from './tabs/ZoneServices';
+import ZoneAutomationBuilder from './tabs/ZoneAutomationBuilder';
 import { Zone } from './types';
 import { mockZones } from './mockData';
 
@@ -123,7 +124,7 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="ai">AI Profile</TabsTrigger>
           <TabsTrigger value="nestvault">NestVault</TabsTrigger>
-          <TabsTrigger value="policies">Policies</TabsTrigger>
+          <TabsTrigger value="automation">Automation</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -150,8 +151,8 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
           <ZoneNestvault zone={zone} />
         </TabsContent>
         
-        <TabsContent value="policies" className="space-y-4">
-          <p>Zone-specific policies would appear here.</p>
+        <TabsContent value="automation" className="space-y-4">
+          <ZoneAutomationBuilder zone={zone} />
         </TabsContent>
       </Tabs>
     </div>
