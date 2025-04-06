@@ -52,6 +52,7 @@ import SystemConfiguration from "./pages/SystemConfiguration";
 import Zones from "./pages/Zones";
 import PartnerPortal from "./pages/PartnerPortal";
 import DeploymentTesting from "./pages/DeploymentTesting";
+import Regions from "./pages/Regions";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,6 +85,7 @@ const App = () => (
                 <Route path="/nest" element={<ProtectedRoute><Nest /></ProtectedRoute>} />
                 <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />
                 <Route path="/zones" element={<ProtectedRoute adminOnly><Zones /></ProtectedRoute>} />
+                <Route path="/regions" element={<ProtectedRoute><Regions /></ProtectedRoute>} />
                 <Route path="/quantum-encryption" element={<ProtectedRoute><QuantumEncryption /></ProtectedRoute>} />
                 <Route path="/deployment-testing" element={<ProtectedRoute><DeploymentTesting /></ProtectedRoute>} />
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
