@@ -18,7 +18,9 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
-  MarkerType
+  MarkerType,
+  Handle,
+  Position
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -34,6 +36,12 @@ const TriggerNode = ({ data }: { data: any }) => (
         </div>
       ))}
     </div>
+    <Handle 
+      type="source" 
+      position={Position.Bottom} 
+      id="trigger-out" 
+      style={{ background: '#4299e1', width: '10px', height: '10px', bottom: '-6px' }}
+    />
   </div>
 );
 
@@ -48,6 +56,18 @@ const ActionNode = ({ data }: { data: any }) => (
         </div>
       ))}
     </div>
+    <Handle 
+      type="target" 
+      position={Position.Top} 
+      id="action-in" 
+      style={{ background: '#9f7aea', width: '10px', height: '10px', top: '-6px' }}
+    />
+    <Handle 
+      type="source" 
+      position={Position.Bottom} 
+      id="action-out" 
+      style={{ background: '#9f7aea', width: '10px', height: '10px', bottom: '-6px' }}
+    />
   </div>
 );
 
@@ -62,6 +82,12 @@ const OutcomeNode = ({ data }: { data: any }) => (
         </div>
       ))}
     </div>
+    <Handle 
+      type="target" 
+      position={Position.Top} 
+      id="outcome-in" 
+      style={{ background: '#48bb78', width: '10px', height: '10px', top: '-6px' }}
+    />
   </div>
 );
 
@@ -82,6 +108,8 @@ const transformFlow = (flow: AutomationFlow): { nodes: Node[], edges: Edge[] } =
       label: node.subType.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
       properties: node.data
     },
+    draggable: true,
+    connectable: true,
   }));
 
   // Map edges
@@ -101,15 +129,40 @@ const transformFlow = (flow: AutomationFlow): { nodes: Node[], edges: Edge[] } =
 };
 
 // Flow Editor component
-const FlowEditor = ({ initialFlow }: { initialFlow: AutomationFlow }) => {
+const FlowEditor = ({ initialFlow, onFlowChange }: { initialFlow: AutomationFlow, onFlowChange?: (nodes: Node[], edges: Edge[]) => void }) => {
   const { nodes: initialNodes, edges: initialEdges } = transformFlow(initialFlow);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    (params: Connection) => {
+      // Create a new edge with a unique ID
+      const newEdge = {
+        ...params,
+        id: `edge-${Date.now()}`,
+        animated: true,
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+        },
+        style: { stroke: '#9b87f5' }
+      };
+      
+      setEdges((eds) => addEdge(newEdge, eds));
+      
+      // Notify parent component of changes if callback provided
+      if (onFlowChange) {
+        onFlowChange(nodes, [...edges, newEdge]);
+      }
+    },
+    [setEdges, nodes, edges, onFlowChange]
   );
+
+  // Update parent component when nodes change
+  React.useEffect(() => {
+    if (onFlowChange) {
+      onFlowChange(nodes, edges);
+    }
+  }, [nodes, edges, onFlowChange]);
 
   return (
     <div style={{ height: 500 }}>
@@ -121,6 +174,15 @@ const FlowEditor = ({ initialFlow }: { initialFlow: AutomationFlow }) => {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
+        snapToGrid
+        snapGrid={[15, 15]}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+          style: { stroke: '#9b87f5', strokeWidth: 2 },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+        }}
       >
         <Background />
         <Controls />
@@ -145,6 +207,88 @@ const AutomationBuilder = () => {
     if (selectedFlow && selectedFlow.id === id) {
       setSelectedFlow({ ...selectedFlow, enabled: !selectedFlow.enabled });
     }
+  };
+
+  // Handle flow changes (nodes and edges updates)
+  const handleFlowChange = (nodes: Node[], edges: Edge[]) => {
+    if (!selectedFlow) return;
+    
+    // Transform React Flow nodes back to our AutomationNode format
+    const updatedNodes = nodes.map(node => {
+      const originalNode = selectedFlow.nodes.find(n => n.id === node.id);
+      return {
+        ...originalNode!,
+        position: node.position,
+      };
+    });
+
+    // Transform React Flow edges back to our AutomationEdge format
+    const updatedEdges = edges.map(edge => {
+      const originalEdge = selectedFlow.edges.find(e => e.id === edge.id);
+      if (originalEdge) {
+        return {
+          ...originalEdge,
+          source: edge.source,
+          target: edge.target,
+        };
+      } else {
+        // This is a new edge
+        return {
+          id: edge.id,
+          source: edge.source!,
+          target: edge.target!,
+          animated: edge.animated || false,
+          label: edge.label,
+        };
+      }
+    });
+
+    const updatedFlow = {
+      ...selectedFlow,
+      nodes: updatedNodes,
+      edges: updatedEdges,
+    };
+
+    // Update the selected flow
+    setSelectedFlow(updatedFlow);
+    
+    // Update the flow in the flows array
+    const updatedFlows = flows.map(flow => 
+      flow.id === updatedFlow.id ? updatedFlow : flow
+    );
+    setFlows(updatedFlows);
+  };
+
+  // Add a new node to the flow
+  const addNode = (type: 'trigger' | 'action' | 'outcome') => {
+    if (!selectedFlow) return;
+
+    const newNode: AutomationNode = {
+      id: `${type}-${Date.now()}`,
+      type,
+      subType: type === 'trigger' ? 'log_entry' : 
+               type === 'action' ? 'alert' : 'email',
+      position: { 
+        x: Math.random() * 300, 
+        y: Math.random() * 300 
+      },
+      data: {
+        name: `New ${type}`,
+        description: `This is a new ${type} node`
+      }
+    };
+
+    const updatedFlow = {
+      ...selectedFlow,
+      nodes: [...selectedFlow.nodes, newNode]
+    };
+
+    setSelectedFlow(updatedFlow);
+    
+    const updatedFlows = flows.map(flow => 
+      flow.id === updatedFlow.id ? updatedFlow : flow
+    );
+    setFlows(updatedFlows);
   };
 
   return (
@@ -216,7 +360,29 @@ const AutomationBuilder = () => {
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline">Add Node</Button>
+              <div className="flex space-x-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => addNode('trigger')}
+                  size="sm"
+                >
+                  Add Trigger
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => addNode('action')}
+                  size="sm"
+                >
+                  Add Action
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => addNode('outcome')}
+                  size="sm"
+                >
+                  Add Outcome
+                </Button>
+              </div>
               <Button>
                 <Save className="h-4 w-4 mr-2" /> Save Flow
               </Button>
@@ -225,7 +391,10 @@ const AutomationBuilder = () => {
           <CardContent className="p-0 border-t">
             {selectedFlow ? (
               <ReactFlowProvider>
-                <FlowEditor initialFlow={selectedFlow} />
+                <FlowEditor 
+                  initialFlow={selectedFlow} 
+                  onFlowChange={handleFlowChange} 
+                />
               </ReactFlowProvider>
             ) : (
               <div className="flex items-center justify-center h-[500px] text-muted-foreground">
