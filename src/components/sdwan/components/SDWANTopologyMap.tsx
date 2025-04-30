@@ -298,6 +298,29 @@ const SDWANTopologyMap: React.FC<SDWANTopologyMapProps> = ({ onNodeClick }) => {
   });
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  fetch("/api/sdwan")
+    .then(r => r.json())
+    .then(nodes => nodes.map((nest, index) => {
+        const angle = (index / mockNestNodes.length) * 2 * Math.PI;
+        const radius = 200;
+        // Position nodes in a circle for a full mesh visualization
+        const x = 300 + radius * Math.cos(angle);
+        const y = 250 + radius * Math.sin(angle);
+        return {
+          id: nest.id,
+          type: 'sdwanNode',
+          position: { x, y },
+          data: {
+            label: nest.name,
+            status: nest.networkStatus,
+            node: nest,
+            onClick: () => handleNodeClick(nest)
+          }
+        };
+      })
+    )
+    .then(setNodes);
+
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const handleNodeClick = (node: NESTNode) => {
@@ -319,7 +342,7 @@ const SDWANTopologyMap: React.FC<SDWANTopologyMapProps> = ({ onNodeClick }) => {
   // Format uptime from seconds to human-readable
   const formatUptime = (seconds: number) => {
     if (seconds === 0) return 'Down';
-    
+
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const minutes = Math.floor(((seconds % 86400) % 3600) / 60);
