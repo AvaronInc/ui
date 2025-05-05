@@ -8,7 +8,6 @@ import { RefreshCw, Search, Filter } from 'lucide-react';
 import { SystemService, SystemServiceType, SystemServiceStatus, SystemServiceHealth } from '@/types/services';
 import SystemServicesTable from '../components/system-services/SystemServicesTable';
 import SystemServiceDetail from '../components/system-services/SystemServiceDetail';
-import { mockSystemServices } from '../data/mockSystemServices';
 
 // Refresh interval options in seconds
 const REFRESH_INTERVALS = [
@@ -19,7 +18,7 @@ const REFRESH_INTERVALS = [
 ];
 
 const SystemServicesTab = () => {
-  const [services, setServices] = useState<SystemService[]>(mockSystemServices);
+  const [services, setServices] = useState<SystemService[]>([]);
   const [selectedService, setSelectedService] = useState<SystemService | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<SystemServiceType | 'all'>('all');
@@ -29,6 +28,13 @@ const SystemServicesTab = () => {
   const [groupByType, setGroupByType] = useState<boolean>(false);
   const [refreshInterval, setRefreshInterval] = useState<string>('0');
   const [refreshTimerId, setRefreshTimerId] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    fetch("/api/services")
+      .then(r => { if (r.ok) { return r.json() } else { throw r.statusText } })
+      .catch(r => (console.log(r), ([])))
+      .then(setServices)
+  }, []);
   
   // Handle selecting a service
   const handleSelectService = (service: SystemService) => {
@@ -137,7 +143,7 @@ const SystemServicesTab = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {/* Left Column - Service List */}
       <div className="lg:col-span-1 space-y-4">
         <Card>
@@ -270,7 +276,7 @@ const SystemServicesTab = () => {
       </div>
       
       {/* Right Column - Service Details */}
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-1">
         {selectedService ? (
           <SystemServiceDetail 
             service={selectedService} 
