@@ -1,37 +1,37 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getNestLocations } from '@/data/nestData';
+import { getVertexLocations } from '@/data/vertexData';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import NestMap from '@/components/nest/NestMap';
-import NestTable from '@/components/nest/NestTable';
-import NestDetailPanel from '@/components/nest/NestDetailPanel';
-import NestFilters from '@/components/nest/NestFilters';
-import { NestLocation, NestFilters as NestFilterTypes } from '@/types/nest';
+import VertexMap from '@/components/vertex/VertexMap';
+import VertexTable from '@/components/vertex/VertexTable';
+import VertexDetailPanel from '@/components/vertex/VertexDetailPanel';
+import VertexFilters from '@/components/vertex/VertexFilters';
+import { VertexLocation, VertexFilters as VertexFilterTypes } from '@/types/vertex';
 import PageTransition from '@/components/transitions/PageTransition';
-import { NestProvider } from '@/components/nest/NestContext';
+import { VertexProvider } from '@/components/vertex/VertexContext';
 import { Button } from '@/components/ui/button';
 import { Play, RefreshCw, Calendar, FileText } from 'lucide-react';
 import { toast } from 'sonner';
-import CyberNestInfoButton from '@/components/nest/CyberNestInfoButton';
+import AvaronVertexInfoButton from '@/components/vertex/AvaronVertexInfoButton';
 
-const Nest = () => {
-  const [selectedNestId, setSelectedNestId] = React.useState<string | null>(null);
-  const [filters, setFilters] = React.useState<NestFilterTypes>({
+const Vertex = () => {
+  const [selectedVertexId, setSelectedVertexId] = React.useState<string | null>(null);
+  const [filters, setFilters] = React.useState<VertexFilterTypes>({
     search: '',
     status: ['online', 'degraded', 'offline'],
     hardwareType: [],
     region: []
   });
 
-  const { data: nestLocations = [], isLoading, error } = useQuery({
-    queryKey: ['nestLocations'],
-    queryFn: getNestLocations
+  const { data: vertexLocations = [], isLoading, error } = useQuery({
+    queryKey: ['vertexLocations'],
+    queryFn: getVertexLocations
   });
 
-  const selectedNest = nestLocations.find(nest => nest.id === selectedNestId) || null;
+  const selectedVertex = vertexLocations.find(vertex => vertex.id === selectedVertexId) || null;
 
   const filteredLocations = React.useMemo(() => {
-    return nestLocations.filter(location => {
+    return vertexLocations.filter(location => {
       if (filters.search && !location.name.toLowerCase().includes(filters.search.toLowerCase()) && 
           !location.region.toLowerCase().includes(filters.search.toLowerCase())) {
         return false;
@@ -51,43 +51,43 @@ const Nest = () => {
       
       return true;
     });
-  }, [nestLocations, filters]);
+  }, [vertexLocations, filters]);
 
-  const handleNestSelect = (nestId: string) => {
-    setSelectedNestId(nestId);
+  const handleVertexSelect = (vertexId: string) => {
+    setSelectedVertexId(vertexId);
   };
 
   const handleRunHealthCheck = () => {
-    toast.info('Network health check initiated for all N.E.S.T. locations');
+    toast.info('Network health check initiated for all Vertex locations');
   };
 
   const handleGenerateReport = () => {
-    toast.success('N.E.S.T. network report generated successfully');
+    toast.success('Vertex network report generated successfully');
   };
 
   return (
     <PageTransition>
-      <NestProvider value={{ selectedNestId, setSelectedNestId }}>
+      <VertexProvider value={{ selectedVertexId, setSelectedVertexId }}>
         <DashboardLayout>
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">N.E.S.T. Management</h1>
+                <h1 className="text-3xl font-bold tracking-tight">Vertex Management</h1>
                 <div className="flex items-center mt-1 text-sm text-muted-foreground">
                   <span>Home</span>
                   <span className="mx-2">•</span>
-                  <span>N.E.S.T. Management</span>
-                  {selectedNest && (
+                  <span>Vertex Management</span>
+                  {selectedVertex && (
                     <>
                       <span className="mx-2">•</span>
-                      <span>{selectedNest.name}</span>
+                      <span>{selectedVertex.name}</span>
                     </>
                   )}
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-                <CyberNestInfoButton />
+                <AvaronVertexInfoButton />
                 <Button 
                   variant="outline" 
                   size="sm" 
@@ -114,38 +114,38 @@ const Nest = () => {
               </div>
             </div>
 
-            <NestFilters filters={filters} setFilters={setFilters} nestLocations={nestLocations} />
+            <VertexFilters filters={filters} setFilters={setFilters} vertexLocations={vertexLocations} />
 
             <div className="mt-6 border rounded-lg shadow-sm h-[500px] bg-background">
-              <NestMap 
+              <VertexMap 
                 locations={filteredLocations} 
-                selectedLocation={selectedNest}
-                onSelectLocation={handleNestSelect}
+                selectedLocation={selectedVertex}
+                onSelectLocation={handleVertexSelect}
                 isLoading={isLoading}
               />
             </div>
 
             <div className="mt-6">
-              <NestTable 
+              <VertexTable 
                 locations={filteredLocations}
-                selectedNestId={selectedNestId}
-                onSelectNest={handleNestSelect}
+                selectedVertexId={selectedVertexId}
+                onSelectVertex={handleVertexSelect}
                 isLoading={isLoading}
               />
             </div>
           </div>
 
-          {selectedNest && (
-            <NestDetailPanel 
-              nest={selectedNest}
-              open={!!selectedNestId}
-              onClose={() => setSelectedNestId(null)}
+          {selectedVertex && (
+            <VertexDetailPanel 
+              vertex={selectedVertex}
+              open={!!selectedVertexId}
+              onClose={() => setSelectedVertexId(null)}
             />
           )}
         </DashboardLayout>
-      </NestProvider>
+      </VertexProvider>
     </PageTransition>
   );
 };
 
-export default Nest;
+export default Vertex;

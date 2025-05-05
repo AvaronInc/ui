@@ -60,7 +60,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
     ai: <Brain className="h-4 w-4 text-amber-500" />,
     rmm: <Server className="h-4 w-4 text-cyan-500" />,
     mixtral: <Brain className="h-4 w-4 text-pink-500" />,
-    nestvault: <Database className="h-4 w-4 text-indigo-500" />
+    vertexvault: <Database className="h-4 w-4 text-indigo-500" />
   };
 
   const formatDate = (dateString: string) => {
@@ -156,7 +156,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                         <Label htmlFor={service} className="flex items-center cursor-pointer">
                           {icon}
                           <span className="ml-2 capitalize">
-                            {service === 'nestvault' ? 'Storage (NestVault)' : service}
+                            {service === 'vertexvault' ? 'Storage (VertexVault)' : service}
                           </span>
                         </Label>
                       </div>
@@ -240,7 +240,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                   <div>
                     <Label htmlFor="enable-storage" className="text-md font-semibold flex items-center">
                       <Database className="h-4 w-4 mr-2 text-indigo-500" />
-                      NestVault Storage Configuration
+                      VertexVault Storage Configuration
                     </Label>
                     <p className="text-sm text-muted-foreground">Enable dedicated storage isolation for this zone</p>
                   </div>
@@ -454,7 +454,7 @@ const ZonesOverview: React.FC<ZonesOverviewProps> = ({ zones, onZoneClick }) => 
                     >
                       {serviceIcons[service]}
                       <span className="ml-1 capitalize">
-                        {service === 'nestvault' ? 'Storage' : service}
+                        {service === 'vertexvault' ? 'Storage' : service}
                       </span>
                     </div>
                   ))}

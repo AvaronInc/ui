@@ -22,7 +22,7 @@ const CustomFailoverPoliciesSection: React.FC = () => {
             <TableRow>
               <TableHead className="font-medium">Policy Name</TableHead>
               <TableHead className="font-medium">Type</TableHead>
-              <TableHead className="font-medium">NEST Targets</TableHead>
+              <TableHead className="font-medium">Vertex Targets</TableHead>
               <TableHead className="font-medium">Status</TableHead>
               <TableHead className="font-medium">Last Triggered</TableHead>
               <TableHead className="font-medium">Connection Path</TableHead>

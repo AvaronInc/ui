@@ -18,7 +18,7 @@ const AdvancedConfigForm: React.FC = () => {
       portMappings: '',
       volumeMounts: '',
       networkMode: 'bridge',
-      nestVaultBucket: 'none',
+      vertexVaultBucket: 'none',
     },
   });
 

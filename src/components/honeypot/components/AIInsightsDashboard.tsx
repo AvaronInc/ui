@@ -23,7 +23,7 @@ export const AIInsightsDashboard: React.FC = () => {
               <div>
                 <h4 className="font-medium">Emerging SQL Injection Pattern Detected</h4>
                 <p className="text-sm text-muted-foreground mt-1">
-                  The AI has identified a new SQL injection pattern targeting the web server honeypot that bypasses standard WAF rules. This pattern uses a novel payload structure with nested comments.
+                  The AI has identified a new SQL injection pattern targeting the web server honeypot that bypasses standard WAF rules. This pattern uses a novel payload structure with vertexed comments.
                 </p>
                 <div className="mt-2 text-sm font-mono bg-muted p-2 rounded">
                   Pattern: <code>/*!50000 SELECT*//**//*!50000 1*/</code>

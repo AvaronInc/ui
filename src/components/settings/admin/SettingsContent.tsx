@@ -7,7 +7,7 @@ import UserAccessSettings from '@/components/settings/UserAccessSettings';
 import WorkforceSettings from '@/components/settings/WorkforceSettings';
 import SecuritySettings from '@/components/settings/SecuritySettings';
 import NetworkSettings from '@/components/settings/NetworkSettings';
-import NestSettings from '@/components/settings/NestSettings';
+import VertexSettings from '@/components/settings/VertexSettings';
 import StorageSettings from '@/components/settings/StorageSettings';
 import LoggingSettings from '@/components/settings/LoggingSettings';
 import AISettings from '@/components/settings/ai';
@@ -36,8 +36,8 @@ const SettingsContent = ({ activeSection, sections }: SettingsContentProps) => {
         return <SecuritySettings />;
       case 'network':
         return <NetworkSettings />;
-      case 'nest':
-        return <NestSettings />;
+      case 'vertex':
+        return <VertexSettings />;
       case 'storage':
         return <StorageSettings />;
       case 'logging':

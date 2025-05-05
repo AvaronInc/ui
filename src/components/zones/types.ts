@@ -8,7 +8,7 @@ export type ServiceType =
   | 'ai' 
   | 'rmm' 
   | 'mixtral'
-  | 'nestvault';
+  | 'vertexvault';
 
 export type IsolationLevel = 
   | 'normal'

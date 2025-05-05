@@ -14,7 +14,7 @@ const AutomationIntegrations = () => {
         <div>
           <h2 className="text-2xl font-bold">Automation & Scripting Integrations</h2>
           <p className="text-muted-foreground">
-            Connect CyberNest with your automation platforms for streamlined operations
+            Connect Avaron Vertex with your automation platforms for streamlined operations
           </p>
         </div>
         <Button onClick={() => setOpenDialog(true)}>

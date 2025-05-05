@@ -45,7 +45,7 @@ const NewDealForm: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
     { id: 'enterprise', name: 'Enterprise' },
     { id: 'ai', name: 'AI Security' },
     { id: 'vaultId', name: 'VaultID' },
-    { id: 'nestvault', name: 'NestVault Storage' },
+    { id: 'vertexvault', name: 'VertexVault Storage' },
   ];
 
   return (

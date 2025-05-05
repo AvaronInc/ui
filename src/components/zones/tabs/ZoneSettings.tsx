@@ -227,7 +227,7 @@ const ZoneSettings: React.FC = () => {
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-medium flex items-center">
             <Database className="h-4 w-4 mr-2 text-indigo-500" />
-            NestVault Storage Configuration
+            VertexVault Storage Configuration
           </CardTitle>
           <CardDescription>
             Configure storage segregation and policies for this zone

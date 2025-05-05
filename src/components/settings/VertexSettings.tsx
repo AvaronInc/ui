@@ -22,7 +22,7 @@ import { Switch } from '@/components/ui/switch';
 import { useForm } from 'react-hook-form';
 import { Thermometer, RefreshCw, Video, Box } from 'lucide-react';
 
-interface NestSettingsFormValues {
+interface VertexSettingsFormValues {
   enableCoolingFailureAlerts: boolean;
   maximumTemperatureThreshold: number;
   diagnosticsInterval: string;
@@ -30,10 +30,10 @@ interface NestSettingsFormValues {
   restrictLiveStreamAccess: boolean;
 }
 
-const NestSettings = () => {
+const VertexSettings = () => {
   const { toast } = useToast();
   
-  const defaultValues: NestSettingsFormValues = {
+  const defaultValues: VertexSettingsFormValues = {
     enableCoolingFailureAlerts: true,
     maximumTemperatureThreshold: 75,
     diagnosticsInterval: '7',
@@ -42,24 +42,24 @@ const NestSettings = () => {
   };
   
   // Initialize form with saved values from localStorage or defaults
-  const [formValues, setFormValues] = useState<NestSettingsFormValues>(() => {
-    const savedSettings = localStorage.getItem('nestSettings');
+  const [formValues, setFormValues] = useState<VertexSettingsFormValues>(() => {
+    const savedSettings = localStorage.getItem('vertexSettings');
     return savedSettings ? JSON.parse(savedSettings) : defaultValues;
   });
   
-  const form = useForm<NestSettingsFormValues>({
+  const form = useForm<VertexSettingsFormValues>({
     defaultValues: formValues,
   });
   
   // Save settings to localStorage when form is submitted
   const handleSave = () => {
     const values = form.getValues();
-    localStorage.setItem('nestSettings', JSON.stringify(values));
+    localStorage.setItem('vertexSettings', JSON.stringify(values));
     setFormValues(values);
     
     toast({
       title: "Settings saved",
-      description: "CyberNest Management settings have been updated successfully.",
+      description: "Avaron Vertex Management settings have been updated successfully.",
     });
   };
   
@@ -71,7 +71,7 @@ const NestSettings = () => {
   return (
     <div className="space-y-6">
       <div className="text-sm text-muted-foreground mb-6">
-        Configure CyberNest deployment parameters, monitoring thresholds, and maintenance schedules.
+        Configure Avaron Vertex deployment parameters, monitoring thresholds, and maintenance schedules.
       </div>
       
       <Form {...form}>
@@ -97,7 +97,7 @@ const NestSettings = () => {
                         Enable Cooling Failure Alerts
                       </FormLabel>
                       <FormDescription>
-                        Get alerts when cooling systems in CyberNests fail
+                        Get alerts when cooling systems in Avaron Vertices fail
                       </FormDescription>
                     </div>
                   </FormItem>
@@ -142,7 +142,7 @@ const NestSettings = () => {
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
                       <RefreshCw className="h-4 w-4" />
-                      Auto-Run CyberNest Diagnostics Every
+                      Auto-Run Avaron Vertex Diagnostics Every
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -230,4 +230,4 @@ const NestSettings = () => {
   );
 };
 
-export default NestSettings;
+export default VertexSettings;

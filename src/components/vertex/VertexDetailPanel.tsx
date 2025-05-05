@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { NestLocation } from '@/types/nest';
+import { VertexLocation } from '@/types/vertex';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -24,20 +24,20 @@ import {
   Eye
 } from 'lucide-react';
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { restartNest, runNestDiagnostics } from '@/data/nestData';
+import { restartVertex, runVertexDiagnostics } from '@/data/vertexData';
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
 
-interface NestDetailPanelProps {
-  nest: NestLocation;
+interface VertexDetailPanelProps {
+  vertex: VertexLocation;
   open: boolean;
   onClose: () => void;
 }
 
-const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }) => {
+const VertexDetailPanel: React.FC<VertexDetailPanelProps> = ({ vertex, open, onClose }) => {
   // Restart mutation
   const restartMutation = useMutation({
-    mutationFn: restartNest,
+    mutationFn: restartVertex,
     onSuccess: (data) => {
       if (data.success) {
         toast.success(data.message);
@@ -46,13 +46,13 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
       }
     },
     onError: () => {
-      toast.error('Failed to restart N.E.S.T.');
+      toast.error('Failed to restart Vertex');
     }
   });
 
   // Diagnostics mutation
   const diagnosticsMutation = useMutation({
-    mutationFn: runNestDiagnostics,
+    mutationFn: runVertexDiagnostics,
     onSuccess: (data) => {
       if (data.success) {
         toast.success(data.message);
@@ -84,16 +84,16 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
   };
 
   // Handle quick actions
-  const handleRestartNest = () => {
-    restartMutation.mutate(nest.id);
+  const handleRestartVertex = () => {
+    restartMutation.mutate(vertex.id);
   };
 
   const handleRunDiagnostics = () => {
-    diagnosticsMutation.mutate(nest.id);
+    diagnosticsMutation.mutate(vertex.id);
   };
 
   const handleScheduleMaintenance = () => {
-    toast.info(`Maintenance scheduled for ${nest.name}`);
+    toast.info(`Maintenance scheduled for ${vertex.name}`);
   };
 
   // Format temperature for display with color coding
@@ -111,7 +111,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
     <Sheet open={open} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>N.E.S.T. Details</SheetTitle>
+          <SheetTitle>Vertex Details</SheetTitle>
         </SheetHeader>
         
         <div className="py-6 space-y-6">
@@ -119,52 +119,52 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
           <div className="space-y-4">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="font-semibold text-lg">{nest.name}</h3>
-                <p className="text-sm text-muted-foreground">{nest.hardwareModel}</p>
+                <h3 className="font-semibold text-lg">{vertex.name}</h3>
+                <p className="text-sm text-muted-foreground">{vertex.hardwareModel}</p>
               </div>
-              <div className={`flex items-center gap-1 text-sm ${getStatusColor(nest.status)}`}>
+              <div className={`flex items-center gap-1 text-sm ${getStatusColor(vertex.status)}`}>
                 <div className={`h-2 w-2 rounded-full ${
-                  nest.status === 'online' ? 'bg-success' : 
-                  nest.status === 'degraded' ? 'bg-warning' : 
+                  vertex.status === 'online' ? 'bg-success' : 
+                  vertex.status === 'degraded' ? 'bg-warning' : 
                   'bg-destructive'
                 }`}></div>
-                <span className="capitalize">{nest.status}</span>
+                <span className="capitalize">{vertex.status}</span>
               </div>
             </div>
             
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="space-y-1">
                 <p className="text-muted-foreground">Region</p>
-                <p className="font-medium">{nest.region}</p>
+                <p className="font-medium">{vertex.region}</p>
               </div>
               <div className="space-y-1">
                 <p className="text-muted-foreground">Last Check-in</p>
-                <p className="font-medium">{formatTimestamp(nest.lastCheckIn)}</p>
+                <p className="font-medium">{formatTimestamp(vertex.lastCheckIn)}</p>
               </div>
               <div className="space-y-1">
                 <p className="text-muted-foreground">Last Restart</p>
-                <p className="font-medium">{formatTimestamp(nest.lastRestart)}</p>
+                <p className="font-medium">{formatTimestamp(vertex.lastRestart)}</p>
               </div>
               <div className="space-y-1">
                 <p className="text-muted-foreground">Uptime</p>
-                <p className="font-medium">{nest.uptime}</p>
+                <p className="font-medium">{vertex.uptime}</p>
               </div>
               <div className="space-y-1">
                 <p className="text-muted-foreground">Temperature</p>
-                <p className="font-medium">{formatTemperature(nest.temperature)}</p>
+                <p className="font-medium">{formatTemperature(vertex.temperature)}</p>
               </div>
               <div className="space-y-1">
                 <p className="text-muted-foreground">Live Stream</p>
-                <p className="font-medium">{nest.hasLiveStream ? 'Available' : 'Unavailable'}</p>
+                <p className="font-medium">{vertex.hasLiveStream ? 'Available' : 'Unavailable'}</p>
               </div>
             </div>
           </div>
 
           {/* Live Stream Button */}
-          {nest.hasLiveStream && (
+          {vertex.hasLiveStream && (
             <Button 
               className="w-full"
-              disabled={nest.status === 'offline'}
+              disabled={vertex.status === 'offline'}
             >
               <Eye className="h-4 w-4 mr-2" />
               View Live Feed
@@ -178,8 +178,8 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={handleRestartNest}
-                disabled={nest.status === 'offline' || restartMutation.isPending}
+                onClick={handleRestartVertex}
+                disabled={vertex.status === 'offline' || restartMutation.isPending}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${restartMutation.isPending ? 'animate-spin' : ''}`} />
                 {restartMutation.isPending ? 'Restarting...' : 'Restart'}
@@ -188,7 +188,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                 variant="outline" 
                 size="sm"
                 onClick={handleRunDiagnostics}
-                disabled={nest.status === 'offline' || diagnosticsMutation.isPending}
+                disabled={vertex.status === 'offline' || diagnosticsMutation.isPending}
               >
                 <Play className={`h-4 w-4 mr-2 ${diagnosticsMutation.isPending ? 'animate-spin' : ''}`} />
                 {diagnosticsMutation.isPending ? 'Running...' : 'Run Diagnostics'}
@@ -204,7 +204,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
             </div>
           </div>
           
-          {/* N.E.S.T. Details Tabs */}
+          {/* Vertex Details Tabs */}
           <Tabs defaultValue="hardware">
             <TabsList className="grid grid-cols-3 w-full">
               <TabsTrigger value="hardware">Hardware</TabsTrigger>
@@ -223,21 +223,21 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                       <Cpu className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span>CPU</span>
                     </div>
-                    <span>{nest.hardwareInventory.cpu}</span>
+                    <span>{vertex.hardwareInventory.cpu}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <div className="h-4 w-4 mr-2 text-muted-foreground">RAM</div>
                       <span>Memory</span>
                     </div>
-                    <span>{nest.hardwareInventory.ram}</span>
+                    <span>{vertex.hardwareInventory.ram}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <HardDrive className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span>Storage</span>
                     </div>
-                    <span>{nest.hardwareInventory.storage}</span>
+                    <span>{vertex.hardwareInventory.storage}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -247,7 +247,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                   <CardTitle className="text-sm font-medium">Network Adapters</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm space-y-2">
-                  {nest.hardwareInventory.networkAdapters.map((adapter, index) => (
+                  {vertex.hardwareInventory.networkAdapters.map((adapter, index) => (
                     <div key={index} className="flex items-center">
                       <Network className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span>{adapter}</span>
@@ -264,12 +264,12 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span>CPU Load</span>
-                      <span className={nest.resourceUsage.cpuLoad > 70 ? 'text-warning' : 'text-muted-foreground'}>{nest.resourceUsage.cpuLoad}%</span>
+                      <span className={vertex.resourceUsage.cpuLoad > 70 ? 'text-warning' : 'text-muted-foreground'}>{vertex.resourceUsage.cpuLoad}%</span>
                     </div>
                     <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
                       <div 
-                        className={`h-full rounded-full ${nest.resourceUsage.cpuLoad > 70 ? 'bg-warning' : 'bg-primary'}`}
-                        style={{ width: `${nest.resourceUsage.cpuLoad}%` }}
+                        className={`h-full rounded-full ${vertex.resourceUsage.cpuLoad > 70 ? 'bg-warning' : 'bg-primary'}`}
+                        style={{ width: `${vertex.resourceUsage.cpuLoad}%` }}
                       ></div>
                     </div>
                   </div>
@@ -277,12 +277,12 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span>Storage Used</span>
-                      <span className="text-muted-foreground">{nest.resourceUsage.storageUsed}%</span>
+                      <span className="text-muted-foreground">{vertex.resourceUsage.storageUsed}%</span>
                     </div>
                     <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
                       <div 
                         className="h-full rounded-full bg-primary"
-                        style={{ width: `${nest.resourceUsage.storageUsed}%` }}
+                        style={{ width: `${vertex.resourceUsage.storageUsed}%` }}
                       ></div>
                     </div>
                   </div>
@@ -290,12 +290,12 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span>Network Traffic</span>
-                      <span className="text-muted-foreground">{nest.resourceUsage.networkTraffic} Mbps</span>
+                      <span className="text-muted-foreground">{vertex.resourceUsage.networkTraffic} Mbps</span>
                     </div>
                     <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
                       <div 
                         className="h-full rounded-full bg-primary"
-                        style={{ width: `${(nest.resourceUsage.networkTraffic / 100) * 100}%` }}
+                        style={{ width: `${(vertex.resourceUsage.networkTraffic / 100) * 100}%` }}
                       ></div>
                     </div>
                   </div>
@@ -314,7 +314,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                       <Thermometer className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span>Temperature</span>
                     </div>
-                    <span>{formatTemperature(nest.temperature)}</span>
+                    <span>{formatTemperature(vertex.temperature)}</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -322,7 +322,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                       <Droplets className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span>Humidity</span>
                     </div>
-                    <span>{nest.environmentalData.humidity !== null ? `${nest.environmentalData.humidity}%` : 'N/A'}</span>
+                    <span>{vertex.environmentalData.humidity !== null ? `${vertex.environmentalData.humidity}%` : 'N/A'}</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -330,7 +330,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                       <Zap className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span>Power Usage</span>
                     </div>
-                    <span>{nest.environmentalData.powerUsage > 0 ? `${nest.environmentalData.powerUsage}W` : 'N/A'}</span>
+                    <span>{vertex.environmentalData.powerUsage > 0 ? `${vertex.environmentalData.powerUsage}W` : 'N/A'}</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -340,12 +340,12 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                     </div>
                     <Badge 
                       variant={
-                        nest.environmentalData.coolingStatus === 'normal' ? 'default' : 
-                        nest.environmentalData.coolingStatus === 'warning' ? 'warning' : 
+                        vertex.environmentalData.coolingStatus === 'normal' ? 'default' : 
+                        vertex.environmentalData.coolingStatus === 'warning' ? 'warning' : 
                         'destructive'
                       }
                     >
-                      {nest.environmentalData.coolingStatus}
+                      {vertex.environmentalData.coolingStatus}
                     </Badge>
                   </div>
                 </CardContent>
@@ -359,15 +359,15 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span>Last Maintenance</span>
-                      <span>{formatTimestamp(nest.lastMaintenance.date)}</span>
+                      <span>{formatTimestamp(vertex.lastMaintenance.date)}</span>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Technician:</span>
-                      <span className="ml-2">{nest.lastMaintenance.technician}</span>
+                      <span className="ml-2">{vertex.lastMaintenance.technician}</span>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Notes:</span>
-                      <p className="mt-1 text-xs">{nest.lastMaintenance.notes}</p>
+                      <p className="mt-1 text-xs">{vertex.lastMaintenance.notes}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -375,7 +375,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
             </TabsContent>
             
             <TabsContent value="alerts" className="space-y-4 mt-4">
-              {nest.securityAlerts.length === 0 ? (
+              {vertex.securityAlerts.length === 0 ? (
                 <Card>
                   <CardContent className="text-center py-6">
                     <Shield className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
@@ -384,7 +384,7 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
                 </Card>
               ) : (
                 <div className="space-y-3">
-                  {nest.securityAlerts.map((alert) => (
+                  {vertex.securityAlerts.map((alert) => (
                     <Card key={alert.id} className="border-l-2" style={{ 
                       borderLeftColor: 
                         alert.severity === 'critical' ? '#ef4444' : 
@@ -427,4 +427,4 @@ const NestDetailPanel: React.FC<NestDetailPanelProps> = ({ nest, open, onClose }
   );
 };
 
-export default NestDetailPanel;
+export default VertexDetailPanel;

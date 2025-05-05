@@ -18,7 +18,7 @@ const SDNOverview: React.FC = () => {
             Global SDN Topology
           </CardTitle>
           <CardDescription>
-            Visual map of interconnected CyberNest NESTS, cloud deployments, and remote offices
+            Visual map of interconnected Avaron Vertices, cloud deployments, and remote offices
           </CardDescription>
         </CardHeader>
         <CardContent>

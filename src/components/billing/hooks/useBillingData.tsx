@@ -7,7 +7,7 @@ export type BillingData = {
   subscriptionPlan: 'SMB' | 'Enterprise' | 'Government' | 'Basic' | 'Professional' | 'Enterprise Plus';
   monthlySubscriptionCost: string;
   totalHardwareCount: number;
-  activeNestCount: number;
+  activeVertexCount: number;
   additionalHardwareCount: number;
   expiringContracts: Array<{
     name: string;
@@ -36,11 +36,11 @@ export const useBillingData = () => {
           subscriptionPlan: 'Enterprise',
           monthlySubscriptionCost: '999.95',
           totalHardwareCount: 12,
-          activeNestCount: 8,
+          activeVertexCount: 8,
           additionalHardwareCount: 4,
           expiringContracts: [
             { 
-              name: 'NEST N1000 (Denver Office)', 
+              name: 'Vertex N1000 (Denver Office)', 
               expirationDate: 'Nov 21, 2023',
               renewalCost: 599
             },

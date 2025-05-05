@@ -14,7 +14,7 @@ const mockBackups = [
   {
     id: 'bk-001',
     timestamp: '2023-11-15T08:00:00',
-    locations: ['local', 'nestvault'],
+    locations: ['local', 'vertexvault'],
     status: 'success',
     size: '15.4 MB',
     version: 'v1.0.14'
@@ -22,7 +22,7 @@ const mockBackups = [
   {
     id: 'bk-002',
     timestamp: '2023-11-14T08:00:00',
-    locations: ['local', 'nestvault', 'wasabi'],
+    locations: ['local', 'vertexvault', 'wasabi'],
     status: 'success',
     size: '15.2 MB',
     version: 'v1.0.13'
@@ -30,7 +30,7 @@ const mockBackups = [
   {
     id: 'bk-003',
     timestamp: '2023-11-13T08:00:00',
-    locations: ['local', 'nestvault'],
+    locations: ['local', 'vertexvault'],
     status: 'success',
     size: '15.2 MB',
     version: 'v1.0.12'
@@ -38,7 +38,7 @@ const mockBackups = [
   {
     id: 'bk-004',
     timestamp: '2023-11-12T08:00:00',
-    locations: ['nestvault', 'wasabi'],
+    locations: ['vertexvault', 'wasabi'],
     status: 'success',
     size: '15.1 MB',
     version: 'v1.0.11'
@@ -54,7 +54,7 @@ const mockBackups = [
   {
     id: 'bk-006',
     timestamp: '2023-11-10T08:00:00',
-    locations: ['nestvault', 'wasabi'],
+    locations: ['vertexvault', 'wasabi'],
     status: 'success',
     size: '14.9 MB',
     version: 'v1.0.9'
@@ -62,7 +62,7 @@ const mockBackups = [
   {
     id: 'bk-007',
     timestamp: '2023-11-09T08:00:00',
-    locations: ['local', 'nestvault'],
+    locations: ['local', 'vertexvault'],
     status: 'success',
     size: '14.8 MB',
     version: 'v1.0.8'
@@ -125,7 +125,7 @@ const BackupHistorySection: React.FC = () => {
     switch (location) {
       case 'local':
         return <HardDrive className="h-4 w-4" />;
-      case 'nestvault':
+      case 'vertexvault':
         return <Database className="h-4 w-4" />;
       case 'wasabi':
         return <Cloud className="h-4 w-4" />;
@@ -176,7 +176,7 @@ const BackupHistorySection: React.FC = () => {
               <SelectContent>
                 <SelectItem value="all">All Locations</SelectItem>
                 <SelectItem value="local">Local Storage</SelectItem>
-                <SelectItem value="nestvault">NestVault</SelectItem>
+                <SelectItem value="vertexvault">VertexVault</SelectItem>
                 <SelectItem value="wasabi">Wasabi Cloud</SelectItem>
               </SelectContent>
             </Select>
@@ -221,7 +221,7 @@ const BackupHistorySection: React.FC = () => {
                             >
                               <LocationIcon location={location} />
                               {location === 'local' && 'Local'}
-                              {location === 'nestvault' && 'NestVault'}
+                              {location === 'vertexvault' && 'VertexVault'}
                               {location === 'wasabi' && 'Wasabi'}
                             </Badge>
                           ))}

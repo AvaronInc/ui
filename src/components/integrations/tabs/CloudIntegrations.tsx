@@ -14,7 +14,7 @@ const CloudIntegrations = () => {
         <div>
           <h2 className="text-2xl font-bold">Cloud Provider Integrations</h2>
           <p className="text-muted-foreground">
-            Connect CyberNest with your cloud platforms for infrastructure management
+            Connect Avaron Vertex with your cloud platforms for infrastructure management
           </p>
         </div>
         <Button onClick={() => setOpenDialog(true)}>

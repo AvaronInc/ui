@@ -1,5 +1,5 @@
 
-import { NestLocation, SecurityAlert } from '@/types/nest';
+import { VertexLocation, SecurityAlert } from '@/types/vertex';
 
 // Generate mock security alerts
 const generateMockSecurityAlerts = (count: number): SecurityAlert[] => {
@@ -31,14 +31,14 @@ const generateMockSecurityAlerts = (count: number): SecurityAlert[] => {
   return alerts;
 };
 
-// Mock N.E.S.T. locations
-export const mockNestLocations: NestLocation[] = [
+// Mock Vertex locations
+export const mockVertexLocations: VertexLocation[] = [
   {
-    id: 'nest-001',
+    id: 'vertex-001',
     name: 'San Francisco Data Center',
     status: 'online',
     lastCheckIn: '2023-08-29T13:45:20Z',
-    hardwareModel: 'CyberNest Pro X1',
+    hardwareModel: 'Avaron Vertex Pro X1',
     temperature: 22.5,
     uptime: '45 days, 12 hours',
     hasLiveStream: true,
@@ -70,11 +70,11 @@ export const mockNestLocations: NestLocation[] = [
     securityAlerts: generateMockSecurityAlerts(2)
   },
   {
-    id: 'nest-002',
+    id: 'vertex-002',
     name: 'New York Edge Node',
     status: 'online',
     lastCheckIn: '2023-08-29T13:50:10Z',
-    hardwareModel: 'CyberNest Lite',
+    hardwareModel: 'Avaron Vertex Lite',
     temperature: 24.1,
     uptime: '67 days, 3 hours',
     hasLiveStream: true,
@@ -106,11 +106,11 @@ export const mockNestLocations: NestLocation[] = [
     securityAlerts: []
   },
   {
-    id: 'nest-003',
+    id: 'vertex-003',
     name: 'London Gateway',
     status: 'degraded',
     lastCheckIn: '2023-08-29T13:30:45Z',
-    hardwareModel: 'CyberNest Pro X1',
+    hardwareModel: 'Avaron Vertex Pro X1',
     temperature: 28.3,
     uptime: '12 days, 7 hours',
     hasLiveStream: true,
@@ -142,11 +142,11 @@ export const mockNestLocations: NestLocation[] = [
     securityAlerts: generateMockSecurityAlerts(1)
   },
   {
-    id: 'nest-004',
+    id: 'vertex-004',
     name: 'Singapore Hub',
     status: 'online',
     lastCheckIn: '2023-08-29T13:55:30Z',
-    hardwareModel: 'CyberNest Ultra',
+    hardwareModel: 'Avaron Vertex Ultra',
     temperature: 25.7,
     uptime: '103 days, 22 hours',
     hasLiveStream: true,
@@ -178,11 +178,11 @@ export const mockNestLocations: NestLocation[] = [
     securityAlerts: []
   },
   {
-    id: 'nest-005',
+    id: 'vertex-005',
     name: 'Sydney Edge Point',
     status: 'offline',
     lastCheckIn: '2023-08-28T22:15:12Z',
-    hardwareModel: 'CyberNest Pro',
+    hardwareModel: 'Avaron Vertex Pro',
     temperature: null,
     uptime: '0 days, 0 hours',
     hasLiveStream: false,
@@ -214,11 +214,11 @@ export const mockNestLocations: NestLocation[] = [
     securityAlerts: generateMockSecurityAlerts(3)
   },
   {
-    id: 'nest-006',
+    id: 'vertex-006',
     name: 'Tokyo Data Center',
     status: 'online',
     lastCheckIn: '2023-08-29T14:01:05Z',
-    hardwareModel: 'CyberNest Ultra',
+    hardwareModel: 'Avaron Vertex Ultra',
     temperature: 21.9,
     uptime: '89 days, 14 hours',
     hasLiveStream: true,
@@ -252,49 +252,49 @@ export const mockNestLocations: NestLocation[] = [
 ];
 
 // API mock functions
-export const getNestLocations = async (): Promise<NestLocation[]> => {
+export const getVertexLocations = async (): Promise<VertexLocation[]> => {
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 800));
-  return mockNestLocations;
+  return mockVertexLocations;
 };
 
-export const getNestLocationById = async (id: string): Promise<NestLocation | undefined> => {
+export const getVertexLocationById = async (id: string): Promise<VertexLocation | undefined> => {
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 400));
-  return mockNestLocations.find(location => location.id === id);
+  return mockVertexLocations.find(location => location.id === id);
 };
 
-export const restartNest = async (id: string): Promise<{ success: boolean, message: string }> => {
+export const restartVertex = async (id: string): Promise<{ success: boolean, message: string }> => {
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 1500));
   
-  // Check if the N.E.S.T. exists
-  const nest = mockNestLocations.find(location => location.id === id);
-  if (!nest) {
-    return { success: false, message: 'N.E.S.T. not found' };
+  // Check if the Vertex exists
+  const vertex = mockVertexLocations.find(location => location.id === id);
+  if (!vertex) {
+    return { success: false, message: 'Vertex not found' };
   }
   
-  // Check if the N.E.S.T. is online
-  if (nest.status === 'offline') {
-    return { success: false, message: 'Cannot restart offline N.E.S.T.' };
+  // Check if the Vertex is online
+  if (vertex.status === 'offline') {
+    return { success: false, message: 'Cannot restart offline Vertex' };
   }
   
-  return { success: true, message: `${nest.name} restart initiated successfully` };
+  return { success: true, message: `${vertex.name} restart initiated successfully` };
 };
 
-export const runNestDiagnostics = async (id: string): Promise<{ success: boolean, message: string, results?: any }> => {
+export const runVertexDiagnostics = async (id: string): Promise<{ success: boolean, message: string, results?: any }> => {
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 2000));
   
-  // Check if the N.E.S.T. exists
-  const nest = mockNestLocations.find(location => location.id === id);
-  if (!nest) {
-    return { success: false, message: 'N.E.S.T. not found' };
+  // Check if the Vertex exists
+  const vertex = mockVertexLocations.find(location => location.id === id);
+  if (!vertex) {
+    return { success: false, message: 'Vertex not found' };
   }
   
-  // Check if the N.E.S.T. is online
-  if (nest.status === 'offline') {
-    return { success: false, message: 'Cannot run diagnostics on offline N.E.S.T.' };
+  // Check if the Vertex is online
+  if (vertex.status === 'offline') {
+    return { success: false, message: 'Cannot run diagnostics on offline Vertex' };
   }
   
   // Mock diagnostics results
@@ -308,7 +308,7 @@ export const runNestDiagnostics = async (id: string): Promise<{ success: boolean
   
   return { 
     success: true, 
-    message: `Diagnostics completed for ${nest.name}`,
+    message: `Diagnostics completed for ${vertex.name}`,
     results
   };
 };

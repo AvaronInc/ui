@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ZonesOverview from './tabs/ZonesOverview';
 import ZoneSettings from './tabs/ZoneSettings';
 import ZoneInsights from './sidebar/ZoneInsights';
-import ZoneNestvault from './tabs/ZoneNestvault';
+import ZoneVertexvault from './tabs/ZoneVertexvault';
 import ZoneOverview from './tabs/ZoneOverview';
 import ZoneServices from './tabs/ZoneServices';
 import ZoneAutomationBuilder from './tabs/ZoneAutomationBuilder';
@@ -123,7 +123,7 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
           <TabsTrigger value="logs">Logs</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="ai">AI Profile</TabsTrigger>
-          <TabsTrigger value="nestvault">NestVault</TabsTrigger>
+          <TabsTrigger value="vertexvault">VertexVault</TabsTrigger>
           <TabsTrigger value="automation">Automation</TabsTrigger>
         </TabsList>
 
@@ -147,8 +147,8 @@ const ZoneDetail: React.FC<{ zone: Zone }> = ({ zone }) => {
           <p>AI behavior profiles would appear here.</p>
         </TabsContent>
         
-        <TabsContent value="nestvault" className="space-y-4">
-          <ZoneNestvault zone={zone} />
+        <TabsContent value="vertexvault" className="space-y-4">
+          <ZoneVertexvault zone={zone} />
         </TabsContent>
         
         <TabsContent value="automation" className="space-y-4">

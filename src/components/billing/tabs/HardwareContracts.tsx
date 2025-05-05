@@ -10,8 +10,8 @@ import { Calendar, FileText, AlertCircle, MoreHorizontal } from 'lucide-react';
 const contracts = [
   {
     id: '001',
-    deviceType: 'NEST N5000',
-    serialNumber: 'NEST-N5K-78945612',
+    deviceType: 'Vertex N5000',
+    serialNumber: 'Vertex-N5K-78945612',
     location: 'Main Office, New York',
     startDate: '2023-05-15',
     endDate: '2024-05-14',
@@ -21,8 +21,8 @@ const contracts = [
   },
   {
     id: '002',
-    deviceType: 'NEST N3000',
-    serialNumber: 'NEST-N3K-65478932',
+    deviceType: 'Vertex N3000',
+    serialNumber: 'Vertex-N3K-65478932',
     location: 'Branch Office, Seattle',
     startDate: '2023-02-10',
     endDate: '2024-02-09',
@@ -32,8 +32,8 @@ const contracts = [
   },
   {
     id: '003',
-    deviceType: 'NEST N1000',
-    serialNumber: 'NEST-N1K-12369854',
+    deviceType: 'Vertex N1000',
+    serialNumber: 'Vertex-N1K-12369854',
     location: 'Remote Office, Denver',
     startDate: '2023-08-22',
     endDate: '2023-11-21',
@@ -91,7 +91,7 @@ const HardwareContracts = () => {
             <div>
               <CardTitle>Active Contracts</CardTitle>
               <CardDescription>
-                All NESTS & services currently under contract
+                All Vertices & services currently under contract
               </CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">

@@ -10,7 +10,7 @@ export interface ConnectionType {
   };
 }
 
-export interface NESTNode {
+export interface VertexNode {
   id: string;
   name: string;
   location: {
@@ -33,7 +33,7 @@ export interface NESTNode {
 
 export interface MeshConfiguration {
   enabled: boolean;
-  participatingNodes: string[]; // NEST IDs
+  participatingNodes: string[]; // Vertex IDs
   latencyBasedRouting: boolean;
   dynamicPathSelection: boolean;
   encryptionKeyManagement: 'auto' | 'manual';
@@ -41,7 +41,7 @@ export interface MeshConfiguration {
 }
 
 export interface FailoverPolicy {
-  nestId: string;
+  vertexId: string;
   thresholds: {
     latency: number; // ms
     packetLoss: number; // percentage
@@ -95,7 +95,7 @@ export interface SDWANEvent {
   id: string;
   timestamp: string;
   eventType: 'failover' | 'security' | 'bgp' | 'performance' | 'system';
-  nestId: string;
+  vertexId: string;
   status: 'info' | 'warning' | 'alert';
   message: string;
 }

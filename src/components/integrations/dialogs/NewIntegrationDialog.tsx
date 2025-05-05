@@ -90,7 +90,7 @@ const NewIntegrationDialog = ({
         <DialogHeader>
           <DialogTitle>Add New Integration</DialogTitle>
           <DialogDescription>
-            Connect CyberNest with your IT infrastructure and service platforms
+            Connect Avaron Vertex with your IT infrastructure and service platforms
           </DialogDescription>
         </DialogHeader>
 

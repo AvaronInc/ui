@@ -59,7 +59,7 @@ const IntegrationsOverview = () => {
         <div>
           <h2 className="text-2xl font-bold">Integrations Overview</h2>
           <p className="text-muted-foreground">
-            Connect CyberNest with your IT infrastructure and services
+            Connect Avaron Vertex with your IT infrastructure and services
           </p>
         </div>
         <div className="flex gap-2">

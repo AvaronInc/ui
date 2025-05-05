@@ -14,7 +14,7 @@ const ITSMIntegrations = () => {
         <div>
           <h2 className="text-2xl font-bold">IT Service Management Integrations</h2>
           <p className="text-muted-foreground">
-            Connect CyberNest with your ITSM platforms for ticket management and asset tracking
+            Connect Avaron Vertex with your ITSM platforms for ticket management and asset tracking
           </p>
         </div>
         <Button onClick={() => setOpenDialog(true)}>

@@ -171,7 +171,7 @@ const ChartTooltipContent = React.forwardRef<
       return null
     }
 
-    const nestLabel = payload.length === 1 && indicator !== "dot"
+    const vertexLabel = payload.length === 1 && indicator !== "dot"
 
     return (
       <div
@@ -181,7 +181,7 @@ const ChartTooltipContent = React.forwardRef<
           className
         )}
       >
-        {!nestLabel ? tooltipLabel : null}
+        {!vertexLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
           {payload.map((item, index) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
@@ -212,7 +212,7 @@ const ChartTooltipContent = React.forwardRef<
                               "w-1": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
-                              "my-0.5": nestLabel && indicator === "dashed",
+                              "my-0.5": vertexLabel && indicator === "dashed",
                             }
                           )}
                           style={
@@ -227,11 +227,11 @@ const ChartTooltipContent = React.forwardRef<
                     <div
                       className={cn(
                         "flex flex-1 justify-between leading-none",
-                        nestLabel ? "items-end" : "items-center"
+                        vertexLabel ? "items-end" : "items-center"
                       )}
                     >
                       <div className="grid gap-1.5">
-                        {nestLabel ? tooltipLabel : null}
+                        {vertexLabel ? tooltipLabel : null}
                         <span className="text-muted-foreground">
                           {itemConfig?.label || item.name}
                         </span>

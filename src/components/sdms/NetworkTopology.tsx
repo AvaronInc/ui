@@ -104,8 +104,8 @@ const NetworkTopology = () => {
         return <div className="w-4 h-4 rounded-full bg-cyan-500" title="RMM"></div>;
       case 'mixtral':
         return <div className="w-4 h-4 rounded-full bg-pink-500" title="Mixtral"></div>;
-      case 'nestvault':
-        return <div className="w-4 h-4 rounded-full bg-indigo-500" title="Storage (NestVault)"></div>;
+      case 'vertexvault':
+        return <div className="w-4 h-4 rounded-full bg-indigo-500" title="Storage (VertexVault)"></div>;
       default:
         return <div className="w-4 h-4 rounded-full bg-gray-500" title={service}></div>;
     }

@@ -20,10 +20,10 @@ const buckets = [
 const BucketMounting: React.FC<BucketMountingProps> = ({ form }) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">NestVault Bucket Mounting</h3>
+      <h3 className="text-lg font-medium">VertexVault Bucket Mounting</h3>
       <FormField
         control={form.control}
-        name="nestVaultBucket"
+        name="vertexVaultBucket"
         render={({ field }) => (
           <FormItem>
             <FormLabel>MinIO Bucket</FormLabel>
@@ -46,7 +46,7 @@ const BucketMounting: React.FC<BucketMountingProps> = ({ form }) => {
               </SelectContent>
             </Select>
             <FormDescription>
-              Mount a NestVault MinIO bucket as a volume in your container
+              Mount a VertexVault MinIO bucket as a volume in your container
             </FormDescription>
             <FormMessage />
           </FormItem>

@@ -112,7 +112,7 @@ const AssetOverviewSection = () => {
             <div className="flex items-center space-x-3 sm:space-x-4">
               <MapPin className="h-8 w-8 sm:h-10 sm:w-10 text-red-500 bg-red-50 p-1 sm:p-2 rounded-md" />
               <div className="min-w-0">
-                <h4 className="text-sm font-medium">CyberNests</h4>
+                <h4 className="text-sm font-medium">Avaron Vertices</h4>
                 <p className="text-xl sm:text-2xl font-bold">48</p>
                 <div className="flex flex-wrap mt-1 gap-1 sm:gap-2">
                   <Badge variant="outline" className="text-xs">Enterprise: 12</Badge>

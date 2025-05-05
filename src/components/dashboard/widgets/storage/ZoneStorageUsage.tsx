@@ -21,7 +21,7 @@ const ZoneStorageUsage = () => {
         <CardTitle className="text-md font-medium flex items-center justify-between">
           <div className="flex items-center">
             <span>Zone Storage Usage</span>
-            <Badge variant="outline" className="ml-2">NestVault</Badge>
+            <Badge variant="outline" className="ml-2">VertexVault</Badge>
           </div>
           <span className="text-xs font-normal text-muted-foreground">
             <HardDrive className="h-3.5 w-3.5 inline mr-1" />

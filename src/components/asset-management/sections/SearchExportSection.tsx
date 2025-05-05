@@ -20,7 +20,7 @@ const SearchExportSection = () => {
     { id: "1", name: "WS-DEV-01", category: "Workstation", manufacturer: "Dell", model: "Precision 5570", location: "HQ - Floor 2", status: "Active" },
     { id: "2", name: "SRV-DB-01", category: "Server", manufacturer: "HP", model: "ProLiant DL380", location: "Data Center Alpha", status: "Active" },
     { id: "3", name: "SW-CORE-01", category: "Networking", manufacturer: "Cisco", model: "Catalyst 9300", location: "Data Center Alpha", status: "Active" },
-    { id: "4", name: "NEST-PDX-01", category: "CyberNest", manufacturer: "Custom", model: "Enterprise C4", location: "Portland Office", status: "Active" },
+    { id: "4", name: "Vertex-PDX-01", category: "Avaron Vertex", manufacturer: "Custom", model: "Enterprise C4", location: "Portland Office", status: "Active" },
     { id: "5", name: "LAP-MKT-05", category: "Workstation", manufacturer: "Apple", model: "MacBook Pro M1", location: "HQ - Floor 3", status: "In Maintenance" },
   ];
 
@@ -71,7 +71,7 @@ const SearchExportSection = () => {
                     <SelectItem value="workstation">Workstations</SelectItem>
                     <SelectItem value="server">Servers</SelectItem>
                     <SelectItem value="networking">Networking</SelectItem>
-                    <SelectItem value="cybernest">CyberNests</SelectItem>
+                    <SelectItem value="avaron-vertex">Avaron Vertices</SelectItem>
                     <SelectItem value="storage">Storage</SelectItem>
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>

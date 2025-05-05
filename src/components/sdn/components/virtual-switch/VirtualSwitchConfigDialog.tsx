@@ -65,7 +65,7 @@ const VirtualSwitchConfigDialog: React.FC<VirtualSwitchConfigDialogProps> = ({
     onClose();
   };
 
-  const nestSites = [
+  const vertexSites = [
     { id: 'site1', name: 'Main Datacenter' },
     { id: 'site2', name: 'Edge Network' },
     { id: 'site3', name: 'Branch Office 1' },
@@ -323,11 +323,11 @@ const VirtualSwitchConfigDialog: React.FC<VirtualSwitchConfigDialogProps> = ({
                 <div className="p-4 border rounded-md bg-muted/30">
                   <h3 className="font-medium mb-2">Multi-Site Deployment</h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Deploy this virtual switch across multiple NEST locations
+                    Deploy this virtual switch across multiple Vertex locations
                   </p>
                   
                   <div className="grid grid-cols-2 gap-2">
-                    {nestSites.map(site => (
+                    {vertexSites.map(site => (
                       <FormField
                         key={site.id}
                         control={form.control}

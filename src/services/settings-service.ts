@@ -14,7 +14,7 @@ export enum SettingsCategory {
   COMPLIANCE = 'compliance',
   USER_ACCESS = 'user_access',
   WORKFORCE = 'workforce',
-  NEST = 'nest',
+  Vertex = 'vertex',
   AI = 'ai'
 }
 

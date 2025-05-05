@@ -14,7 +14,7 @@ const MonitoringIntegrations = () => {
         <div>
           <h2 className="text-2xl font-bold">Monitoring & Logging Integrations</h2>
           <p className="text-muted-foreground">
-            Connect CyberNest with your monitoring platforms for unified visibility
+            Connect Avaron Vertex with your monitoring platforms for unified visibility
           </p>
         </div>
         <Button onClick={() => setOpenDialog(true)}>

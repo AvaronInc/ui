@@ -14,11 +14,11 @@ export const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>;
 
 export const defaultSettings: FormValues = {
-  companyName: 'CyberNest Corp',
+  companyName: 'Avaron Vertex Corp',
   systemName: 'Network Pulse Management',
   timeZone: 'UTC',
   dateFormat: "MM/DD/YYYY",
   language: 'en-US',
-  supportEmail: 'support@cybernest.com',
+  supportEmail: 'support@avaron-vertex.com',
   helpdeskPhone: '+1 (555) 123-4567',
 };

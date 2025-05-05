@@ -136,7 +136,7 @@ const QuoteBuilder: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <Label>Storage Add-ons (NestVault)</Label>
+                <Label>Storage Add-ons (VertexVault)</Label>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">2 TB</span>
                   <Slider 
@@ -194,7 +194,7 @@ const QuoteBuilder: React.FC = () => {
                     <span>$3,000</span>
                   </li>
                   <li className="flex justify-between text-sm">
-                    <span>NestVault Storage (2TB)</span>
+                    <span>VertexVault Storage (2TB)</span>
                     <span>$2,000</span>
                   </li>
                   <li className="flex justify-between text-sm">

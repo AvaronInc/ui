@@ -15,9 +15,9 @@ export const coreSystemItems: NavItem[] = [
     href: '/aim'
   },
   {
-    title: 'N.E.S.T.',
+    title: 'Vertex',
     icon: Server,
-    href: '/nest'
+    href: '/vertex'
   },
   {
     title: 'Zones',

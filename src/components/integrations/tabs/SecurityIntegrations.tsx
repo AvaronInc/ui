@@ -14,7 +14,7 @@ const SecurityIntegrations = () => {
         <div>
           <h2 className="text-2xl font-bold">Security & SIEM Integrations</h2>
           <p className="text-muted-foreground">
-            Connect CyberNest with your security platforms for enhanced threat intelligence
+            Connect Avaron Vertex with your security platforms for enhanced threat intelligence
           </p>
         </div>
         <Button onClick={() => setOpenDialog(true)}>

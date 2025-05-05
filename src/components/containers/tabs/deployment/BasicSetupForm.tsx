@@ -14,7 +14,7 @@ interface DeploymentFormValues {
   ports: string;
   environment: string;
   orchestration: string;
-  nestNode: string;
+  vertexNode: string;
   customServerIp?: string;
   customServerUsername?: string;
   customServerPassword?: string;
@@ -29,8 +29,8 @@ interface BasicSetupFormProps {
 const BasicSetupForm: React.FC<BasicSetupFormProps> = ({ form, onSubmit }) => {
   const [showCustomServerFields, setShowCustomServerFields] = useState(false);
 
-  const handleNestNodeChange = (value: string) => {
-    form.setValue('nestNode', value);
+  const handleVertexNodeChange = (value: string) => {
+    form.setValue('vertexNode', value);
     setShowCustomServerFields(value === 'custom');
   };
 
@@ -73,24 +73,24 @@ const BasicSetupForm: React.FC<BasicSetupFormProps> = ({ form, onSubmit }) => {
         
         <FormField
           control={form.control}
-          name="nestNode"
+          name="vertexNode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>NEST Node</FormLabel>
+              <FormLabel>Vertex Node</FormLabel>
               <Select 
-                onValueChange={(value) => handleNestNodeChange(value)} 
+                onValueChange={(value) => handleVertexNodeChange(value)} 
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select NEST node" />
+                    <SelectValue placeholder="Select Vertex node" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="nest-1">NEST-1 (Primary)</SelectItem>
-                  <SelectItem value="nest-2">NEST-2 (Secondary)</SelectItem>
-                  <SelectItem value="nest-3">NEST-3 (Development)</SelectItem>
-                  <SelectItem value="nest-4">NEST-4 (Testing)</SelectItem>
+                  <SelectItem value="vertex-1">Vertex-1 (Primary)</SelectItem>
+                  <SelectItem value="vertex-2">Vertex-2 (Secondary)</SelectItem>
+                  <SelectItem value="vertex-3">Vertex-3 (Development)</SelectItem>
+                  <SelectItem value="vertex-4">Vertex-4 (Testing)</SelectItem>
                   <SelectItem value="custom">Custom Server</SelectItem>
                 </SelectContent>
               </Select>

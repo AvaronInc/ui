@@ -5,7 +5,7 @@ import { ContainerImage } from '@/types/containers';
 export const getSampleImages = (): ContainerImage[] => [
   {
     id: '1',
-    name: 'cybernest/api-server',
+    name: 'avaron-vertex/api-server',
     tag: 'latest',
     size: '120MB',
     registry: 'Docker Hub',
@@ -14,7 +14,7 @@ export const getSampleImages = (): ContainerImage[] => [
   },
   {
     id: '2',
-    name: 'cybernest/web-frontend',
+    name: 'avaron-vertex/web-frontend',
     tag: 'latest',
     size: '85MB',
     registry: 'Docker Hub',
@@ -41,7 +41,7 @@ export const getSampleImages = (): ContainerImage[] => [
   },
   {
     id: '5',
-    name: 'cybernest/monitoring',
+    name: 'avaron-vertex/monitoring',
     tag: 'v1.2',
     size: '92MB',
     registry: 'Private Registry',

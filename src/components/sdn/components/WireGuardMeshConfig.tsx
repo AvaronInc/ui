@@ -36,7 +36,7 @@ const WireGuardMeshConfig: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="endpoint">Primary Endpoint</Label>
-                  <Input id="endpoint" placeholder="wg.example.com:51820" value="wg.cybernest.io:51820" />
+                  <Input id="endpoint" placeholder="wg.example.com:51820" value="wg.avaron-vertex.io:51820" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="listen-port">Listen Port</Label>
@@ -108,7 +108,7 @@ const WireGuardMeshConfig: React.FC = () => {
                 <Input 
                   id="netmaker-server" 
                   placeholder="netmaker.example.com" 
-                  value="netmaker.cybernest.io" 
+                  value="netmaker.avaron-vertex.io" 
                   disabled={!isNetmakerEnabled}
                 />
               </div>
@@ -117,8 +117,8 @@ const WireGuardMeshConfig: React.FC = () => {
                 <Label htmlFor="network-name">Network Name</Label>
                 <Input 
                   id="network-name" 
-                  placeholder="cybernest-mesh" 
-                  value="cybernest-global-mesh" 
+                  placeholder="avaron-vertex-mesh" 
+                  value="avaron-vertex-global-mesh" 
                   disabled={!isNetmakerEnabled}
                 />
               </div>
@@ -140,7 +140,7 @@ const WireGuardMeshConfig: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Checkbox id="auto-connect" checked disabled={!isNetmakerEnabled} />
                 <Label htmlFor="auto-connect">
-                  Automatically connect new NEST deployments
+                  Automatically connect new Vertex deployments
                 </Label>
               </div>
             </div>

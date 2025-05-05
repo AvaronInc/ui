@@ -4,7 +4,7 @@ import { Service, ServiceAlert, ServiceTypeConfig } from '@/types/services';
 export const activeServices: Service[] = [
   {
     id: 'dns-001',
-    name: 'NEST DNS Server',
+    name: 'Vertex DNS Server',
     description: 'Primary DNS server for network name resolution and service discovery',
     type: 'dns',
     status: 'healthy',
@@ -23,8 +23,8 @@ export const activeServices: Service[] = [
   },
   {
     id: 'web-001',
-    name: 'Avaron NEST Portal',
-    description: 'Main web portal for Avaron NEST management and configuration',
+    name: 'Avaron Vertex Portal',
+    description: 'Main web portal for Avaron Vertex management and configuration',
     type: 'web',
     status: 'warning',
     resources: {

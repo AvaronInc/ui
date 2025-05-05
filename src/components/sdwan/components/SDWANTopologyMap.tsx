@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, RefreshCw, ZoomIn, ZoomOut, Filter } from 'lucide-react';
-import { NESTNode } from '@/types/sdwan';
+import { VertexNode } from '@/types/sdwan';
 import {
   ReactFlow,
   Controls,
@@ -19,7 +19,7 @@ import {
 import '@xyflow/react/dist/style.css';
 
 // Mock data for demonstration purposes
-const mockNestNodes: NESTNode[] = [
+const mockVertexNodes: VertexNode[] = [
   {
     id: 'headquarters',
     name: 'Headquarters',
@@ -208,11 +208,11 @@ const mockNestNodes: NESTNode[] = [
 ];
 
 interface SDWANTopologyMapProps {
-  onNodeClick?: (node: NESTNode) => void;
+  onNodeClick?: (node: VertexNode) => void;
 }
 
 // Custom node component for SDWAN nodes
-const SDWANNode = ({ data }: { data: { label: string; status: string; node: NESTNode; onClick: () => void } }) => {
+const SDWANNode = ({ data }: { data: { label: string; status: string; node: VertexNode; onClick: () => void } }) => {
   const getStatusColor = () => {
     switch(data.status) {
       case 'active': return 'bg-green-500';
@@ -242,35 +242,35 @@ const nodeTypes = {
 };
 
 const SDWANTopologyMap: React.FC<SDWANTopologyMapProps> = ({ onNodeClick }) => {
-  const [selectedNode, setSelectedNode] = useState<NESTNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<VertexNode | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Create nodes for ReactFlow
-  const initialNodes: Node[] = mockNestNodes.map((nest, index) => {
-    const angle = (index / mockNestNodes.length) * 2 * Math.PI;
+  const initialNodes: Node[] = mockVertexNodes.map((vertex, index) => {
+    const angle = (index / mockVertexNodes.length) * 2 * Math.PI;
     const radius = 200;
     // Position nodes in a circle for a full mesh visualization
     const x = 300 + radius * Math.cos(angle);
     const y = 250 + radius * Math.sin(angle);
     
     return {
-      id: nest.id,
+      id: vertex.id,
       type: 'sdwanNode',
       position: { x, y },
       data: { 
-        label: nest.name, 
-        status: nest.networkStatus,
-        node: nest,
-        onClick: () => handleNodeClick(nest)
+        label: vertex.name, 
+        status: vertex.networkStatus,
+        node: vertex,
+        onClick: () => handleNodeClick(vertex)
       }
     };
   });
 
   // Create edges for full mesh (every node connected to every other node)
   const initialEdges: Edge[] = [];
-  mockNestNodes.forEach(source => {
-    mockNestNodes.forEach(target => {
+  mockVertexNodes.forEach(source => {
+    mockVertexNodes.forEach(target => {
       if (source.id !== target.id) {
         // Avoid duplicate connections by using IDs in specific order
         const edgeIds = [source.id, target.id].sort();
@@ -300,21 +300,21 @@ const SDWANTopologyMap: React.FC<SDWANTopologyMapProps> = ({ onNodeClick }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   fetch("/api/sdwan")
     .then(r => r.json())
-    .then(nodes => nodes.map((nest, index) => {
-        const angle = (index / mockNestNodes.length) * 2 * Math.PI;
+    .then(nodes => nodes.map((vertex, index) => {
+        const angle = (index / mockVertexNodes.length) * 2 * Math.PI;
         const radius = 200;
         // Position nodes in a circle for a full mesh visualization
         const x = 300 + radius * Math.cos(angle);
         const y = 250 + radius * Math.sin(angle);
         return {
-          id: nest.id,
+          id: vertex.id,
           type: 'sdwanNode',
           position: { x, y },
           data: {
-            label: nest.name,
-            status: nest.networkStatus,
-            node: nest,
-            onClick: () => handleNodeClick(nest)
+            label: vertex.name,
+            status: vertex.networkStatus,
+            node: vertex,
+            onClick: () => handleNodeClick(vertex)
           }
         };
       })
@@ -323,7 +323,7 @@ const SDWANTopologyMap: React.FC<SDWANTopologyMapProps> = ({ onNodeClick }) => {
 
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const handleNodeClick = (node: NESTNode) => {
+  const handleNodeClick = (node: VertexNode) => {
     setSelectedNode(node);
     setIsDialogOpen(true);
     if (onNodeClick) {
@@ -373,12 +373,12 @@ const SDWANTopologyMap: React.FC<SDWANTopologyMapProps> = ({ onNodeClick }) => {
           </Button>
           <Select defaultValue="all">
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="View NEST Sites" />
+              <SelectValue placeholder="View Vertex Sites" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All NEST Sites</SelectItem>
-              {mockNestNodes.map(nest => (
-                <SelectItem key={nest.id} value={nest.id}>{nest.name}</SelectItem>
+              <SelectItem value="all">All Vertex Sites</SelectItem>
+              {mockVertexNodes.map(vertex => (
+                <SelectItem key={vertex.id} value={vertex.id}>{vertex.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -448,7 +448,7 @@ const SDWANTopologyMap: React.FC<SDWANTopologyMapProps> = ({ onNodeClick }) => {
         </div>
       </div>
 
-      {/* NEST Node Details Dialog */}
+      {/* Vertex Node Details Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-lg">
           {selectedNode && (

@@ -113,8 +113,8 @@ const ZeroTrustNetworkingPanel: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-medium">NEST Quorum Required</h4>
-                  <p className="text-sm text-muted-foreground">Number of NEST nodes required for authentication</p>
+                  <h4 className="font-medium">Vertex Quorum Required</h4>
+                  <p className="text-sm text-muted-foreground">Number of Vertex nodes required for authentication</p>
                 </div>
                 <span className="font-medium">{quorumLevel} nodes</span>
               </div>

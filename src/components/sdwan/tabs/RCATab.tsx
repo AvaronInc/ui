@@ -15,7 +15,7 @@ const sdwanIssues = [
     severity: 'critical',
     timestamp: '2023-09-15T08:32:45Z',
     description: 'Complete loss of connectivity on the primary WAN link at Tokyo office location. Failover to secondary link was successful but bandwidth is degraded.',
-    affectedNodes: ['Tokyo-NEST-01', 'Tokyo-NEST-02'],
+    affectedNodes: ['Tokyo-Vertex-01', 'Tokyo-Vertex-02'],
     duration: '4h 23m',
   },
   {
@@ -24,7 +24,7 @@ const sdwanIssues = [
     severity: 'high',
     timestamp: '2023-09-18T14:15:22Z',
     description: 'Intermittent BGP session instability between Singapore office and AWS Southeast region VPC. Multiple route withdrawals and announcements detected.',
-    affectedNodes: ['Singapore-NEST-01', 'AWS-SG-VPC'],
+    affectedNodes: ['Singapore-Vertex-01', 'AWS-SG-VPC'],
     duration: '1h 47m',
   },
   {
@@ -33,7 +33,7 @@ const sdwanIssues = [
     severity: 'medium',
     timestamp: '2023-09-22T19:05:10Z',
     description: 'Significant packet loss (>15%) detected on SD-WAN tunnel between New York and London offices. Latency increased by 85ms during event.',
-    affectedNodes: ['NewYork-NEST-03', 'London-NEST-01'],
+    affectedNodes: ['NewYork-Vertex-03', 'London-Vertex-01'],
     duration: '2h 15m',
   },
   {
@@ -42,7 +42,7 @@ const sdwanIssues = [
     severity: 'medium',
     timestamp: '2023-09-25T11:30:05Z',
     description: 'QoS policy for video conferencing traffic failed to apply correctly, resulting in degraded call quality across European sites.',
-    affectedNodes: ['Paris-NEST-01', 'Berlin-NEST-01', 'Madrid-NEST-01'],
+    affectedNodes: ['Paris-Vertex-01', 'Berlin-Vertex-01', 'Madrid-Vertex-01'],
     duration: '3h 40m',
   },
   {
@@ -51,7 +51,7 @@ const sdwanIssues = [
     severity: 'high',
     timestamp: '2023-09-27T02:10:18Z',
     description: 'Abnormal latency increase during failover to Starlink backup connection at remote mining site. Jitter exceeded 120ms during transition.',
-    affectedNodes: ['RemoteSite-NEST-04'],
+    affectedNodes: ['RemoteSite-Vertex-04'],
     duration: '0h 55m',
   }
 ];

@@ -24,7 +24,7 @@ const permissions = [
   { value: 'view_logs', label: 'View Logs', category: 'Security' },
   { value: 'manage_systems', label: 'Manage Systems', category: 'System' },
   { value: 'view_reports', label: 'View Reports', category: 'Reports' },
-  { value: 'manage_nests', label: 'Manage Nests', category: 'NEST' },
+  { value: 'manage_vertexs', label: 'Manage Vertexs', category: 'Vertex' },
   { value: 'manage_sdwan', label: 'Manage SD-WAN', category: 'SD-WAN' },
   { value: 'manage_containers', label: 'Manage Containers', category: 'Containers' },
   { value: 'access_apis', label: 'Access APIs', category: 'Development' },
@@ -53,7 +53,7 @@ const RoleManagement: React.FC = () => {
       id: '3',
       name: 'Network Engineer',
       description: 'Can manage network devices and configurations',
-      permissions: ['view_dashboard', 'manage_nests', 'manage_sdwan', 'view_reports'],
+      permissions: ['view_dashboard', 'manage_vertexs', 'manage_sdwan', 'view_reports'],
       userCount: 8
     },
     {

@@ -148,8 +148,8 @@ const WarrantySection = () => {
                       <TableCell><Badge variant="warning">Expiring Soon</Badge></TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">NEST-PDX-01</TableCell>
-                      <TableCell>CyberNest</TableCell>
+                      <TableCell className="font-medium">Vertex-PDX-01</TableCell>
+                      <TableCell>Avaron Vertex</TableCell>
                       <TableCell>Network Pulse</TableCell>
                       <TableCell className="hidden md:table-cell">2023-06-05</TableCell>
                       <TableCell>2026-06-05</TableCell>

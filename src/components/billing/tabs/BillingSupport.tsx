@@ -131,7 +131,7 @@ const BillingSupport = () => {
                 <div>
                   <h4 className="font-medium">Email Support</h4>
                   <p className="text-sm text-muted-foreground">
-                    billing@cybernest.com
+                    billing@avaron-vertex.com
                   </p>
                 </div>
                 <Button variant="outline" size="sm" className="ml-auto">

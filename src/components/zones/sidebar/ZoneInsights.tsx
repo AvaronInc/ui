@@ -87,7 +87,7 @@ const ZoneInsights: React.FC = () => {
           
           <p className="text-sm text-muted-foreground mt-3 border-t pt-3">
             <span className="font-medium text-foreground block mb-1">Storage Insights:</span>
-            "Marketing Zone's NestVault usage has increased 40% in 2 weeks. Recommend reviewing access logs."
+            "Marketing Zone's VertexVault usage has increased 40% in 2 weeks. Recommend reviewing access logs."
           </p>
           
           <p className="text-sm text-muted-foreground mt-3">

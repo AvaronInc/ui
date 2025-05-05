@@ -1,5 +1,5 @@
 
-export interface NestLocation {
+export interface VertexLocation {
   id: string;
   name: string;
   status: 'online' | 'degraded' | 'offline';
@@ -44,7 +44,7 @@ export interface SecurityAlert {
   acknowledged: boolean;
 }
 
-export interface NestFilters {
+export interface VertexFilters {
   search: string;
   status: ('online' | 'degraded' | 'offline')[];
   hardwareType: string[];

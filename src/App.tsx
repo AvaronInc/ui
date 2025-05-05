@@ -19,7 +19,7 @@ import Security from "./pages/Security";
 import Intelligence from "./pages/Intelligence";
 import WorkforceEMS from "./pages/WorkforceEMS";
 import Topology from "./pages/Topology";
-import Nest from "./pages/Nest";
+import Vertex from "./pages/Vertex";
 import AdminSettings from "./pages/AdminSettings";
 import SDMS from "./pages/SDMS";
 import EmailSecurity from "./pages/EmailSecurity";
@@ -82,7 +82,7 @@ const App = () => (
                 <Route path="/identity" element={<ProtectedRoute><Identity /></ProtectedRoute>} />
                 <Route path="/authenticator" element={<ProtectedRoute><Authenticator /></ProtectedRoute>} />
                 <Route path="/topology" element={<ProtectedRoute><Topology /></ProtectedRoute>} />
-                <Route path="/nest" element={<ProtectedRoute><Nest /></ProtectedRoute>} />
+                <Route path="/vertex" element={<ProtectedRoute><Vertex /></ProtectedRoute>} />
                 <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />
                 <Route path="/zones" element={<ProtectedRoute adminOnly><Zones /></ProtectedRoute>} />
                 <Route path="/regions" element={<ProtectedRoute><Regions /></ProtectedRoute>} />

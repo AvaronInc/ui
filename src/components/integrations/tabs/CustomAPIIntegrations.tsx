@@ -14,7 +14,7 @@ const CustomAPIIntegrations = () => {
         <div>
           <h2 className="text-2xl font-bold">Custom API & Webhook Integrations</h2>
           <p className="text-muted-foreground">
-            Connect CyberNest with custom APIs and set up webhooks for any service
+            Connect Avaron Vertex with custom APIs and set up webhooks for any service
           </p>
         </div>
         <Button onClick={() => setOpenDialog(true)}>

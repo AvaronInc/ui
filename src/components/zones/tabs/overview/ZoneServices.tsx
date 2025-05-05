@@ -18,7 +18,7 @@ const ZoneServices: React.FC<ZoneServicesProps> = ({ zone }) => {
       'ai': 'AI Core',
       'rmm': 'RMM',
       'mixtral': 'Mixtral',
-      'nestvault': 'NestVault'
+      'vertexvault': 'VertexVault'
     };
     return serviceMap[service] || service;
   };

@@ -14,7 +14,7 @@ const invoices = [
     date: '2023-10-01',
     amount: 1249.95,
     status: 'paid',
-    items: 'Monthly subscription, 5 NEST devices, Support package',
+    items: 'Monthly subscription, 5 Vertex devices, Support package',
     paymentMethod: 'Visa ending in 4242'
   },
   {
@@ -22,7 +22,7 @@ const invoices = [
     date: '2023-09-01',
     amount: 1249.95,
     status: 'paid',
-    items: 'Monthly subscription, 5 NEST devices, Support package',
+    items: 'Monthly subscription, 5 Vertex devices, Support package',
     paymentMethod: 'Visa ending in 4242'
   },
   {
@@ -30,7 +30,7 @@ const invoices = [
     date: '2023-08-01',
     amount: 1249.95,
     status: 'paid',
-    items: 'Monthly subscription, 5 NEST devices, Support package',
+    items: 'Monthly subscription, 5 Vertex devices, Support package',
     paymentMethod: 'Visa ending in 4242'
   },
   {
@@ -38,7 +38,7 @@ const invoices = [
     date: '2023-07-01',
     amount: 1199.95,
     status: 'paid',
-    items: 'Monthly subscription, 5 NEST devices',
+    items: 'Monthly subscription, 5 Vertex devices',
     paymentMethod: 'ACH ending in 7890'
   },
   {
@@ -46,7 +46,7 @@ const invoices = [
     date: '2023-06-01',
     amount: 1199.95,
     status: 'paid',
-    items: 'Monthly subscription, 5 NEST devices',
+    items: 'Monthly subscription, 5 Vertex devices',
     paymentMethod: 'ACH ending in 7890'
   },
   {
@@ -54,7 +54,7 @@ const invoices = [
     date: '2023-11-01',
     amount: 1299.95,
     status: 'unpaid',
-    items: 'Monthly subscription, 5 NEST devices, Premium support upgrade',
+    items: 'Monthly subscription, 5 Vertex devices, Premium support upgrade',
     dueDate: '2023-11-15'
   }
 ];

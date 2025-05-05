@@ -12,11 +12,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Database, HardDrive, Clock, Shield, NetworkIcon, Eye, Share2, FileArchive } from 'lucide-react';
 import { Zone } from '../types';
 
-interface ZoneNestvaultProps {
+interface ZoneVertexvaultProps {
   zone: Zone;
 }
 
-const ZoneNestvault: React.FC<ZoneNestvaultProps> = ({ zone }) => {
+const ZoneVertexvault: React.FC<ZoneVertexvaultProps> = ({ zone }) => {
   const [activeTab, setActiveTab] = useState('buckets');
   
   // If storage is not enabled for this zone
@@ -24,9 +24,9 @@ const ZoneNestvault: React.FC<ZoneNestvaultProps> = ({ zone }) => {
     return (
       <div className="min-h-[400px] flex flex-col items-center justify-center">
         <Database className="h-16 w-16 text-muted-foreground mb-4 opacity-20" />
-        <h3 className="text-xl font-medium">NestVault not enabled</h3>
+        <h3 className="text-xl font-medium">VertexVault not enabled</h3>
         <p className="text-muted-foreground mb-6">Storage is not currently enabled for this zone.</p>
-        <Button>Enable NestVault</Button>
+        <Button>Enable VertexVault</Button>
       </div>
     );
   }
@@ -115,7 +115,7 @@ const ZoneNestvault: React.FC<ZoneNestvaultProps> = ({ zone }) => {
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <Database className="h-5 w-5 mr-2 text-indigo-500" />
-              NestVault Storage
+              VertexVault Storage
             </CardTitle>
             <CardDescription>
               Isolated storage for {zone.name}
@@ -493,4 +493,4 @@ const ZoneNestvault: React.FC<ZoneNestvaultProps> = ({ zone }) => {
   );
 };
 
-export default ZoneNestvault;
+export default ZoneVertexvault;

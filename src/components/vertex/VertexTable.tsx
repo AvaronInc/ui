@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { NestLocation } from '@/types/nest';
+import { VertexLocation } from '@/types/vertex';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
@@ -15,17 +15,17 @@ import { formatDistanceToNow, parseISO } from 'date-fns';
 import { Thermometer, Clock, Signal, Eye } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface NestTableProps {
-  locations: NestLocation[];
-  selectedNestId: string | null;
-  onSelectNest: (id: string) => void;
+interface VertexTableProps {
+  locations: VertexLocation[];
+  selectedVertexId: string | null;
+  onSelectVertex: (id: string) => void;
   isLoading: boolean;
 }
 
-const NestTable: React.FC<NestTableProps> = ({ 
+const VertexTable: React.FC<VertexTableProps> = ({ 
   locations, 
-  selectedNestId, 
-  onSelectNest,
+  selectedVertexId, 
+  onSelectVertex,
   isLoading 
 }) => {
   const formatLastCheckIn = (dateString: string) => {
@@ -65,15 +65,15 @@ const NestTable: React.FC<NestTableProps> = ({
           {locations.length === 0 ? (
             <TableRow>
               <TableCell colSpan={8} className="text-center py-6 text-muted-foreground">
-                No N.E.S.T. locations found
+                No Vertex locations found
               </TableCell>
             </TableRow>
           ) : (
             locations.map((location) => (
               <TableRow 
                 key={location.id} 
-                className={`cursor-pointer ${selectedNestId === location.id ? 'bg-muted' : ''}`}
-                onClick={() => onSelectNest(location.id)}
+                className={`cursor-pointer ${selectedVertexId === location.id ? 'bg-muted' : ''}`}
+                onClick={() => onSelectVertex(location.id)}
               >
                 <TableCell className="font-medium">{location.name}</TableCell>
                 <TableCell>
@@ -114,7 +114,7 @@ const NestTable: React.FC<NestTableProps> = ({
                     disabled={!location.hasLiveStream}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent row click event
-                      onSelectNest(location.id); // Call the same function as row click
+                      onSelectVertex(location.id); // Call the same function as row click
                     }}
                   >
                     <Eye className="h-4 w-4 mr-1" />
@@ -130,4 +130,4 @@ const NestTable: React.FC<NestTableProps> = ({
   );
 };
 
-export default NestTable;
+export default VertexTable;

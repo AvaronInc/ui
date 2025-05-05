@@ -14,7 +14,7 @@ export const getSampleRegistries = (): Registry[] => [
   {
     id: '2',
     name: 'Private Registry',
-    url: 'https://registry.cybernest.internal',
+    url: 'https://registry.avaron-vertex.internal',
     status: 'connected',
     imageCount: 18,
     lastSync: '1 day ago'

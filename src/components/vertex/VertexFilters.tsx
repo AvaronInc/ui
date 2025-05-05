@@ -1,26 +1,26 @@
 
 import React from 'react';
-import { NestLocation, NestFilters as NestFilterTypes } from '@/types/nest';
+import { VertexLocation, VertexFilters as VertexFilterTypes } from '@/types/vertex';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Search, X } from 'lucide-react';
 
-interface NestFiltersProps {
-  filters: NestFilterTypes;
-  setFilters: React.Dispatch<React.SetStateAction<NestFilterTypes>>;
-  nestLocations: NestLocation[];
+interface VertexFiltersProps {
+  filters: VertexFilterTypes;
+  setFilters: React.Dispatch<React.SetStateAction<VertexFilterTypes>>;
+  vertexLocations: VertexLocation[];
 }
 
-const NestFilters: React.FC<NestFiltersProps> = ({ filters, setFilters, nestLocations }) => {
+const VertexFilters: React.FC<VertexFiltersProps> = ({ filters, setFilters, vertexLocations }) => {
   // Extract unique hardware models and regions for filtering
   const hardwareModels = React.useMemo(() => {
-    return Array.from(new Set(nestLocations.map(loc => loc.hardwareModel)));
-  }, [nestLocations]);
+    return Array.from(new Set(vertexLocations.map(loc => loc.hardwareModel)));
+  }, [vertexLocations]);
   
   const regions = React.useMemo(() => {
-    return Array.from(new Set(nestLocations.map(loc => loc.region)));
-  }, [nestLocations]);
+    return Array.from(new Set(vertexLocations.map(loc => loc.region)));
+  }, [vertexLocations]);
 
   // Handle search input
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,4 +164,4 @@ const NestFilters: React.FC<NestFiltersProps> = ({ filters, setFilters, nestLoca
   );
 };
 
-export default NestFilters;
+export default VertexFilters;

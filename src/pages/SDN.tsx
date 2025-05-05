@@ -13,7 +13,7 @@ const SDN = () => {
         <div className="p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
           <PageTitle 
             title="Software Defined Networking" 
-            description="Automated network configuration and control across all NEST deployments"
+            description="Automated network configuration and control across all Vertex deployments"
             icon={<Network className="h-6 w-6" />}
           />
           <SDNPanel />

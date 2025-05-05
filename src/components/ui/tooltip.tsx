@@ -27,7 +27,7 @@ const TooltipContent = React.forwardRef<
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
 // A simple component wrapper that doesn't use tooltip provider
-// This is just a regular fragment wrapper to prevent context nesting issues
+// This is just a regular fragment wrapper to prevent context vertexing issues
 const SafeTooltipWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };

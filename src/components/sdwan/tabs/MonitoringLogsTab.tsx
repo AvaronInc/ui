@@ -9,10 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import SDWANTopologyMap from '../components/SDWANTopologyMap';
-import { NESTNode } from '@/types/sdwan';
+import { VertexNode } from '@/types/sdwan';
 
 const MonitoringLogsTab = () => {
-  const handleNodeClick = (node: NESTNode) => {
+  const handleNodeClick = (node: VertexNode) => {
     console.log('Node clicked:', node);
     // Additional logic if needed when node is clicked
   };
@@ -40,13 +40,13 @@ const MonitoringLogsTab = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Select NEST to View</Label>
+            <Label>Select Vertex to View</Label>
             <Select defaultValue="all">
               <SelectTrigger>
-                <SelectValue placeholder="Select NEST" />
+                <SelectValue placeholder="Select Vertex" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All NESTS</SelectItem>
+                <SelectItem value="all">All Vertices</SelectItem>
                 <SelectItem value="headquarters">Headquarters</SelectItem>
                 <SelectItem value="branch1">Branch Office 1</SelectItem>
                 <SelectItem value="branch2">Branch Office 2</SelectItem>
@@ -104,7 +104,7 @@ const MonitoringLogsTab = () => {
                 <tr>
                   <th scope="col" className="px-4 py-3">Timestamp</th>
                   <th scope="col" className="px-4 py-3">Event Type</th>
-                  <th scope="col" className="px-4 py-3">NEST</th>
+                  <th scope="col" className="px-4 py-3">Vertex</th>
                   <th scope="col" className="px-4 py-3">Status</th>
                   <th scope="col" className="px-4 py-3">Message</th>
                 </tr>
@@ -141,7 +141,7 @@ const MonitoringLogsTab = () => {
                 <tr>
                   <td className="px-4 py-3">2023-08-28 13:45:11</td>
                   <td className="px-4 py-3">System</td>
-                  <td className="px-4 py-3">All NESTS</td>
+                  <td className="px-4 py-3">All Vertices</td>
                   <td className="px-4 py-3"><Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">Info</Badge></td>
                   <td className="px-4 py-3">SD-WAN configuration updated successfully</td>
                 </tr>

@@ -32,7 +32,7 @@ const TemporaryAccessControl: React.FC = () => {
     },
     {
       id: 'temp-3',
-      user: 'NestEdge Support',
+      user: 'VertexEdge Support',
       role: 'Admin',
       requestedBy: 'Help Desk',
       reason: 'Critical system issue troubleshooting',
@@ -113,10 +113,10 @@ const TemporaryAccessControl: React.FC = () => {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center">
             <Shield className="h-5 w-5 mr-2 text-primary" />
-            NestEdge Technician Access
+            VertexEdge Technician Access
           </CardTitle>
           <CardDescription>
-            Grant temporary admin access to NestEdge support technicians
+            Grant temporary admin access to VertexEdge support technicians
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -149,7 +149,7 @@ const TemporaryAccessControl: React.FC = () => {
             <div className="flex items-center p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
               <AlertTriangle className="h-5 w-5 text-amber-500 mr-3 flex-shrink-0" />
               <p className="text-sm text-amber-800 dark:text-amber-300">
-                All actions performed by NestEdge technicians will be logged and recorded for security auditing purposes.
+                All actions performed by VertexEdge technicians will be logged and recorded for security auditing purposes.
               </p>
             </div>
             

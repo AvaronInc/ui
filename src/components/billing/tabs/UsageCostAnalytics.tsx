@@ -19,7 +19,7 @@ const monthlyBillingData = [
 
 const breakdownData = [
   { name: 'Subscription', value: 499.95 },
-  { name: 'NEST Devices', value: 600.00 },
+  { name: 'Vertex Devices', value: 600.00 },
   { name: 'Premium Support', value: 200.00 },
 ];
 

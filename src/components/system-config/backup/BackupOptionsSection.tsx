@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 const BackupOptionsSection: React.FC = () => {
   const [backupLocal, setBackupLocal] = useState(true);
-  const [backupNestVault, setBackupNestVault] = useState(false);
+  const [backupVertexVault, setBackupVertexVault] = useState(false);
   const [backupWasabi, setBackupWasabi] = useState(false);
   const [wasabiKey, setWasabiKey] = useState('');
   const [wasabiBucket, setWasabiBucket] = useState('');
@@ -20,7 +20,7 @@ const BackupOptionsSection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleStartBackup = async () => {
-    if (!backupLocal && !backupNestVault && !backupWasabi) {
+    if (!backupLocal && !backupVertexVault && !backupWasabi) {
       toast.error("Please select at least one backup destination");
       return;
     }
@@ -38,7 +38,7 @@ const BackupOptionsSection: React.FC = () => {
       
       const destinations = [];
       if (backupLocal) destinations.push('Local Storage');
-      if (backupNestVault) destinations.push('NestVault');
+      if (backupVertexVault) destinations.push('VertexVault');
       if (backupWasabi) destinations.push('Wasabi Cloud');
       
       toast.success(`Backup started to: ${destinations.join(', ')}`);
@@ -98,12 +98,12 @@ const BackupOptionsSection: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* NestVault Backup */}
+        {/* VertexVault Backup */}
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="flex items-center gap-2">
               <Database className="h-5 w-5 text-primary" />
-              NestVault Backup
+              VertexVault Backup
             </CardTitle>
             <CardDescription>
               Secure backup with erasure coding
@@ -112,16 +112,16 @@ const BackupOptionsSection: React.FC = () => {
           <CardContent>
             <div className="flex items-start space-x-2">
               <Checkbox 
-                id="backup-nestvault" 
-                checked={backupNestVault} 
-                onCheckedChange={(checked) => setBackupNestVault(!!checked)}
+                id="backup-vertexvault" 
+                checked={backupVertexVault} 
+                onCheckedChange={(checked) => setBackupVertexVault(!!checked)}
               />
               <div className="grid gap-1.5 leading-none">
                 <Label 
-                  htmlFor="backup-nestvault" 
+                  htmlFor="backup-vertexvault" 
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Save to NestVault (MinIO S3)
+                  Save to VertexVault (MinIO S3)
                 </Label>
                 <p className="text-xs text-muted-foreground">
                   Encrypted local cluster storage with redundancy
@@ -134,7 +134,7 @@ const BackupOptionsSection: React.FC = () => {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="w-[200px] text-xs">
-                      NestVault uses MinIO S3-compatible storage with erasure coding for redundancy. Recommended for regular backups.
+                      VertexVault uses MinIO S3-compatible storage with erasure coding for redundancy. Recommended for regular backups.
                     </p>
                   </TooltipContent>
                 </Tooltip>

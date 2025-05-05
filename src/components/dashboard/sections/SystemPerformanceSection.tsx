@@ -19,7 +19,7 @@ const SystemPerformanceSection = () => {
     { name: 'Servers', cpu: 65, memory: 78, storage: 45 },
     { name: 'Database', cpu: 85, memory: 72, storage: 68 },
     { name: 'Storage', cpu: 40, memory: 35, storage: 82 },
-    { name: 'NESTS', cpu: 52, memory: 48, storage: 30 },
+    { name: 'Vertex', cpu: 52, memory: 48, storage: 30 },
   ];
 
   return (

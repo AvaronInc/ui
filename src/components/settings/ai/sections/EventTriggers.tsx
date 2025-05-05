@@ -75,9 +75,9 @@ const EventTriggers: React.FC<EventTriggersProps> = ({ form }) => {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>CyberNest Hardware Failure</FormLabel>
+                <FormLabel>Avaron Vertex Hardware Failure</FormLabel>
                 <FormDescription>
-                  Trigger AI calls when CyberNest hardware failures occur
+                  Trigger AI calls when Avaron Vertex hardware failures occur
                 </FormDescription>
               </div>
             </FormItem>

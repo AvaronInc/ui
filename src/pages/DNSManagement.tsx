@@ -13,7 +13,7 @@ const DNSManagement = () => {
         <div className="p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
           <PageTitle 
             title="DNS Management" 
-            description="Enterprise-grade DNS configuration and monitoring for CyberNest NESTS, cloud instances, and external domains"
+            description="Enterprise-grade DNS configuration and monitoring for Avaron Vertices, cloud instances, and external domains"
             icon={<Server className="h-6 w-6" />}
           />
           <DNSPanel />

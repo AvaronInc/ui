@@ -15,9 +15,9 @@ const DnsZoneList: React.FC = () => {
   // Mock DNS zones data
   const zones = [
     { id: 1, name: 'example.com', type: 'Primary', records: 42, status: 'Healthy', lastUpdated: '2 hours ago' },
-    { id: 2, name: 'cybernest.local', type: 'Internal', records: 53, status: 'Healthy', lastUpdated: '1 day ago' },
+    { id: 2, name: 'avaron-vertex.local', type: 'Internal', records: 53, status: 'Healthy', lastUpdated: '1 day ago' },
     { id: 3, name: 'test.example.com', type: 'Secondary', records: 16, status: 'Degraded', lastUpdated: '3 hours ago' },
-    { id: 4, name: 'dev.cybernest.local', type: 'Internal', records: 24, status: 'Healthy', lastUpdated: '5 hours ago' },
+    { id: 4, name: 'dev.avaron-vertex.local', type: 'Internal', records: 24, status: 'Healthy', lastUpdated: '5 hours ago' },
     { id: 5, name: 'customer-portal.example.com', type: 'Primary', records: 31, status: 'Critical', lastUpdated: '20 mins ago' },
   ];
 

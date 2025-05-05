@@ -1,18 +1,18 @@
 
 import React from 'react';
-import { NestLocation } from '@/types/nest';
+import { VertexLocation } from '@/types/vertex';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useNest } from './NestContext';
+import { useVertex } from './VertexContext';
 import { Badge } from '@/components/ui/badge';
 
-interface NestMapProps {
-  locations: NestLocation[];
-  selectedLocation: NestLocation | null;
+interface VertexMapProps {
+  locations: VertexLocation[];
+  selectedLocation: VertexLocation | null;
   onSelectLocation: (id: string) => void;
   isLoading: boolean;
 }
 
-const NestMap: React.FC<NestMapProps> = ({ 
+const VertexMap: React.FC<VertexMapProps> = ({ 
   locations, 
   selectedLocation, 
   onSelectLocation,
@@ -108,4 +108,4 @@ const NestMap: React.FC<NestMapProps> = ({
   );
 };
 
-export default NestMap;
+export default VertexMap;

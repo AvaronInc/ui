@@ -6,7 +6,7 @@ export const getSampleContainers = (): Container[] => [
   {
     id: '1',
     name: 'api-server',
-    image: 'cybernest/api-server:latest',
+    image: 'avaron-vertex/api-server:latest',
     status: 'running',
     uptime: '10d 4h',
     cpu: 12,
@@ -16,7 +16,7 @@ export const getSampleContainers = (): Container[] => [
   {
     id: '2',
     name: 'web-frontend',
-    image: 'cybernest/web:latest',
+    image: 'avaron-vertex/web:latest',
     status: 'running',
     uptime: '5d 7h',
     cpu: 8,

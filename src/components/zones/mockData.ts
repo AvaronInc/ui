@@ -7,7 +7,7 @@ export const mockZones: Zone[] = [
     name: 'HR Zone',
     description: 'Human Resources dedicated zone with enhanced privacy controls',
     status: 'warning',
-    services: ['identity', 'vault', 'ai', 'mixtral', 'nestvault'],
+    services: ['identity', 'vault', 'ai', 'mixtral', 'vertexvault'],
     adminScopes: ['HR Admin', 'Global Admin'],
     resourceUsage: {
       cpu: 45,
@@ -35,7 +35,7 @@ export const mockZones: Zone[] = [
     name: 'Finance Zone',
     description: 'Financial systems and operations zone with strict access controls',
     status: 'healthy',
-    services: ['identity', 'vault', 'ai', 'sdwan', 'nestvault'],
+    services: ['identity', 'vault', 'ai', 'sdwan', 'vertexvault'],
     adminScopes: ['Finance Admin', 'Global Admin'],
     resourceUsage: {
       cpu: 35,
@@ -63,7 +63,7 @@ export const mockZones: Zone[] = [
     name: 'Development Zone',
     description: 'Software development environment with CI/CD integrations',
     status: 'healthy',
-    services: ['identity', 'ai', 'rmm', 'mixtral', 'nestvault'],
+    services: ['identity', 'ai', 'rmm', 'mixtral', 'vertexvault'],
     adminScopes: ['DevOps Admin', 'Global Admin'],
     resourceUsage: {
       cpu: 70,
@@ -91,7 +91,7 @@ export const mockZones: Zone[] = [
     name: 'Executive Zone',
     description: 'Executive leadership secure communications environment',
     status: 'healthy',
-    services: ['sdwan', 'identity', 'vault', 'ai', 'nestvault'],
+    services: ['sdwan', 'identity', 'vault', 'ai', 'vertexvault'],
     adminScopes: ['Executive Admin', 'Global Admin'],
     resourceUsage: {
       cpu: 25,
@@ -119,7 +119,7 @@ export const mockZones: Zone[] = [
     name: 'Marketing Zone',
     description: 'Marketing operations and content development zone',
     status: 'degraded',
-    services: ['identity', 'ai', 'mixtral', 'nestvault'],
+    services: ['identity', 'ai', 'mixtral', 'vertexvault'],
     adminScopes: ['Marketing Admin', 'Global Admin'],
     resourceUsage: {
       cpu: 90,

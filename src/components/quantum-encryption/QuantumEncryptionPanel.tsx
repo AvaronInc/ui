@@ -65,7 +65,7 @@ const QuantumEncryptionPanel = () => {
   
   function generateTunnels(): TunnelInfo[] {
     const results: TunnelInfo[] = [];
-    const locations = ["NYC-NEST", "LA-NEST", "CHI-NEST", "ATL-NEST", "SFO-NEST", "MIA-NEST", "DFW-NEST", "SEA-NEST"];
+    const locations = ["NYC-Vertex", "LA-Vertex", "CHI-Vertex", "ATL-Vertex", "SFO-Vertex", "MIA-Vertex", "DFW-Vertex", "SEA-Vertex"];
     const encryptionMethods: EncryptionMethod[] = ["standard", "hybrid", "kyber-only"];
     
     for (let i = 0; i < 10; i++) {

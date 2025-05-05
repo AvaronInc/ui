@@ -20,7 +20,7 @@ const OrchestrationForm: React.FC = () => {
   const form = useForm<OrchestrationFormValues>({
     defaultValues: {
       orchestration: 'docker',
-      primaryNode: 'nest-1',
+      primaryNode: 'vertex-1',
       replicaCount: '1',
       nodeAffinity: 'any',
     },

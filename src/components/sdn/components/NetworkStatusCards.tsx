@@ -6,7 +6,7 @@ import { CheckCircle, AlertTriangle, XCircle, Clock, Server } from 'lucide-react
 const statusData = [
   { 
     id: 'headquarters', 
-    name: 'Headquarters NEST', 
+    name: 'Headquarters Vertex', 
     status: 'healthy', 
     devices: 45, 
     utilization: '72%',

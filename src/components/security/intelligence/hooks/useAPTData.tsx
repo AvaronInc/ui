@@ -74,7 +74,7 @@ export const useAPTData = () => {
       threatLevel: 'critical',
       firstObserved: '2014',
       isActive: true,
-      associatedMalware: ['DYEPACK', 'NESTEGG', 'BLINDINGCAN', 'COPPERHEDGE']
+      associatedMalware: ['DYEPACK', 'VertexEGG', 'BLINDINGCAN', 'COPPERHEDGE']
     },
     {
       id: 'apt41',

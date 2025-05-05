@@ -13,7 +13,7 @@ interface PrimaryNodeSelectorProps {
 const PrimaryNodeSelector: React.FC<PrimaryNodeSelectorProps> = ({ form, onValueChange }) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Primary NEST Node</h3>
+      <h3 className="text-lg font-medium">Primary Vertex Node</h3>
       <FormField
         control={form.control}
         name="primaryNode"
@@ -29,10 +29,10 @@ const PrimaryNodeSelector: React.FC<PrimaryNodeSelectorProps> = ({ form, onValue
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="nest-1">NEST-1 (Primary)</SelectItem>
-                <SelectItem value="nest-2">NEST-2 (Secondary)</SelectItem>
-                <SelectItem value="nest-3">NEST-3 (Development)</SelectItem>
-                <SelectItem value="nest-4">NEST-4 (Testing)</SelectItem>
+                <SelectItem value="vertex-1">Vertex-1 (Primary)</SelectItem>
+                <SelectItem value="vertex-2">Vertex-2 (Secondary)</SelectItem>
+                <SelectItem value="vertex-3">Vertex-3 (Development)</SelectItem>
+                <SelectItem value="vertex-4">Vertex-4 (Testing)</SelectItem>
                 <SelectItem value="custom">Custom Server</SelectItem>
               </SelectContent>
             </Select>

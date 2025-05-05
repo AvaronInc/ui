@@ -36,7 +36,7 @@ const NetworkStatusSection = () => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           <div className="text-center p-2 bg-green-50 dark:bg-green-900/10 rounded-md">
             <Wifi className="h-5 w-5 text-green-500 mx-auto mb-1" />
-            <div className="text-xs text-muted-foreground">NESTS Online</div>
+            <div className="text-xs text-muted-foreground">Vertices Online</div>
             <div className="text-lg font-bold">16/18</div>
           </div>
           <div className="text-center p-2 bg-blue-50 dark:bg-blue-900/10 rounded-md">

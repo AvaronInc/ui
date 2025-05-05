@@ -87,13 +87,13 @@ const NetworkConnectivityTab = () => {
           </div>
           
           <div className="space-y-2">
-            <Label>Select NESTS to Participate</Label>
+            <Label>Vertices to Include</Label>
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder="Select NESTS" />
+                <SelectValue placeholder="-" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All NESTS</SelectItem>
+                <SelectItem value="all">All Vertices</SelectItem>
                 <SelectItem value="headquarters">Headquarters</SelectItem>
                 <SelectItem value="branch1">Branch Office 1</SelectItem>
                 <SelectItem value="branch2">Branch Office 2</SelectItem>

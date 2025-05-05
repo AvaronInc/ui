@@ -197,7 +197,7 @@ const BillingOverview = () => {
               <DialogHeader>
                 <DialogTitle>Change Subscription Plan</DialogTitle>
                 <DialogDescription>
-                  Select a new subscription plan for your CyberNest services.
+                  Select a new subscription plan for your Avaron Vertex services.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -222,7 +222,7 @@ const BillingOverview = () => {
                   <h4 className="font-medium mb-2">{selectedPlan} Plan Features:</h4>
                   {selectedPlan === "Basic" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
-                      <li>Up to 5 NEST units</li>
+                      <li>Up to 5 Vertex units</li>
                       <li>Basic network monitoring</li>
                       <li>Email support</li>
                       <li>Standard SLA</li>
@@ -230,7 +230,7 @@ const BillingOverview = () => {
                   )}
                   {selectedPlan === "Professional" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
-                      <li>Up to 15 NEST units</li>
+                      <li>Up to 15 Vertex units</li>
                       <li>Advanced monitoring</li>
                       <li>Email and phone support</li>
                       <li>Enhanced SLA</li>
@@ -239,7 +239,7 @@ const BillingOverview = () => {
                   )}
                   {selectedPlan === "Enterprise" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
-                      <li>Up to 50 NEST units</li>
+                      <li>Up to 50 Vertex units</li>
                       <li>Premium monitoring and alerts</li>
                       <li>24/7 priority support</li>
                       <li>Premium SLA</li>
@@ -249,7 +249,7 @@ const BillingOverview = () => {
                   )}
                   {selectedPlan === "Enterprise Plus" && (
                     <ul className="text-sm space-y-1 list-disc pl-5">
-                      <li>Unlimited NEST units</li>
+                      <li>Unlimited Vertex units</li>
                       <li>Enterprise-grade monitoring</li>
                       <li>Dedicated support manager</li>
                       <li>Custom SLA</li>
@@ -277,7 +277,7 @@ const BillingOverview = () => {
         <CardContent>
           <div className="text-2xl font-bold">{billing?.totalHardwareCount || '12'} devices</div>
           <p className="text-xs text-muted-foreground">
-            {billing?.activeNestCount || '8'} NEST units + {billing?.additionalHardwareCount || '4'} add-ons
+            {billing?.activeVertexCount || '8'} Vertex units + {billing?.additionalHardwareCount || '4'} add-ons
           </p>
         </CardContent>
         <CardFooter>
@@ -291,7 +291,7 @@ const BillingOverview = () => {
               <DialogHeader>
                 <DialogTitle>Hardware Under Contract</DialogTitle>
                 <DialogDescription>
-                  View details of all your CyberNest hardware units
+                  View details of all your Avaron Vertex hardware units
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4 max-h-[60vh] overflow-auto">
@@ -304,9 +304,9 @@ const BillingOverview = () => {
                     <div>Warranty</div>
                   </div>
                   {Array.from({ length: 8 }).map((_, i) => (
-                    <div key={`nest-${i}`} className="grid grid-cols-5 gap-4 p-3 text-sm border-t">
-                      <div>NEST-{1000 + i}</div>
-                      <div>NEST Core</div>
+                    <div key={`vertex-${i}`} className="grid grid-cols-5 gap-4 p-3 text-sm border-t">
+                      <div>Vertex-{1000 + i}</div>
+                      <div>Vertex Core</div>
                       <div>{['HQ', 'Branch Office', 'Data Center', 'Remote Site'][i % 4]}</div>
                       <div className="flex items-center">
                         <span className={`h-2 w-2 rounded-full mr-2 ${i % 5 !== 0 ? 'bg-green-500' : 'bg-amber-500'}`}></span>

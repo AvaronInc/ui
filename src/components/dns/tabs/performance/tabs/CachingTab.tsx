@@ -14,10 +14,10 @@ import { DNSCacheConfig } from '../types';
 const CachingTab: React.FC = () => {
   // Mock data for DNS cache configuration
   const [cacheConfigs, setCacheConfigs] = useState<DNSCacheConfig[]>([
-    { id: 1, domain: "*.internal.cybernest.com", ttl: 3600, recommended_ttl: 7200, negativeCache: true, status: 'active' },
-    { id: 2, domain: "api.cybernest.com", ttl: 300, recommended_ttl: 300, negativeCache: false, status: 'active' },
-    { id: 3, domain: "static.cybernest.com", ttl: 86400, recommended_ttl: 86400, negativeCache: false, status: 'active' },
-    { id: 4, domain: "*.client.cybernest.com", ttl: 1800, recommended_ttl: 3600, negativeCache: true, status: 'inactive' },
+    { id: 1, domain: "*.internal.avaron-vertex.com", ttl: 3600, recommended_ttl: 7200, negativeCache: true, status: 'active' },
+    { id: 2, domain: "api.avaron-vertex.com", ttl: 300, recommended_ttl: 300, negativeCache: false, status: 'active' },
+    { id: 3, domain: "static.avaron-vertex.com", ttl: 86400, recommended_ttl: 86400, negativeCache: false, status: 'active' },
+    { id: 4, domain: "*.client.avaron-vertex.com", ttl: 1800, recommended_ttl: 3600, negativeCache: true, status: 'inactive' },
   ]);
 
   const [globalCacheTTL, setGlobalCacheTTL] = useState(3600);
@@ -120,7 +120,7 @@ const CachingTab: React.FC = () => {
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-medium mb-0.5">Increase TTL for static.cybernest.com</p>
+                      <p className="font-medium mb-0.5">Increase TTL for static.avaron-vertex.com</p>
                       <p className="text-muted-foreground">Static content rarely changes. Consider increasing TTL to 7 days for better performance.</p>
                     </div>
                   </div>

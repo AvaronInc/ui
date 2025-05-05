@@ -24,7 +24,7 @@ const initialNodes: Node[] = [
     id: 'headquarters',
     type: 'default',
     data: { 
-      label: 'Headquarters NEST',
+      label: 'Headquarters Vertex',
       status: 'healthy'
     },
     position: { x: 250, y: 100 },

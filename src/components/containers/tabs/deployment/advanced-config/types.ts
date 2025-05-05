@@ -4,5 +4,5 @@ export interface AdvancedConfigFormValues {
   portMappings: string;
   volumeMounts: string;
   networkMode: string;
-  nestVaultBucket: string;
+  vertexVaultBucket: string;
 }

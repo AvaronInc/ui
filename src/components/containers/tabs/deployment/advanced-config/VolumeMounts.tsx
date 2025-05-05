@@ -25,7 +25,7 @@ const VolumeMounts: React.FC<VolumeMountsProps> = ({ form }) => {
               />
             </FormControl>
             <FormDescription>
-              Mount local volumes (use NestVault section below for MinIO buckets)
+              Mount local volumes (use VertexVault section below for MinIO buckets)
             </FormDescription>
             <FormMessage />
           </FormItem>

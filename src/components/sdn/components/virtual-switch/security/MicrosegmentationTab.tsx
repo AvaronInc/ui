@@ -117,7 +117,7 @@ const MicrosegmentationTab: React.FC<MicrosegmentationTabProps> = ({ control }) 
                 Auto-Quarantine Suspicious Traffic
               </FormLabel>
               <FormDescription>
-                Automatically isolate suspicious traffic detected by CyberNest AI
+                Automatically isolate suspicious traffic detected by Avaron Vertex AI
               </FormDescription>
             </div>
           </FormItem>

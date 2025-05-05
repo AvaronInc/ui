@@ -12,24 +12,24 @@ const DataCenterSection = () => {
   const [selectedLocation, setSelectedLocation] = useState('all');
   
   const dataCenters = [
-    { id: 'dc1', name: 'Data Center Alpha', location: 'Portland, OR', racks: 24, usedU: 683, totalU: 1008, power: '87%', cooling: 'Optimal', cyberNests: 8 },
-    { id: 'dc2', name: 'Data Center Beta', location: 'Seattle, WA', racks: 18, usedU: 492, totalU: 756, power: '72%', cooling: 'Optimal', cyberNests: 6 },
-    { id: 'dc3', name: 'CoLo Facility East', location: 'New York, NY', racks: 6, usedU: 168, totalU: 252, power: '65%', cooling: 'Optimal', cyberNests: 2 },
-    { id: 'dc4', name: 'Edge Deployment 1', location: 'Austin, TX', racks: 4, usedU: 76, totalU: 168, power: '45%', cooling: 'Optimal', cyberNests: 4 },
+    { id: 'dc1', name: 'Data Center Alpha', location: 'Portland, OR', racks: 24, usedU: 683, totalU: 1008, power: '87%', cooling: 'Optimal', avaronVertices: 8 },
+    { id: 'dc2', name: 'Data Center Beta', location: 'Seattle, WA', racks: 18, usedU: 492, totalU: 756, power: '72%', cooling: 'Optimal', avaronVertices: 6 },
+    { id: 'dc3', name: 'CoLo Facility East', location: 'New York, NY', racks: 6, usedU: 168, totalU: 252, power: '65%', cooling: 'Optimal', avaronVertices: 2 },
+    { id: 'dc4', name: 'Edge Deployment 1', location: 'Austin, TX', racks: 4, usedU: 76, totalU: 168, power: '45%', cooling: 'Optimal', avaronVertices: 4 },
   ];
   
-  const cyberNests = [
-    { id: 'nest1', name: 'NEST-PDX-01', location: 'Portland HQ', model: 'Enterprise C4', cpuCores: 32, ram: '128GB', storage: '24TB', uplink: '10Gbps', firmware: 'v3.7.2', status: 'Active' },
-    { id: 'nest2', name: 'NEST-PDX-02', location: 'Portland HQ', model: 'Enterprise C4', cpuCores: 32, ram: '128GB', storage: '24TB', uplink: '10Gbps', firmware: 'v3.7.2', status: 'Active' },
-    { id: 'nest3', name: 'NEST-SEA-01', location: 'Seattle Office', model: 'Standard C2', cpuCores: 16, ram: '64GB', storage: '12TB', uplink: '5Gbps', firmware: 'v3.7.1', status: 'Active' },
-    { id: 'nest4', name: 'NEST-NYC-01', location: 'New York Office', model: 'Standard C2', cpuCores: 16, ram: '64GB', storage: '12TB', uplink: '2.5Gbps', firmware: 'v3.7.1', status: 'Maintenance' },
-    { id: 'nest5', name: 'NEST-ATX-01', location: 'Austin Office', model: 'Standard C2', cpuCores: 16, ram: '64GB', storage: '12TB', uplink: '1Gbps', firmware: 'v3.6.9', status: 'Update Required' },
+  const avaronVertices = [
+    { id: 'vertex1', name: 'Vertex-PDX-01', location: 'Portland HQ', model: 'Enterprise C4', cpuCores: 32, ram: '128GB', storage: '24TB', uplink: '10Gbps', firmware: 'v3.7.2', status: 'Active' },
+    { id: 'vertex2', name: 'Vertex-PDX-02', location: 'Portland HQ', model: 'Enterprise C4', cpuCores: 32, ram: '128GB', storage: '24TB', uplink: '10Gbps', firmware: 'v3.7.2', status: 'Active' },
+    { id: 'vertex3', name: 'Vertex-SEA-01', location: 'Seattle Office', model: 'Standard C2', cpuCores: 16, ram: '64GB', storage: '12TB', uplink: '5Gbps', firmware: 'v3.7.1', status: 'Active' },
+    { id: 'vertex4', name: 'Vertex-NYC-01', location: 'New York Office', model: 'Standard C2', cpuCores: 16, ram: '64GB', storage: '12TB', uplink: '2.5Gbps', firmware: 'v3.7.1', status: 'Maintenance' },
+    { id: 'vertex5', name: 'Vertex-ATX-01', location: 'Austin Office', model: 'Standard C2', cpuCores: 16, ram: '64GB', storage: '12TB', uplink: '1Gbps', firmware: 'v3.6.9', status: 'Update Required' },
   ];
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-        <h3 className="text-lg font-medium">Data Center & CyberNest Management</h3>
+        <h3 className="text-lg font-medium">Data Center & Avaron Vertex Management</h3>
         <div className="w-full sm:w-auto max-w-xs">
           <Select value={selectedLocation} onValueChange={setSelectedLocation}>
             <SelectTrigger>
@@ -49,7 +49,7 @@ const DataCenterSection = () => {
       <Tabs defaultValue="datacenters">
         <TabsList className="mb-4">
           <TabsTrigger value="datacenters">Data Centers</TabsTrigger>
-          <TabsTrigger value="cybernests">CyberNests</TabsTrigger>
+          <TabsTrigger value="avaron-vertices">Avaron Vertices</TabsTrigger>
           <TabsTrigger value="map">Map View</TabsTrigger>
         </TabsList>
         
@@ -83,8 +83,8 @@ const DataCenterSection = () => {
                       <span className="font-medium">{dc.cooling}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">CyberNests:</span>
-                      <span className="font-medium">{dc.cyberNests}</span>
+                      <span className="text-muted-foreground">Avaron Vertices:</span>
+                      <span className="font-medium">{dc.avaronVertices}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -159,12 +159,12 @@ const DataCenterSection = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="cybernests" className="mt-0">
+        <TabsContent value="avaron-vertices" className="mt-0">
           <div className="border rounded-md mb-6">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nest ID</TableHead>
+                  <TableHead>Vertex ID</TableHead>
                   <TableHead>Location</TableHead>
                   <TableHead>Model</TableHead>
                   <TableHead className="hidden md:table-cell">CPU Cores</TableHead>
@@ -175,24 +175,24 @@ const DataCenterSection = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {cyberNests.map(nest => (
-                  <TableRow key={nest.id}>
-                    <TableCell className="font-medium">{nest.name}</TableCell>
-                    <TableCell>{nest.location}</TableCell>
-                    <TableCell>{nest.model}</TableCell>
-                    <TableCell className="hidden md:table-cell">{nest.cpuCores}</TableCell>
-                    <TableCell className="hidden md:table-cell">{nest.ram}</TableCell>
-                    <TableCell className="hidden lg:table-cell">{nest.storage}</TableCell>
-                    <TableCell className="hidden lg:table-cell">{nest.uplink}</TableCell>
+                {avaronVertices.map(vertex => (
+                  <TableRow key={vertex.id}>
+                    <TableCell className="font-medium">{vertex.name}</TableCell>
+                    <TableCell>{vertex.location}</TableCell>
+                    <TableCell>{vertex.model}</TableCell>
+                    <TableCell className="hidden md:table-cell">{vertex.cpuCores}</TableCell>
+                    <TableCell className="hidden md:table-cell">{vertex.ram}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{vertex.storage}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{vertex.uplink}</TableCell>
                     <TableCell>
                       <Badge 
                         variant={
-                          nest.status === 'Active' ? 'default' : 
-                          nest.status === 'Maintenance' ? 'warning' : 
+                          vertex.status === 'Active' ? 'default' : 
+                          vertex.status === 'Maintenance' ? 'warning' : 
                           'secondary'
                         }
                       >
-                        {nest.status}
+                        {vertex.status}
                       </Badge>
                     </TableCell>
                   </TableRow>
@@ -203,13 +203,13 @@ const DataCenterSection = () => {
           
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg">CyberNest Health Status</CardTitle>
+              <CardTitle className="text-lg">Avaron Vertex Health Status</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card>
                   <CardContent className="p-4">
-                    <div className="text-base font-medium mb-4">NEST-PDX-01</div>
+                    <div className="text-base font-medium mb-4">Vertex-PDX-01</div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center">
                         <Thermometer className="h-4 w-4 mr-2 text-blue-500" />
@@ -246,7 +246,7 @@ const DataCenterSection = () => {
                 
                 <Card>
                   <CardContent className="p-4">
-                    <div className="text-base font-medium mb-4">NEST-SEA-01</div>
+                    <div className="text-base font-medium mb-4">Vertex-SEA-01</div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center">
                         <Thermometer className="h-4 w-4 mr-2 text-blue-500" />
@@ -350,7 +350,7 @@ const DataCenterSection = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">8</div>
-                <div className="text-sm text-muted-foreground">With CyberNests</div>
+                <div className="text-sm text-muted-foreground">With Avaron Vertices</div>
                 <div className="mt-4 space-y-2">
                   <div className="text-sm">Denver Field Office</div>
                   <div className="text-sm">Phoenix Site</div>

@@ -23,10 +23,10 @@ const FailoverRulesTab = () => {
         <CardContent className="space-y-4">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Select NEST to Configure</Label>
+              <Label>Select Vertex to Configure</Label>
               <Select defaultValue="headquarters">
                 <SelectTrigger>
-                  <SelectValue placeholder="Select NEST" />
+                  <SelectValue placeholder="Select Vertex" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="headquarters">Headquarters</SelectItem>
