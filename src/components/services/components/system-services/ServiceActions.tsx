@@ -19,10 +19,13 @@ const ServiceActions: React.FC<ServiceActionsProps> = ({ service, onRefresh }) =
   // Mock function for service actions (start, stop, restart)
   const handleServiceAction = (action: 'start' | 'stop' | 'restart') => {
     console.log(`${action} service: ${service.id}`);
+    fetch(`/api/services/${action}`, {
+      method: "POST",
+      body: JSON.stringify([service.id]),
+    })
+    .then(() => (toast.success(`Service ${action}ed successfully`)))
+    .catch(err =>(console.log("failed to", action, "service", service.name, err))) // TODO
     
-    // In a real application, this would call an API to perform the action
-    toast.success(`Service ${action}ed successfully`);
-    setTimeout(onRefresh, 500); // Refresh after action completes
   };
 
   return (
