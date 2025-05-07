@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -29,11 +29,13 @@ const SystemServicesTab = () => {
   const [refreshInterval, setRefreshInterval] = useState<string>('0');
   const [refreshTimerId, setRefreshTimerId] = useState<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    fetch("/api/services")
+  const fetchServices = (() => fetch("/api/services")
       .then(r => { if (r.ok) { return r.json() } else { throw r.statusText } })
       .catch(r => (console.log(r), ([])))
-      .then(setServices)
+      .then(setServices))
+
+  useEffect(() => {
+    fetchServices()
   }, []);
   
   // Handle selecting a service
@@ -107,15 +109,7 @@ const SystemServicesTab = () => {
     if (refreshInterval !== '0') {
       const intervalSeconds = parseInt(refreshInterval, 10);
       const timer = setInterval(() => {
-        // In a real application, this would fetch fresh data
-        // For the mock, we'll just update random usage values
-        setServices(prevServices => 
-          prevServices.map(service => ({
-            ...service,
-            cpuUsage: Math.floor(Math.random() * 90) + 1,
-            memoryUsage: Math.floor(Math.random() * 90) + 1,
-          }))
-        );
+        fetchServices()
       }, intervalSeconds * 1000);
       
       setRefreshTimerId(timer);
@@ -131,15 +125,7 @@ const SystemServicesTab = () => {
 
   // Handle manual refresh
   const handleManualRefresh = () => {
-    // In a real application, this would fetch fresh data
-    // For the mock, we'll just update random usage values
-    setServices(prevServices => 
-      prevServices.map(service => ({
-        ...service,
-        cpuUsage: Math.floor(Math.random() * 90) + 1,
-        memoryUsage: Math.floor(Math.random() * 90) + 1,
-      }))
-    );
+    fetchServices()
   };
 
   return (
@@ -163,7 +149,7 @@ const SystemServicesTab = () => {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={handleManualRefresh}
+                onClick={() => handleManualRefresh()}
                 title="Refresh"
               >
                 <RefreshCw className="h-4 w-4" />
@@ -280,7 +266,7 @@ const SystemServicesTab = () => {
         {selectedService ? (
           <SystemServiceDetail 
             service={selectedService} 
-            onRefresh={handleManualRefresh}
+            onRefresh={() => handleManualRefresh()}
           />
         ) : (
           <Card className="h-full flex items-center justify-center">

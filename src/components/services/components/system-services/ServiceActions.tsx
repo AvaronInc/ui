@@ -23,7 +23,10 @@ const ServiceActions: React.FC<ServiceActionsProps> = ({ service, onRefresh }) =
       method: "POST",
       body: JSON.stringify([service.id]),
     })
-    .then(() => (toast.success(`Service ${action}ed successfully`)))
+    .then((r) => { if (!r.ok) { throw r.statusText } return r })
+    .then(() => fetch(`/api/services`))
+    .then((r) => { if (!r.ok) { throw r.statusText } return r.json() })
+    .then((r) => (console.log("handleServicesAction: ", r), onRefresh(r)))
     .catch(err =>(console.log("failed to", action, "service", service.name, err))) // TODO
     
   };
@@ -34,7 +37,7 @@ const ServiceActions: React.FC<ServiceActionsProps> = ({ service, onRefresh }) =
       <Button 
         variant="outline" 
         size="sm" 
-        disabled={service.status === 'running'}
+        disabled={false && (service.status||"").toLowerCase() === 'running'}
         className="flex items-center gap-1"
         onClick={() => setStartDialogOpen(true)}
       >
@@ -46,7 +49,7 @@ const ServiceActions: React.FC<ServiceActionsProps> = ({ service, onRefresh }) =
       <Button 
         variant="outline" 
         size="sm" 
-        disabled={service.status !== 'running'}
+        disabled={false && (service.status||"").toLowerCase() !== 'running'}
         className="flex items-center gap-1"
         onClick={() => setStopDialogOpen(true)}
       >
@@ -58,7 +61,7 @@ const ServiceActions: React.FC<ServiceActionsProps> = ({ service, onRefresh }) =
       <Button 
         variant="outline" 
         size="sm" 
-        disabled={service.status !== 'running'}
+        disabled={false && (service.status||"").toLowerCase() !== 'running'}
         className="flex items-center gap-1"
         onClick={() => setRestartDialogOpen(true)}
       >
