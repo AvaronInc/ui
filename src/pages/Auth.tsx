@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import PageTransition from '@/components/transitions/PageTransition';
 import { AuthCard } from '@/components/auth';
 import { toast } from 'sonner';
@@ -9,7 +8,7 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 
 const Auth = () => {
   const navigate = useNavigate();
-  const [isChecking, setIsChecking] = useState(true);
+  const [isChecking, setIsChecking] = useState(false);
   const [checkingError, setCheckingError] = useState<string | null>(null);
   const [showDebugInfo, setShowDebugInfo] = useState(false);
   const [networkStatus, setNetworkStatus] = useState(navigator.onLine);
@@ -27,99 +26,6 @@ const Auth = () => {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
-
-  // Check if user is already logged in
-  useEffect(() => {
-    let didCancel = false;
-    let subscriptionObject: { unsubscribe: () => void } | null = null;
-    
-    const checkSession = async () => {
-      try {
-        setIsChecking(true);
-        setCheckingError(null);
-        
-        console.log('[Auth Page] Setting up auth listener...');
-        
-        // Set up auth state listener first - IMPORTANT: Using non-async callback to prevent deadlocks
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          (event, session) => {
-            console.log('[Auth Page] Auth state changed:', event);
-            if (didCancel) return;
-            
-            if (session) {
-              console.log('[Auth Page] Session detected in auth change');
-              // Use setTimeout to defer navigation and avoid deadlocks
-              setTimeout(() => {
-                if (!didCancel) {
-                  console.log('[Auth Page] Navigating to home after auth change');
-                  toast.success('Successfully authenticated!');
-                  navigate('/');
-                }
-              }, 0);
-            }
-          }
-        );
-        
-        // Store the subscription for cleanup
-        subscriptionObject = subscription;
-        
-        // If we're offline in development mode, don't try to check session
-        if (import.meta.env.DEV && !networkStatus) {
-          console.log('[Auth Page] Offline in development mode, skipping session check');
-          if (!didCancel) {
-            setIsChecking(false);
-          }
-          return;
-        }
-        
-        // Then check for existing session
-        console.log('[Auth Page] Checking for existing session...');
-        const { data: sessionData, error } = await supabase.auth.getSession();
-        
-        if (didCancel) return;
-        
-        if (error) {
-          console.error('[Auth Page] Error checking session:', error);
-          setCheckingError(error.message);
-          // Don't redirect on error - let the user try to log in manually
-          return;
-        }
-        
-        if (sessionData.session) {
-          console.log('[Auth Page] User already has a session, redirecting to home');
-          navigate('/');
-        }
-      } catch (error: any) {
-        console.error('[Auth Page] Exception in checkSession:', error);
-        if (!didCancel) {
-          setCheckingError(error.message || 'Failed to check authentication status');
-        }
-      } finally {
-        if (!didCancel) {
-          setIsChecking(false);
-        }
-      }
-    };
-    
-    // Use a shorter timeout for faster user experience
-    const timeoutId = setTimeout(() => {
-      if (isChecking && !didCancel) {
-        console.log('[Auth Page] Session check timeout, allowing login');
-        setIsChecking(false);
-      }
-    }, 1500); // Reduced timeout for better UX
-    
-    checkSession();
-    
-    return () => {
-      didCancel = true;
-      clearTimeout(timeoutId);
-      if (subscriptionObject) {
-        // Properly unsubscribe from auth events
-        subscriptionObject.unsubscribe();
-      }
-    };
-  }, [navigate, networkStatus]);
 
   if (isChecking) {
     return (
