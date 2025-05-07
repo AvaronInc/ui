@@ -1,0 +1,19 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <style>
+    path { 
+      fill: #0F172A;
+    }
+    @media (prefers-color-scheme: light) {
+      path {
+        fill: #000000;
+      }
+    }
+    @media (prefers-color-scheme: dark) {
+      path {
+        fill: #A1A1AA;
+      }
+    }
+  </style>
+  <path d="M400 30L770 680H30L400 30z M400 170L650 600H150L400 170z M270 170L150 400H400L270 170z M530 170L400 400H650L530 170z M400 350L470 470H330L400 350z" />
+</svg>

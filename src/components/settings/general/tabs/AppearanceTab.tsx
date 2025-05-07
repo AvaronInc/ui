@@ -53,7 +53,7 @@ const colors = [
 // Background image options
 const backgroundOptions = [
   { value: "none", label: "None" },
-  { value: "/lovable-uploads/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png", label: "Blue Grid" }
+  { value: "/assets/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png", label: "Blue Grid" }
 ];
 
 const AppearanceTab: React.FC<AppearanceTabProps> = ({ 

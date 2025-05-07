@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // These can be found in your Supabase project settings
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://ldhcbonevdxtoycfoeds.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkaGNib25ldmR4dG95Y2ZvZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg5NjI3ODUsImV4cCI6MjA1NDUzODc4NX0.ZkIh5Y16nttZBxJbvZjMV7vWp0tjuRtV2DGMAIiuv1k';
+const supabaseUrl = 'https://ldhcbonevdxtoycfoeds.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkaGNib25ldmR4dG95Y2ZvZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg5NjI3ODUsImV4cCI6MjA1NDUzODc4NX0.ZkIh5Y16nttZBxJbvZjMV7vWp0tjuRtV2DGMAIiuv1k';
 
 // Log connection details (in development only)
 if (import.meta.env.DEV) {

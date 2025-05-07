@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { PlusCircle, Save, ZoomIn, ZoomOut, Edit, Copy } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { Toast as toast } from '@/components/ui/toast';
 import { 
   type TriggerType, 
   type ActionType, 
