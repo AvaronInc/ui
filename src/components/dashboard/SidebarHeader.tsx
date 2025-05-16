@@ -12,7 +12,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ systemName }) => {
       <div className="flex items-center">
         <div className="relative mr-3">
           <img 
-            src="/assets/ede20021-c7ab-4b80-ae9a-9356f305c24c.png"
+            src="/assets/avaron.png"
             alt="Avaron Logo" 
             className="w-8 h-8" 
           />

@@ -4,7 +4,7 @@ import { Conversation, Message, User, Post } from './types';
 export const currentUser: User = {
   id: 'user1',
   name: 'Alex Johnson',
-  avatar: '/assets/7a756512-0fbb-4a57-8285-428cb5a8bd2c.png',
+  avatar: '/assets/wasp-hive.png',
   department: 'Network Operations',
   role: 'Senior Network Engineer',
   status: 'online'
@@ -23,7 +23,7 @@ export const mockConversations: Conversation[] = [
       {
         id: 'user2',
         name: 'Sarah Chen',
-        avatar: '/assets/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        avatar: '/assets/bird-wifi.png',
         department: 'Security',
         role: 'CISO',
         status: 'online'
@@ -31,7 +31,7 @@ export const mockConversations: Conversation[] = [
       {
         id: 'user3',
         name: 'Marcus Williams',
-        avatar: '/assets/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png',
+        avatar: '/assets/bird-wifi.png',
         department: 'Infrastructure',
         role: 'Systems Administrator',
         status: 'away'
@@ -53,7 +53,7 @@ export const mockConversations: Conversation[] = [
     id: '2',
     name: 'Sarah Chen',
     type: 'direct',
-    avatar: '/assets/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+    avatar: '/assets/bird-wifi.png',
     description: 'Direct messages with Sarah Chen',
     isGroup: false,
     participants: [
@@ -61,7 +61,7 @@ export const mockConversations: Conversation[] = [
       {
         id: 'user2',
         name: 'Sarah Chen',
-        avatar: '/assets/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        avatar: '/assets/bird-wifi.png',
         department: 'Security',
         role: 'CISO',
         status: 'online'
@@ -224,7 +224,7 @@ export const mockMessages: { [key: string]: Message[] } = {
       sender: {
         id: 'user3',
         name: 'Marcus Williams',
-        avatar: '/assets/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png',
+        avatar: '/assets/bird-wifi.png',
         department: 'Infrastructure',
         role: 'Systems Administrator'
       },
@@ -237,7 +237,7 @@ export const mockMessages: { [key: string]: Message[] } = {
       sender: {
         id: 'user2',
         name: 'Sarah Chen',
-        avatar: '/assets/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        avatar: '/assets/bird-wifi.png',
         department: 'Security',
         role: 'CISO'
       },
@@ -259,7 +259,7 @@ export const mockMessages: { [key: string]: Message[] } = {
       sender: {
         id: 'user2',
         name: 'Sarah Chen',
-        avatar: '/assets/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+        avatar: '/assets/bird-wifi.png',
         department: 'Security',
         role: 'CISO'
       },
@@ -276,7 +276,7 @@ export const mockUsers: User[] = [
   {
     id: 'user2',
     name: 'Sarah Chen',
-    avatar: '/assets/135ba5fa-132c-4d75-924f-a5b9a6d32116.png',
+    avatar: '/assets/bird-wifi.png',
     department: 'Security',
     role: 'CISO',
     status: 'online'
@@ -284,7 +284,7 @@ export const mockUsers: User[] = [
   {
     id: 'user3',
     name: 'Marcus Williams',
-    avatar: '/assets/e05794c6-4e4e-4e35-903f-c2f666cf5d6d.png',
+    avatar: '/assets/bird-wifi.png',
     department: 'Infrastructure',
     role: 'Systems Administrator',
     status: 'away'
