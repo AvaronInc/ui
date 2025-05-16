@@ -40,6 +40,8 @@ const AIChat: React.FC<AIChatProps> = ({
 
   const handleSendMessage = (messageText: string = input) => {
     if (!messageText.trim()) return;
+
+    const len = messages.length+1
     
     const newMessage: MessageType = {
       id: Date.now().toString(),
@@ -47,27 +49,45 @@ const AIChat: React.FC<AIChatProps> = ({
       sender: 'user',
       timestamp: new Date(),
     };
-    
+
     setMessages(prev => [...prev, newMessage]);
     setInput('');
     setIsProcessing(true);
-    
-    setTimeout(() => {
-      const aiResponse: MessageType = {
-        id: (Date.now() + 1).toString(),
-        content: "I'm analyzing your request. This is a placeholder response while the actual AI integration is being developed.",
-        sender: 'assistant',
-        timestamp: new Date(),
-      };
-      
-      setMessages(prev => [...prev, aiResponse]);
-      setIsProcessing(false);
-      
-      // If in voice mode, read the response aloud
-      if (voiceMode) {
-        speakText(aiResponse.content);
+
+    const ai: MessageType = {
+      id: (Date.now() + 1).toString(),
+      content: "",
+      sender: 'assistant',
+      timestamp: new Date(),
+    };
+
+    console.log("xhr http")
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/chat", true);
+    let content = ""
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 3) {
+        const newData = xhr.responseText.substring(xhr.seenBytes);
+        console.log("data chunk:", newData);
+        xhr.seenBytes = xhr.responseText.length; // Track received bytes
+        setMessages((prev) => {
+          console.log("prev", prev )
+          console.log("len", len)
+          content += newData
+          let n = [...(prev.slice(0, len)), {...ai, content}]
+          console.log("new messages", n)
+          return n
+        })
+      } else if (xhr.readyState === 4 && xhr.status === 200) {
+        setIsProcessing(false);
+      } else if (xhr.readyState === 4 && xhr.status !== 200) {
+        console.error("failed with status:", xhr.status);
+        setIsProcessing(false);
       }
-    }, 1500);
+    };
+    xhr.seenBytes = 0; // Initialize the seenBytes counter
+    console.log("send")
+    xhr.send(messageText);
   };
 
   const toggleVoiceMode = () => {
