@@ -25,7 +25,6 @@ import {
   ThreatSummary,
   TopBlockedIPs,
   ActiveCVEs,
-  DailyNewsWidget,
   WeatherBySiteWidget
 } from './widgets';
 
@@ -67,9 +66,6 @@ const MainDashboard = () => {
     'threat-summary': <ThreatSummary />,
     'top-blocked-ips': <TopBlockedIPs />,
     'active-cves': <ActiveCVEs />,
-    
-    // News widget
-    'daily-news': <DailyNewsWidget />,
     
     // Weather widget
     'weather-by-site': <WeatherBySiteWidget />,

@@ -8,7 +8,6 @@ export const defaultLayout: Layout[] = [
   { i: 'network-status-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'zone-insights-default', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'unverified-users-default', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
-  { i: 'daily-news-default', x: 0, y: 16, w: 6, h: 10, minW: 4, minH: 8 },
   { i: 'weather-by-site-default', x: 6, y: 16, w: 6, h: 8, minW: 3, minH: 6 },
 ];
 
@@ -286,16 +285,6 @@ export const availableWidgets: WidgetDefinition[] = [
     type: 'pending-compliance-expirations',
     defaultSize: { w: 4, h: 6 },
     category: 'Compliance'
-  },
-
-  {
-    id: 'daily-news',
-    title: 'Daily AI News Feed',
-    description: 'Curated cybersecurity and IT news with AI-powered insights',
-    icon: 'newspaper',
-    type: 'daily-news',
-    defaultSize: { w: 6, h: 10 },
-    category: 'AI'
   },
 
   {
