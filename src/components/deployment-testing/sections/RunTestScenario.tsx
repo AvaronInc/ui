@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useToast } from '@/components/ui/use-toast';
 import SimulationProgress from './run-test/SimulationProgress';
 import ConfigSummary from './run-test/ConfigSummary';
 
@@ -20,7 +19,6 @@ const RunTestScenario: React.FC<RunTestScenarioProps> = ({
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
   const [savedConfig, setSavedConfig] = useState<any>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Get the saved configuration from localStorage
@@ -37,7 +35,7 @@ const RunTestScenario: React.FC<RunTestScenarioProps> = ({
 
   const handleStartSimulation = () => {
     if (!savedConfig) {
-      toast({
+      console.log({
         title: "No Configuration Found",
         description: "Please configure your test in the Simulation Configuration tab first",
         variant: "destructive"

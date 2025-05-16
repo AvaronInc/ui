@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/components/ui/use-toast';
 import ConfigurationOptions from './config/ConfigurationOptions';
 import ConfigurationEditor from './config/ConfigurationEditor';
 import { getDefaultConfigCode } from './config/ConfigUtils';
@@ -12,7 +11,6 @@ const SimulationConfiguration = () => {
   const [replicateZone, setReplicateZone] = useState(false);
   const [selectedZone, setSelectedZone] = useState('global');
   const [trafficProfile, setTrafficProfile] = useState('normal');
-  const { toast } = useToast();
 
   const handleConfigTypeChange = (value: string) => {
     setConfigType(value);
@@ -21,7 +19,7 @@ const SimulationConfiguration = () => {
 
   const saveConfiguration = () => {
     // In a real app, this would save to context or API
-    toast({
+    console.log({
       title: "Configuration Saved",
       description: "Test configuration has been saved and is ready to run",
     });

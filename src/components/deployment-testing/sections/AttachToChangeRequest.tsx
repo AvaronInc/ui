@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CheckCircle, ClipboardList, LinkIcon } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
 import { useChangeManagement } from '@/hooks/use-change-management';
 
 interface AttachToChangeRequestProps {
@@ -21,7 +20,6 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
   const [approver, setApprover] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { toast } = useToast();
   
   // Get pending changes from change management
   const { 
@@ -47,7 +45,7 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
     e.preventDefault();
     
     if (changeType === 'existing' && !changeId) {
-      toast({
+      console.log({
         title: "Missing Information",
         description: "Please select a Change Request",
         variant: "destructive"
@@ -56,7 +54,7 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
     }
     
     if (!summary) {
-      toast({
+      console.log({
         title: "Missing Information",
         description: "Please enter a summary of the change",
         variant: "destructive"
@@ -65,7 +63,7 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
     }
     
     if (!approver) {
-      toast({
+      console.log({
         title: "Missing Information",
         description: "Please select an approver",
         variant: "destructive"
@@ -80,7 +78,7 @@ const AttachToChangeRequest: React.FC<AttachToChangeRequestProps> = ({ results }
       setIsSubmitting(false);
       setIsSuccess(true);
       
-      toast({
+      console.log({
         title: "Success!",
         description: changeType === 'new' 
           ? "New Change Request created with test results attached" 
