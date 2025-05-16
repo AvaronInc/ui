@@ -4,7 +4,6 @@ import { useAuth } from '@/context/auth';
 
 // Default dashboard layouts for different breakpoints
 export const defaultLayout: Layout[] = [
-  { i: 'security-overview-default', x: 0, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'network-status-default', x: 6, y: 0, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'zone-insights-default', x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
   { i: 'unverified-users-default', x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 6 },
@@ -37,15 +36,6 @@ export type WidgetDefinition = {
 
 // Available widgets for the library
 export const availableWidgets: WidgetDefinition[] = [
-  {
-    id: 'security-overview',
-    title: 'Security & Compliance',
-    description: 'Overview of security posture and compliance status',
-    icon: 'shield',
-    type: 'security-overview',
-    defaultSize: { w: 6, h: 8 },
-    category: 'Security'
-  },
   {
     id: 'network-status',
     title: 'Network & Infrastructure',

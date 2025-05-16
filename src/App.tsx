@@ -22,7 +22,6 @@ import Topology from "./pages/Topology";
 import Vertex from "./pages/Vertex";
 import AdminSettings from "./pages/AdminSettings";
 import SDMS from "./pages/SDMS";
-import EmailSecurity from "./pages/EmailSecurity";
 import AssetManagement from "./pages/AssetManagement";
 import NotFound from "./pages/NotFound";
 import Automation from "./pages/Automation";
@@ -30,7 +29,6 @@ import Auth from "./pages/Auth";
 import SDWAN from "./pages/SDWAN";
 import SDN from "./pages/SDN";
 import DNSManagement from "./pages/DNSManagement";
-import Contacts from "./pages/Contacts";
 import Integrations from "./pages/Integrations";
 import Billing from "./pages/Billing";
 import LicenseCompliance from "./pages/LicenseCompliance";
@@ -38,16 +36,13 @@ import Containers from "./pages/Containers";
 import Services from "./pages/Services";
 import SystemServices from "./pages/SystemServices";
 import ChangeManagement from "./pages/ChangeManagement";
-import Scheduling from "./pages/Scheduling";
 import Firewall from "./pages/Firewall";
 import Honeypot from "./pages/Honeypot";
-import SecurityTesting from "./pages/SecurityTesting";
 import LoggingAudit from "./pages/LoggingAudit";
 import AIM from "./pages/AIM";
 import QuantumEncryption from "./pages/QuantumEncryption";
 import Authenticator from "./pages/Authenticator";
 import Messaging from "./pages/Messaging";
-import TeamsChat from "./pages/TeamsChat";
 import SystemConfiguration from "./pages/SystemConfiguration";
 import Zones from "./pages/Zones";
 import PartnerPortal from "./pages/PartnerPortal";
@@ -86,23 +81,19 @@ const App = () => (
                 <Route path="/aim" element={<ProtectedRoute><AIM /></ProtectedRoute>} />
                 <Route path="/zones" element={<ProtectedRoute adminOnly><Zones /></ProtectedRoute>} />
                 <Route path="/regions" element={<ProtectedRoute><Regions /></ProtectedRoute>} />
-                <Route path="/quantum-encryption" element={<ProtectedRoute><QuantumEncryption /></ProtectedRoute>} />
                 <Route path="/deployment-testing" element={<ProtectedRoute><DeploymentTesting /></ProtectedRoute>} />
                 <Route path="/storage" element={<ProtectedRoute><Storage /></ProtectedRoute>} />
                 <Route path="/security" element={<ProtectedRoute><Security /></ProtectedRoute>} />
                 <Route path="/intelligence" element={<ProtectedRoute><Intelligence /></ProtectedRoute>} />
                 <Route path="/workforce" element={<ProtectedRoute><WorkforceEMS /></ProtectedRoute>} />
                 <Route path="/messaging" element={<ProtectedRoute><Messaging /></ProtectedRoute>} />
-                <Route path="/teams-chat" element={<ProtectedRoute><TeamsChat /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
                 <Route path="/sdms" element={<ProtectedRoute><SDMS /></ProtectedRoute>} />
-                <Route path="/email-security" element={<ProtectedRoute><EmailSecurity /></ProtectedRoute>} />
                 <Route path="/asset-management" element={<ProtectedRoute><AssetManagement /></ProtectedRoute>} />
                 <Route path="/automation" element={<ProtectedRoute><Automation /></ProtectedRoute>} />
                 <Route path="/sdwan" element={<ProtectedRoute><SDWAN /></ProtectedRoute>} />
                 <Route path="/sdn" element={<ProtectedRoute><SDN /></ProtectedRoute>} />
                 <Route path="/dns-management" element={<ProtectedRoute><DNSManagement /></ProtectedRoute>} />
-                <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
                 <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
                 <Route path="/billing" element={<ProtectedRoute adminOnly><Billing /></ProtectedRoute>} />
                 <Route path="/license-compliance" element={<ProtectedRoute adminOnly><LicenseCompliance /></ProtectedRoute>} />
@@ -111,10 +102,8 @@ const App = () => (
                 <Route path="/system-services" element={<ProtectedRoute><SystemServices /></ProtectedRoute>} />
                 <Route path="/system-configuration" element={<ProtectedRoute adminOnly><SystemConfiguration /></ProtectedRoute>} />
                 <Route path="/change-management" element={<ProtectedRoute><ChangeManagement /></ProtectedRoute>} />
-                <Route path="/scheduling" element={<ProtectedRoute><Scheduling /></ProtectedRoute>} />
                 <Route path="/firewall" element={<ProtectedRoute><Firewall /></ProtectedRoute>} />
                 <Route path="/honeypot" element={<ProtectedRoute><Honeypot /></ProtectedRoute>} />
-                <Route path="/security-testing" element={<ProtectedRoute><SecurityTesting /></ProtectedRoute>} />
                 <Route path="/logging-audit" element={<ProtectedRoute><LoggingAudit /></ProtectedRoute>} />
                 <Route path="/partner-portal" element={<ProtectedRoute adminOnly><PartnerPortal /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />

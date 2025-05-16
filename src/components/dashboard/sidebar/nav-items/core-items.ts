@@ -30,11 +30,6 @@ export const coreSystemItems: NavItem[] = [
     href: '/regions'
   },
   {
-    title: 'Quantum Encryption',
-    icon: Fingerprint,
-    href: '/quantum-encryption'
-  },
-  {
     title: 'Deployment Testing',
     icon: Wrench,
     href: '/deployment-testing'

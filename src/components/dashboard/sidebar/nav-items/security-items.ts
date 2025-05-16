@@ -15,11 +15,6 @@ export const securityItems: NavItem[] = [
     href: '/intelligence'
   },
   {
-    title: 'Email Security',
-    icon: Mail,
-    href: '/email-security'
-  },
-  {
     title: 'Firewall',
     icon: Lock,
     href: '/firewall'
@@ -33,10 +28,5 @@ export const securityItems: NavItem[] = [
     title: 'Honeypot',
     icon: Bug,
     href: '/honeypot'
-  },
-  {
-    title: 'Security Testing',
-    icon: TestTube,
-    href: '/security-testing'
   },
 ];

@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Network, BarChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StatusCardGrid from './StatusCardGrid';
-import SecurityOverviewSection from './sections/SecurityOverviewSection';
 import NetworkStatusSection from './sections/NetworkStatusSection';
 import SystemPerformanceSection from './sections/SystemPerformanceSection';
 import ActiveAlertsSection from './sections/ActiveAlertsSection';
@@ -46,7 +45,6 @@ const MainDashboard = () => {
   // Define all widgets that will be available in the grid layout
   const widgetComponents = {
     // Original widgets
-    'security-overview': <SecurityOverviewSection />,
     'network-status': <NetworkStatusSection />,
     'system-performance': <SystemPerformanceSection />,
     'active-alerts': <ActiveAlertsSection />,

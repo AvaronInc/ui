@@ -98,25 +98,6 @@ const AIOptimization = () => {
             </CardContent>
           </Card>
         </TabsContent>
-        
-        <TabsContent value="recommendations" className="p-0 border-0 mt-4 sm:mt-6">
-          <Card>
-            <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl flex items-center">
-                <Zap className="mr-2 h-5 w-5 text-primary" />
-                AI Service Recommendations
-              </CardTitle>
-              <CardDescription>
-                Intelligent suggestions for optimizing your services
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
-              <AIRecommendations 
-                service={activeServices.find(s => s.id === selectedService)} 
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   );
