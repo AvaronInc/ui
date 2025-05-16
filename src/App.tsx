@@ -25,7 +25,6 @@ import SDMS from "./pages/SDMS";
 import AssetManagement from "./pages/AssetManagement";
 import NotFound from "./pages/NotFound";
 import Automation from "./pages/Automation";
-import Auth from "./pages/Auth";
 import SDWAN from "./pages/SDWAN";
 import SDN from "./pages/SDN";
 import DNSManagement from "./pages/DNSManagement";
@@ -68,7 +67,6 @@ const App = () => (
           <BrowserRouter>
             <AnimatePresence mode="wait">
               <Routes>
-                <Route path="/auth" element={<Auth />} />
                 <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/rmm" element={<ProtectedRoute><RMM /></ProtectedRoute>} />
                 <Route path="/ipam" element={<ProtectedRoute><IPAM /></ProtectedRoute>} />
