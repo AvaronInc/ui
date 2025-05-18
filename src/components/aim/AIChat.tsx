@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,7 @@ import { useVoiceInteraction } from '@/hooks/useVoiceInteraction';
 type MessageType = {
   id: string;
   content: string;
-  sender: 'user' | 'assistant';
+  role: 'user' | 'assistant';
   timestamp: Date;
 };
 
@@ -32,63 +32,44 @@ const AIChat: React.FC<AIChatProps> = ({
 }) => {
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const handleSendMessage = (messageText: string = input) => {
-    if (!messageText.trim()) return;
-
-    const len = messages.length+1
-    
-    const newMessage: MessageType = {
+  const sendMessage = useCallback((text) => {
+    const latest = [...messages, {
       id: Date.now().toString(),
-      content: messageText,
-      sender: 'user',
+      content: text.trim(),
+      role: 'user',
       timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, newMessage]);
-    setInput('');
-    setIsProcessing(true);
-
-    const ai: MessageType = {
+    }, {
       id: (Date.now() + 1).toString(),
-      content: "",
-      sender: 'assistant',
+      content: "...",
+      role: 'assistant',
       timestamp: new Date(),
-    };
+    }];
 
-    console.log("xhr http")
+    setMessages(latest)
+    setInput('')
+    setIsProcessing(true)
+
+
+    const json = JSON.stringify(latest.slice(0, latest.length-1))
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/chat", true);
+    xhr.open("POST", "/api/completions", true);
     let content = ""
     xhr.onreadystatechange = function() {
-      if (xhr.readyState === 3) {
-        const newData = xhr.responseText.substring(xhr.seenBytes);
-        console.log("data chunk:", newData);
-        xhr.seenBytes = xhr.responseText.length; // Track received bytes
-        setMessages((prev) => {
-          console.log("prev", prev )
-          console.log("len", len)
-          content += newData
-          let n = [...(prev.slice(0, len)), {...ai, content}]
-          console.log("new messages", n)
-          return n
-        })
-      } else if (xhr.readyState === 4 && xhr.status === 200) {
+      switch (xhr.readyState) {
+      case 3:
+        break;
+      case 4:
         setIsProcessing(false);
-      } else if (xhr.readyState === 4 && xhr.status !== 200) {
-        console.error("failed with status:", xhr.status);
-        setIsProcessing(false);
+        break;
       }
+      setMessages((prev) => {
+        return [...(prev.slice(0, prev.length-1)), {...prev[prev.length-1], content: xhr.responseText}]
+      })
     };
-    xhr.seenBytes = 0; // Initialize the seenBytes counter
-    console.log("send")
-    xhr.send(messageText);
-  };
+    xhr.send(json);
+
+  }, [messages])
 
   const toggleVoiceMode = () => {
     const newMode = !voiceMode;
@@ -120,12 +101,12 @@ const AIChat: React.FC<AIChatProps> = ({
     startListening, 
     stopListening, 
     speakText 
-  } = useVoiceInteraction(voiceMode, setMessages, handleSendMessage);
+  } = useVoiceInteraction(voiceMode, setMessages, sendMessage);
 
   // Effect to speak the last assistant message when it's added
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
-    if (voiceMode && lastMessage && lastMessage.sender === 'assistant') {
+    if (voiceMode && lastMessage && lastMessage.role === 'assistant') {
       speakText(lastMessage.content);
     }
   }, [messages, voiceMode, speakText]);
@@ -158,18 +139,18 @@ const AIChat: React.FC<AIChatProps> = ({
               <div
                 key={message.id}
                 className={`flex ${
-                  message.sender === 'user' ? 'justify-end' : 'justify-start'
+                  message.role === 'user' ? 'justify-end' : 'justify-start'
                 }`}
               >
                 <div
                   className={`flex max-w-[80%] ${
-                    message.sender === 'user'
+                    message.role === 'user'
                       ? 'flex-row-reverse'
                       : 'flex-row'
                   }`}
                 >
                   <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full border bg-primary text-primary-foreground">
-                    {message.sender === 'user' ? (
+                    {message.role === 'user' ? (
                       <User className="h-4 w-4" />
                     ) : (
                       <Bot className="h-4 w-4" />
@@ -177,7 +158,7 @@ const AIChat: React.FC<AIChatProps> = ({
                   </div>
                   <div
                     className={`mx-2 rounded-lg p-3 ${
-                      message.sender === 'user'
+                      message.role === 'user'
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-muted text-foreground'
                     }`}
@@ -193,7 +174,7 @@ const AIChat: React.FC<AIChatProps> = ({
                 </div>
               </div>
             ))}
-            <div ref={messagesEndRef} />
+            <div />
           </div>
         </ScrollArea>
       </CardContent>
@@ -223,7 +204,7 @@ const AIChat: React.FC<AIChatProps> = ({
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleSendMessage();
+                sendMessage(input);
               }
             }}
             disabled={isProcessing || (voiceMode && isListening)}
@@ -231,7 +212,7 @@ const AIChat: React.FC<AIChatProps> = ({
           />
           <Button 
             size="icon" 
-            onClick={() => handleSendMessage()}
+            onClick={() =>sendMessage(input)}
             disabled={isProcessing || !input.trim() || (voiceMode && isListening)}
           >
             <Send className="h-4 w-4" />
